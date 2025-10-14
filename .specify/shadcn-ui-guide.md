@@ -3,6 +3,7 @@
 ## Quick Reference for Church Management App
 
 ### Constitution Reference
+
 - **Version**: 1.1.0
 - **Section**: Architecture Standards > UI Development Standards
 - **Authority**: This guide implements constitutional requirements for UI development
@@ -19,6 +20,7 @@ npx shadcn-ui@latest init
 ```
 
 Configuration options:
+
 - ✅ TypeScript: Yes
 - ✅ Style: Default
 - ✅ Base color: Slate (professional, church-appropriate)
@@ -42,35 +44,35 @@ Edit `tailwind.config.js`:
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
       colors: {
         // Church-themed color palette
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         // Additional custom colors for church context
         worship: {
-          light: '#F3F4F6',
-          DEFAULT: '#6B7280',
-          dark: '#374151',
+          light: "#F3F4F6",
+          DEFAULT: "#6B7280",
+          dark: "#374151",
         },
         ministry: {
-          light: '#DBEAFE',
-          DEFAULT: '#3B82F6',
-          dark: '#1E40AF',
+          light: "#DBEAFE",
+          DEFAULT: "#3B82F6",
+          dark: "#1E40AF",
         },
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
 ```
 
 ---
@@ -115,9 +117,16 @@ frontend/src/components/
 
 ```typescript
 // src/components/features/member-card.tsx
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface MemberCardProps {
   member: {
@@ -149,7 +158,11 @@ export function MemberCard({ member, onEdit }: MemberCardProps) {
         <p className="text-sm text-muted-foreground">{member.email}</p>
       </CardContent>
       <CardFooter>
-        <Button onClick={() => onEdit(member.id)} variant="outline" className="w-full">
+        <Button
+          onClick={() => onEdit(member.id)}
+          variant="outline"
+          className="w-full"
+        >
           Edit Member
         </Button>
       </CardFooter>
@@ -169,14 +182,17 @@ When implementing UI features, leverage the MCP server:
 **Example Prompts:**
 
 1. **Component Discovery:**
+
    - "What shadcn components should I use for a member directory?"
    - "Show me shadcn table component examples"
 
 2. **Implementation Guidance:**
+
    - "Create a donation form using shadcn form components"
    - "Build a responsive navigation menu with shadcn"
 
 3. **Accessibility Checks:**
+
    - "How do I ensure this component is WCAG 2.1 AA compliant?"
    - "Add keyboard navigation to this shadcn dialog"
 
@@ -185,6 +201,7 @@ When implementing UI features, leverage the MCP server:
    - "Add dark mode support to this component"
 
 **MCP Server Benefits:**
+
 - ✅ Instant component examples with best practices
 - ✅ Accessibility guidance built-in
 - ✅ Theme customization suggestions
@@ -233,6 +250,7 @@ npx shadcn-ui@latest add separator
 ### Church-Specific Component Examples
 
 **1. Event Card**
+
 ```typescript
 // Uses: Card, Badge, Button, Calendar
 <Card>
@@ -251,6 +269,7 @@ npx shadcn-ui@latest add separator
 ```
 
 **2. Donation Form**
+
 ```typescript
 // Uses: Form, Input, Select, Button
 <Form>
@@ -271,6 +290,7 @@ npx shadcn-ui@latest add separator
 ```
 
 **3. Member Directory Table**
+
 ```typescript
 // Uses: Table, Avatar, Badge, DropdownMenu
 <Table>
@@ -301,9 +321,7 @@ npx shadcn-ui@latest add separator
           </Badge>
         </TableCell>
         <TableCell>
-          <DropdownMenu>
-            {/* Actions */}
-          </DropdownMenu>
+          <DropdownMenu>{/* Actions */}</DropdownMenu>
         </TableCell>
       </TableRow>
     ))}
@@ -334,29 +352,29 @@ All components MUST meet these accessibility standards:
 
 ```typescript
 // src/components/features/__tests__/member-card.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import { MemberCard } from '../member-card';
+import { render, screen, fireEvent } from "@testing-library/react";
+import { MemberCard } from "../member-card";
 
-describe('MemberCard', () => {
+describe("MemberCard", () => {
   const mockMember = {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@church.org',
-    role: 'Elder',
+    id: "1",
+    name: "John Doe",
+    email: "john@church.org",
+    role: "Elder",
   };
 
-  it('renders member information', () => {
+  it("renders member information", () => {
     render(<MemberCard member={mockMember} onEdit={jest.fn()} />);
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('Elder')).toBeInTheDocument();
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Elder")).toBeInTheDocument();
   });
 
-  it('calls onEdit when edit button clicked', () => {
+  it("calls onEdit when edit button clicked", () => {
     const handleEdit = jest.fn();
     render(<MemberCard member={mockMember} onEdit={handleEdit} />);
-    
-    fireEvent.click(screen.getByText('Edit Member'));
-    expect(handleEdit).toHaveBeenCalledWith('1');
+
+    fireEvent.click(screen.getByText("Edit Member"));
+    expect(handleEdit).toHaveBeenCalledWith("1");
   });
 });
 ```
@@ -364,12 +382,14 @@ describe('MemberCard', () => {
 ### Accessibility Tests
 
 ```typescript
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe, toHaveNoViolations } from "jest-axe";
 
 expect.extend(toHaveNoViolations);
 
-it('should not have accessibility violations', async () => {
-  const { container } = render(<MemberCard member={mockMember} onEdit={jest.fn()} />);
+it("should not have accessibility violations", async () => {
+  const { container } = render(
+    <MemberCard member={mockMember} onEdit={jest.fn()} />
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -383,12 +403,12 @@ it('should not have accessibility violations', async () => {
 
 ```typescript
 // src/components/features/theme-toggle.tsx
-import { Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTheme } from "next-themes" // or your theme provider
+import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes"; // or your theme provider
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
 
   return (
     <Button
@@ -400,7 +420,7 @@ export function ThemeToggle() {
       <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
-  )
+  );
 }
 ```
 
@@ -412,9 +432,9 @@ export function ThemeToggle() {
 
 ```typescript
 // Lazy load heavy components
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from "react";
 
-const HeavyDataTable = lazy(() => import('@/components/features/data-table'));
+const HeavyDataTable = lazy(() => import("@/components/features/data-table"));
 
 function MemberDirectory() {
   return (
@@ -448,6 +468,7 @@ function MemberDirectory() {
 ## Constitutional Compliance
 
 This guide implements:
+
 - ✅ Principle I: Clean Architecture (UI as presentation layer)
 - ✅ Principle II: Test-Driven Development (test examples provided)
 - ✅ Principle III: DRY (reusable components)
