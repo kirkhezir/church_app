@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Full stack web app for church management application with landing page. the name of the church is 'Sing Buri Adventist Center'."
 
+## Clarifications
+
+### Session 2025-10-14
+
+- Q: Who can create new member accounts in the system? → A: Admin-only registration: Only administrators can create member accounts (members receive invitation email)
+- Q: Should events have maximum capacity limits that prevent over-booking? → A: Optional capacity: Administrators can optionally set a max capacity; when reached, RSVPs are closed or waitlisted
+- Q: What level of privacy control should members have over their directory profile? → A: Field-level control: Members can individually show/hide specific fields (phone, email, address) while name is always visible
+- Q: How frequently should the system backup data? → A: Daily automated backups with 30-day retention
+- Q: How long should password reset links remain valid? → A: 1 hour expiration
+
 ## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Public Landing Page (Priority: P1)
@@ -94,7 +104,7 @@ Members can view a directory of other church members (with privacy controls) to 
 ### Edge Cases
 
 - What happens when a user tries to access member features without logging in?
-- How does the system handle concurrent event RSVPs that might exceed venue capacity?
+- When event capacity is reached, RSVPs are closed and members can join a waitlist; administrators are notified
 - What happens if a member forgets their password?
 - How does the system handle duplicate member registrations with the same email?
 - What happens if an administrator accidentally deletes an important announcement?
@@ -108,10 +118,10 @@ Members can view a directory of other church members (with privacy controls) to 
 **Authentication & Authorization**
 
 - **FR-001**: System MUST allow visitors to view the public landing page without authentication
-- **FR-002**: System MUST provide secure registration for new members with email verification
+- **FR-002**: System MUST allow administrators to create new member accounts and send invitation emails with account setup links
 - **FR-003**: System MUST authenticate users with email and password credentials
 - **FR-004**: System MUST support role-based access with at least three roles: Administrator, Staff, and Member
-- **FR-005**: System MUST allow users to reset forgotten passwords via email link
+- **FR-005**: System MUST allow users to reset forgotten passwords via email link that expires after 1 hour
 - **FR-006**: System MUST automatically log out users after 24 hours of inactivity
 
 **Landing Page**
@@ -133,9 +143,10 @@ Members can view a directory of other church members (with privacy controls) to 
 
 **Event Management**
 
-- **FR-018**: Administrators MUST be able to create events with title, description, date, time, location, and category
+- **FR-018**: Administrators MUST be able to create events with title, description, date, time, location, category, and optional maximum capacity
 - **FR-019**: System MUST display events in calendar view and list view
 - **FR-020**: System MUST allow members to RSVP to events
+- **FR-020a**: System MUST prevent RSVPs when event capacity is reached and offer waitlist option
 - **FR-021**: System MUST track RSVP responses and display attendance counts to administrators
 - **FR-022**: System MUST allow administrators to edit or cancel events
 - **FR-023**: System MUST send notifications to RSVPed members when an event is modified or cancelled
@@ -150,8 +161,8 @@ Members can view a directory of other church members (with privacy controls) to 
 
 **Member Directory**
 
-- **FR-029**: System MUST display a searchable directory of church members
-- **FR-030**: System MUST respect member privacy settings for contact information visibility
+- **FR-029**: System MUST display a searchable directory of church members with names always visible
+- **FR-030**: System MUST allow members to individually control visibility of phone, email, and address fields in the directory
 - **FR-031**: System MUST allow members to search directory by name
 - **FR-032**: System MUST allow members to send internal messages to other members
 
@@ -159,12 +170,12 @@ Members can view a directory of other church members (with privacy controls) to 
 
 - **FR-033**: System MUST persist all user data, events, and announcements
 - **FR-034**: System MUST maintain audit logs of administrative actions
-- **FR-035**: System MUST backup data regularly to prevent data loss
+- **FR-035**: System MUST perform automated daily backups with 30-day retention to prevent data loss
 - **FR-036**: System MUST allow data export for reporting and compliance purposes
 
 ### Key Entities
 
-- **Member**: Represents a church member with profile information (name, email, phone, address), authentication credentials, role, membership date, and privacy preferences
+- **Member**: Represents a church member with profile information (name, email, phone, address), authentication credentials, role, membership date, and field-level privacy preferences (visibility toggles for phone, email, address)
 - **Event**: Represents a church event with title, description, date/time, location, category (worship, Bible study, community, fellowship), and RSVP list
 - **Announcement**: Represents a church announcement with title, message content, author, publication date, priority level (urgent/normal), and archived status
 - **Message**: Represents internal member-to-member communication with sender, recipient, subject, content, and timestamp
