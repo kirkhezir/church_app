@@ -76,21 +76,26 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 1 (NON-NEGOTIABLE - TDD Required) ⚠️
 
-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+**CRITICAL: Write these tests FIRST, ensure they FAIL before implementation (Red-Green-Refactor cycle)**
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].ts
+- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].ts
+- [ ] T012 [P] [US1] Unit tests for domain entities in tests/unit/domain/test_[name].ts
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T013 [P] [US1] Create [Entity1] domain model in backend/src/domain/entities/[entity1].ts
+- [ ] T014 [P] [US1] Create [Entity2] domain model in backend/src/domain/entities/[entity2].ts
+- [ ] T015 [US1] Implement [UseCase] in backend/src/application/use-cases/[use-case].ts (depends on T013, T014)
+- [ ] T016 [US1] Implement repository interface in backend/src/domain/repositories/[repository].ts
+- [ ] T017 [US1] Implement repository in backend/src/infrastructure/persistence/[repository].ts
+- [ ] T018 [US1] Implement API controller in backend/src/presentation/controllers/[controller].ts
+- [ ] T019 [US1] Add input validation and error handling
+- [ ] T020 [US1] Add structured logging and audit trail for user story 1 operations
+- [ ] T021 [P] [US1] Create frontend service client in frontend/src/services/[service].ts
+- [ ] T022 [P] [US1] Create UI components in frontend/src/components/[feature]/
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

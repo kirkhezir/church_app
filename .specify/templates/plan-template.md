@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Clean Architecture**: Confirms clear separation between domain, application, infrastructure, and presentation layers
+- [ ] **Test-Driven Development**: Test strategy defined with unit, integration, and contract test requirements
+- [ ] **DRY Principle**: Identifies opportunities for code reuse and shared abstractions
+- [ ] **KISS Principle**: Solution is simple and avoids over-engineering
+- [ ] **YAGNI Principle**: Feature scope limited to actual requirements, no speculative additions
+- [ ] **Separation of Concerns**: Clear boundaries between frontend/backend and business/data layers
+- [ ] **API-First Design**: API contracts defined before implementation (OpenAPI/GraphQL schema)
+- [ ] **Security Requirements**: Authentication, authorization, data protection, and audit logging addressed
+- [ ] **Performance Standards**: Response time, caching strategy, and query optimization considered
 
 ## Project Structure
 
@@ -68,20 +76,28 @@ tests/
 ├── integration/
 └── unit/
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+# [REMOVE IF UNUSED] Option 2: Web application - Clean Architecture (when "frontend" + "backend" detected)
 backend/
 ├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
+│   ├── domain/           # Business entities and logic (innermost layer)
+│   ├── application/      # Use cases and application services
+│   ├── infrastructure/   # Database, external APIs, frameworks
+│   └── presentation/     # Controllers, routes, DTOs
 └── tests/
+    ├── unit/             # Fast, isolated tests
+    ├── integration/      # Component interaction tests
+    └── contract/         # API contract tests
 
 frontend/
 ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
+│   ├── components/       # Reusable UI components
+│   ├── pages/            # Route-level page components
+│   ├── services/         # API client layer
+│   ├── hooks/            # Custom React hooks
+│   └── utils/            # Pure utility functions
 └── tests/
+    ├── unit/             # Component and utility tests
+    └── e2e/              # End-to-end user flows
 
 # [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/
