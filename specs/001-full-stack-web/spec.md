@@ -14,6 +14,11 @@
 - Q: What level of privacy control should members have over their directory profile? → A: Field-level control: Members can individually show/hide specific fields (phone, email, address) while name is always visible
 - Q: How frequently should the system backup data? → A: Daily automated backups with 30-day retention
 - Q: How long should password reset links remain valid? → A: 1 hour expiration
+- Q: What level of control should members have over email notifications? → A: Granular by type: Members can opt out of event/announcement notifications but always receive security-related emails (password resets, account changes)
+- Q: How should the system handle multiple failed login attempts? → A: Temporary lockout: After 5 failed attempts, lock account for 15 minutes
+- Q: Who should be able to view archived announcements? → A: All members: Any logged-in member can access the announcement archive to view past communications
+- Q: How should internal member messages be delivered and notified? → A: Real-time push: Real-time notifications if user is online, plus in-app message storage
+- Q: Where should contact form submissions be sent? → A: Designated email address configured by admins
 
 ## User Scenarios & Testing _(mandatory)_
 
@@ -109,7 +114,7 @@ Members can view a directory of other church members (with privacy controls) to 
 - How does the system handle duplicate member registrations with the same email?
 - What happens if an administrator accidentally deletes an important announcement?
 - How does the system handle timezone differences for event scheduling?
-- How does the system handle members who opt out of email notifications?
+- Members who opt out of notifications will not receive event/announcement emails but will still receive security-related emails; they can still view updates on their dashboard
 
 ## Requirements _(mandatory)_
 
@@ -120,6 +125,7 @@ Members can view a directory of other church members (with privacy controls) to 
 - **FR-001**: System MUST allow visitors to view the public landing page without authentication
 - **FR-002**: System MUST allow administrators to create new member accounts and send invitation emails with account setup links
 - **FR-003**: System MUST authenticate users with email and password credentials
+- **FR-003a**: System MUST temporarily lock accounts for 15 minutes after 5 consecutive failed login attempts
 - **FR-004**: System MUST support role-based access with at least three roles: Administrator, Staff, and Member
 - **FR-005**: System MUST allow users to reset forgotten passwords via email link that expires after 1 hour
 - **FR-006**: System MUST automatically log out users after 24 hours of inactivity
@@ -129,7 +135,7 @@ Members can view a directory of other church members (with privacy controls) to 
 - **FR-007**: System MUST display church name "Sing Buri Adventist Center" prominently on the landing page
 - **FR-008**: System MUST display worship service times and weekly schedule
 - **FR-009**: System MUST include an interactive map showing church location
-- **FR-010**: System MUST provide a contact form that sends messages to church administrators
+- **FR-010**: System MUST provide a contact form that sends messages to a designated email address configurable by administrators
 - **FR-011**: System MUST display church mission statement and core values
 - **FR-012**: System MUST be responsive and display correctly on mobile devices and tablets
 
@@ -139,7 +145,7 @@ Members can view a directory of other church members (with privacy controls) to 
 - **FR-014**: System MUST show upcoming events relevant to the logged-in member
 - **FR-015**: System MUST display recent announcements ordered by date
 - **FR-016**: System MUST allow members to update their profile information
-- **FR-017**: System MUST allow members to manage their notification preferences
+- **FR-017**: System MUST allow members to opt out of event and announcement email notifications while always sending security-related emails (password resets, account changes)
 
 **Event Management**
 
@@ -158,6 +164,7 @@ Members can view a directory of other church members (with privacy controls) to 
 - **FR-026**: System MUST support marking announcements as "urgent" or "normal" priority
 - **FR-027**: System MUST send email notifications for urgent announcements
 - **FR-028**: System MUST allow administrators to archive old announcements
+- **FR-028a**: System MUST allow all logged-in members to access and view archived announcements
 
 **Member Directory**
 
@@ -165,6 +172,8 @@ Members can view a directory of other church members (with privacy controls) to 
 - **FR-030**: System MUST allow members to individually control visibility of phone, email, and address fields in the directory
 - **FR-031**: System MUST allow members to search directory by name
 - **FR-032**: System MUST allow members to send internal messages to other members
+- **FR-032a**: System MUST deliver real-time push notifications to online recipients when they receive messages
+- **FR-032b**: System MUST store all messages in-app for retrieval when recipients are offline
 
 **Data Management**
 
