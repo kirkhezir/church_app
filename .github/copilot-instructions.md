@@ -48,10 +48,13 @@ When implementing features, leverage available MCP servers for enhanced developm
   - Finding component usage examples and patterns
   - Checking component API and customization options
 - **Example use cases**:
+
   - "Add shadcn button component"
   - "Show shadcn form component examples"
   - "Get shadcn dialog implementation pattern"
   - "Find card component variants"
+
+- **Reference shadcn-ui-guide.md** for detailed instructions on using shadcn components effectively.
 
 **Best Practice**: Always consult MCP servers before implementing features to ensure you're using current best practices and correct API patterns.
 
