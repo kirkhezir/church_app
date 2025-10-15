@@ -1,0 +1,1234 @@
+openapi: 3.0.3
+info:
+  title: Sing Buri Adventist Center - Church Management API
+  description: |
+    RESTful API for church management application supporting member authentication,
+    event management, announcements, member directory, and internal messaging.
+  version: 1.0.0
+  contact:
+    name: Church Management Team
+    email: admin@singburiadventist.org
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://staging.singburiadventist.org/api/v1
+    description: Staging environment
+  - url: https://singburiadventist.org/api/v1
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Members
+    description: Member directory and profile management
+  - name: Events
+    description: Church event creation and RSVP management
+  - name: Announcements
+    description: Church announcements and notifications
+  - name: Messages
+    description: Internal member-to-member messaging
+
+paths:
+  # ===== AUTHENTICATION =====
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user
+      description: |
+        Authenticates user with email and password. Returns access token and sets
+        refresh token as httpOnly cookie. Implements account lockout after 5 failed
+        attempts (FR-003a).
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  format: password
+                  example: SecurePass123
+      responses:
+        "200":
+          description: Authentication successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refreshToken=abc123; HttpOnly; Secure; SameSite=Strict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          description: Account locked due to too many failed attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                error:
+                  code: ACCOUNT_LOCKED
+                  message: Account locked for 15 minutes due to failed login attempts
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      description: |
+        Exchanges refresh token (from cookie) for new access token. Implements
+        token rotation for security.
+      operationId: refreshToken
+      responses:
+        "200":
+          description: Token refresh successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  expiresIn:
+                    type: integer
+                    example: 900
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Logout user
+      description: Invalidates refresh token and clears cookie
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged out successfully
+
+  /auth/password/reset-request:
+    post:
+      tags: [Authentication]
+      summary: Request password reset
+      description: |
+        Sends password reset email with 1-hour expiration link (FR-005)
+      operationId: requestPasswordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Reset email sent (generic response for security)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If email exists, password reset link has been sent
+
+  /auth/password/reset:
+    post:
+      tags: [Authentication]
+      summary: Reset password
+      description: Resets password using valid reset token
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, newPassword]
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+                  format: password
+                  minLength: 8
+      responses:
+        "200":
+          description: Password reset successful
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ===== MEMBERS =====
+
+  /members:
+    get:
+      tags: [Members]
+      summary: List all members (directory)
+      description: |
+        Returns member directory with privacy controls applied (FR-029, FR-030).
+        Name is always visible; phone, email, address shown based on member preferences.
+      operationId: listMembers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          description: Search by name
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        "200":
+          description: Member list retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MemberPublic"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [Members]
+      summary: Create new member (admin only)
+      description: |
+        Admin-only endpoint to create new member account and send invitation email (FR-002)
+      operationId: createMember
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMemberRequest"
+      responses:
+        "201":
+          description: Member created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /members/{id}:
+    get:
+      tags: [Members]
+      summary: Get member details
+      description: Returns member profile with privacy controls applied
+      operationId: getMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Member details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberPublic"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Members]
+      summary: Update member profile
+      description: Members can update their own profile; admins can update any profile
+      operationId: updateMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMemberRequest"
+      responses:
+        "200":
+          description: Member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /members/me:
+    get:
+      tags: [Members]
+      summary: Get current user profile
+      description: Returns authenticated user's full profile
+      operationId: getCurrentMember
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+
+  # ===== EVENTS =====
+
+  /events:
+    get:
+      tags: [Events]
+      summary: List events
+      description: |
+        Returns upcoming and past events with optional filtering by category and date range (FR-019)
+      operationId: listEvents
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [WORSHIP, BIBLE_STUDY, COMMUNITY, FELLOWSHIP]
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Event list retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Event"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+    post:
+      tags: [Events]
+      summary: Create new event (admin/staff only)
+      description: Creates new church event (FR-018)
+      operationId: createEvent
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventRequest"
+      responses:
+        "201":
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /events/{id}:
+    get:
+      tags: [Events]
+      summary: Get event details
+      description: Returns event details with RSVP list for admins/staff
+      operationId: getEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Event details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Events]
+      summary: Update event (admin/staff only)
+      description: |
+        Updates event details. Sends notification to RSVPed members if event modified (FR-023)
+      operationId: updateEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEventRequest"
+      responses:
+        "200":
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    delete:
+      tags: [Events]
+      summary: Cancel event (admin/staff only)
+      description: |
+        Soft-cancels event. Sends notification to RSVPed members (FR-023)
+      operationId: cancelEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Event cancelled successfully
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /events/{id}/rsvp:
+    post:
+      tags: [Events]
+      summary: RSVP to event
+      description: |
+        Member RSVPs to event. If at capacity, member is waitlisted (FR-020, FR-020a)
+      operationId: rsvpToEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "201":
+          description: RSVP recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RSVP"
+        "400":
+          description: Already RSVPed or event full
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [Events]
+      summary: Cancel RSVP
+      description: Member withdraws attendance from event
+      operationId: cancelRSVP
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: RSVP cancelled successfully
+
+  # ===== ANNOUNCEMENTS =====
+
+  /announcements:
+    get:
+      tags: [Announcements]
+      summary: List announcements
+      description: |
+        Returns active and archived announcements (FR-025, FR-028a)
+      operationId: listAnnouncements
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: archived
+          in: query
+          description: Include archived announcements
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Announcement list retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Announcement"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+    post:
+      tags: [Announcements]
+      summary: Create announcement (admin/staff only)
+      description: |
+        Creates announcement. If URGENT, sends email to all members with notifications enabled (FR-027)
+      operationId: createAnnouncement
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAnnouncementRequest"
+      responses:
+        "201":
+          description: Announcement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Announcement"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /announcements/{id}:
+    get:
+      tags: [Announcements]
+      summary: Get announcement details
+      operationId: getAnnouncement
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Announcement details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Announcement"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Announcements]
+      summary: Update announcement (admin/staff only)
+      operationId: updateAnnouncement
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAnnouncementRequest"
+      responses:
+        "200":
+          description: Announcement updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Announcement"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /announcements/{id}/archive:
+    post:
+      tags: [Announcements]
+      summary: Archive announcement (admin/staff only)
+      description: Removes from main dashboard but keeps in archive (FR-028)
+      operationId: archiveAnnouncement
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Announcement archived successfully
+
+  # ===== MESSAGES =====
+
+  /messages:
+    get:
+      tags: [Messages]
+      summary: List user messages
+      description: |
+        Returns messages for authenticated user (inbox and sent)
+      operationId: listMessages
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: folder
+          in: query
+          description: Filter by inbox or sent
+          schema:
+            type: string
+            enum: [inbox, sent]
+            default: inbox
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Message list retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Message"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+    post:
+      tags: [Messages]
+      summary: Send message to another member
+      description: |
+        Sends internal message. Real-time push if recipient online (FR-032a, FR-032b)
+      operationId: sendMessage
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageRequest"
+      responses:
+        "201":
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /messages/{id}:
+    get:
+      tags: [Messages]
+      summary: Get message details
+      description: Marks message as read if unread
+      operationId: getMessage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Message retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Messages]
+      summary: Delete message
+      description: Soft delete (only hides from user's view)
+      operationId: deleteMessage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Message deleted successfully
+
+# ===== COMPONENTS =====
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Authentication
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        expiresIn:
+          type: integer
+          example: 900
+        user:
+          $ref: "#/components/schemas/Member"
+
+    # Member
+    Member:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [ADMIN, STAFF, MEMBER]
+        membershipDate:
+          type: string
+          format: date
+        privacySettings:
+          type: object
+          properties:
+            showPhone:
+              type: boolean
+            showEmail:
+              type: boolean
+            showAddress:
+              type: boolean
+        emailNotifications:
+          type: boolean
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    MemberPublic:
+      type: object
+      description: Member profile with privacy controls applied
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+          nullable: true
+          description: Only shown if member's privacySettings.showPhone is true
+        email:
+          type: string
+          nullable: true
+          description: Only shown if member's privacySettings.showEmail is true
+        address:
+          type: string
+          nullable: true
+          description: Only shown if member's privacySettings.showAddress is true
+        membershipDate:
+          type: string
+          format: date
+
+    CreateMemberRequest:
+      type: object
+      required: [email, firstName, lastName, membershipDate]
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+          minLength: 2
+          maxLength: 50
+        lastName:
+          type: string
+          minLength: 2
+          maxLength: 50
+        phone:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [ADMIN, STAFF, MEMBER]
+          default: MEMBER
+        membershipDate:
+          type: string
+          format: date
+
+    UpdateMemberRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        privacySettings:
+          type: object
+          properties:
+            showPhone:
+              type: boolean
+            showEmail:
+              type: boolean
+            showAddress:
+              type: boolean
+        emailNotifications:
+          type: boolean
+
+    # Event
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        location:
+          type: string
+        category:
+          type: string
+          enum: [WORSHIP, BIBLE_STUDY, COMMUNITY, FELLOWSHIP]
+        maxCapacity:
+          type: integer
+          nullable: true
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+        rsvpCount:
+          type: integer
+          description: Number of confirmed RSVPs
+        userRSVP:
+          $ref: "#/components/schemas/RSVP"
+          nullable: true
+          description: Current user's RSVP status (if any)
+        isCancelled:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    EventDetail:
+      allOf:
+        - $ref: "#/components/schemas/Event"
+        - type: object
+          properties:
+            creator:
+              $ref: "#/components/schemas/MemberPublic"
+            rsvps:
+              type: array
+              items:
+                type: object
+                properties:
+                  member:
+                    $ref: "#/components/schemas/MemberPublic"
+                  status:
+                    type: string
+                    enum: [CONFIRMED, WAITLISTED, CANCELLED]
+                  rsvpedAt:
+                    type: string
+                    format: date-time
+
+    CreateEventRequest:
+      type: object
+      required:
+        [title, description, startDateTime, endDateTime, location, category]
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 2000
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 200
+        category:
+          type: string
+          enum: [WORSHIP, BIBLE_STUDY, COMMUNITY, FELLOWSHIP]
+        maxCapacity:
+          type: integer
+          minimum: 1
+          nullable: true
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+
+    UpdateEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        location:
+          type: string
+        category:
+          type: string
+          enum: [WORSHIP, BIBLE_STUDY, COMMUNITY, FELLOWSHIP]
+        maxCapacity:
+          type: integer
+          nullable: true
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+
+    RSVP:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [CONFIRMED, WAITLISTED, CANCELLED]
+        rsvpedAt:
+          type: string
+          format: date-time
+
+    # Announcement
+    Announcement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        priority:
+          type: string
+          enum: [URGENT, NORMAL]
+        author:
+          $ref: "#/components/schemas/MemberPublic"
+        publishedAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateAnnouncementRequest:
+      type: object
+      required: [title, content]
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 150
+        content:
+          type: string
+          maxLength: 5000
+        priority:
+          type: string
+          enum: [URGENT, NORMAL]
+          default: NORMAL
+
+    UpdateAnnouncementRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        priority:
+          type: string
+          enum: [URGENT, NORMAL]
+
+    # Message
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sender:
+          $ref: "#/components/schemas/MemberPublic"
+        recipient:
+          $ref: "#/components/schemas/MemberPublic"
+        subject:
+          type: string
+        body:
+          type: string
+        isRead:
+          type: boolean
+        readAt:
+          type: string
+          format: date-time
+          nullable: true
+        sentAt:
+          type: string
+          format: date-time
+
+    SendMessageRequest:
+      type: object
+      required: [recipientId, subject, body]
+      properties:
+        recipientId:
+          type: string
+          format: uuid
+        subject:
+          type: string
+          minLength: 3
+          maxLength: 100
+        body:
+          type: string
+          maxLength: 2000
+
+    # Common
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            field:
+              type: string
+              nullable: true
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Email is required
+              field: email
+
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: Invalid credentials
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: FORBIDDEN
+              message: Admin role required
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error:
+              code: NOT_FOUND
+              message: Resource not found
