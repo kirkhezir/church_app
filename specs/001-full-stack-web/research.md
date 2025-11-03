@@ -359,32 +359,48 @@ npx shadcn-ui@latest add form
 
 ## 9. Map Integration for Church Location
 
-### Decision: Google Maps Embed API
+### Decision: Google Maps Embedded iframe
 
-**Chosen Approach**: Google Maps Embed API with iframe for static church location display on landing page.
+**Chosen Approach**: Direct Google Maps iframe embed (no API key required) for static church location display on landing page.
 
 **Rationale**:
 
+- **Zero configuration**: No API key or account setup required
 - **Familiarity**: Most users recognize and trust Google Maps interface
 - **Reliability**: Industry-leading uptime and accuracy
 - **Mobile integration**: Seamless "Open in Google Maps app" on mobile devices
-- **Free tier**: Generous free quota for small church usage (no credit card required for embed API)
-- **Ease of implementation**: Single iframe tag, no complex JavaScript integration
+- **Completely free**: No usage limits or billing concerns
+- **Ease of implementation**: Single iframe tag, no JavaScript or API integration needed
+- **Pre-configured**: Specific coordinates and location already set in embed URL
 
 **Implementation Details**:
 
-- Embed API: `https://www.google.com/maps/embed/v1/place?key=API_KEY&q=Sing+Buri+Adventist+Center`
-- API key stored in environment variable (`VITE_GOOGLE_MAPS_API_KEY`)
-- Restricted API key: Domain restrictions to prevent unauthorized use
-- Responsive iframe: Tailwind CSS classes for mobile/tablet/desktop sizing
-- Fallback: Static address text if iframe fails to load
+- **Embed URL**: Pre-generated iframe for "Singburi Seventh Day Adventist (SDA) Center"
+- **Coordinates**: 14.8924418, 100.40142999999999 (Sing Buri, Thailand)
+- **No API key needed**: Standard Google Maps share/embed feature
+- **Responsive iframe**: Tailwind CSS classes for mobile/tablet/desktop sizing
+- **Implementation**: Simply paste iframe HTML into landing page component
+
+```html
+<iframe
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.800285887927!2d100.40142999999999!3d14.8924418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e1f18a81a744c7%3A0x867c5a12e90f0d17!2sSingburi%20Seventh%20Day%20Adventist%20(SDA)%20Center!5e0!3m2!1sen!2sth!4v1762152706654!5m2!1sen!2sth"
+  width="400"
+  height="300"
+  style="border:0;"
+  allowfullscreen=""
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+>
+</iframe>
+```
 
 **Alternatives Considered**:
 
-1. **OpenStreetMap (Leaflet.js)**: Open-source, no API key, but less familiar to users and requires JavaScript library
-2. **Mapbox**: Modern styling, but requires account and credit card on file
-3. **Apple Maps**: Limited web support, poor on Android devices
-4. **Static map image**: No interactivity (zoom, directions), poor user experience
+1. **Google Maps Embed API (with API key)**: Unnecessary complexity, requires account and key management
+2. **OpenStreetMap (Leaflet.js)**: Requires JavaScript library, less familiar to users
+3. **Mapbox**: Requires account and credit card on file
+4. **Apple Maps**: Limited web support, poor on Android devices
+5. **Static map image**: No interactivity (zoom, directions), poor user experience
 
 **Constitutional Alignment**:
 

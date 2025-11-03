@@ -19,7 +19,7 @@
 - Q: Who should be able to view archived announcements? → A: All members: Any logged-in member can access the announcement archive to view past communications
 - Q: How should internal member messages be delivered and notified? → A: Real-time push: Real-time notifications if user is online, plus in-app message storage via Socket.io WebSockets
 - Q: Where should contact form submissions be sent? → A: Designated email address configured by admins
-- Q: Which map service should be used for church location display? → A: Google Maps API (familiar interface, reliable, good mobile support; API key required and managed in environment config)
+- Q: Which map service should be used for church location display? → A: Google Maps embedded iframe (no API key required; pre-configured iframe with church coordinates provided for direct embedding)
 - Q: What testing strategy should be followed? → A: Test-Driven Development (TDD) with unit tests (Jest, 80%+ coverage), integration tests (Supertest for APIs), and E2E tests (Playwright for critical flows). Tests written BEFORE implementation per constitutional requirements.
 
 ## User Scenarios & Testing _(mandatory)_

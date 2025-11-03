@@ -92,18 +92,17 @@
 - [ ] T038 [P] Implement Prisma client singleton in backend/src/infrastructure/database/prismaClient.ts
 - [ ] T039 [P] Setup email service (SMTP) configuration in backend/src/infrastructure/email/emailService.ts
 - [ ] T040 [P] Setup Socket.io WebSocket server in backend/src/infrastructure/websocket/websocketServer.ts
-- [ ] T041 [P] Configure Google Maps API key management in backend/src/infrastructure/maps/mapsConfig.ts
 
 ### Frontend Foundation
 
-- [ ] T042 Setup Axios API client with interceptors in frontend/src/services/api/apiClient.ts
-- [ ] T043 Create AuthContext for global authentication state and 24-hour auto-logout in frontend/src/contexts/AuthContext.tsx
-- [ ] T044 Create useAuth custom hook in frontend/src/hooks/useAuth.ts
-- [ ] T045 [P] Initialize shadcn/ui CLI and add base components (Button, Input, Card, Form) in frontend/src/components/ui/
-- [ ] T046 [P] Create shared TypeScript types matching backend DTOs in frontend/src/types/api.ts
-- [ ] T047 Create layout components (Header, Footer, Navigation) in frontend/src/components/layout/
-- [ ] T048 Setup React Router with route configuration in frontend/src/App.tsx
-- [ ] T049 Setup Socket.io client for real-time notifications in frontend/src/services/websocket/websocketClient.ts
+- [ ] T041 Setup Axios API client with interceptors in frontend/src/services/api/apiClient.ts
+- [ ] T042 Create AuthContext for global authentication state and 24-hour auto-logout in frontend/src/contexts/AuthContext.tsx
+- [ ] T043 Create useAuth custom hook in frontend/src/hooks/useAuth.ts
+- [ ] T044 [P] Initialize shadcn/ui CLI and add base components (Button, Input, Card, Form) in frontend/src/components/ui/
+- [ ] T045 [P] Create shared TypeScript types matching backend DTOs in frontend/src/types/api.ts
+- [ ] T046 Create layout components (Header, Footer, Navigation) in frontend/src/components/layout/
+- [ ] T047 Setup React Router with route configuration in frontend/src/App.tsx
+- [ ] T048 Setup Socket.io client for real-time notifications in frontend/src/services/websocket/websocketClient.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -127,7 +126,7 @@
 
 - [ ] T055 [P] [US1] Create LandingPage component with hero section in frontend/src/pages/public/LandingPage.tsx
 - [ ] T056 [P] [US1] Create WorshipTimesSection component in frontend/src/components/features/WorshipTimesSection.tsx
-- [ ] T057 [P] [US1] Create LocationMapSection component with Google Maps embed in frontend/src/components/features/LocationMapSection.tsx
+- [ ] T057 [P] [US1] Create LocationMapSection component with embedded Google Maps iframe (no API key needed; iframe provided) in frontend/src/components/features/LocationMapSection.tsx
 - [ ] T058 [P] [US1] Create MissionStatementSection component in frontend/src/components/features/MissionStatementSection.tsx
 - [ ] T059 [P] [US1] Create ContactForm component with validation in frontend/src/components/features/ContactForm.tsx
 - [ ] T060 [US1] Implement ContactService for sending contact form emails in backend/src/application/services/contactService.ts
@@ -864,7 +863,7 @@ Task T112: "Create EventFilters component"
 For fastest time-to-value with constitutional compliance, implement only the core:
 
 1. **Complete Phase 1**: Setup with Test Infrastructure (T001-T015)
-2. **Complete Phase 2**: Foundational Backend + Test Setup (T016-T049) - **CRITICAL BLOCKER**
+2. **Complete Phase 2**: Foundational Backend + Test Setup (T016-T048) - **CRITICAL BLOCKER**
 3. **Complete Phase 3**: User Story 1 with Tests - Landing Page (T050-T066)
    - TDD Workflow: Write tests first (T050-T054), implement (T055-T066), validate coverage
 4. **Complete Phase 4**: User Story 2 with Tests - Authentication & Dashboard (T067-T112)
@@ -878,7 +877,7 @@ For fastest time-to-value with constitutional compliance, implement only the cor
 
 Add features one story at a time with TDD:
 
-1. **Setup + Foundational** (T001-T049) → Test infrastructure + foundation ready
+1. **Setup + Foundational** (T001-T048) → Test infrastructure + foundation ready
 2. **+ User Story 1 with Tests** (T050-T066) → Test independently → Deploy (Public landing page live!)
 3. **+ User Story 2 with Tests** (T067-T112) → Test independently → Deploy (Member authentication working!)
 4. **+ User Story 3** (T113-T155 pending TDD) → Test independently → Deploy (Event management live!)
@@ -893,7 +892,7 @@ Each story adds value without breaking previous stories. **Every feature has tes
 
 With 5+ developers after Foundational phase complete:
 
-1. **Team completes Setup + Foundational together** (T001-T049) - **All developers learn TDD workflow**
+1. **Team completes Setup + Foundational together** (T001-T048) - **All developers learn TDD workflow**
 2. **Once Foundational is done, parallel work begins**:
    - Developer A: User Story 1 with Tests (Landing Page) - T050-T066
    - Developer B: User Story 2 with Tests (Authentication) - T067-T112
@@ -909,12 +908,12 @@ With 5+ developers after Foundational phase complete:
 
 ## Summary
 
-**Total Tasks**: 383 tasks across 9 phases (Fully TDD-compliant with MFA, backups, audit logs, and data export)
+**Total Tasks**: 382 tasks across 9 phases (Fully TDD-compliant with MFA, backups, audit logs, and data export)
 
 **Task Count by Phase**:
 
 - Phase 1 (Setup): 15 tasks (T001-T015, added test infrastructure)
-- Phase 2 (Foundational): 34 tasks (T016-T049, added test setup, WebSocket, Maps, session timeout) - **CRITICAL PATH**
+- Phase 2 (Foundational): 33 tasks (T016-T048, added test setup, WebSocket, session timeout) - **CRITICAL PATH**
 - Phase 3 (US1 - Landing Page): 17 tasks (T050-T066, includes 5 TDD test tasks + implementation)
 - Phase 4 (US2 - Authentication): 46 tasks (T067-T112, includes 9 TDD test tasks + implementation)
 - Phase 5 (US3 - Events): 57 tasks (T113-T169, includes 13 TDD test tasks + 43 implementation + load test) - **✅ TDD COMPLETE**
@@ -935,20 +934,20 @@ With 5+ developers after Foundational phase complete:
 - ✅ FR-035 (Automated Backups): T270-T274
 - ✅ FR-036 (Data Export): T250-T255
 - ✅ FR-034 (Audit Log Viewing): T246-T249
-- ✅ FR-032a (Real-time WebSockets): Socket.io implementation T040, T049
-- ✅ MFA for Admins (Constitution): T216-T232 with speakeasy TOTP
-- ✅ 24-hour Session Timeout (FR-006): T043
-- ✅ Google Maps Integration: T041, T057
+- ✅ FR-032a (Real-time WebSockets): Socket.io implementation T040, T048
+- ✅ MFA for Admins (Constitution): T285-T301 with speakeasy TOTP
+- ✅ 24-hour Session Timeout (FR-006): T042
+- ✅ Google Maps Integration: T057 (embedded iframe, no API key needed)
 
 **Parallel Opportunities**: ~140 tasks marked [P] can run in parallel within their phases
 
 **MVP Scope** (Recommended first delivery with TDD):
 
 - Phase 1: Setup (15 tasks including test config)
-- Phase 2: Foundational (34 tasks including test infrastructure)
+- Phase 2: Foundational (33 tasks including test infrastructure)
 - Phase 3: User Story 1 with Tests (17 tasks)
 - Phase 4: User Story 2 with Tests (46 tasks)
-- **Total MVP: 112 tasks** - Delivers TDD-compliant public website with member authentication
+- **Total MVP: 111 tasks** - Delivers TDD-compliant public website with member authentication
 
 **Test-Driven Development Workflow** (Phases 1-4, 8-9):
 
