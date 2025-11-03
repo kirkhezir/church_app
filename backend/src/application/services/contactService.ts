@@ -79,6 +79,9 @@ export class ContactService {
   /** Minimum required message length in characters */
   private readonly MIN_MESSAGE_LENGTH = 20;
 
+  /** Cleanup interval in milliseconds (5 minutes) */
+  private readonly CLEANUP_INTERVAL = 5 * 60 * 1000;
+
   /**
    * Creates an instance of ContactService
    * Initializes email service and rate limiting with automatic cleanup
@@ -87,8 +90,8 @@ export class ContactService {
     this.emailService = new EmailService();
     this.rateLimitMap = new Map();
 
-    // Clean up old rate limit entries every 5 minutes
-    this.cleanupInterval = setInterval(() => this.cleanupRateLimits(), 5 * 60 * 1000);
+    // Clean up old rate limit entries periodically
+    this.cleanupInterval = setInterval(() => this.cleanupRateLimits(), this.CLEANUP_INTERVAL);
     // Allow the process to exit even if this interval is running
     this.cleanupInterval.unref();
   }

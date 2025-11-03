@@ -17,7 +17,7 @@ export function LocationMapSection() {
           <div className="aspect-video w-full">
             <iframe
               title="Google Maps - Sing Buri Adventist Center"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3850.1!2d100.4!3d14.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDUzJzU5LjQiTiAxMDDCsDIzJzU5LjQiRQ!5e0!3m2!1sen!2sth!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.800285887927!2d100.40142999999999!3d14.8924418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e1f18a81a744c7%3A0x867c5a12e90f0d17!2sSingburi%20Seventh%20Day%20Adventist%20(SDA)%20Center!5e0!3m2!1sen!2sth!4v1762180423839!5m2!1sen!2sth"
               width="100%"
               height="100%"
               className="border-0"
