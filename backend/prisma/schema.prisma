@@ -1,0 +1,201 @@
+// Prisma schema for Church Management Application
+// Database: PostgreSQL 15+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum Role {
+  ADMIN
+  STAFF
+  MEMBER
+}
+
+enum EventCategory {
+  WORSHIP
+  BIBLE_STUDY
+  COMMUNITY
+  FELLOWSHIP
+}
+
+enum RSVPStatus {
+  CONFIRMED
+  WAITLISTED
+  CANCELLED
+}
+
+enum Priority {
+  URGENT
+  NORMAL
+}
+
+// ============================================================================
+// ENTITIES
+// ============================================================================
+
+model Member {
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  passwordHash         String
+  firstName            String
+  lastName             String
+  phone                String?
+  address              String?
+  role                 Role      @default(MEMBER)
+  membershipDate       DateTime
+  privacySettings      Json      // { showPhone: boolean, showEmail: boolean, showAddress: boolean }
+  emailNotifications   Boolean   @default(true)
+  accountLocked        Boolean   @default(false)
+  lockedUntil          DateTime?
+  failedLoginAttempts  Int       @default(0)
+  lastLoginAt          DateTime?
+  
+  // MFA fields
+  mfaEnabled           Boolean   @default(false)
+  mfaSecret            String?
+  backupCodes          Json?     // Array of backup codes (hashed)
+  
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime?
+
+  // Relationships
+  createdEvents        Event[]           @relation("EventCreator")
+  rsvps                EventRSVP[]
+  sentMessages         Message[]         @relation("MessageSender")
+  receivedMessages     Message[]         @relation("MessageRecipient")
+  announcements        Announcement[]    @relation("AnnouncementAuthor")
+  announcementViews    MemberAnnouncementView[]
+  auditLogs            AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([membershipDate])
+  @@map("members")
+}
+
+model Event {
+  id              String        @id @default(uuid())
+  title           String
+  description     String        @db.Text
+  startDateTime   DateTime
+  endDateTime     DateTime
+  location        String
+  category        EventCategory
+  maxCapacity     Int?
+  imageUrl        String?
+  createdById     String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  cancelledAt     DateTime?
+  deletedAt       DateTime?
+
+  // Relationships
+  creator         Member        @relation("EventCreator", fields: [createdById], references: [id])
+  rsvps           EventRSVP[]
+
+  @@index([startDateTime, category])
+  @@index([createdById])
+  @@map("events")
+}
+
+model EventRSVP {
+  id        String      @id @default(uuid())
+  eventId   String
+  memberId  String
+  status    RSVPStatus  @default(CONFIRMED)
+  rsvpedAt  DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relationships
+  event     Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  member    Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, memberId])
+  @@index([eventId])
+  @@map("event_rsvps")
+}
+
+model Announcement {
+  id          String    @id @default(uuid())
+  title       String
+  content     String    @db.Text
+  priority    Priority  @default(NORMAL)
+  authorId    String
+  publishedAt DateTime  @default(now())
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // Relationships
+  author      Member    @relation("AnnouncementAuthor", fields: [authorId], references: [id])
+  views       MemberAnnouncementView[]
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([archivedAt, publishedAt])
+  @@map("announcements")
+}
+
+model Message {
+  id                  String    @id @default(uuid())
+  senderId            String
+  recipientId         String
+  subject             String
+  body                String    @db.Text
+  isRead              Boolean   @default(false)
+  readAt              DateTime?
+  sentAt              DateTime  @default(now())
+  deletedBySender     Boolean   @default(false)
+  deletedByRecipient  Boolean   @default(false)
+
+  // Relationships
+  sender              Member    @relation("MessageSender", fields: [senderId], references: [id])
+  recipient           Member    @relation("MessageRecipient", fields: [recipientId], references: [id])
+
+  @@index([recipientId, isRead])
+  @@index([senderId, sentAt])
+  @@map("messages")
+}
+
+model MemberAnnouncementView {
+  id              String       @id @default(uuid())
+  memberId        String
+  announcementId  String
+  viewedAt        DateTime     @default(now())
+
+  // Relationships
+  member          Member       @relation(fields: [memberId], references: [id])
+  announcement    Announcement @relation(fields: [announcementId], references: [id])
+
+  @@unique([memberId, announcementId])
+  @@map("member_announcement_views")
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  userId      String
+  action      String    // CREATE, UPDATE, DELETE
+  entityType  String    // MEMBER, EVENT, ANNOUNCEMENT, MESSAGE
+  entityId    String
+  changes     Json?     // { before: {}, after: {} }
+  ipAddress   String
+  userAgent   String
+  timestamp   DateTime  @default(now())
+
+  // Relationships
+  user        Member    @relation(fields: [userId], references: [id])
+
+  @@index([userId, timestamp])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}

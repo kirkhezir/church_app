@@ -26,20 +26,20 @@
 
 **Purpose**: Project initialization and basic structure per plan.md
 
-- [ ] T001 Create root project structure with backend/ and frontend/ directories
-- [ ] T002 Initialize backend Node.js project with TypeScript, Express, Prisma dependencies in backend/package.json
-- [ ] T003 Initialize frontend React project with Vite, TypeScript, shadcn/ui dependencies in frontend/package.json
-- [ ] T004 [P] Configure ESLint and Prettier for backend in backend/.eslintrc.json and backend/.prettierrc
-- [ ] T005 [P] Configure ESLint and Prettier for frontend in frontend/.eslintrc.json and frontend/.prettierrc
-- [ ] T006 [P] Create backend Clean Architecture folder structure: backend/src/domain/, backend/src/application/, backend/src/infrastructure/, backend/src/presentation/
-- [ ] T007 [P] Create frontend folder structure: frontend/src/components/, frontend/src/pages/, frontend/src/services/, frontend/src/hooks/, frontend/src/lib/, frontend/src/types/
-- [ ] T008 Setup Tailwind CSS configuration for shadcn/ui in frontend/tailwind.config.js
-- [ ] T009 Create backend environment configuration template in backend/.env.example with DATABASE_URL, JWT_SECRET, SMTP settings
-- [ ] T010 Create frontend environment configuration template in frontend/.env.example with VITE_API_URL
-- [ ] T011 [P] Setup development scripts in backend/package.json: dev, build, start, test
-- [ ] T012 [P] Setup development scripts in frontend/package.json: dev, build, preview
-- [ ] T013 [P] Configure Jest with coverage thresholds (80% minimum) in backend/jest.config.js
-- [ ] T014 [P] Configure Jest for frontend with React Testing Library in frontend/jest.config.js
+- [x] T001 Create root project structure with backend/ and frontend/ directories
+- [x] T002 Initialize backend Node.js project with TypeScript, Express, Prisma dependencies in backend/package.json
+- [x] T003 Initialize frontend React project with Vite, TypeScript, shadcn/ui dependencies in frontend/package.json
+- [x] T004 [P] Configure ESLint and Prettier for backend in backend/.eslintrc.json and backend/.prettierrc
+- [x] T005 [P] Configure ESLint and Prettier for frontend in frontend/.eslintrc.json and frontend/.prettierrc
+- [x] T006 [P] Create backend Clean Architecture folder structure: backend/src/domain/, backend/src/application/, backend/src/infrastructure/, backend/src/presentation/
+- [x] T007 [P] Create frontend folder structure: frontend/src/components/, frontend/src/pages/, frontend/src/services/, frontend/src/hooks/, frontend/src/lib/, frontend/src/types/
+- [x] T008 Setup Tailwind CSS configuration for shadcn/ui in frontend/tailwind.config.js
+- [x] T009 Create backend environment configuration template in backend/.env.example with DATABASE_URL, JWT_SECRET, SMTP settings
+- [x] T010 Create frontend environment configuration template in frontend/.env.example with VITE_API_URL
+- [x] T011 [P] Setup development scripts in backend/package.json: dev, build, start, test
+- [x] T012 [P] Setup development scripts in frontend/package.json: dev, build, preview
+- [x] T013 [P] Configure Jest with coverage thresholds (80% minimum) in backend/jest.config.js
+- [x] T014 [P] Configure Jest for frontend with React Testing Library in frontend/jest.config.js
 - [ ] T015 [P] Setup Playwright for E2E testing in tests/e2e/ directory
 
 ---
@@ -52,7 +52,7 @@
 
 ### Database Foundation
 
-- [ ] T016 Create Prisma schema with all entities (Member, Event, EventRSVP, Announcement, Message, MemberAnnouncementView, AuditLog) in backend/prisma/schema.prisma
+- [x] T016 Create Prisma schema with all entities (Member, Event, EventRSVP, Announcement, Message, MemberAnnouncementView, AuditLog) in backend/prisma/schema.prisma
 - [ ] T017 Generate Prisma client and run initial migration in backend/
 - [ ] T018 Create database seed script with sample data (admin user, members, events) in backend/prisma/seed.ts
 - [ ] T019 Setup test database configuration in backend/prisma/schema.test.prisma
