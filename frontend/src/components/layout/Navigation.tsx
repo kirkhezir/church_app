@@ -26,7 +26,7 @@ export const Navigation: React.FC = () => {
       label: 'Dashboard',
       path: '/dashboard',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -40,7 +40,7 @@ export const Navigation: React.FC = () => {
       label: 'Events',
       path: '/events',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -54,7 +54,7 @@ export const Navigation: React.FC = () => {
       label: 'Announcements',
       path: '/announcements',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -68,7 +68,7 @@ export const Navigation: React.FC = () => {
       label: 'Messages',
       path: '/messages',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -82,7 +82,7 @@ export const Navigation: React.FC = () => {
       label: 'Members',
       path: '/members',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -97,7 +97,7 @@ export const Navigation: React.FC = () => {
       label: 'Profile',
       path: '/profile',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -120,7 +120,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="border-b border-gray-200 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex items-center space-x-1 overflow-x-auto">
           {filteredNavItems.map((item) => (
@@ -128,16 +128,16 @@ export const Navigation: React.FC = () => {
               key={item.path}
               to={item.path}
               className={`
-                flex items-center space-x-2 px-4 py-3 rounded-t-lg transition
+                flex items-center space-x-2 rounded-t-lg px-4 py-3 transition
                 ${
                   isActive(item.path)
-                    ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                    ? 'border-b-2 border-blue-600 bg-blue-50 text-blue-600'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }
               `}
             >
               {item.icon}
-              <span className="font-medium text-sm whitespace-nowrap">{item.label}</span>
+              <span className="whitespace-nowrap text-sm font-medium">{item.label}</span>
             </Link>
           ))}
         </div>

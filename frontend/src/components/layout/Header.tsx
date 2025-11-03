@@ -17,13 +17,13 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
+    <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo and Name */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">SB</span>
+          <Link to="/" className="flex items-center space-x-3 transition hover:opacity-80">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+              <span className="text-xl font-bold text-white">SB</span>
             </div>
             <div className="hidden md:block">
               <h1 className="text-xl font-bold text-gray-900">Sing Buri Adventist Center</h1>
@@ -32,11 +32,8 @@ export const Header: React.FC = () => {
           </Link>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-blue-600 font-medium transition"
-            >
+          <nav className="hidden items-center space-x-6 md:flex">
+            <Link to="/" className="font-medium text-gray-600 transition hover:text-blue-600">
               Home
             </Link>
 
@@ -44,32 +41,32 @@ export const Header: React.FC = () => {
               <>
                 <Link
                   to="/dashboard"
-                  className="text-gray-600 hover:text-blue-600 font-medium transition"
+                  className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/events"
-                  className="text-gray-600 hover:text-blue-600 font-medium transition"
+                  className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Events
                 </Link>
                 <Link
                   to="/announcements"
-                  className="text-gray-600 hover:text-blue-600 font-medium transition"
+                  className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Announcements
                 </Link>
                 <Link
                   to="/messages"
-                  className="text-gray-600 hover:text-blue-600 font-medium transition"
+                  className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Messages
                 </Link>
                 {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
                   <Link
                     to="/members"
-                    className="text-gray-600 hover:text-blue-600 font-medium transition"
+                    className="font-medium text-gray-600 transition hover:text-blue-600"
                   >
                     Members
                   </Link>
@@ -84,18 +81,19 @@ export const Header: React.FC = () => {
               <>
                 {/* User Menu */}
                 <div className="flex items-center space-x-3">
-                  <div className="hidden sm:block text-right">
+                  <div className="hidden text-right sm:block">
                     <p className="text-sm font-medium text-gray-900">
                       {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-xs text-gray-500 capitalize">{user.role.toLowerCase()}</p>
+                    <p className="text-xs capitalize text-gray-500">{user.role.toLowerCase()}</p>
                   </div>
                   <Link
                     to="/profile"
-                    className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition hover:bg-gray-300"
                   >
-                    <span className="text-gray-700 font-semibold">
-                      {user.firstName[0]}{user.lastName[0]}
+                    <span className="font-semibold text-gray-700">
+                      {user.firstName[0]}
+                      {user.lastName[0]}
                     </span>
                   </Link>
                   <Button
@@ -116,20 +114,18 @@ export const Header: React.FC = () => {
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button size="sm">
-                    Register
-                  </Button>
+                  <Button size="sm">Register</Button>
                 </Link>
               </div>
             )}
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+              className="rounded-lg p-2 transition hover:bg-gray-100 md:hidden"
               aria-label="Menu"
             >
               <svg
-                className="w-6 h-6 text-gray-600"
+                className="h-6 w-6 text-gray-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

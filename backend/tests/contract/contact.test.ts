@@ -1,7 +1,7 @@
 /**
  * Contract Tests for Contact Endpoint
  * Validates POST /api/v1/contact against OpenAPI specification
- * 
+ *
  * TDD: This test should FAIL initially until the endpoint is implemented
  */
 
@@ -18,10 +18,7 @@ describe('POST /api/v1/contact - Contract Tests', () => {
         message: 'I would like to know more about your Sabbath services.',
       };
 
-      const response = await request
-        .post('/api/v1/contact')
-        .send(contactData)
-        .expect(201);
+      const response = await request.post('/api/v1/contact').send(contactData).expect(201);
 
       // Validate response structure matches OpenAPI spec
       expectValidApiResponse(response, 'POST', '/api/v1/contact');
@@ -39,10 +36,7 @@ describe('POST /api/v1/contact - Contract Tests', () => {
         // Missing email, subject, and message
       };
 
-      const response = await request
-        .post('/api/v1/contact')
-        .send(invalidData)
-        .expect(400);
+      const response = await request.post('/api/v1/contact').send(invalidData).expect(400);
 
       // Validate error response matches OpenAPI spec
       expectValidApiResponse(response, 'POST', '/api/v1/contact');
@@ -59,10 +53,7 @@ describe('POST /api/v1/contact - Contract Tests', () => {
         message: 'Test message',
       };
 
-      const response = await request
-        .post('/api/v1/contact')
-        .send(invalidData)
-        .expect(400);
+      const response = await request.post('/api/v1/contact').send(invalidData).expect(400);
 
       expectValidApiResponse(response, 'POST', '/api/v1/contact');
 
@@ -77,10 +68,7 @@ describe('POST /api/v1/contact - Contract Tests', () => {
         message: 'Hi', // Too short (< 10 characters)
       };
 
-      const response = await request
-        .post('/api/v1/contact')
-        .send(invalidData)
-        .expect(400);
+      const response = await request.post('/api/v1/contact').send(invalidData).expect(400);
 
       expectValidApiResponse(response, 'POST', '/api/v1/contact');
 
@@ -121,10 +109,7 @@ describe('POST /api/v1/contact - Contract Tests', () => {
 
       const startTime = Date.now();
 
-      await request
-        .post('/api/v1/contact')
-        .send(contactData)
-        .expect(201);
+      await request.post('/api/v1/contact').send(contactData).expect(201);
 
       const endTime = Date.now();
       const responseTime = endTime - startTime;

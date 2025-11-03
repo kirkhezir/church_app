@@ -9,57 +9,44 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
+    <footer className="mt-auto bg-gray-900 text-gray-300">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* About Section */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">
-              Sing Buri Adventist Center
-            </h3>
-            <p className="text-sm text-gray-400 mb-4">
+            <h3 className="mb-4 text-lg font-bold text-white">Sing Buri Adventist Center</h3>
+            <p className="mb-4 text-sm text-gray-400">
               A welcoming community of faith serving the Sing Buri area. Join us for worship,
               fellowship, and spiritual growth.
             </p>
             <p className="text-sm text-gray-400">
-              ศูนย์แอดเวนตีสต์สิงห์บุรี<br />
+              ศูนย์แอดเวนตีสต์สิงห์บุรี
+              <br />
               ชุมชนแห่งศรัทธาที่อบอุ่น
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
+            <h3 className="mb-4 text-lg font-bold text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/"
-                  className="text-sm hover:text-white transition"
-                >
+                <Link to="/" className="text-sm transition hover:text-white">
                   Home
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/events"
-                  className="text-sm hover:text-white transition"
-                >
+                <Link to="/events" className="text-sm transition hover:text-white">
                   Events & Services
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/announcements"
-                  className="text-sm hover:text-white transition"
-                >
+                <Link to="/announcements" className="text-sm transition hover:text-white">
                   Announcements
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/members"
-                  className="text-sm hover:text-white transition"
-                >
+                <Link to="/members" className="text-sm transition hover:text-white">
                   Member Directory
                 </Link>
               </li>
@@ -68,11 +55,11 @@ export const Footer: React.FC = () => {
 
           {/* Contact Information */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Contact Us</h3>
+            <h3 className="mb-4 text-lg font-bold text-white">Contact Us</h3>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start space-x-2">
                 <svg
-                  className="w-5 h-5 text-gray-400 mt-0.5"
+                  className="mt-0.5 h-5 w-5 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -94,7 +81,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-2">
                 <svg
-                  className="w-5 h-5 text-gray-400 mt-0.5"
+                  className="mt-0.5 h-5 w-5 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -108,14 +95,14 @@ export const Footer: React.FC = () => {
                 </svg>
                 <a
                   href="mailto:contact@singburi-adventist.org"
-                  className="hover:text-white transition"
+                  className="transition hover:text-white"
                 >
                   contact@singburi-adventist.org
                 </a>
               </li>
               <li className="flex items-start space-x-2">
                 <svg
-                  className="w-5 h-5 text-gray-400 mt-0.5"
+                  className="mt-0.5 h-5 w-5 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -137,23 +124,23 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-8 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="mt-8 border-t border-gray-800 pt-6">
+          <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
             <p className="text-sm text-gray-400">
               © {currentYear} Sing Buri Adventist Center. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm">
-              <Link to="/privacy" className="hover:text-white transition">
+              <Link to="/privacy" className="transition hover:text-white">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="hover:text-white transition">
+              <Link to="/terms" className="transition hover:text-white">
                 Terms of Service
               </Link>
               <a
                 href="https://adventist.org"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition"
+                className="transition hover:text-white"
               >
                 Seventh-day Adventist Church
               </a>
