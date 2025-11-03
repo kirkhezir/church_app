@@ -34,6 +34,7 @@ interface RateLimitEntry {
 export class ContactService {
   private emailService: EmailService;
   private rateLimitMap: Map<string, RateLimitEntry>;
+  private cleanupInterval?: NodeJS.Timeout;
   private readonly RATE_LIMIT = 10; // Max requests per window
   private readonly RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
   private readonly MIN_MESSAGE_LENGTH = 20;
@@ -43,7 +44,9 @@ export class ContactService {
     this.rateLimitMap = new Map();
 
     // Clean up old rate limit entries every 5 minutes
-    setInterval(() => this.cleanupRateLimits(), 5 * 60 * 1000);
+    this.cleanupInterval = setInterval(() => this.cleanupRateLimits(), 5 * 60 * 1000);
+    // Allow the process to exit even if this interval is running
+    this.cleanupInterval.unref();
   }
 
   /**
@@ -120,7 +123,7 @@ export class ContactService {
     return input
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
       .replace(/javascript:/gi, '') // Remove javascript: protocol
-      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '') // Remove event handlers
+      .replace(/on\w+\s*=\s*["']?[^"'\s>]*["']?/gi, '') // Remove event handlers (with or without quotes)
       .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove iframes
       .trim();
   }
@@ -262,5 +265,15 @@ Reply directly to this email to respond to ${data.name}.
   resetRateLimits(): void {
     this.rateLimitMap.clear();
     logger.debug('Rate limits reset');
+  }
+
+  /**
+   * Cleanup resources (for testing purposes)
+   */
+  destroy(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = undefined;
+    }
   }
 }
