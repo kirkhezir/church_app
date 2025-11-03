@@ -475,4 +475,207 @@ describe('ContactService', () => {
       loggerSpy.mockRestore();
     });
   });
+
+  describe('Email Formatting', () => {
+    it('should format email with both text and HTML content', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      const contactData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        subject: 'Test Subject',
+        message: 'This is a test message with sufficient length for validation.',
+      };
+
+      await contactService.sendContactEmail(contactData);
+
+      // Verify email was sent with both text and html
+      expect(emailServiceSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text: expect.stringContaining('John Doe'),
+          html: expect.stringContaining('John Doe'),
+        })
+      );
+    });
+
+    it('should include styled HTML template with header and formatting', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      const contactData = {
+        name: 'Jane Smith',
+        email: 'jane@example.com',
+        subject: 'HTML Test',
+        message: 'Testing HTML email formatting with proper length.',
+      };
+
+      await contactService.sendContactEmail(contactData);
+
+      const emailCall = emailServiceSpy.mock.calls[0][0];
+
+      // Verify HTML contains styling
+      expect(emailCall.html).toContain('<!DOCTYPE html>');
+      expect(emailCall.html).toContain('<style>');
+      expect(emailCall.html).toContain('background-color: #1e40af'); // Header style
+      expect(emailCall.html).toContain('Jane Smith');
+      expect(emailCall.html).toContain('jane@example.com');
+      expect(emailCall.html).toContain('HTML Test');
+    });
+
+    it('should convert newlines to <br> tags in HTML message', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      const contactData = {
+        name: 'Test User',
+        email: 'test@example.com',
+        subject: 'Multiline Test',
+        message: 'Line one\nLine two\nLine three with enough length to pass validation.',
+      };
+
+      await contactService.sendContactEmail(contactData);
+
+      const emailCall = emailServiceSpy.mock.calls[0][0];
+
+      // Verify newlines are converted to <br> in HTML
+      expect(emailCall.html).toContain('Line one<br>Line two<br>Line three');
+
+      // Verify text version preserves newlines
+      expect(emailCall.text).toContain('Line one\nLine two\nLine three');
+    });
+  });
+
+  describe('Rate Limit Window Reset', () => {
+    it('should reset rate limit counter when window expires', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      const ipAddress = '192.168.1.100';
+
+      // First request
+      let allowed = await contactService.checkRateLimit(ipAddress);
+      expect(allowed).toBe(true);
+
+      // Simulate time passing beyond rate limit window (60 seconds)
+      const originalDateNow = Date.now;
+      Date.now = jest.fn(() => originalDateNow() + 61000); // 61 seconds later
+
+      // Should reset counter and allow request
+      allowed = await contactService.checkRateLimit(ipAddress);
+      expect(allowed).toBe(true);
+
+      // Restore Date.now
+      Date.now = originalDateNow;
+    });
+
+    it('should start fresh count after window expiration', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      const ipAddress = '192.168.1.101';
+
+      // Make 5 requests
+      for (let i = 0; i < 5; i++) {
+        await contactService.checkRateLimit(ipAddress);
+      }
+
+      // Simulate time passing beyond window
+      const originalDateNow = Date.now;
+      Date.now = jest.fn(() => originalDateNow() + 61000);
+
+      // Counter should reset to 1
+      const allowed = await contactService.checkRateLimit(ipAddress);
+      expect(allowed).toBe(true);
+
+      // Should be able to make 9 more requests (total 10)
+      for (let i = 0; i < 9; i++) {
+        const result = await contactService.checkRateLimit(ipAddress);
+        expect(result).toBe(true);
+      }
+
+      // 11th request should be blocked
+      const blocked = await contactService.checkRateLimit(ipAddress);
+      expect(blocked).toBe(false);
+
+      // Restore Date.now
+      Date.now = originalDateNow;
+    });
+  });
+
+  describe('Resource Cleanup', () => {
+    it('should clear cleanup interval when destroy is called', () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      // Cleanup interval should be set
+      expect(contactService.cleanupInterval).toBeDefined();
+
+      // Call destroy
+      contactService.destroy();
+
+      // Interval should be cleared
+      expect(contactService.cleanupInterval).toBeUndefined();
+    });
+
+    it('should handle destroy being called multiple times', () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      // First destroy
+      contactService.destroy();
+      expect(contactService.cleanupInterval).toBeUndefined();
+
+      // Second destroy should not throw
+      expect(() => contactService.destroy()).not.toThrow();
+    });
+
+    it('should allow cleanup interval to remove expired entries', async () => {
+      if (!contactService) {
+        expect(ContactService).toBeUndefined();
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { logger } = require('../../../src/infrastructure/logging/logger');
+      const loggerSpy = jest.spyOn(logger, 'debug').mockImplementation();
+
+      const ipAddress = '192.168.1.102';
+
+      // Add rate limit entry
+      await contactService.checkRateLimit(ipAddress);
+
+      // Simulate time passing beyond window
+      const originalDateNow = Date.now;
+      Date.now = jest.fn(() => originalDateNow() + 61000);
+
+      // Manually trigger cleanup (normally runs via interval)
+      // Access private method for testing
+      contactService['cleanupRateLimits']();
+
+      // Verify cleanup was logged
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'Cleaned up rate limit entries',
+        expect.objectContaining({ count: expect.any(Number) })
+      );
+
+      // Restore
+      Date.now = originalDateNow;
+      loggerSpy.mockRestore();
+    });
+  });
 });
