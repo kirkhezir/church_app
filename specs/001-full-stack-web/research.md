@@ -220,36 +220,41 @@ This document consolidates research findings for technology choices, best practi
 
 ## 6. Real-Time Messaging Implementation
 
-### Decision: Polling with WebSocket upgrade path
+### Decision: Socket.io WebSockets for Real-Time Notifications
 
-**Chosen Approach**: Initial implementation uses polling (30-second intervals) with architecture supporting future WebSocket upgrade.
+**Chosen Approach**: Socket.io library for WebSocket-based real-time notifications as specified in FR-032a requirement.
 
 **Rationale**:
 
-- **YAGNI**: WebSocket adds complexity (connection management, reconnection logic, horizontal scaling challenges)
-- **Simplicity**: HTTP polling is stateless, works with existing REST API
-- **Sufficient for use case**: Real-time messaging for church members doesn't require sub-second latency
-- **Progressive enhancement**: Can add WebSocket later without breaking changes if demand increases
-- **Infrastructure**: Polling works with any hosting provider; WebSocket may require specific support
+- **Requirement-driven**: FR-032a explicitly requires "real-time push notifications to online recipients"
+- **Ease of use**: Socket.io provides automatic fallback (polling → WebSocket), reconnection logic, and room-based messaging
+- **Production-ready**: Mature library with proven scalability and extensive documentation
+- **Event-based architecture**: Clean pub/sub pattern aligns with Clean Architecture principles
+- **Mobile-ready**: Supports future mobile app development with same backend infrastructure
 
-**Polling Implementation**:
+**Implementation Details**:
 
-- Frontend polls `/api/v1/messages?since=<timestamp>` every 30 seconds when user is active
-- Backend returns new messages since last poll
-- Exponential backoff if user idle (reduce to 1 minute, 5 minutes, stop after 15 minutes)
-- Browser Visibility API to pause polling when tab inactive
+- Socket.io server integrated with Express backend
+- User authentication via JWT token in Socket.io handshake
+- User-specific rooms for targeted message delivery: `user:{userId}`
+- Events: `new_message`, `message_read`, `user_online`, `user_offline`
+- Automatic reconnection with message queue for offline users
+- Horizontal scaling support via Redis adapter (when needed)
 
-**WebSocket Upgrade Criteria** (future):
+**Use Cases**:
 
-- User feedback indicates need for instant messaging
-- Message volume exceeds 100 messages/hour sustained
-- Admin requests chat-like features (typing indicators, read receipts)
+1. **Message notifications**: Instant delivery when sender sends message to online recipient
+2. **Announcement alerts**: Real-time notification for urgent announcements
+3. **Event updates**: Live updates when event is modified/cancelled (for RSVPed members)
+4. **Presence indicators**: Optional user online/offline status
 
 **Alternatives Considered**:
 
-1. **WebSocket from day one**: Premature optimization, violates YAGNI and KISS
-2. **Server-Sent Events (SSE)**: One-way communication, still requires separate POST for sending; not significantly simpler than polling
-3. **Third-party service (Pusher, Ably)**: External dependency and cost, unnecessary for MVP
+1. **HTTP Polling**: Simpler but violates FR-032a requirement for "real-time push"
+2. **Server-Sent Events (SSE)**: Unidirectional only; doesn't support bidirectional communication
+3. **Native WebSocket API**: Lower-level, requires manual reconnection and fallback logic
+4. **Server-Sent Events (SSE)**: One-way communication, still requires separate POST for sending; not significantly simpler than polling
+5. **Third-party service (Pusher, Ably)**: External dependency and cost, unnecessary for MVP
 
 **Constitutional Alignment**:
 
@@ -308,18 +313,100 @@ npx shadcn-ui@latest add form
 
 ---
 
-## 8. Testing Strategy
+## 8. Multi-Factor Authentication (MFA) for Administrators
 
-### Decision: Three-tier testing with Jest, Supertest, Cypress
+### Decision: TOTP-based MFA using speakeasy library
 
-**Chosen Approach**: Unit tests (Jest), API integration tests (Supertest), E2E tests (Cypress or Playwright).
+**Chosen Approach**: Time-based One-Time Password (TOTP) authentication for admin and staff roles using authenticator apps.
 
 **Rationale**:
 
+- **Constitutional mandate**: Constitution security requirements specify "Multi-factor authentication (MFA) required for admin roles"
+- **Industry standard**: TOTP is RFC 6238 compliant, works with Google Authenticator, Authy, 1Password, etc.
+- **No external dependencies**: Self-contained implementation, no third-party MFA service required
+- **User-friendly**: Most users already have authenticator apps on their phones
+- **Backup codes**: Recovery codes generated during enrollment for account recovery
+
+**Implementation Details**:
+
+- Use `speakeasy` npm library for TOTP generation and validation
+- Store encrypted MFA secret in Member table (`mfaSecret` field, encrypted at rest)
+- MFA enrollment flow: Generate QR code → User scans with authenticator app → Verify code → Save secret
+- Login flow: Email/password → Validate TOTP code → Issue JWT
+- Backup codes: Generate 10 single-use recovery codes during enrollment, bcrypt hashed in database
+- Grace period: 7 days for admins to enroll in MFA after first login (soft enforcement)
+
+**MFA Exemptions**:
+
+- Member role: MFA optional (can enable voluntarily)
+- Staff role: MFA required (same as admin)
+- API tokens: Separate API key authentication for programmatic access (future feature)
+
+**Alternatives Considered**:
+
+1. **SMS-based MFA**: Less secure (SIM swapping attacks), requires SMS gateway costs
+2. **Email-based codes**: Vulnerable if email account compromised
+3. **Hardware tokens (YubiKey)**: More secure but requires physical devices, cost prohibitive for small churches
+4. **Third-party service (Auth0, Okta)**: External dependency and cost, unnecessary for church scale
+
+**Constitutional Alignment**:
+
+- ✅ Security Requirements: Fulfills constitutional mandate for admin MFA
+- ✅ KISS: TOTP is standard, well-documented, straightforward implementation
+- ✅ YAGNI: No complex biometric or hardware token support until requested
+
+---
+
+## 9. Map Integration for Church Location
+
+### Decision: Google Maps Embed API
+
+**Chosen Approach**: Google Maps Embed API with iframe for static church location display on landing page.
+
+**Rationale**:
+
+- **Familiarity**: Most users recognize and trust Google Maps interface
+- **Reliability**: Industry-leading uptime and accuracy
+- **Mobile integration**: Seamless "Open in Google Maps app" on mobile devices
+- **Free tier**: Generous free quota for small church usage (no credit card required for embed API)
+- **Ease of implementation**: Single iframe tag, no complex JavaScript integration
+
+**Implementation Details**:
+
+- Embed API: `https://www.google.com/maps/embed/v1/place?key=API_KEY&q=Sing+Buri+Adventist+Center`
+- API key stored in environment variable (`VITE_GOOGLE_MAPS_API_KEY`)
+- Restricted API key: Domain restrictions to prevent unauthorized use
+- Responsive iframe: Tailwind CSS classes for mobile/tablet/desktop sizing
+- Fallback: Static address text if iframe fails to load
+
+**Alternatives Considered**:
+
+1. **OpenStreetMap (Leaflet.js)**: Open-source, no API key, but less familiar to users and requires JavaScript library
+2. **Mapbox**: Modern styling, but requires account and credit card on file
+3. **Apple Maps**: Limited web support, poor on Android devices
+4. **Static map image**: No interactivity (zoom, directions), poor user experience
+
+**Constitutional Alignment**:
+
+- ✅ KISS: Iframe embed is simplest implementation
+- ✅ YAGNI: No complex interactive map features (place search, multiple markers) until needed
+- ✅ Performance: Iframe loads asynchronously, doesn't block page render
+
+---
+
+## 10. Testing Strategy (TDD-First Approach)
+
+### Decision: Test-Driven Development with Three-Tier Testing Architecture
+
+**Chosen Approach**: **TDD-MANDATORY** - Write tests BEFORE implementation using Jest (unit), Supertest (integration), and Playwright (E2E).
+
+**Rationale**:
+
+- **Constitutional mandate**: Constitution Principle II states "Tests MUST be written and approved before implementation begins" and "No Code Without Tests"
 - **Test pyramid**: Many unit tests (fast, isolated), fewer integration tests, minimal E2E tests (slow, comprehensive)
-- **TDD compliance**: Write tests first per constitutional mandate
-- **Coverage goals**: 80% overall, 90% for domain/application layers (business logic)
-- **CI/CD ready**: All tests automated in GitHub Actions or similar
+- **Red-Green-Refactor cycle**: Write failing test → Make it pass → Refactor (repeated for every feature)
+- **Coverage goals**: Minimum 80% overall, 90%+ for domain/application layers (business logic) - enforced in CI/CD
+- **Contract-first**: API contract tests validate OpenAPI spec compliance before controller implementation
 
 **Test Layers**:
 
