@@ -7,12 +7,7 @@ export default {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.d.ts',
-    '!src/**/*.interface.ts',
-    '!src/index.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/*.interface.ts', '!src/index.ts'],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -36,5 +31,9 @@ export default {
   coverageDirectory: 'coverage',
   verbose: true,
   testTimeout: 10000,
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tests/integration/setup.ts'],
+  forceExit: true,
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true,
 };
