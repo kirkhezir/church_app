@@ -3,6 +3,11 @@ import { logger } from '../../infrastructure/logging/logger';
 
 /**
  * Contact form data interface
+ * @interface ContactFormData
+ * @property {string} name - Full name of the person submitting the form
+ * @property {string} email - Valid email address for replies
+ * @property {string} subject - Brief subject line for the inquiry
+ * @property {string} message - Detailed message content (minimum 20 characters)
  */
 export interface ContactFormData {
   name: string;
@@ -13,6 +18,9 @@ export interface ContactFormData {
 
 /**
  * Validation result interface
+ * @interface ValidationResult
+ * @property {boolean} valid - Whether the validation passed
+ * @property {string} [errors] - Comma-separated list of validation errors (if any)
  */
 export interface ValidationResult {
   valid: boolean;
@@ -29,16 +37,52 @@ interface RateLimitEntry {
 
 /**
  * ContactService
- * Handles contact form submissions including validation, sanitization, and email sending
+ *
+ * Handles contact form submissions including validation, sanitization, and email sending.
+ * Implements rate limiting to prevent abuse and XSS protection through input sanitization.
+ *
+ * @class ContactService
+ * @example
+ * ```typescript
+ * const contactService = new ContactService();
+ *
+ * // Validate contact data
+ * const validation = contactService.validateContactData({
+ *   name: 'John Doe',
+ *   email: 'john@example.com',
+ *   subject: 'Inquiry',
+ *   message: 'I would like to visit your church.'
+ * });
+ *
+ * if (validation.valid) {
+ *   // Check rate limit
+ *   const allowed = await contactService.checkRateLimit('192.168.1.1');
+ *
+ *   if (allowed) {
+ *     // Send email
+ *     await contactService.sendContactEmail(contactData);
+ *   }
+ * }
+ * ```
  */
 export class ContactService {
   private emailService: EmailService;
   private rateLimitMap: Map<string, RateLimitEntry>;
   private cleanupInterval?: NodeJS.Timeout;
-  private readonly RATE_LIMIT = 10; // Max requests per window
-  private readonly RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
+
+  /** Maximum number of requests allowed per IP address within the rate limit window */
+  private readonly RATE_LIMIT = 10;
+
+  /** Rate limit time window in milliseconds (1 minute) */
+  private readonly RATE_LIMIT_WINDOW = 60 * 1000;
+
+  /** Minimum required message length in characters */
   private readonly MIN_MESSAGE_LENGTH = 20;
 
+  /**
+   * Creates an instance of ContactService
+   * Initializes email service and rate limiting with automatic cleanup
+   */
   constructor() {
     this.emailService = new EmailService();
     this.rateLimitMap = new Map();
@@ -50,7 +94,24 @@ export class ContactService {
   }
 
   /**
-   * Send contact email to church
+   * Send contact form email to church
+   *
+   * Sanitizes all input fields, formats email content, and sends via SMTP.
+   * Logs success or failure for auditing purposes.
+   *
+   * @param {ContactFormData} data - Contact form submission data
+   * @returns {Promise<void>} Resolves when email is sent successfully
+   * @throws {Error} If email service fails or SMTP connection issues occur
+   *
+   * @example
+   * ```typescript
+   * await contactService.sendContactEmail({
+   *   name: 'Jane Smith',
+   *   email: 'jane@example.com',
+   *   subject: 'Church Visit Inquiry',
+   *   message: 'I would like to attend your Sabbath service next week.'
+   * });
+   * ```
    */
   async sendContactEmail(data: ContactFormData): Promise<void> {
     try {
@@ -83,6 +144,26 @@ export class ContactService {
 
   /**
    * Validate contact form data
+   *
+   * Checks all required fields, email format, and message length requirements.
+   * Returns a validation result with specific error messages for each failed validation.
+   *
+   * @param {Partial<ContactFormData>} data - Contact form data to validate (may be incomplete)
+   * @returns {ValidationResult} Object containing validation status and error messages
+   *
+   * @example
+   * ```typescript
+   * const result = contactService.validateContactData({
+   *   name: 'John',
+   *   email: 'invalid-email',
+   *   subject: 'Test',
+   *   message: 'Hi' // Too short
+   * });
+   *
+   * if (!result.valid) {
+   *   console.log(result.errors); // "email format is invalid, message must be at least 20 characters"
+   * }
+   * ```
    */
   validateContactData(data: Partial<ContactFormData>): ValidationResult {
     const errors: string[] = [];
@@ -116,6 +197,24 @@ export class ContactService {
 
   /**
    * Sanitize input to prevent XSS attacks
+   *
+   * Removes potentially malicious HTML/JavaScript content including:
+   * - Script tags and their contents
+   * - JavaScript protocol handlers (javascript:)
+   * - Event handlers (onclick, onerror, etc.)
+   * - iframes
+   *
+   * @param {string | null | undefined} input - Raw user input to sanitize
+   * @returns {string} Sanitized string safe for display/storage
+   *
+   * @example
+   * ```typescript
+   * const clean = contactService.sanitizeInput('<script>alert("XSS")</script>Hello');
+   * console.log(clean); // "Hello"
+   *
+   * const safe = contactService.sanitizeInput('<img src=x onerror="alert(1)">');
+   * console.log(safe); // "<img src=x >"
+   * ```
    */
   sanitizeInput(input: string | null | undefined): string {
     if (!input) return '';
@@ -130,6 +229,22 @@ export class ContactService {
 
   /**
    * Check rate limit for IP address
+   *
+   * Enforces rate limiting to prevent abuse. Tracks requests per IP address
+   * within a sliding time window. Automatically resets after window expires.
+   *
+   * @param {string} ipAddress - Client IP address to check
+   * @returns {Promise<boolean>} True if request is allowed, false if rate limit exceeded
+   *
+   * @example
+   * ```typescript
+   * const ipAddress = req.ip || '127.0.0.1';
+   * const allowed = await contactService.checkRateLimit(ipAddress);
+   *
+   * if (!allowed) {
+   *   return res.status(429).json({ error: 'Too many requests' });
+   * }
+   * ```
    */
   async checkRateLimit(ipAddress: string): Promise<boolean> {
     const now = Date.now();
@@ -167,6 +282,20 @@ export class ContactService {
 
   /**
    * Validate email format
+   *
+   * Checks if email address matches standard email format requirements.
+   * Uses regex to ensure basic structure: localpart@domain.tld
+   *
+   * @param {string} email - Email address to validate
+   * @returns {boolean} True if email format is valid, false otherwise
+   * @private
+   *
+   * @example
+   * ```typescript
+   * this.isValidEmail('user@example.com'); // Returns: true
+   * this.isValidEmail('invalid-email');     // Returns: false
+   * this.isValidEmail('missing@domain');    // Returns: false
+   * ```
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -175,6 +304,27 @@ export class ContactService {
 
   /**
    * Format email content for sending
+   *
+   * Creates both plain text and HTML versions of the contact form email.
+   * HTML version includes styled formatting with blue header, field labels,
+   * and responsive design. Text version provides clean fallback.
+   *
+   * @param {ContactFormData} data - Sanitized contact form data
+   * @returns {{ text: string; html: string }} Email content with both formats
+   * @private
+   *
+   * @example
+   * ```typescript
+   * const emailContent = this.formatEmailContent({
+   *   name: 'John Doe',
+   *   email: 'john@example.com',
+   *   subject: 'Question about services',
+   *   message: 'I would like to learn more...'
+   * });
+   *
+   * // emailContent.text: Plain text version
+   * // emailContent.html: Styled HTML version with header and formatting
+   * ```
    */
   private formatEmailContent(data: ContactFormData): { text: string; html: string } {
     const text = `
@@ -241,6 +391,19 @@ Reply directly to this email to respond to ${data.name}.
 
   /**
    * Clean up old rate limit entries
+   *
+   * Automatically runs every minute to remove expired rate limit entries.
+   * Prevents memory leaks by deleting IP entries that have exceeded the
+   * rate limit window (60 seconds). Called by setInterval in constructor.
+   *
+   * @private
+   *
+   * @example
+   * ```typescript
+   * // Called automatically every 60 seconds
+   * // Checks each IP entry and removes if:
+   * // now - entry.firstRequest > RATE_LIMIT_WINDOW (60000ms)
+   * ```
    */
   private cleanupRateLimits(): void {
     const now = Date.now();
@@ -261,6 +424,20 @@ Reply directly to this email to respond to ${data.name}.
 
   /**
    * Reset rate limits (for testing purposes)
+   *
+   * Clears all rate limit entries from the map. Used in test suites
+   * to ensure test isolation - prevents rate limit state from one test
+   * affecting another. Should only be called in testing environments.
+   *
+   * @example
+   * ```typescript
+   * // In test setup:
+   * beforeEach(() => {
+   *   contactService.resetRateLimits();
+   * });
+   *
+   * // Now each test starts with clean rate limit state
+   * ```
    */
   resetRateLimits(): void {
     this.rateLimitMap.clear();
@@ -269,6 +446,20 @@ Reply directly to this email to respond to ${data.name}.
 
   /**
    * Cleanup resources (for testing purposes)
+   *
+   * Properly disposes of the cleanup interval timer to prevent test hanging.
+   * Clears the interval and sets to undefined to allow garbage collection.
+   * Should be called in test teardown to ensure Jest exits cleanly.
+   *
+   * @example
+   * ```typescript
+   * // In test teardown:
+   * afterEach(() => {
+   *   contactService.destroy();
+   * });
+   *
+   * // Prevents "Jest did not exit one second after test run completed"
+   * ```
    */
   destroy(): void {
     if (this.cleanupInterval) {
