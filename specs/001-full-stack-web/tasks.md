@@ -40,7 +40,7 @@
 - [x] T012 [P] Setup development scripts in frontend/package.json: dev, build, preview
 - [x] T013 [P] Configure Jest with coverage thresholds (80% minimum) in backend/jest.config.js
 - [x] T014 [P] Configure Jest for frontend with React Testing Library in frontend/jest.config.js
-- [ ] T015 [P] Setup Playwright for E2E testing in tests/e2e/ directory
+- [x] T015 [P] Setup Playwright for E2E testing in tests/e2e/ directory
 
 ---
 
@@ -54,7 +54,7 @@
 
 - [x] T016 Create Prisma schema with all entities (Member, Event, EventRSVP, Announcement, Message, MemberAnnouncementView, AuditLog) in backend/prisma/schema.prisma
 - [ ] T017 Generate Prisma client and run initial migration in backend/
-- [ ] T018 Create database seed script with sample data (admin user, members, events) in backend/prisma/seed.ts
+- [x] T018 Create database seed script with sample data (admin user, members, events) in backend/prisma/seed.ts
 - [ ] T019 Setup test database configuration in backend/prisma/schema.test.prisma
 
 ### Test Infrastructure Setup
@@ -65,8 +65,8 @@
 
 ### Authentication & Security Foundation
 
-- [ ] T023 [P] Implement JWT token generation and validation service in backend/src/infrastructure/auth/jwtService.ts
-- [ ] T024 [P] Implement bcrypt password hashing utility in backend/src/infrastructure/auth/passwordService.ts
+- [x] T023 [P] Implement JWT token generation and validation service in backend/src/infrastructure/auth/jwtService.ts
+- [x] T024 [P] Implement bcrypt password hashing utility in backend/src/infrastructure/auth/passwordService.ts
 - [ ] T025 Create authentication middleware for JWT validation in backend/src/presentation/middleware/authMiddleware.ts
 - [ ] T026 Create role-based authorization middleware in backend/src/presentation/middleware/roleMiddleware.ts
 
@@ -76,20 +76,20 @@
 - [ ] T028 [P] Create global error handling middleware in backend/src/presentation/middleware/errorMiddleware.ts
 - [ ] T029 [P] Create request validation middleware using Zod in backend/src/presentation/middleware/validationMiddleware.ts
 - [ ] T030 Create base API router structure with /api/v1 prefix in backend/src/presentation/routes/index.ts
-- [ ] T031 [P] Implement logging service with Winston in backend/src/infrastructure/logging/logger.ts
+- [x] T031 [P] Implement logging service with Winston in backend/src/infrastructure/logging/logger.ts
 - [ ] T032 [P] Create audit logging service in backend/src/application/services/auditLogService.ts
 
 ### Domain Layer Foundation
 
-- [ ] T033 [P] Define Member domain entity with business rules in backend/src/domain/entities/Member.ts
-- [ ] T034 [P] Define Role, EventCategory, RSVPStatus, Priority enums in backend/src/domain/valueObjects/
-- [ ] T035 [P] Define repository interfaces for all entities in backend/src/domain/interfaces/
-- [ ] T036 Implement account lockout logic in Member entity in backend/src/domain/entities/Member.ts (depends on T033)
+- [x] T033 [P] Define Member domain entity with business rules in backend/src/domain/entities/Member.ts
+- [x] T034 [P] Define Role, EventCategory, RSVPStatus, Priority enums in backend/src/domain/valueObjects/
+- [x] T035 [P] Define repository interfaces for all entities in backend/src/domain/interfaces/
+- [x] T036 Implement account lockout logic in Member entity in backend/src/domain/entities/Member.ts (depends on T033)
 
 ### Infrastructure Layer Foundation
 
 - [ ] T037 [P] Implement Prisma repository for Member in backend/src/infrastructure/database/repositories/memberRepository.ts
-- [ ] T038 [P] Implement Prisma client singleton in backend/src/infrastructure/database/prismaClient.ts
+- [x] T038 [P] Implement Prisma client singleton in backend/src/infrastructure/database/prismaClient.ts
 - [ ] T039 [P] Setup email service (SMTP) configuration in backend/src/infrastructure/email/emailService.ts
 - [ ] T040 [P] Setup Socket.io WebSocket server in backend/src/infrastructure/websocket/websocketServer.ts
 
