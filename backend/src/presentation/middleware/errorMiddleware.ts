@@ -25,7 +25,7 @@ export const errorMiddleware = (
   error: Error | AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   // Log error
   logger.error('Error occurred', error, {
@@ -37,11 +37,14 @@ export const errorMiddleware = (
 
   // Handle AppError (known errors)
   if (error instanceof AppError) {
-    res.status(error.statusCode).json({
+    const response: Record<string, unknown> = {
       error: error.code || 'Error',
       message: error.message,
-      ...(error.details && { details: error.details }),
-    });
+    };
+    if (error.details) {
+      response.details = error.details;
+    }
+    res.status(error.statusCode).json(response);
     return;
   }
 

@@ -45,7 +45,7 @@ export class Server {
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
     // Request logging middleware
-    this.app.use((req, res, next) => {
+    this.app.use((req, _res, next) => {
       logger.http(`${req.method} ${req.path}`, {
         method: req.method,
         path: req.path,
@@ -62,7 +62,7 @@ export class Server {
    */
   private configureRoutes(): void {
     // Health check endpoint
-    this.app.get('/health', (req, res) => {
+    this.app.get('/health', (_req, res) => {
       res.status(200).json({
         status: 'ok',
         timestamp: new Date().toISOString(),

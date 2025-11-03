@@ -42,7 +42,7 @@ export class JWTService {
       expiresIn: this.accessTokenExpiry,
       issuer: 'church-app',
       audience: 'church-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   /**
@@ -53,7 +53,7 @@ export class JWTService {
       expiresIn: this.refreshTokenExpiry,
       issuer: 'church-app',
       audience: 'church-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   /**

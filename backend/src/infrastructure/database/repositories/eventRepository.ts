@@ -284,9 +284,9 @@ export class EventRepository implements IEventRepository {
   async addRSVP(eventId: string, memberId: string): Promise<void> {
     await prisma.eventRSVP.upsert({
       where: {
-        memberId_eventId: {
-          memberId,
+        eventId_memberId: {
           eventId,
+          memberId,
         },
       },
       update: {
@@ -307,9 +307,9 @@ export class EventRepository implements IEventRepository {
   async removeRSVP(eventId: string, memberId: string): Promise<void> {
     await prisma.eventRSVP.update({
       where: {
-        memberId_eventId: {
-          memberId,
+        eventId_memberId: {
           eventId,
+          memberId,
         },
       },
       data: {

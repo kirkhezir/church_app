@@ -8,7 +8,7 @@ import { logger } from '../../infrastructure/logging/logger';
 const router = Router();
 
 // API info endpoint
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.json({
     name: 'Church Management API',
     version: '1.0.0',
