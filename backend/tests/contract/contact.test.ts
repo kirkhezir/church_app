@@ -6,9 +6,15 @@
  */
 
 import { request } from '../integration/setup';
-import { expectValidApiResponse } from './helpers/openapi-validator';
+import { expectValidApiResponse, OpenAPIValidator } from './helpers/openapi-validator';
 
 describe('POST /api/v1/contact - Contract Tests', () => {
+  beforeAll(async () => {
+    // Initialize OpenAPI validator
+    const validator = OpenAPIValidator.getInstance();
+    await validator.initialize();
+  });
+
   describe('Valid contact form submission', () => {
     it('should match OpenAPI spec for successful submission', async () => {
       const contactData = {

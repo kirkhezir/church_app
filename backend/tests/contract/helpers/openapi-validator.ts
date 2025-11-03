@@ -44,7 +44,7 @@ export class OpenAPIValidator {
     try {
       const specPath = path.join(
         __dirname,
-        '../../../specs/001-full-stack-web/contracts/openapi.yaml'
+        '../../../../specs/001-full-stack-web/contracts/openapi.yaml'
       );
       this.api = await SwaggerParser.validate(specPath);
       this.isInitialized = true;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
+import LandingPage from './pages/public/LandingPage';
 
 // Placeholder components (to be implemented in Phase 4)
 const LoginPage = () => (
@@ -140,6 +141,9 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 const App: React.FC = () => {
   return (
     <Routes>
+      {/* Public Landing Page (no authentication required) */}
+      <Route path="/" element={<LandingPage />} />
+
       {/* Public Routes */}
       <Route
         path="/login"
@@ -208,8 +212,7 @@ const App: React.FC = () => {
         }
       />
 
-      {/* Default Routes */}
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      {/* 404 Not Found */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

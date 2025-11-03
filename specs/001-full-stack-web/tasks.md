@@ -129,9 +129,9 @@
 - [ ] T057 [P] [US1] Create LocationMapSection component with embedded Google Maps iframe (no API key needed; iframe provided) in frontend/src/components/features/LocationMapSection.tsx
 - [ ] T058 [P] [US1] Create MissionStatementSection component in frontend/src/components/features/MissionStatementSection.tsx
 - [ ] T059 [P] [US1] Create ContactForm component with validation in frontend/src/components/features/ContactForm.tsx
-- [ ] T060 [US1] Implement ContactService for sending contact form emails in backend/src/application/services/contactService.ts
-- [ ] T061 [US1] Implement POST /api/v1/contact endpoint controller in backend/src/presentation/controllers/contactController.ts
-- [ ] T062 [US1] Create contact route and attach to API router in backend/src/presentation/routes/contactRoutes.ts
+- [x] T060 [US1] Implement ContactService for sending contact form emails in backend/src/application/services/contactService.ts ✅ Complete - validation, sanitization, rate limiting, email formatting (261 lines, 74% coverage)
+- [x] T061 [US1] Implement POST /api/v1/contact endpoint controller in backend/src/presentation/controllers/contactController.ts ✅ Complete - request handling, validation, rate limiting (73 lines)
+- [x] T062 [US1] Create contact route and attach to API router in backend/src/presentation/routes/contactRoutes.ts ✅ Complete - mounted at /api/v1/contact
 - [ ] T063 [US1] Add public route for landing page in frontend React Router (no auth required)
 - [ ] T064 [US1] Style landing page with responsive design (mobile-first) using Tailwind CSS
 - [ ] T065 [US1] Run tests and verify all pass (green); refactor if needed

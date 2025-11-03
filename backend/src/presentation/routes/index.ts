@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { logger } from '../../infrastructure/logging/logger';
+import contactRoutes from './contactRoutes';
 
 /**
  * Main API Router
@@ -14,6 +15,7 @@ router.get('/', (_req, res) => {
     version: '1.0.0',
     description: 'RESTful API for Sing Buri Adventist Center',
     endpoints: {
+      contact: '/api/v1/contact',
       auth: '/api/v1/auth',
       members: '/api/v1/members',
       events: '/api/v1/events',
@@ -23,7 +25,10 @@ router.get('/', (_req, res) => {
   });
 });
 
-// TODO: Import and mount route modules as they are implemented
+// Mount route modules
+router.use('/contact', contactRoutes);
+
+// TODO: Import and mount remaining route modules as they are implemented
 // Example:
 // import authRoutes from './authRoutes';
 // import memberRoutes from './memberRoutes';

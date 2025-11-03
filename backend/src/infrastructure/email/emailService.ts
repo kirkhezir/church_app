@@ -49,6 +49,7 @@ export class EmailService {
     subject: string;
     text: string;
     html?: string;
+    replyTo?: string;
   }): Promise<boolean> {
     try {
       const info = await this.transporter.sendMail({
@@ -57,6 +58,7 @@ export class EmailService {
         subject: options.subject,
         text: options.text,
         html: options.html || options.text,
+        replyTo: options.replyTo,
       });
 
       logger.info('Email sent successfully', {
