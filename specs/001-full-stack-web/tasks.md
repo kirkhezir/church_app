@@ -53,31 +53,31 @@
 ### Database Foundation
 
 - [x] T016 Create Prisma schema with all entities (Member, Event, EventRSVP, Announcement, Message, MemberAnnouncementView, AuditLog) in backend/prisma/schema.prisma
-- [ ] T017 Generate Prisma client and run initial migration in backend/
+- [x] T017 Generate Prisma client and run initial migration in backend/
 - [x] T018 Create database seed script with sample data (admin user, members, events) in backend/prisma/seed.ts
-- [ ] T019 Setup test database configuration in backend/prisma/schema.test.prisma
+- [x] T019 Setup test database configuration in backend/prisma/schema.test.prisma
 
 ### Test Infrastructure Setup
 
-- [ ] T020 [P] Create contract test helpers for OpenAPI validation in backend/tests/contract/helpers/
-- [ ] T021 [P] Setup Supertest test utilities and test database cleanup in backend/tests/integration/setup.ts
-- [ ] T022 [P] Create test fixtures and factory functions for entities in backend/tests/fixtures/
+- [x] T020 [P] Create contract test helpers for OpenAPI validation in backend/tests/contract/helpers/
+- [x] T021 [P] Setup Supertest test utilities and test database cleanup in backend/tests/integration/setup.ts
+- [x] T022 [P] Create test fixtures and factory functions for entities in backend/tests/fixtures/
 
 ### Authentication & Security Foundation
 
 - [x] T023 [P] Implement JWT token generation and validation service in backend/src/infrastructure/auth/jwtService.ts
 - [x] T024 [P] Implement bcrypt password hashing utility in backend/src/infrastructure/auth/passwordService.ts
-- [ ] T025 Create authentication middleware for JWT validation in backend/src/presentation/middleware/authMiddleware.ts
-- [ ] T026 Create role-based authorization middleware in backend/src/presentation/middleware/roleMiddleware.ts
+- [x] T025 Create authentication middleware for JWT validation in backend/src/presentation/middleware/authMiddleware.ts
+- [x] T026 Create role-based authorization middleware in backend/src/presentation/middleware/roleMiddleware.ts
 
 ### API Foundation
 
-- [ ] T027 Setup Express application with CORS and JSON middleware in backend/src/presentation/server.ts
-- [ ] T028 [P] Create global error handling middleware in backend/src/presentation/middleware/errorMiddleware.ts
-- [ ] T029 [P] Create request validation middleware using Zod in backend/src/presentation/middleware/validationMiddleware.ts
-- [ ] T030 Create base API router structure with /api/v1 prefix in backend/src/presentation/routes/index.ts
+- [x] T027 Setup Express application with CORS and JSON middleware in backend/src/presentation/server.ts
+- [x] T028 [P] Create global error handling middleware in backend/src/presentation/middleware/errorMiddleware.ts
+- [x] T029 [P] Create request validation middleware using Zod in backend/src/presentation/middleware/validationMiddleware.ts
+- [x] T030 Create base API router structure with /api/v1 prefix in backend/src/presentation/routes/index.ts
 - [x] T031 [P] Implement logging service with Winston in backend/src/infrastructure/logging/logger.ts
-- [ ] T032 [P] Create audit logging service in backend/src/application/services/auditLogService.ts
+- [x] T032 [P] Create audit logging service in backend/src/application/services/auditLogService.ts
 
 ### Domain Layer Foundation
 
@@ -88,21 +88,21 @@
 
 ### Infrastructure Layer Foundation
 
-- [ ] T037 [P] Implement Prisma repository for Member in backend/src/infrastructure/database/repositories/memberRepository.ts
+- [x] T037 [P] Implement Prisma repository for Member in backend/src/infrastructure/database/repositories/memberRepository.ts
 - [x] T038 [P] Implement Prisma client singleton in backend/src/infrastructure/database/prismaClient.ts
-- [ ] T039 [P] Setup email service (SMTP) configuration in backend/src/infrastructure/email/emailService.ts
-- [ ] T040 [P] Setup Socket.io WebSocket server in backend/src/infrastructure/websocket/websocketServer.ts
+- [x] T039 [P] Setup email service (SMTP) configuration in backend/src/infrastructure/email/emailService.ts
+- [x] T040 [P] Setup Socket.io WebSocket server in backend/src/infrastructure/websocket/websocketServer.ts
 
 ### Frontend Foundation
 
-- [ ] T041 Setup Axios API client with interceptors in frontend/src/services/api/apiClient.ts
-- [ ] T042 Create AuthContext for global authentication state and 24-hour auto-logout in frontend/src/contexts/AuthContext.tsx
-- [ ] T043 Create useAuth custom hook in frontend/src/hooks/useAuth.ts
-- [ ] T044 [P] Initialize shadcn/ui CLI and add base components (Button, Input, Card, Form) in frontend/src/components/ui/
-- [ ] T045 [P] Create shared TypeScript types matching backend DTOs in frontend/src/types/api.ts
-- [ ] T046 Create layout components (Header, Footer, Navigation) in frontend/src/components/layout/
-- [ ] T047 Setup React Router with route configuration in frontend/src/App.tsx
-- [ ] T048 Setup Socket.io client for real-time notifications in frontend/src/services/websocket/websocketClient.ts
+- [x] T041 Setup Axios API client with interceptors in frontend/src/services/api/apiClient.ts
+- [x] T042 Create AuthContext for global authentication state and 24-hour auto-logout in frontend/src/contexts/AuthContext.tsx
+- [x] T043 Create useAuth custom hook in frontend/src/hooks/useAuth.ts
+- [x] T044 [P] Initialize shadcn/ui CLI and add base components (Button, Input, Card, Form) in frontend/src/components/ui/
+- [x] T045 [P] Create shared TypeScript types matching backend DTOs in frontend/src/types/api.ts
+- [x] T046 Create layout components (Header, Footer, Navigation) in frontend/src/components/layout/
+- [x] T047 Setup React Router with route configuration in frontend/src/App.tsx
+- [x] T048 Setup Socket.io client for real-time notifications in frontend/src/services/websocket/websocketClient.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
