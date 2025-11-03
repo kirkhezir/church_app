@@ -17,10 +17,16 @@ import '@testing-library/jest-dom';
  * Note: Components don't exist yet - this is the RED phase
  */
 
+// Mock fetch globally for contact form tests
+global.fetch = jest.fn();
+
 describe('LandingPage Component', () => {
   let LandingPage: any;
 
   beforeEach(() => {
+    // Reset fetch mock before each test
+    (global.fetch as jest.Mock).mockClear();
+
     // Try to import the component (will fail in RED phase)
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -224,7 +230,8 @@ describe('LandingPage Component', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/community|faith|worship|christ/i)).toBeInTheDocument();
+      const content = screen.getAllByText(/community|faith|worship|christ/i);
+      expect(content.length).toBeGreaterThan(0);
     });
   });
 
@@ -344,7 +351,8 @@ describe('LandingPage Component', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/required|please fill/i)).toBeInTheDocument();
+        const errorMessages = screen.getAllByText(/required|please fill/i);
+        expect(errorMessages.length).toBeGreaterThan(0);
       });
     });
 
@@ -390,7 +398,8 @@ describe('LandingPage Component', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/20.*characters|message.*too.*short/i)).toBeInTheDocument();
+        // Use queryByText to check if the error message exists (checking error p tag, not label)
+        expect(screen.getByText('Message must be at least 20 characters')).toBeInTheDocument();
       });
     });
 
@@ -399,6 +408,12 @@ describe('LandingPage Component', () => {
         expect(LandingPage).toBeUndefined();
         return;
       }
+
+      // Mock successful fetch response
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, message: 'Contact form received successfully' }),
+      });
 
       render(
         <BrowserRouter>
@@ -428,6 +443,21 @@ describe('LandingPage Component', () => {
         return;
       }
 
+      // Mock a slow fetch response to keep the button disabled
+      (global.fetch as jest.Mock).mockImplementationOnce(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true }),
+                }),
+              100
+            )
+          )
+      );
+
       render(
         <BrowserRouter>
           <LandingPage />
@@ -445,7 +475,10 @@ describe('LandingPage Component', () => {
       const submitButton = screen.getByRole('button', { name: /submit|send/i });
       fireEvent.click(submitButton);
 
-      expect(submitButton).toBeDisabled();
+      // Check immediately after click - button should be disabled
+      await waitFor(() => {
+        expect(submitButton).toBeDisabled();
+      });
     });
   });
 

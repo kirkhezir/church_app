@@ -12,7 +12,7 @@ import ContactForm from '../../components/features/ContactForm';
 
 export function LandingPage() {
   return (
-    <main>
+    <main className="container mx-auto">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-blue-600 to-blue-700 px-4 py-20 text-white">
         <div className="mx-auto max-w-4xl text-center">

@@ -156,7 +156,7 @@ export function ContactForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} noValidate>
+          <form onSubmit={handleSubmit} noValidate role="form" aria-label="Contact form">
             {/* Name Field */}
             <div className="mb-4">
               <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-700">
