@@ -255,4 +255,12 @@ Reply directly to this email to respond to ${data.name}.
       logger.debug('Cleaned up rate limit entries', { count: expiredKeys.length });
     }
   }
+
+  /**
+   * Reset rate limits (for testing purposes)
+   */
+  resetRateLimits(): void {
+    this.rateLimitMap.clear();
+    logger.debug('Rate limits reset');
+  }
 }

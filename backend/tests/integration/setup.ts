@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import supertest from 'supertest';
 import { server } from '../../src/presentation/server';
+import { contactService } from '../../src/presentation/routes/contactRoutes';
 
 /**
  * Test database client (separate from production)
@@ -14,6 +15,11 @@ export const testPrisma = new PrismaClient({
  * Uses the server.app instance from the Express Server class
  */
 export const request = supertest(server.app);
+
+/**
+ * Export shared ContactService for testing
+ */
+export { contactService };
 
 /**
  * Clean database tables

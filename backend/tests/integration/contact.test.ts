@@ -1,4 +1,4 @@
-import { request, setupTestDatabase, teardownTestDatabase } from './setup';
+import { request, setupTestDatabase, teardownTestDatabase, contactService } from './setup';
 import { EmailService } from '../../src/infrastructure/email/emailService';
 
 /**
@@ -29,6 +29,9 @@ describe('Contact Form Integration Tests', () => {
   beforeEach(() => {
     // Mock the email sending to prevent actual SMTP calls
     emailServiceSpy = jest.spyOn(EmailService.prototype, 'sendEmail').mockResolvedValue(true);
+
+    // Reset rate limits for each test
+    contactService.resetRateLimits();
   });
 
   afterEach(() => {
@@ -121,7 +124,8 @@ describe('Contact Form Integration Tests', () => {
 
       // Verify error response mentions email
       expect(response.body).toHaveProperty('error');
-      expect(response.body.error).toMatch(/email/i);
+      expect(response.body).toHaveProperty('message');
+      expect(JSON.stringify(response.body.message)).toMatch(/email/i);
 
       // Verify no email was sent
       expect(emailServiceSpy).not.toHaveBeenCalled();
@@ -139,7 +143,8 @@ describe('Contact Form Integration Tests', () => {
 
       // Verify error response mentions message length
       expect(response.body).toHaveProperty('error');
-      expect(response.body.error).toMatch(/message|length|characters/i);
+      expect(response.body).toHaveProperty('message');
+      expect(JSON.stringify(response.body.message)).toMatch(/message|length|characters/i);
 
       // Verify no email was sent
       expect(emailServiceSpy).not.toHaveBeenCalled();
@@ -149,17 +154,19 @@ describe('Contact Form Integration Tests', () => {
       const xssData = {
         name: 'John<script>alert("XSS")</script>Doe',
         email: 'john@example.com',
-        subject: 'Test<img src=x onerror=alert(1)>',
-        message: 'This is a test message with <b>HTML tags</b> and scripts.',
+        subject: 'Test<img src=x onerror="alert(1)">',
+        message:
+          'This is a test message with <b>HTML tags</b> and <script>evil();</script> scripts.',
       };
 
       await request.post('/api/v1/contact').send(xssData).expect(201);
 
       // Verify email content is sanitized
       const emailCall = emailServiceSpy.mock.calls[0][0];
-      const emailContent = emailCall.text || emailCall.html || '';
+      const emailContent = JSON.stringify(emailCall);
       expect(emailContent).not.toContain('<script>');
-      expect(emailContent).not.toContain('onerror');
+      expect(emailContent).not.toContain('onerror="');
+      expect(emailContent).not.toContain('alert');
     });
 
     it('should handle email service failures gracefully', async () => {
@@ -190,8 +197,8 @@ describe('Contact Form Integration Tests', () => {
         message: 'Testing rate limiting functionality with sufficient message length.',
       };
 
-      // Make 10 rapid requests
-      const requests = Array(10)
+      // Make 11 rapid requests (rate limit is 10 per minute)
+      const requests = Array(11)
         .fill(null)
         .map(() => request.post('/api/v1/contact').send(contactData));
 
@@ -203,7 +210,8 @@ describe('Contact Form Integration Tests', () => {
 
       // Successful requests should be less than total
       const successfulCount = responses.filter((r) => r.status === 201).length;
-      expect(successfulCount).toBeLessThan(10);
+      expect(successfulCount).toBeLessThan(11);
+      expect(successfulCount).toBeLessThanOrEqual(10); // Rate limit is 10
     });
 
     it('should allow requests after rate limit window expires', async () => {

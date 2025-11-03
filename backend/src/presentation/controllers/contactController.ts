@@ -9,8 +9,8 @@ import { logger } from '../../infrastructure/logging/logger';
 export class ContactController {
   private contactService: ContactService;
 
-  constructor() {
-    this.contactService = new ContactService();
+  constructor(contactService?: ContactService) {
+    this.contactService = contactService || new ContactService();
   }
 
   /**

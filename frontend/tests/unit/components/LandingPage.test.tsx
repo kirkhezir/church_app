@@ -65,7 +65,9 @@ describe('LandingPage Component', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/Sing Buri Adventist Center/i)).toBeInTheDocument();
+      // Church name appears in multiple places (hero + location section)
+      const englishNames = screen.getAllByText(/Sing Buri Adventist Center/i);
+      expect(englishNames.length).toBeGreaterThan(0);
       expect(screen.getByText(/ศูนย์แอ็ดเวนตีสท์สิงห์บุรี/)).toBeInTheDocument();
     });
 
@@ -81,7 +83,9 @@ describe('LandingPage Component', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/welcome/i)).toBeInTheDocument();
+      // "Welcome" text appears in multiple places
+      const welcomeTexts = screen.getAllByText(/welcome/i);
+      expect(welcomeTexts.length).toBeGreaterThan(0);
     });
 
     it('should have accessible heading structure', () => {
@@ -130,7 +134,9 @@ describe('LandingPage Component', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/sabbath/i)).toBeInTheDocument();
+      // Multiple instances of "Sabbath" text expected (heading + time label)
+      const sabbathTexts = screen.getAllByText(/sabbath/i);
+      expect(sabbathTexts.length).toBeGreaterThan(0);
       expect(screen.getByText(/saturday/i)).toBeInTheDocument();
     });
 
@@ -197,7 +203,9 @@ describe('LandingPage Component', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/sing buri|สิงห์บุรี/i)).toBeInTheDocument();
+      // Multiple instances of "Sing Buri" expected (hero, location, mission)
+      const singBuriTexts = screen.getAllByText(/sing buri|สิงห์บุรี/i);
+      expect(singBuriTexts.length).toBeGreaterThan(0);
       expect(screen.getByText(/thailand/i)).toBeInTheDocument();
     });
   });
