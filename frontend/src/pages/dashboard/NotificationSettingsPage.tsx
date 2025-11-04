@@ -6,6 +6,7 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SidebarLayout } from '@/components/layout';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -68,19 +69,23 @@ export default function NotificationSettingsPage() {
 
   if (fetchLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <SidebarLayout
+        breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Notifications' }]}
+      >
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
             <p className="text-center text-gray-600">Loading preferences...</p>
           </CardContent>
         </Card>
-      </div>
+      </SidebarLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="mx-auto max-w-2xl">
+    <SidebarLayout
+      breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Notifications' }]}
+    >
+      <div className="mx-auto w-full max-w-2xl">
         <Card>
           <CardHeader>
             <CardTitle>Notification Settings</CardTitle>
@@ -176,6 +181,6 @@ export default function NotificationSettingsPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </SidebarLayout>
   );
 }
