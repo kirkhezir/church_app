@@ -4,7 +4,7 @@
 // Set test environment variables
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-jwt-secret-key-for-testing-only';
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/church_app_test';
+process.env.DATABASE_URL = 'postgresql://postgres:admin123@localhost:5432/church_app';
 
 // Global test timeout
 jest.setTimeout(10000);

@@ -96,6 +96,11 @@ describe('Contract Tests: Event Endpoints', () => {
   }
 
   beforeAll(async () => {
+    console.log('🔧 beforeAll started');
+
+    // Ensure Prisma is connected
+    await prisma.$connect();
+
     // Clean up any existing test data
     await prisma.member.deleteMany({
       where: {
@@ -105,7 +110,7 @@ describe('Contract Tests: Event Endpoints', () => {
       },
     });
 
-    // Clean up any existing events that might reference old members
+    // Clean up any existing events
     await prisma.eventRSVP.deleteMany({});
     await prisma.event.deleteMany({
       where: {
@@ -115,16 +120,28 @@ describe('Contract Tests: Event Endpoints', () => {
       },
     });
 
-    // Create test members
-    adminId = await createTestMember('event-admin@example.com', 'AdminPass123!', 'ADMIN');
-    memberId = await createTestMember('event-member@example.com', 'MemberPass123!', 'MEMBER');
+    // Create test members using raw SQL to bypass any transaction issues
+    const adminPassword = await passwordService.hash('AdminPass123!');
+    const memberPassword = await passwordService.hash('MemberPass123!');
 
-    // Verify members were created
-    if (!adminId || !memberId) {
-      throw new Error('Failed to create test members');
-    }
+    // Use raw SQL to ensure immediate commit
+    const [admin] = await prisma.$queryRaw<Array<{ id: string }>>`
+      INSERT INTO members (id, email, "passwordHash", "firstName", "lastName", role, phone, "membershipDate", "privacySettings", "failedLoginAttempts", "createdAt", "updatedAt")
+      VALUES (gen_random_uuid(), 'event-admin@example.com', ${adminPassword}, 'Event', 'Admin', 'ADMIN', '+1234567890', NOW(), '{"showPhone": true, "showEmail": true, "showAddress": true}'::jsonb, 0, NOW(), NOW())
+      RETURNING id
+    `;
 
-    console.log('✅ Test members created:', { adminId, memberId });
+    const [member] = await prisma.$queryRaw<Array<{ id: string }>>`
+      INSERT INTO members (id, email, "passwordHash", "firstName", "lastName", role, phone, "membershipDate", "privacySettings", "failedLoginAttempts", "createdAt", "updatedAt")
+      VALUES (gen_random_uuid(), 'event-member@example.com', ${memberPassword}, 'Event', 'Member', 'MEMBER', '+1234567891', NOW(), '{"showPhone": true, "showEmail": true, "showAddress": true}'::jsonb, 0, NOW(), NOW())
+      RETURNING id
+    `;
+
+    adminId = admin.id;
+    memberId = member.id;
+    testMemberIds.push(adminId, memberId);
+
+    console.log('✅ Test members created via raw SQL:', { adminId, memberId });
 
     // Generate tokens
     adminToken = jwtService.generateAccessToken({
@@ -172,6 +189,10 @@ describe('Contract Tests: Event Endpoints', () => {
 
   describe('POST /api/v1/events', () => {
     it('should return 201 and create event for admin', async () => {
+      // DEBUG: Check if admin member exists before making the request
+      const adminExists = await prisma.member.findUnique({ where: { id: adminId } });
+      console.log('🔍 [TEST START] Admin member exists:', !!adminExists, 'ID:', adminId);
+
       const eventData = {
         title: 'Sabbath Worship Service',
         description: 'Weekly worship service for the church community',
@@ -191,12 +212,13 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('title', eventData.title);
-      expect(response.body).toHaveProperty('description', eventData.description);
-      expect(response.body).toHaveProperty('category', eventData.category);
-      expect(response.body).toHaveProperty('maxCapacity', eventData.maxCapacity);
-      expect(response.body).toHaveProperty('createdById', adminId);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toHaveProperty('id');
+      expect(response.body.data).toHaveProperty('title', eventData.title);
+      expect(response.body.data).toHaveProperty('description', eventData.description);
+      expect(response.body.data).toHaveProperty('category', eventData.category);
+      expect(response.body.data).toHaveProperty('maxCapacity', eventData.maxCapacity);
+      expect(response.body.data).toHaveProperty('createdById', adminId);
 
       // Store for cleanup
       if (response.body.id) {
@@ -297,11 +319,12 @@ describe('Contract Tests: Event Endpoints', () => {
       const response = await request(app).get('/api/v1/events').expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
 
       // Verify event structure
-      const event = response.body[0];
+      const event = response.body.data[0];
       expect(event).toHaveProperty('id');
       expect(event).toHaveProperty('title');
       expect(event).toHaveProperty('description');
@@ -318,10 +341,11 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.data)).toBe(true);
 
       // All returned events should be WORSHIP category
-      response.body.forEach((event: any) => {
+      response.body.data.forEach((event: any) => {
         expect(event.category).toBe('WORSHIP');
       });
     });
@@ -336,7 +360,8 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.data)).toBe(true);
     });
 
     it('should work without authentication for public access', async () => {
@@ -360,15 +385,15 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('id', testEventId);
-      expect(response.body).toHaveProperty('title', 'Detailed Event Test');
-      expect(response.body).toHaveProperty('description');
-      expect(response.body).toHaveProperty('startDateTime');
-      expect(response.body).toHaveProperty('endDateTime');
-      expect(response.body).toHaveProperty('location');
-      expect(response.body).toHaveProperty('category');
-      expect(response.body).toHaveProperty('maxCapacity', 50);
-      expect(response.body).toHaveProperty('rsvpCount');
+      expect(response.body.data).toHaveProperty('id', testEventId);
+      expect(response.body.data).toHaveProperty('title', 'Detailed Event Test');
+      expect(response.body.data).toHaveProperty('description');
+      expect(response.body.data).toHaveProperty('startDateTime');
+      expect(response.body.data).toHaveProperty('endDateTime');
+      expect(response.body.data).toHaveProperty('location');
+      expect(response.body.data).toHaveProperty('category');
+      expect(response.body.data).toHaveProperty('maxCapacity', 50);
+      expect(response.body.data).toHaveProperty('rsvpCount');
     });
 
     it('should return 404 for non-existent event', async () => {
@@ -413,10 +438,10 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('id', testEventId);
-      expect(response.body).toHaveProperty('title', updateData.title);
-      expect(response.body).toHaveProperty('description', updateData.description);
-      expect(response.body).toHaveProperty('maxCapacity', updateData.maxCapacity);
+      expect(response.body.data).toHaveProperty('id', testEventId);
+      expect(response.body.data).toHaveProperty('title', updateData.title);
+      expect(response.body.data).toHaveProperty('description', updateData.description);
+      expect(response.body.data).toHaveProperty('maxCapacity', updateData.maxCapacity);
     });
 
     it('should return 403 for non-admin/staff member', async () => {
@@ -471,7 +496,7 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message');
+      expect(response.body.data).toHaveProperty('message');
 
       // Verify event is cancelled
       const event = await prisma.event.findUnique({
@@ -526,10 +551,10 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('eventId', testEventId);
-      expect(response.body).toHaveProperty('memberId', memberId);
-      expect(response.body).toHaveProperty('status', 'CONFIRMED');
+      expect(response.body.data).toHaveProperty('id');
+      expect(response.body.data).toHaveProperty('eventId', testEventId);
+      expect(response.body.data).toHaveProperty('memberId', memberId);
+      expect(response.body.data).toHaveProperty('status', 'CONFIRMED');
     });
 
     it('should return 409 for duplicate RSVP', async () => {
@@ -579,7 +604,7 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('status', 'WAITLISTED');
+      expect(response.body.data).toHaveProperty('status', 'WAITLISTED');
     });
 
     it('should return 404 for non-existent event', async () => {
@@ -627,7 +652,7 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message');
+      expect(response.body.data).toHaveProperty('message');
 
       // Verify RSVP is deleted or cancelled
       const rsvp = await prisma.eventRSVP.findFirst({
@@ -701,11 +726,13 @@ describe('Contract Tests: Event Endpoints', () => {
         .expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toHaveProperty('rsvps');
+      expect(Array.isArray(response.body.data.rsvps)).toBe(true);
+      expect(response.body.data.rsvps.length).toBeGreaterThan(0);
 
       // Verify RSVP structure
-      const rsvp = response.body[0];
+      const rsvp = response.body.data.rsvps[0];
       expect(rsvp).toHaveProperty('id');
       expect(rsvp).toHaveProperty('eventId', testEventId);
       expect(rsvp).toHaveProperty('memberId');

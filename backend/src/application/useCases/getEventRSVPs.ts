@@ -15,12 +15,19 @@ interface GetEventRSVPsInput {
 
 interface RSVPSummary {
   id: string;
+  eventId: string;
   memberId: string;
   memberName?: string;
   memberEmail?: string;
   status: string;
   notes?: string;
   rsvpedAt: Date;
+  member?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 interface GetEventRSVPsOutput {
@@ -70,14 +77,24 @@ export class GetEventRSVPs {
     const availableSpots = event.maxCapacity ? Math.max(0, event.maxCapacity - confirmedCount) : -1; // -1 means unlimited
 
     // Transform RSVPs to summary format
-    const rsvps: RSVPSummary[] = filteredRSVPs.map((rsvp) => ({
+    const rsvps: RSVPSummary[] = filteredRSVPs.map((rsvp: any) => ({
       id: rsvp.id,
+      eventId: rsvp.eventId,
       memberId: rsvp.memberId,
-      memberName: undefined, // Member details would need to be joined from repository
-      memberEmail: undefined,
+      memberName: rsvp.member ? `${rsvp.member.firstName} ${rsvp.member.lastName}` : undefined,
+      memberEmail: rsvp.member?.email,
       status: rsvp.status,
       notes: undefined,
       rsvpedAt: rsvp.rsvpedAt,
+      // Include member object for detailed views
+      member: rsvp.member
+        ? {
+            id: rsvp.member.id,
+            firstName: rsvp.member.firstName,
+            lastName: rsvp.member.lastName,
+            email: rsvp.member.email,
+          }
+        : undefined,
     }));
 
     return {

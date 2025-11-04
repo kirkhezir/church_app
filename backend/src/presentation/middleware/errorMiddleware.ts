@@ -84,6 +84,44 @@ export const errorMiddleware = (
     return;
   }
 
+  // Map common error messages to appropriate status codes
+  const message = error.message.toLowerCase();
+
+  // 404 Not Found errors
+  if (message.includes('not found') || message.includes('does not exist')) {
+    res.status(404).json({
+      error: 'NotFound',
+      message: error.message,
+    });
+    return;
+  }
+
+  // 409 Conflict errors
+  if (message.includes('already') || message.includes('duplicate')) {
+    res.status(409).json({
+      error: 'Conflict',
+      message: error.message,
+    });
+    return;
+  }
+
+  // 400 Bad Request errors (validation)
+  if (
+    message.includes('required') ||
+    message.includes('invalid') ||
+    message.includes('must be') ||
+    message.includes('cannot be') ||
+    message.includes('too') ||
+    message.includes('minimum') ||
+    message.includes('maximum')
+  ) {
+    res.status(400).json({
+      error: 'BadRequest',
+      message: error.message,
+    });
+    return;
+  }
+
   // Handle unknown errors (500 Internal Server Error)
   res.status(500).json({
     error: 'InternalServerError',

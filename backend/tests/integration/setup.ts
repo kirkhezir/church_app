@@ -143,7 +143,8 @@ afterAll(async () => {
 
 /**
  * Clean database before each test
+ * TEMPORARILY DISABLED: Contract tests manage their own data lifecycle
  */
-beforeEach(async () => {
-  await cleanDatabase();
-});
+// beforeEach(async () => {
+//   await cleanDatabase();
+// });
