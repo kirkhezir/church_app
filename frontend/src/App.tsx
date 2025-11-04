@@ -1,17 +1,11 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/public/LandingPage';
+import LoginPage from './pages/auth/LoginPage';
+import { PrivateRoute } from './components/routing/PrivateRoute';
+import { PublicRoute } from './components/routing/PublicRoute';
 
 // Placeholder components (to be implemented in Phase 4)
-const LoginPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Login</h1>
-      <p className="text-gray-600">Login page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
 
 const RegisterPage = () => (
   <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -84,56 +78,6 @@ const NotFoundPage = () => (
     </div>
   </div>
 );
-
-/**
- * Private Route Component
- * Redirects to login if not authenticated
- */
-interface PrivateRouteProps {
-  children: React.ReactNode;
-}
-
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
-};
-
-/**
- * Public Route Component
- * Redirects to dashboard if already authenticated
- */
-interface PublicRouteProps {
-  children: React.ReactNode;
-}
-
-const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
-};
 
 /**
  * Main App Component with Routing
