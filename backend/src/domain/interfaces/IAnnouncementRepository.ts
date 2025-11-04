@@ -36,4 +36,9 @@ export interface IAnnouncementRepository {
    * Delete announcement (soft delete)
    */
   delete(id: string): Promise<void>;
+
+  /**
+   * Find recent published announcements
+   */
+  findRecent(limit: number): Promise<any[]>;
 }

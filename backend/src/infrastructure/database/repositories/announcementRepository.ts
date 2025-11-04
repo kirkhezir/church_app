@@ -120,6 +120,38 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   }
 
   /**
+   * Find recent announcements
+   */
+  async findRecent(limit: number = 10): Promise<PrismaAnnouncement[]> {
+    const announcements = await prisma.announcement.findMany({
+      where: {
+        deletedAt: null,
+        archivedAt: null,
+        publishedAt: { lte: new Date() }, // Only published announcements
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        _count: {
+          select: {
+            views: true,
+          },
+        },
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: limit,
+    });
+
+    return announcements as never[];
+  }
+
+  /**
    * Create new announcement
    */
   async create(announcement: any): Promise<PrismaAnnouncement> {
