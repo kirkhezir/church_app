@@ -5,6 +5,8 @@ import LoginPage from './pages/auth/LoginPage';
 import PasswordResetRequestPage from './pages/auth/PasswordResetRequestPage';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
 import MemberDashboard from './pages/dashboard/MemberDashboard';
+import EditProfilePage from './pages/dashboard/EditProfilePage';
+import NotificationSettingsPage from './pages/dashboard/NotificationSettingsPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 
@@ -51,15 +53,6 @@ const MembersPage = () => (
     <div className="rounded-lg bg-white p-8 shadow-md">
       <h1 className="mb-4 text-2xl font-bold">Members</h1>
       <p className="text-gray-600">Members page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
-
-const ProfilePage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Profile</h1>
-      <p className="text-gray-600">Profile page will be implemented in Phase 4</p>
     </div>
   </div>
 );
@@ -161,7 +154,15 @@ const App: React.FC = () => {
         path="/profile"
         element={
           <PrivateRoute>
-            <ProfilePage />
+            <EditProfilePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute>
+            <NotificationSettingsPage />
           </PrivateRoute>
         }
       />

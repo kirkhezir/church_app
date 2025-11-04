@@ -29,4 +29,18 @@ router.get('/dashboard', authMiddleware, memberController.getDashboard);
  */
 router.get('/me', authMiddleware, memberController.getProfile);
 
+/**
+ * PATCH /api/v1/members/me
+ * Update current member profile
+ * Requires authentication
+ */
+router.patch('/me', authMiddleware, memberController.updateProfile);
+
+/**
+ * PATCH /api/v1/members/me/notifications
+ * Update notification preferences
+ * Requires authentication
+ */
+router.patch('/me/notifications', authMiddleware, memberController.updateNotificationPreferences);
+
 export default router;
