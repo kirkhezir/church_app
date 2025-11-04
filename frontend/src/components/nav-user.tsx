@@ -94,11 +94,11 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate('/profile/edit')}>
+              <DropdownMenuItem onClick={() => navigate('/profile')}>
                 <User />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/profile/notifications')}>
+              <DropdownMenuItem onClick={() => navigate('/notifications')}>
                 <Bell />
                 Notifications
               </DropdownMenuItem>

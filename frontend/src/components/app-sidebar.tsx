@@ -60,12 +60,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const settingsItems = [
     {
       title: 'Profile',
-      url: '/profile/edit',
+      url: '/profile',
       icon: User,
     },
     {
       title: 'Notifications',
-      url: '/profile/notifications',
+      url: '/notifications',
       icon: Bell,
     },
     {
@@ -88,13 +88,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-                  <span className="text-sm font-bold text-white">SB</span>
+              <a href="/dashboard">
+                <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-white">
+                  <img
+                    src="/church-logo.png"
+                    alt="Sing Buri Adventist Center"
+                    className="h-full w-full object-contain"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Sing Buri Adventist</span>
-                  <span className="truncate text-xs">ศูนย์แอดเวนตีสต์สิงห์บุรี</span>
                 </div>
               </a>
             </SidebarMenuButton>
