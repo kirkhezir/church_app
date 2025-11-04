@@ -73,7 +73,11 @@ export class EventRSVP {
    * Validate RSVP status
    */
   private static validateStatus(status: RSVPStatus): void {
-    const validStatuses: RSVPStatus[] = ['CONFIRMED', 'WAITLISTED', 'CANCELLED'];
+    const validStatuses: RSVPStatus[] = [
+      RSVPStatus.CONFIRMED,
+      RSVPStatus.WAITLISTED,
+      RSVPStatus.CANCELLED,
+    ];
     if (!validStatuses.includes(status)) {
       throw new Error(`Invalid RSVP status: ${status}`);
     }

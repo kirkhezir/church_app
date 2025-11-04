@@ -3,6 +3,7 @@ import { logger } from '../../infrastructure/logging/logger';
 import contactRoutes from './contactRoutes';
 import authRoutes from './authRoutes';
 import memberRoutes from './memberRoutes';
+import eventRoutes from './eventRoutes';
 
 /**
  * Main API Router
@@ -31,18 +32,13 @@ router.get('/', (_req, res) => {
 router.use('/contact', contactRoutes);
 router.use('/auth', authRoutes);
 router.use('/members', memberRoutes);
+router.use('/events', eventRoutes);
 
 // TODO: Import and mount remaining route modules as they are implemented
 // Example:
-// import authRoutes from './authRoutes';
-// import memberRoutes from './memberRoutes';
-// import eventRoutes from './eventRoutes';
 // import announcementRoutes from './announcementRoutes';
 // import messageRoutes from './messageRoutes';
 //
-// router.use('/auth', authRoutes);
-// router.use('/members', memberRoutes);
-// router.use('/events', eventRoutes);
 // router.use('/announcements', announcementRoutes);
 // router.use('/messages', messageRoutes);
 
