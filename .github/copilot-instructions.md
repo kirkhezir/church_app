@@ -56,6 +56,25 @@ When implementing features, leverage available MCP servers for enhanced developm
 
 - **Reference shadcn-ui-guide.md** for detailed instructions on using shadcn components effectively.
 
+### Playwright MCP Server (E2E Testing)
+
+- **Use for**: End-to-end testing and manual testing guidance with Playwright
+- **When to use**:
+  - Writing E2E tests for user flows
+  - Setting up test fixtures and page objects
+  - Implementing test automation patterns
+  - Debugging test failures and selectors
+  - Checking Playwright API and best practices
+  - Planning manual test scenarios and cases
+  - Converting manual test cases to automated tests
+- **Example use cases**:
+  - "Show Playwright authentication flow test example"
+  - "Get Playwright page object pattern"
+  - "Find best practices for waiting strategies"
+  - "Create test for form submission flow"
+  - "Generate manual test checklist for user registration"
+  - "Convert manual test scenario to Playwright test"
+
 **Best Practice**: Always consult MCP servers before implementing features to ensure you're using current best practices and correct API patterns.
 
 ## Recent Changes
