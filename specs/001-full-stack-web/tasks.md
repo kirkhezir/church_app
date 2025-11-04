@@ -12,15 +12,15 @@
 
 ## 📊 Progress Summary (Updated: November 4, 2025)
 
-### Overall Status: **Phase 4 In Progress** - Core Auth Implemented
+### Overall Status: **Phase 5 In Progress** - Event Management Backend Foundation
 
-| Phase                     | Status      | Progress     | Tests         | Notes                                  |
-| ------------------------- | ----------- | ------------ | ------------- | -------------------------------------- |
-| **Phase 1: Setup**        | ✅ Complete | 15/15 (100%) | N/A           | Project structure, tooling, configs    |
-| **Phase 2: Foundation**   | ✅ Complete | 33/33 (100%) | 45/45 passing | Database, auth, API foundation         |
-| **Phase 3: User Story 1** | ✅ Complete | 17/17 (100%) | 72/72 passing | Public landing page + contact form     |
-| **Phase 4: User Story 2** | ✅ Complete | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE |
-| **Phase 5: User Story 3** | ⏳ Pending  | 0/TBD        | Not started   | Event management & RSVP                |
+| Phase                     | Status         | Progress     | Tests         | Notes                                           |
+| ------------------------- | -------------- | ------------ | ------------- | ----------------------------------------------- |
+| **Phase 1: Setup**        | ✅ Complete    | 15/15 (100%) | N/A           | Project structure, tooling, configs             |
+| **Phase 2: Foundation**   | ✅ Complete    | 33/33 (100%) | 45/45 passing | Database, auth, API foundation                  |
+| **Phase 3: User Story 1** | ✅ Complete    | 17/17 (100%) | 72/72 passing | Public landing page + contact form              |
+| **Phase 4: User Story 2** | ✅ Complete    | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE          |
+| **Phase 5: User Story 3** | 🔄 In Progress | 4/45 (9%)    | 33 RED tests  | Event management & RSVP - Domain layer complete |
 
 ### Test Coverage Summary
 
