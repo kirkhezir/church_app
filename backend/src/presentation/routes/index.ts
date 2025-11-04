@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { logger } from '../../infrastructure/logging/logger';
 import contactRoutes from './contactRoutes';
+import authRoutes from './authRoutes';
 
 /**
  * Main API Router
@@ -27,6 +28,7 @@ router.get('/', (_req, res) => {
 
 // Mount route modules
 router.use('/contact', contactRoutes);
+router.use('/auth', authRoutes);
 
 // TODO: Import and mount remaining route modules as they are implemented
 // Example:
