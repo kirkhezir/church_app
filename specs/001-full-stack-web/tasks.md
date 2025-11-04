@@ -32,6 +32,7 @@
 - Example Tests: 17 failing (expected - Phase 5 placeholders)
 
 **Phase 4 Coverage Notes:**
+
 - New use cases (updateProfile, resetPassword, etc.) have low unit test coverage (<25%)
 - All features were manually tested and verified working with Playwright MCP
 - 2 critical bugs found and fixed during manual testing
