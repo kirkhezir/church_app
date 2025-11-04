@@ -57,10 +57,8 @@ export default function EditProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = (await apiClient.get('/members/me')) as {
-        data: ProfileData;
-      };
-      setFormData(response.data);
+      const response = (await apiClient.get('/members/me')) as ProfileData;
+      setFormData(response);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load profile');
     } finally {
@@ -81,21 +79,19 @@ export default function EditProfilePage() {
         phone: formData.phone,
         address: formData.address,
         privacySettings: formData.privacySettings,
-      })) as {
-        data: { success: boolean; message: string; profile: ProfileData };
-      };
+      })) as { success: boolean; message: string; profile: ProfileData };
 
-      if (response.data.success) {
+      if (response.success) {
         setSuccess(true);
         // Update form with returned data
-        if (response.data.profile) {
+        if (response.profile) {
           setFormData((prev) => ({
             ...prev,
-            ...response.data.profile,
+            ...response.profile,
           }));
         }
       } else {
-        setError(response.data.message || 'Failed to update profile');
+        setError(response.message || 'Failed to update profile');
       }
     } catch (err: any) {
       setError(

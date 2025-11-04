@@ -15,7 +15,6 @@ import { expectValidApiResponse } from '../contract/helpers/openapi-validator';
 
 describe('Example Integration Tests', () => {
   let adminToken: string;
-  let adminId: string;
   let staffToken: string;
   let staffId: string;
   let memberToken: string;
@@ -34,7 +33,6 @@ describe('Example Integration Tests', () => {
       role: 'ADMIN',
     });
     adminToken = admin.token;
-    adminId = admin.memberId;
 
     const staff = await createTestMemberAndLogin({
       email: 'staff@example.com',

@@ -29,11 +29,9 @@ export default function NotificationSettingsPage() {
   const fetchPreferences = async () => {
     try {
       const response = (await apiClient.get('/members/me')) as {
-        data: {
-          emailNotifications: boolean;
-        };
+        emailNotifications: boolean;
       };
-      setEmailNotifications(response.data.emailNotifications);
+      setEmailNotifications(response.emailNotifications);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load notification preferences');
     } finally {
@@ -50,14 +48,12 @@ export default function NotificationSettingsPage() {
     try {
       const response = (await apiClient.patch('/members/me/notifications', {
         emailNotifications,
-      })) as {
-        data: { success: boolean; message: string };
-      };
+      })) as { success: boolean; message: string };
 
-      if (response.data.success) {
+      if (response.success) {
         setSuccess(true);
       } else {
-        setError(response.data.message || 'Failed to update notification preferences');
+        setError(response.message || 'Failed to update notification preferences');
       }
     } catch (err: any) {
       setError(

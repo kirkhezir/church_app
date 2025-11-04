@@ -6,7 +6,7 @@
  */
 
 import { request, contactService } from '../integration/setup';
-import { expectValidApiResponse, OpenAPIValidator } from './helpers/openapi-validator';
+import { OpenAPIValidator } from './helpers/openapi-validator';
 
 describe('POST /api/v1/contact - Contract Tests', () => {
   beforeAll(async () => {
