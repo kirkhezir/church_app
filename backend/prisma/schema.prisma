@@ -64,6 +64,10 @@ model Member {
   mfaSecret            String?
   backupCodes          Json?     // Array of backup codes (hashed)
   
+  // Password reset fields
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?

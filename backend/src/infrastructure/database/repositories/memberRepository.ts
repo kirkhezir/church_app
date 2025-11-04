@@ -42,6 +42,8 @@ export class MemberRepository implements IMemberRepository {
       prismaMember.mfaEnabled,
       prismaMember.mfaSecret || undefined,
       prismaMember.backupCodes ? (prismaMember.backupCodes as string[]) : undefined,
+      prismaMember.passwordResetToken || undefined,
+      prismaMember.passwordResetExpires || undefined,
       prismaMember.createdAt,
       prismaMember.updatedAt,
       prismaMember.deletedAt || undefined

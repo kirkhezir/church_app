@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
+import PasswordResetRequestPage from './pages/auth/PasswordResetRequestPage';
+import PasswordResetPage from './pages/auth/PasswordResetPage';
 import MemberDashboard from './pages/dashboard/MemberDashboard';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
@@ -94,6 +96,22 @@ const App: React.FC = () => {
         element={
           <PublicRoute>
             <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/password-reset-request"
+        element={
+          <PublicRoute>
+            <PasswordResetRequestPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <PublicRoute>
+            <PasswordResetPage />
           </PublicRoute>
         }
       />

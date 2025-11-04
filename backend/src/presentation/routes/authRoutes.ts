@@ -31,4 +31,16 @@ router.post('/refresh', authController.refresh);
  */
 router.post('/logout', authMiddleware, authController.logout);
 
+/**
+ * POST /api/v1/auth/password/reset-request
+ * Public endpoint - request password reset email
+ */
+router.post('/password/reset-request', authController.requestPasswordResetHandler);
+
+/**
+ * POST /api/v1/auth/password/reset
+ * Public endpoint - reset password with token
+ */
+router.post('/password/reset', authController.resetPasswordHandler);
+
 export default router;

@@ -11,20 +11,26 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthenticateUser } from '../../application/useCases/authenticateUser';
 import { RefreshToken } from '../../application/useCases/refreshToken';
 import { LogoutUser } from '../../application/useCases/logoutUser';
+import { RequestPasswordReset } from '../../application/useCases/requestPasswordReset';
+import { ResetPassword } from '../../application/useCases/resetPassword';
 import { MemberRepository } from '../../infrastructure/database/repositories/memberRepository';
 import { PasswordService } from '../../infrastructure/auth/passwordService';
 import { JWTService } from '../../infrastructure/auth/jwtService';
+import { EmailService } from '../../infrastructure/email/emailService';
 import { logger } from '../../infrastructure/logging/logger';
 
 // Initialize dependencies
 const memberRepository = new MemberRepository();
 const passwordService = new PasswordService();
 const jwtService = new JWTService();
+const emailService = new EmailService();
 
 // Initialize use cases
 const authenticateUser = new AuthenticateUser(memberRepository, passwordService, jwtService);
 const refreshToken = new RefreshToken(jwtService, memberRepository);
 const logoutUser = new LogoutUser();
+const requestPasswordReset = new RequestPasswordReset(memberRepository, emailService);
+const resetPassword = new ResetPassword(memberRepository);
 
 /**
  * POST /api/v1/auth/login
@@ -149,6 +155,71 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
       return;
     }
 
+    next(error);
+  }
+}
+
+/**
+ * POST /api/v1/auth/password/reset-request
+ * Request password reset email (T089)
+ */
+export async function requestPasswordResetHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { email } = req.body;
+
+    // Validate required fields
+    if (!email) {
+      res.status(400).json({
+        error: 'Email is required',
+      });
+      return;
+    }
+
+    // Execute password reset request
+    const result = await requestPasswordReset.execute({ email });
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    logger.error('Password reset request error', { error: error.message });
+    next(error);
+  }
+}
+
+/**
+ * POST /api/v1/auth/password/reset
+ * Reset password with token (T090)
+ */
+export async function resetPasswordHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Validate required fields
+    if (!token || !newPassword) {
+      res.status(400).json({
+        error: 'Token and new password are required',
+      });
+      return;
+    }
+
+    // Execute password reset
+    const result = await resetPassword.execute({ token, newPassword });
+
+    if (!result.success) {
+      res.status(400).json(result);
+      return;
+    }
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    logger.error('Password reset error', { error: error.message });
     next(error);
   }
 }

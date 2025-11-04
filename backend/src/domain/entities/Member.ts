@@ -33,6 +33,8 @@ export class Member {
     public mfaEnabled: boolean = false,
     public mfaSecret?: string,
     public backupCodes?: string[],
+    public passwordResetToken?: string,
+    public passwordResetExpires?: Date,
     public createdAt: Date = new Date(),
     public updatedAt: Date = new Date(),
     public deletedAt?: Date
