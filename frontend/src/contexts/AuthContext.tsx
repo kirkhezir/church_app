@@ -1,6 +1,16 @@
 import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { apiClient } from '../services/api/apiClient';
-import { LoginRequest, LoginResponse, Member, Role } from '../types/api';
+import { authService } from '../services/endpoints/authService';
+
+/**
+ * Member type
+ */
+interface Member {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
 
 /**
  * Authentication Context Type
@@ -9,9 +19,8 @@ interface AuthContextType {
   user: Member | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  refreshUser: () => Promise<void>;
 }
 
 /**

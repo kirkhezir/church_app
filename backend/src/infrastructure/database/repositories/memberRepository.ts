@@ -63,8 +63,11 @@ export class MemberRepository implements IMemberRepository {
    * Find member by email
    */
   async findByEmail(email: string): Promise<Member | null> {
-    const member = await prisma.member.findUnique({
-      where: { email, deletedAt: null },
+    const member = await prisma.member.findFirst({
+      where: {
+        email,
+        deletedAt: null,
+      },
     });
 
     return member ? this.toDomain(member) : null;

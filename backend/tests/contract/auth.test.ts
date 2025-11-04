@@ -11,10 +11,9 @@
 
 import request from 'supertest';
 import { Server } from '../../src/presentation/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
 
-const prisma = new PrismaClient();
 const passwordService = new PasswordService();
 const server = new Server();
 const app = server.app;
@@ -23,6 +22,15 @@ describe('Contract Tests: Authentication Endpoints', () => {
   let testMemberId: string;
 
   beforeAll(async () => {
+    // Clean up any existing test data
+    await prisma.member.deleteMany({
+      where: {
+        email: {
+          in: ['auth-test@example.com', 'lockout-test@example.com'],
+        },
+      },
+    });
+
     // Create test member for authentication
     const hashedPassword = await passwordService.hash('TestPassword123!');
     const member = await prisma.member.create({
@@ -32,13 +40,14 @@ describe('Contract Tests: Authentication Endpoints', () => {
         firstName: 'Auth',
         lastName: 'Test',
         role: 'MEMBER',
-        phone: '1234567890',
+        phone: '+1234567890',
         membershipDate: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         failedLoginAttempts: 0,
       },
     });
     testMemberId = member.id;
+    console.log('Test member created:', member.id, member.email);
   });
 
   afterAll(async () => {
@@ -55,9 +64,13 @@ describe('Contract Tests: Authentication Endpoints', () => {
           email: 'auth-test@example.com',
           password: 'TestPassword123!',
         })
-        .expect('Content-Type', /json/)
-        .expect(200);
+        .expect('Content-Type', /json/);
 
+      if (response.status !== 200) {
+        console.log('Login failed:', response.status, response.body);
+      }
+
+      expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
       expect(response.body).toHaveProperty('member');
@@ -142,7 +155,7 @@ describe('Contract Tests: Authentication Endpoints', () => {
           firstName: 'Lockout',
           lastName: 'Test',
           role: 'MEMBER',
-          phone: '9876543210',
+          phone: '+9876543210',
           membershipDate: new Date(),
           privacySettings: { showPhone: true, showEmail: true, showAddress: true },
           failedLoginAttempts: 0,
