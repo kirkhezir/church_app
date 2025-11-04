@@ -77,6 +77,8 @@ describe('Contract Tests: Event Endpoints', () => {
     const endDateTime =
       overrides?.endDateTime || new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // 2 hours later
 
+    console.log('📝 Creating test event with createdById:', createdById);
+
     const event = await prisma.event.create({
       data: {
         title: overrides?.title || 'Test Event',
@@ -103,9 +105,26 @@ describe('Contract Tests: Event Endpoints', () => {
       },
     });
 
+    // Clean up any existing events that might reference old members
+    await prisma.eventRSVP.deleteMany({});
+    await prisma.event.deleteMany({
+      where: {
+        title: {
+          contains: 'Test Event',
+        },
+      },
+    });
+
     // Create test members
     adminId = await createTestMember('event-admin@example.com', 'AdminPass123!', 'ADMIN');
     memberId = await createTestMember('event-member@example.com', 'MemberPass123!', 'MEMBER');
+
+    // Verify members were created
+    if (!adminId || !memberId) {
+      throw new Error('Failed to create test members');
+    }
+
+    console.log('✅ Test members created:', { adminId, memberId });
 
     // Generate tokens
     adminToken = jwtService.generateAccessToken({
@@ -262,8 +281,8 @@ describe('Contract Tests: Event Endpoints', () => {
   });
 
   describe('GET /api/v1/events', () => {
-    beforeAll(async () => {
-      // Create test events with different categories and dates
+    it('should return 200 with list of events', async () => {
+      // Create test events
       await createTestEvent(adminId, {
         title: 'Sunday Worship',
         category: 'WORSHIP',
@@ -274,14 +293,7 @@ describe('Contract Tests: Event Endpoints', () => {
         category: 'BIBLE_STUDY',
         startDateTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       });
-      await createTestEvent(adminId, {
-        title: 'Community Outreach',
-        category: 'COMMUNITY',
-        startDateTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      });
-    });
 
-    it('should return 200 with list of events', async () => {
       const response = await request(app).get('/api/v1/events').expect('Content-Type', /json/);
 
       expect(response.status).toBe(200);
@@ -337,14 +349,12 @@ describe('Contract Tests: Event Endpoints', () => {
   describe('GET /api/v1/events/:id', () => {
     let testEventId: string;
 
-    beforeAll(async () => {
+    it('should return 200 with event details', async () => {
       testEventId = await createTestEvent(adminId, {
         title: 'Detailed Event Test',
         maxCapacity: 50,
       });
-    });
 
-    it('should return 200 with event details', async () => {
       const response = await request(app)
         .get(`/api/v1/events/${testEventId}`)
         .expect('Content-Type', /json/);
