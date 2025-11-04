@@ -52,8 +52,11 @@ export class MemberRepository implements IMemberRepository {
    * Find member by ID
    */
   async findById(id: string): Promise<Member | null> {
-    const member = await prisma.member.findUnique({
-      where: { id, deletedAt: null },
+    const member = await prisma.member.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+      },
     });
 
     return member ? this.toDomain(member) : null;

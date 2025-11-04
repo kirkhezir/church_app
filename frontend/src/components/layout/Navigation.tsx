@@ -112,7 +112,7 @@ export const Navigation: React.FC = () => {
   // Filter nav items based on user role
   const filteredNavItems = navItems.filter((item) => {
     if (!item.roles) return true;
-    return user && item.roles.includes(user.role);
+    return user && item.roles.includes(user.role as 'ADMIN' | 'STAFF' | 'MEMBER');
   });
 
   const isActive = (path: string): boolean => {

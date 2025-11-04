@@ -65,12 +65,16 @@ class ApiClient {
         }
 
         // Transform error to ApiError format
+        const errorData = error.response?.data as any;
         const apiError: ApiError = {
-          code: error.response?.data?.error?.code || 'UNKNOWN_ERROR',
+          code: errorData?.error?.code || errorData?.code || 'UNKNOWN_ERROR',
           message:
-            error.response?.data?.error?.message || error.message || 'An unexpected error occurred',
+            errorData?.error?.message ||
+            errorData?.message ||
+            error.message ||
+            'An unexpected error occurred',
           statusCode: error.response?.status || 500,
-          details: error.response?.data?.error?.details,
+          details: errorData?.error?.details || errorData?.details,
         };
 
         return Promise.reject(apiError);

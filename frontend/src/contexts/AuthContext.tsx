@@ -20,7 +20,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 /**
@@ -71,21 +71,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [clearLogoutTimer]);
 
   /**
-   * Login user
+   * Login user with email and password
    */
-  const login = async (credentials: LoginRequest): Promise<void> => {
+  const login = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await apiClient.post<{ data: LoginResponse }>('/auth/login', credentials);
-      const { accessToken, refreshToken, user: userData } = response.data;
+      const response = await authService.login(email, password);
+      const { accessToken, refreshToken, member } = response;
 
-      // Store tokens
-      apiClient.setTokens(accessToken, refreshToken);
+      // Store tokens in localStorage
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
 
       // Store user data
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('user', JSON.stringify(member));
 
       // Set user state
-      setUser(userData as never);
+      setUser(member);
 
       // Setup 24-hour auto-logout
       setupLogoutTimer();
@@ -98,35 +99,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   /**
    * Logout user
    */
-  const logout = useCallback(() => {
-    // Clear tokens
-    apiClient.clearTokens();
-
-    // Clear user state
-    setUser(null);
-
-    // Clear logout timer
-    clearLogoutTimer();
-
-    // Redirect to login page
-    window.location.href = '/login';
-  }, [clearLogoutTimer]);
-
-  /**
-   * Refresh user data from API
-   */
-  const refreshUser = async (): Promise<void> => {
+  const logout = useCallback(async () => {
     try {
-      const response = await apiClient.get<{ data: Member }>('/auth/me');
-      const userData = response.data;
-
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        // Call logout API
+        await authService.logout(refreshToken);
+      }
     } catch (error) {
-      console.error('Failed to refresh user data:', error);
-      logout();
+      console.error('Logout API call failed:', error);
+      // Continue with local cleanup even if API call fails
+    } finally {
+      // Clear tokens and user data
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+
+      // Clear user state
+      setUser(null);
+
+      // Clear logout timer
+      clearLogoutTimer();
+
+      // Redirect to login page
+      window.location.href = '/login';
     }
-  };
+  }, [clearLogoutTimer]);
 
   /**
    * Initialize authentication state from localStorage
@@ -141,13 +139,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const userData = JSON.parse(storedUser) as Member;
           setUser(userData);
           setupLogoutTimer();
-
-          // Optionally refresh user data from API
-          // await refreshUser();
         }
       } catch (error) {
         console.error('Failed to initialize auth:', error);
-        apiClient.clearTokens();
+        // Clear invalid data
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
       } finally {
         setIsLoading(false);
       }
@@ -190,7 +188,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading,
     login,
     logout,
-    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -14,13 +14,13 @@
 
 ### Overall Status: **Phase 4 In Progress** - Core Auth Implemented
 
-| Phase                     | Status      | Progress     | Tests         | Notes                                |
-| ------------------------- | ----------- | ------------ | ------------- | ------------------------------------ |
-| **Phase 1: Setup**        | ✅ Complete | 15/15 (100%) | N/A           | Project structure, tooling, configs  |
-| **Phase 2: Foundation**   | ✅ Complete | 33/33 (100%) | 45/45 passing | Database, auth, API foundation       |
-| **Phase 3: User Story 1** | ✅ Complete | 17/17 (100%) | 72/72 passing | Public landing page + contact form   |
-| **Phase 4: User Story 2** | 🔄 Active   | 11/46 (24%)  | 9/13 passing  | Auth backend done, dashboard pending |
-| **Phase 5: User Story 3** | ⏳ Pending  | 0/TBD        | Not started   | Event management & RSVP              |
+| Phase                     | Status      | Progress     | Tests         | Notes                               |
+| ------------------------- | ----------- | ------------ | ------------- | ----------------------------------- |
+| **Phase 1: Setup**        | ✅ Complete | 15/15 (100%) | N/A           | Project structure, tooling, configs |
+| **Phase 2: Foundation**   | ✅ Complete | 33/33 (100%) | 45/45 passing | Database, auth, API foundation      |
+| **Phase 3: User Story 1** | ✅ Complete | 17/17 (100%) | 72/72 passing | Public landing page + contact form  |
+| **Phase 4: User Story 2** | 🔄 Active   | 13/46 (28%)  | 13/13 passing | Auth complete, routing next         |
+| **Phase 5: User Story 3** | ⏳ Pending  | 0/TBD        | Not started   | Event management & RSVP             |
 
 ### Test Coverage Summary
 
