@@ -43,32 +43,27 @@ test.describe("Event RSVP Flow - Member Actions", () => {
   test("should view event details", async ({ page }) => {
     await page.goto(`${BASE_URL}/events`);
 
-    // Click on first event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
+    // Click on first event's View Details button
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
 
     // Wait for event detail page
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
-    // Verify event details are displayed
-    await expect(
-      page.locator('h1, h2, [data-testid="event-title"]')
-    ).toBeVisible();
+    // Verify event details are displayed (look for any h1 or h2 element)
+    const heading = page.locator("h1, h2").first();
+    await expect(heading).toBeVisible({ timeout: 5000 });
   });
 
   test("should RSVP to an event successfully", async ({ page }) => {
     await page.goto(`${BASE_URL}/events`);
 
     // Find first event with RSVP button
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
 
     // Wait for event detail page
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Look for RSVP button
     const rsvpButton = page
@@ -82,10 +77,10 @@ test.describe("Event RSVP Flow - Member Actions", () => {
       if (!isDisabled) {
         await rsvpButton.click();
 
-        // Wait for success message
+        // Wait for success message or button state change
         await expect(
           page.locator(
-            'text=/success|rsvp.*confirmed|registered/i, [role="alert"]'
+            '[role="alert"]:has-text("success"), [role="alert"]:has-text("confirmed"), [role="alert"]:has-text("RSVP")'
           )
         ).toBeVisible({ timeout: 5000 });
 
@@ -103,11 +98,9 @@ test.describe("Event RSVP Flow - Member Actions", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Navigate to first event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Look for Cancel RSVP button (means user already RSVPd)
     const cancelButton = page.locator(
@@ -156,7 +149,7 @@ test.describe("Event RSVP Flow - Member Actions", () => {
     if (await cancelledEvent.isVisible({ timeout: 2000 })) {
       // Click to view details
       await cancelledEvent.click();
-      await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
       // Verify no RSVP button is present
       const rsvpButton = page.locator('button:has-text("RSVP")');
@@ -168,16 +161,14 @@ test.describe("Event RSVP Flow - Member Actions", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Click on first event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Look for capacity information (e.g., "50 / 100 attendees")
-    const capacityText = page.locator(
-      "text=/\\d+.*\\/.*\\d+.*attendees|capacity|spots.*left/i"
-    );
+    const capacityText = page
+      .locator("text=/\\d+.*\\/.*\\d+.*attendees/i")
+      .first();
 
     if (await capacityText.isVisible({ timeout: 2000 })) {
       // Verify capacity is displayed
@@ -199,12 +190,10 @@ test.describe("Event RSVP Flow - Member Actions", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Click on an event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
     if (await firstEvent.isVisible()) {
-      await firstEvent.click();
-      await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+      await firstEvent.locator('button:has-text("View Details")').click();
+      await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
       // Try to click RSVP button
       const rsvpButton = page.locator(
@@ -234,16 +223,14 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Click on first event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Click "View RSVPs" or "Attendees" button
     const viewRSVPsButton = page
       .locator(
-        'text=/view.*rsvps|view.*attendees|manage.*rsvps/i, button:has-text("RSVPs")'
+        'button:has-text("RSVP"), button:has-text("View"), button:has-text("Attendees")'
       )
       .first();
 
@@ -251,7 +238,7 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
       await viewRSVPsButton.click();
 
       // Wait for RSVP list page
-      await page.waitForURL(/\/events\/\d+\/rsvps$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/rsvps$/i, { timeout: 5000 });
 
       // Verify RSVP list is displayed
       await expect(page.locator("h1, h2")).toContainText(/rsvps|attendees/i);
@@ -262,11 +249,9 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Navigate to first event's RSVP list
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Click view RSVPs
     const viewRSVPsButton = page
@@ -274,7 +259,7 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
       .first();
     if (await viewRSVPsButton.isVisible({ timeout: 2000 })) {
       await viewRSVPsButton.click();
-      await page.waitForURL(/\/events\/\d+\/rsvps$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/rsvps$/i, { timeout: 5000 });
 
       // Look for statistics (total RSVPs, attendance rate, etc.)
       const statsSection = page.locator(
@@ -288,16 +273,14 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Navigate to RSVP list
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     const viewRSVPsButton = page.locator("text=/view.*rsvps/i").first();
     if (await viewRSVPsButton.isVisible({ timeout: 2000 })) {
       await viewRSVPsButton.click();
-      await page.waitForURL(/\/events\/\d+\/rsvps$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/rsvps$/i, { timeout: 5000 });
 
       // Look for status filter tabs/buttons
       const confirmedTab = page
@@ -318,16 +301,14 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Navigate to RSVP list
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     const viewRSVPsButton = page.locator("text=/view.*rsvps/i").first();
     if (await viewRSVPsButton.isVisible({ timeout: 2000 })) {
       await viewRSVPsButton.click();
-      await page.waitForURL(/\/events\/\d+\/rsvps$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/rsvps$/i, { timeout: 5000 });
 
       // Look for search input
       const searchInput = page
@@ -346,16 +327,14 @@ test.describe("Event RSVP Flow - Admin Views RSVPs", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Navigate to RSVP list
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     const viewRSVPsButton = page.locator("text=/view.*rsvps/i").first();
     if (await viewRSVPsButton.isVisible({ timeout: 2000 })) {
       await viewRSVPsButton.click();
-      await page.waitForURL(/\/events\/\d+\/rsvps$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/rsvps$/i, { timeout: 5000 });
 
       // Look for export button
       const exportButton = page
@@ -396,11 +375,9 @@ test.describe("Event RSVP Flow - Capacity Limits", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Click on first event
-    const firstEvent = page
-      .locator('[data-testid="event-card"], .event-card')
-      .first();
-    await firstEvent.click();
-    await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+    const firstEvent = page.locator('[data-testid="event-card"]').first();
+    await firstEvent.locator('button:has-text("View Details")').click();
+    await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
     // Get current capacity count
     const capacityText = page.locator("text=/\\d+.*\\/.*\\d+/i").first();
@@ -455,7 +432,10 @@ test.describe("Event RSVP Flow - Edge Cases", () => {
     const event2 = page2.locator('[data-testid="event-card"]').first();
 
     if ((await event1.isVisible()) && (await event2.isVisible())) {
-      await Promise.all([event1.click(), event2.click()]);
+      await Promise.all([
+        event1.locator('button:has-text("View Details")').click(),
+        event2.locator('button:has-text("View Details")').click(),
+      ]);
 
       // Try to RSVP simultaneously
       const rsvp1 = page.locator('button:has-text("RSVP")');
@@ -479,7 +459,7 @@ test.describe("Event RSVP Flow - Edge Cases", () => {
 
     await page.goto(`${BASE_URL}/events`);
     const firstEvent = page.locator('[data-testid="event-card"]').first();
-    await firstEvent.click();
+    await firstEvent.locator('button:has-text("View Details")').click();
 
     // If already RSVPd, button should show "Already RSVP'd" or similar
     const alreadyRSVPButton = page.locator(

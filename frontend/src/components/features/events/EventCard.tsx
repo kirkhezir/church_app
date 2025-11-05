@@ -54,7 +54,10 @@ export function EventCard({
   const isFull = availableSpots !== undefined && availableSpots <= 0;
 
   return (
-    <Card className={`transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}>
+    <Card
+      className={`transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
+      data-testid="event-card"
+    >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
