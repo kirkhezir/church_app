@@ -34,11 +34,11 @@ interface PerformanceMetrics {
  * Helper function to login and get auth token
  */
 async function loginUser(email: string, password: string): Promise<string> {
-  const response = await axios.post(`${API_URL}/auth/login`, {
+  const response = await axios.post(`${API_URL}/api/v1/auth/login`, {
     email,
     password,
   });
-  return response.data.token;
+  return response.data.accessToken;
 }
 
 /**
@@ -46,15 +46,24 @@ async function loginUser(email: string, password: string): Promise<string> {
  */
 async function measureRequest(
   requestFn: () => Promise<any>
-): Promise<{ success: boolean; responseTime: number }> {
+): Promise<{ success: boolean; responseTime: number; error?: string }> {
   const startTime = Date.now();
   try {
     await requestFn();
     const responseTime = Date.now() - startTime;
     return { success: true, responseTime };
-  } catch (error) {
+  } catch (error: any) {
     const responseTime = Date.now() - startTime;
-    return { success: false, responseTime };
+    // Log first few errors for debugging
+    if (Math.random() < 0.1) {
+      // Log ~10% of errors to avoid spam
+      console.error(
+        'Request failed:',
+        error.response?.status,
+        error.response?.data || error.message
+      );
+    }
+    return { success: false, responseTime, error: error.message };
   }
 }
 
@@ -103,14 +112,17 @@ describe('Event Management Performance Tests', () => {
       .fill(null)
       .map(() =>
         measureRequest(async () => {
-          const response = await axios.get(`${API_URL}/events`, {
+          const response = await axios.get(`${API_URL}/api/v1/events`, {
             params: {
               page: 1,
               limit: 10,
             },
           });
-          expect(response.status).toBe(200);
-          expect(Array.isArray(response.data.events)).toBe(true);
+          // For performance tests, just verify we got a response
+          // Response structure is {success, data: [...]}
+          if (response.status !== 200 || !Array.isArray(response.data?.data)) {
+            throw new Error(`Invalid response: ${response.status}`);
+          }
         })
       );
 
@@ -144,11 +156,12 @@ describe('Event Management Performance Tests', () => {
     const results: Array<{ success: boolean; responseTime: number }> = [];
 
     // First, get list of events
-    const eventsResponse = await axios.get(`${API_URL}/events`, {
+    const eventsResponse = await axios.get(`${API_URL}/api/v1/events`, {
       params: { page: 1, limit: 10 },
     });
 
-    const events = eventsResponse.data.events;
+    // Response structure is {success, data: [...]}
+    const events = eventsResponse.data.data;
     expect(events.length).toBeGreaterThan(0);
 
     const eventId = events[0].id;
@@ -159,17 +172,27 @@ describe('Event Management Performance Tests', () => {
       .fill(null)
       .map(() =>
         measureRequest(async () => {
-          const response = await axios.post(
-            `${API_URL}/events/${eventId}/rsvp`,
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
+          try {
+            const response = await axios.post(
+              `${API_URL}/api/v1/events/${eventId}/rsvp`,
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${authToken}`,
+                },
+                validateStatus: (status) => status < 500, // Accept 2xx, 3xx, 4xx as "successful"
+              }
+            );
+            // 200/201 = successful RSVP, 409 = already RSVPed (also valid)
+            if (![200, 201, 409].includes(response.status)) {
+              throw new Error(`Unexpected status: ${response.status}`);
             }
-          );
-          // Expect either success or "already RSVP'd" error
-          expect([200, 201, 400, 409]).toContain(response.status);
+          } catch (error: any) {
+            // Only throw if it's not a 409 (duplicate RSVP)
+            if (error.response?.status !== 409) {
+              throw error;
+            }
+          }
         })
       );
 
@@ -195,7 +218,8 @@ describe('Event Management Performance Tests', () => {
     console.log(`Requests/Second: ${metrics.requestsPerSecond.toFixed(2)}`);
 
     // Assertions
-    expect(metrics.successfulRequests).toBeGreaterThan(45); // At least 90% success rate (some may fail due to duplicates)
+    // All requests should succeed (either creating RSVP or getting 409 for duplicates)
+    expect(metrics.successfulRequests).toBeGreaterThan(45); // At least 90% success rate
     expect(metrics.averageResponseTime).toBeLessThan(2000); // Average < 2 seconds
   }, 60000);
 
@@ -212,10 +236,13 @@ describe('Event Management Performance Tests', () => {
         .fill(null)
         .map(() =>
           measureRequest(async () => {
-            const response = await axios.get(`${API_URL}/events`, {
+            const response = await axios.get(`${API_URL}/api/v1/events`, {
               params: { page: 1, limit: 10 },
             });
-            expect(response.status).toBe(200);
+            // For performance tests, just verify we got a valid response
+            if (response.status !== 200) {
+              throw new Error(`Invalid response: ${response.status}`);
+            }
           })
         );
 
@@ -270,9 +297,12 @@ describe('Event Management Performance Tests', () => {
         .fill(null)
         .map(() =>
           measureRequest(async () => {
-            const response = await axios.get(`${API_URL}/events`, { params });
-            expect(response.status).toBe(200);
-            expect(Array.isArray(response.data.events)).toBe(true);
+            const response = await axios.get(`${API_URL}/api/v1/events`, { params });
+            // For performance tests, just verify we got a valid response
+            // Response structure is {success, data: [...]}
+            if (response.status !== 200 || !Array.isArray(response.data?.data)) {
+              throw new Error(`Invalid response: ${response.status}`);
+            }
           })
         )
     );
