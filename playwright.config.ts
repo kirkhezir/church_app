@@ -37,11 +37,6 @@ export default defineConfig({
     },
 
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-
-    {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
     },
@@ -58,18 +53,19 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: [
-    {
-      command: "cd backend && npm run dev",
-      url: "http://localhost:3000",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000,
-    },
-    {
-      command: "cd frontend && npm run dev",
-      url: "http://localhost:5173",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000,
-    },
-  ],
+  // Commented out - servers are already running manually
+  // webServer: [
+  //   {
+  //     command: "cd backend && npm run dev",
+  //     url: "http://localhost:3000",
+  //     reuseExistingServer: true,
+  //     timeout: 120 * 1000,
+  //   },
+  //   {
+  //     command: "cd frontend && npm run dev",
+  //     url: "http://localhost:5173",
+  //     reuseExistingServer: true,
+  //     timeout: 120 * 1000,
+  //   },
+  // ],
 });

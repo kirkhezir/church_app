@@ -65,3 +65,9 @@ playwright/.cache/
 *.db
 *.sqlite
 *.sqlite3
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

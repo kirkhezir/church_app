@@ -9,9 +9,9 @@ const BASE_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 // Test user credentials (from seed data)
 const MEMBER_EMAIL = "john.doe@example.com";
-const MEMBER_PASSWORD = "SecurePass123!";
-const ADMIN_EMAIL = "admin@church.com";
-const ADMIN_PASSWORD = "SecurePass123!";
+const MEMBER_PASSWORD = "Member123!";
+const ADMIN_EMAIL = "admin@singburi-adventist.org";
+const ADMIN_PASSWORD = "Admin123!";
 
 test.describe("Event RSVP Flow - Member Actions", () => {
   test.beforeEach(async ({ page }) => {

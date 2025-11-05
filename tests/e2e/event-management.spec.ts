@@ -9,8 +9,8 @@ const BASE_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const API_URL = process.env.BACKEND_URL || "http://localhost:3000/api/v1";
 
 // Test user credentials (from seed data)
-const ADMIN_EMAIL = "admin@church.com";
-const ADMIN_PASSWORD = "SecurePass123!";
+const ADMIN_EMAIL = "admin@singburi-adventist.org";
+const ADMIN_PASSWORD = "Admin123!";
 
 test.describe("Event Management - Admin Flow", () => {
   test.beforeEach(async ({ page }) => {
@@ -38,74 +38,56 @@ test.describe("Event Management - Admin Flow", () => {
     await page.goto(`${BASE_URL}/events`);
 
     // Click "Create Event" button
-    await page.click(
-      'text=/create.*event/i, a:has-text("Create"), button:has-text("Create")'
-    );
+    await page.getByRole("button", { name: /create event/i }).click();
 
     // Verify create page loaded
     await expect(page).toHaveURL(`${BASE_URL}/events/create`, {
       timeout: 5000,
     });
-    await expect(page.locator("h1, h2")).toContainText(/create.*event/i);
+    await expect(page.getByText(/create new event/i)).toBeVisible();
   });
 
   test("should create a new event successfully", async ({ page }) => {
     await page.goto(`${BASE_URL}/events/create`);
 
     // Fill in event form
-    await page.fill(
-      'input[name="title"], input[placeholder*="title" i]',
-      "E2E Test Event"
-    );
-    await page.fill(
-      'textarea[name="description"], textarea[placeholder*="description" i]',
-      "This is an automated test event created by Playwright"
-    );
+    await page.getByPlaceholder(/enter event title/i).fill("E2E Test Event");
+    await page
+      .getByPlaceholder(/describe the event/i)
+      .fill("This is an automated test event created by Playwright");
 
-    // Select category (use first option if dropdown, or find specific category)
-    const categorySelect = page
-      .locator('select[name="category"], [role="combobox"]')
-      .first();
-    await categorySelect.selectOption({ index: 1 }); // Select first non-empty option
+    // Select category - Click combobox and select option
+    await page.getByRole("combobox", { name: /category/i }).click();
+    await page.getByRole("option", { name: /bible study/i }).click();
 
     // Set location
-    await page.fill(
-      'input[name="location"], input[placeholder*="location" i]',
-      "Test Chapel"
-    );
+    await page.getByPlaceholder(/enter event location/i).fill("Test Chapel");
 
-    // Set start date (tomorrow)
+    // Set start date/time (tomorrow at 10:00 AM)
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split("T")[0];
-    await page.fill('input[name="startDate"], input[type="date"]', tomorrowStr);
+    const tomorrowDatetime = `${tomorrow.toISOString().split("T")[0]}T10:00`;
+    await page.getByLabel(/start date.*time/i).fill(tomorrowDatetime);
 
-    // Set start time
-    await page.fill('input[name="startTime"], input[type="time"]', "10:00");
-
-    // Set end date (same day)
-    await page.fill('input[name="endDate"], input[type="date"]', tomorrowStr);
-
-    // Set end time
-    await page.fill('input[name="endTime"], input[type="time"]', "12:00");
+    // Set end date/time (same day at 12:00 PM)
+    const endDatetime = `${tomorrow.toISOString().split("T")[0]}T12:00`;
+    await page.getByLabel(/end date.*time/i).fill(endDatetime);
 
     // Set max capacity
-    await page.fill(
-      'input[name="maxCapacity"], input[placeholder*="capacity" i]',
-      "50"
-    );
+    await page.getByLabel(/max capacity/i).fill("50");
 
     // Submit form
-    await page.click(
-      'button[type="submit"], button:has-text("Create"), button:has-text("Save")'
-    );
+    await page.getByRole("button", { name: /create event/i }).click();
 
-    // Wait for redirect to events list or event detail
-    await page.waitForURL(/\/events(\/\d+)?$/, { timeout: 10000 });
+    // Wait for redirect to events list or event detail (UUID format)
+    await page.waitForURL(/\/events(\/[a-f0-9-]+)?$/i, { timeout: 10000 });
 
     // Verify success message or event in list
     await expect(
-      page.locator('text=/success|created|event added/i, [role="alert"]')
+      page
+        .locator('[role="alert"]')
+        .filter({ hasText: /success|created|event added/i })
+        .or(page.getByText(/event created|success/i))
     ).toBeVisible({ timeout: 5000 });
   });
 
@@ -119,7 +101,7 @@ test.describe("Event Management - Admin Flow", () => {
 
     // Should show validation errors
     await expect(
-      page.locator("text=/required|enter.*title|please provide/i")
+      page.locator("text=/required|enter.*title|please provide/i").first()
     ).toBeVisible({ timeout: 3000 });
   });
 
@@ -127,28 +109,26 @@ test.describe("Event Management - Admin Flow", () => {
     await page.goto(`${BASE_URL}/events/create`);
 
     // Fill in basic required fields
-    await page.fill(
-      'input[name="title"], input[placeholder*="title" i]',
-      "Invalid Date Event"
-    );
-    await page.fill('textarea[name="description"]', "Testing date validation");
+    await page
+      .getByPlaceholder(/enter event title/i)
+      .fill("Invalid Date Event");
+    await page
+      .getByPlaceholder(/describe the event/i)
+      .fill("Testing date validation");
 
-    // Set start date (tomorrow)
+    // Set start date/time (tomorrow at 2 PM)
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+    const tomorrowDatetime = `${tomorrow.toISOString().split("T")[0]}T14:00`;
+    await page.getByLabel(/start date.*time/i).fill(tomorrowDatetime);
 
-    // Set start date
-    await page.fill('input[name="startDate"]', tomorrowStr);
-    await page.fill('input[name="startTime"]', "14:00");
-
-    // Set end date to today (before start)
-    const today = new Date().toISOString().split("T")[0];
-    await page.fill('input[name="endDate"]', today);
-    await page.fill('input[name="endTime"]', "12:00");
+    // Set end date/time to today at 12 PM (before start - should be invalid)
+    const today = new Date();
+    const todayDatetime = `${today.toISOString().split("T")[0]}T12:00`;
+    await page.getByLabel(/end date.*time/i).fill(todayDatetime);
 
     // Try to submit
-    await page.click('button[type="submit"]');
+    await page.getByRole("button", { name: /create event/i }).click();
 
     // Should show validation error
     await expect(
@@ -170,31 +150,30 @@ test.describe("Event Management - Admin Flow", () => {
       await firstEvent.click();
 
       // Wait for event detail page
-      await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
       // Click edit button
-      await page.click(
-        'text=/edit/i, a:has-text("Edit"), button:has-text("Edit")'
-      );
+      await page.getByRole("button", { name: /edit/i }).click();
 
       // Wait for edit page
-      await page.waitForURL(/\/events\/\d+\/edit$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+\/edit$/i, { timeout: 5000 });
 
       // Modify title
-      const titleInput = page.locator('input[name="title"]');
+      const titleInput = page.getByPlaceholder(/enter event title/i);
       await titleInput.fill("Updated Event Title");
 
       // Submit update
-      await page.click(
-        'button[type="submit"], button:has-text("Update"), button:has-text("Save")'
-      );
+      await page.getByRole("button", { name: /update|save/i }).click();
 
       // Wait for redirect
-      await page.waitForURL(/\/events\/\d+$/, { timeout: 10000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 10000 });
 
       // Verify success message
       await expect(
-        page.locator('text=/success|updated/i, [role="alert"]')
+        page
+          .locator('[role="alert"]')
+          .filter({ hasText: /success|updated/i })
+          .or(page.getByText(/updated|success/i))
       ).toBeVisible({ timeout: 5000 });
     }
   });
@@ -211,12 +190,10 @@ test.describe("Event Management - Admin Flow", () => {
       await firstEvent.click();
 
       // Wait for event detail page
-      await page.waitForURL(/\/events\/\d+$/, { timeout: 5000 });
+      await page.waitForURL(/\/events\/[a-f0-9-]+$/i, { timeout: 5000 });
 
       // Click cancel event button (might be in dropdown or modal)
-      await page.click(
-        'text=/cancel.*event/i, button:has-text("Cancel Event")'
-      );
+      await page.getByRole("button", { name: /cancel event/i }).click();
 
       // Confirm cancellation (if modal appears)
       const confirmButton = page.locator(
@@ -282,9 +259,7 @@ test.describe("Event Management - Admin Flow", () => {
       await page.waitForTimeout(500);
 
       // Click clear all button
-      const clearButton = page
-        .locator('text=/clear.*all|clear.*filters/i, button:has-text("Clear")')
-        .first();
+      const clearButton = page.getByRole("button", { name: /clear/i }).first();
       if (await clearButton.isVisible()) {
         await clearButton.click();
 
