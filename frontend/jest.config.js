@@ -7,6 +7,13 @@ export default {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  globals: {
+    'import.meta': {
+      env: {
+        VITE_API_URL: 'http://localhost:3000/api/v1',
+      },
+    },
+  },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',

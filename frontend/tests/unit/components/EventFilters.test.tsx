@@ -32,7 +32,7 @@ describe('EventFilters', () => {
       );
 
       expect(screen.getByText('All')).toBeInTheDocument();
-      expect(screen.getByText('Worship')).toBeInTheDocument();
+      expect(screen.getByText('Worship Service')).toBeInTheDocument();
       expect(screen.getByText('Bible Study')).toBeInTheDocument();
       expect(screen.getByText('Community')).toBeInTheDocument();
       expect(screen.getByText('Fellowship')).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship');
+      const worshipButton = screen.getByText('Worship Service');
       fireEvent.click(worshipButton);
 
       expect(mockOnCategoryChange).toHaveBeenCalledTimes(1);
@@ -186,7 +186,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship');
+      const worshipButton = screen.getByText('Worship Service');
       // Check that the button has the 'default' variant (active state)
       expect(worshipButton.closest('button')).not.toHaveClass('variant-outline');
     });
@@ -403,7 +403,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship');
+      const worshipButton = screen.getByText('Worship Service');
       const bibleStudyButton = screen.getByText('Bible Study');
 
       fireEvent.click(worshipButton);

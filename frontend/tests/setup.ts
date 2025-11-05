@@ -1,5 +1,6 @@
 // Frontend test setup
 import '@testing-library/jest-dom';
+import './__mocks__/importMeta';
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

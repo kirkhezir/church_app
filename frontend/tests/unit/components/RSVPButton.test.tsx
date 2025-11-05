@@ -3,6 +3,9 @@
  * Tests RSVP button states, authentication handling, and capacity checking
  */
 
+// Mock apiClient before any imports to avoid import.meta issues
+jest.mock('@/services/api/apiClient');
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { RSVPButton } from '@/components/features/events/RSVPButton';
