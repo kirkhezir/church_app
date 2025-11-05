@@ -8,6 +8,10 @@ import MemberDashboard from './pages/dashboard/MemberDashboard';
 import EditProfilePage from './pages/dashboard/EditProfilePage';
 import NotificationSettingsPage from './pages/dashboard/NotificationSettingsPage';
 import { EventsListPage } from './pages/events/EventsListPage';
+import { EventDetailPage } from './pages/events/EventDetailPage';
+import { EventCreatePage } from './pages/events/EventCreatePage';
+import { EventEditPage } from './pages/events/EventEditPage';
+import { RSVPListPage } from './pages/events/RSVPListPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 
@@ -103,6 +107,33 @@ const App: React.FC = () => {
 
       {/* Public Events Page (no authentication required, but RSVP requires login) */}
       <Route path="/events" element={<EventsListPage />} />
+      <Route path="/events/:id" element={<EventDetailPage />} />
+
+      {/* Event Management Routes (ADMIN/STAFF only - protected in components) */}
+      <Route
+        path="/events/create"
+        element={
+          <PrivateRoute>
+            <EventCreatePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/events/:id/edit"
+        element={
+          <PrivateRoute>
+            <EventEditPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/events/:id/rsvps"
+        element={
+          <PrivateRoute>
+            <RSVPListPage />
+          </PrivateRoute>
+        }
+      />
 
       {/* Private Routes */}
       <Route

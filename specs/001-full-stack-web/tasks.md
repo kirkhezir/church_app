@@ -14,13 +14,13 @@
 
 ### Overall Status: **Phase 5 In Progress** - Event Management Backend Foundation
 
-| Phase                     | Status         | Progress     | Tests         | Notes                                                |
-| ------------------------- | -------------- | ------------ | ------------- | ---------------------------------------------------- |
-| **Phase 1: Setup**        | ✅ Complete    | 15/15 (100%) | N/A           | Project structure, tooling, configs                  |
-| **Phase 2: Foundation**   | ✅ Complete    | 33/33 (100%) | 45/45 passing | Database, auth, API foundation                       |
-| **Phase 3: User Story 1** | ✅ Complete    | 17/17 (100%) | 72/72 passing | Public landing page + contact form                   |
-| **Phase 4: User Story 2** | ✅ Complete    | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE               |
-| **Phase 5: User Story 3** | 🔄 In Progress | 18/45 (40%)  | 33/33 passing | Event management backend complete, starting frontend |
+| Phase                     | Status         | Progress     | Tests         | Notes                                                      |
+| ------------------------- | -------------- | ------------ | ------------- | ---------------------------------------------------------- |
+| **Phase 1: Setup**        | ✅ Complete    | 15/15 (100%) | N/A           | Project structure, tooling, configs                        |
+| **Phase 2: Foundation**   | ✅ Complete    | 33/33 (100%) | 45/45 passing | Database, auth, API foundation                             |
+| **Phase 3: User Story 1** | ✅ Complete    | 17/17 (100%) | 72/72 passing | Public landing page + contact form                         |
+| **Phase 4: User Story 2** | ✅ Complete    | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE                     |
+| **Phase 5: User Story 3** | 🔄 In Progress | 38/45 (84%)  | 33/33 passing | Backend + Frontend complete, pending notifications & tests |
 
 ### Test Coverage Summary
 
@@ -358,32 +358,34 @@
 
 #### Frontend - Event List & Calendar
 
-- [ ] T149 [P] [US3] Create EventsListPage component in frontend/src/pages/events/EventsListPage.tsx
-- [ ] T150 [P] [US3] Create EventCard component for event display in frontend/src/components/features/EventCard.tsx
-- [ ] T151 [P] [US3] Create EventCalendarView component in frontend/src/components/features/EventCalendarView.tsx
-- [ ] T152 [P] [US3] Create EventFilters component (category, date range) in frontend/src/components/features/EventFilters.tsx
-- [ ] T153 [US3] Implement eventService.getEvents() in frontend/src/services/endpoints/eventService.ts
-- [ ] T154 [US3] Create useEvents custom hook in frontend/src/hooks/useEvents.ts
+- [x] T149 [P] [US3] Create EventsListPage component in frontend/src/pages/events/EventsListPage.tsx ✅ Complete (November 5, 2025) - Grid layout, filters, RSVP, loading/empty states
+- [x] T150 [P] [US3] Create EventCard component for event display in frontend/src/components/features/EventCard.tsx ✅ Complete - Category badges, date/time, capacity, RSVP button
+- [ ] T151 [P] [US3] Create EventCalendarView component in frontend/src/components/features/EventCalendarView.tsx (deferred - list view sufficient for MVP)
+- [x] T152 [P] [US3] Create EventFilters component (category, date range) in frontend/src/components/features/EventFilters.tsx ✅ Complete - Category buttons, date inputs, clear all
+- [x] T153 [US3] Implement eventService.getEvents() in frontend/src/services/endpoints/eventService.ts ✅ Complete - All 8 API methods implemented
+- [x] T154 [US3] Create useEvents custom hook in frontend/src/hooks/useEvents.ts ✅ Complete - useEvents, useEventDetail, useEventRSVP hooks
 
 #### Frontend - Event Detail & RSVP
 
-- [ ] T155 [P] [US3] Create EventDetailPage component in frontend/src/pages/events/EventDetailPage.tsx
-- [ ] T156 [P] [US3] Create RSVPButton component with capacity handling in frontend/src/components/features/RSVPButton.tsx
-- [ ] T157 [US3] Implement eventService.getEventById() in frontend/src/services/endpoints/eventService.ts
-- [ ] T158 [US3] Implement eventService.rsvpToEvent() in frontend/src/services/endpoints/eventService.ts
-- [ ] T159 [US3] Implement eventService.cancelRSVP() in frontend/src/services/endpoints/eventService.ts
+- [x] T155 [P] [US3] Create EventDetailPage component in frontend/src/pages/events/EventDetailPage.tsx ✅ Complete (November 5, 2025) - Full event view, RSVP functionality, attendee count
+- [x] T156 [P] [US3] Create RSVPButton component with capacity handling in frontend/src/components/features/RSVPButton.tsx ✅ Complete - Reusable button with auth redirect, capacity checks
+- [x] T157 [US3] Implement eventService.getEventById() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T158 [US3] Implement eventService.rsvpToEvent() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T159 [US3] Implement eventService.cancelRSVP() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
 
 #### Frontend - Event Management (Admin/Staff)
 
-- [ ] T160 [P] [US3] Create EventCreatePage component (admin/staff only) in frontend/src/pages/events/EventCreatePage.tsx
-- [ ] T161 [P] [US3] Create EventEditPage component (admin/staff only) in frontend/src/pages/events/EventEditPage.tsx
-- [ ] T162 [P] [US3] Create EventForm component with validation in frontend/src/components/features/EventForm.tsx
-- [ ] T163 [P] [US3] Create RSVPListPage component for viewing attendees (admin/staff) in frontend/src/pages/events/RSVPListPage.tsx
-- [ ] T164 [US3] Implement eventService.createEvent() in frontend/src/services/endpoints/eventService.ts
-- [ ] T165 [US3] Implement eventService.updateEvent() in frontend/src/services/endpoints/eventService.ts
-- [ ] T166 [US3] Implement eventService.cancelEvent() in frontend/src/services/endpoints/eventService.ts
-- [ ] T167 [US3] Implement eventService.getEventRSVPs() in frontend/src/services/endpoints/eventService.ts
-- [ ] T168 [US3] Add event management routes to React Router with role-based access
+- [x] T160 [P] [US3] Create EventCreatePage component (admin/staff only) in frontend/src/pages/events/EventCreatePage.tsx ✅ Complete (November 5, 2025) - Form page with navigation
+- [x] T161 [P] [US3] Create EventEditPage component (admin/staff only) in frontend/src/pages/events/EventEditPage.tsx ✅ Complete - Edit page with event loading, cancelled event prevention
+- [x] T162 [P] [US3] Create EventForm component with validation in frontend/src/components/features/EventForm.tsx ✅ Complete - Comprehensive validation (dates, capacity, URL), create/edit modes
+- [x] T163 [P] [US3] Create RSVPListPage component for viewing attendees (admin/staff) in frontend/src/pages/events/RSVPListPage.tsx ✅ Complete (November 5, 2025) - Table view, status tabs, statistics
+- [x] T164 [US3] Implement eventService.createEvent() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T165 [US3] Implement eventService.updateEvent() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T166 [US3] Implement eventService.cancelEvent() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T167 [US3] Implement eventService.getEventRSVPs() in frontend/src/services/endpoints/eventService.ts ✅ Complete (part of eventService)
+- [x] T168 [US3] Add event management routes to React Router with role-based access ✅ Complete - All routes added (/events, /events/:id, /events/create, /events/:id/edit, /events/:id/rsvps)
+
+**Frontend Status**: ✅ Complete - All event management pages, components, and services implemented (November 5, 2025)
 
 #### Incremental Load Testing
 

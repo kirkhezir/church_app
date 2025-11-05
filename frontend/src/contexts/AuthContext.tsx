@@ -1,4 +1,11 @@
-import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  ReactNode,
+} from 'react';
 import { authService } from '../services/endpoints/authService';
 
 /**
@@ -27,6 +34,18 @@ interface AuthContextType {
  * Authentication Context
  */
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+/**
+ * useAuth Hook
+ * Custom hook to access authentication context
+ */
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 /**
  * Authentication Provider Props
