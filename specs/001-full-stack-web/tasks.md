@@ -14,13 +14,13 @@
 
 ### Overall Status: **Phase 5 In Progress** - Event Management Backend Foundation
 
-| Phase                     | Status         | Progress     | Tests         | Notes                                           |
-| ------------------------- | -------------- | ------------ | ------------- | ----------------------------------------------- |
-| **Phase 1: Setup**        | ✅ Complete    | 15/15 (100%) | N/A           | Project structure, tooling, configs             |
-| **Phase 2: Foundation**   | ✅ Complete    | 33/33 (100%) | 45/45 passing | Database, auth, API foundation                  |
-| **Phase 3: User Story 1** | ✅ Complete    | 17/17 (100%) | 72/72 passing | Public landing page + contact form              |
-| **Phase 4: User Story 2** | ✅ Complete    | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE          |
-| **Phase 5: User Story 3** | 🔄 In Progress | 4/45 (9%)    | 33 RED tests  | Event management & RSVP - Domain layer complete |
+| Phase                     | Status         | Progress     | Tests         | Notes                                                |
+| ------------------------- | -------------- | ------------ | ------------- | ---------------------------------------------------- |
+| **Phase 1: Setup**        | ✅ Complete    | 15/15 (100%) | N/A           | Project structure, tooling, configs                  |
+| **Phase 2: Foundation**   | ✅ Complete    | 33/33 (100%) | 45/45 passing | Database, auth, API foundation                       |
+| **Phase 3: User Story 1** | ✅ Complete    | 17/17 (100%) | 72/72 passing | Public landing page + contact form                   |
+| **Phase 4: User Story 2** | ✅ Complete    | 46/46 (100%) | 57/58 (98.3%) | Auth, dashboard, profile - GREEN PHASE               |
+| **Phase 5: User Story 3** | 🔄 In Progress | 18/45 (40%)  | 33/33 passing | Event management backend complete, starting frontend |
 
 ### Test Coverage Summary
 
@@ -286,7 +286,7 @@
 
 #### API Contract Tests
 
-- [ ] T113 [US3] Write OpenAPI contract tests for event endpoints in backend/tests/contracts/eventEndpoints.test.ts (verify POST /api/v1/events, GET /api/v1/events, GET /api/v1/events/:id, PATCH /api/v1/events/:id, DELETE /api/v1/events/:id, POST /api/v1/events/:id/rsvp, DELETE /api/v1/events/:id/rsvp, GET /api/v1/events/:id/rsvps match spec)
+- [x] T113 [US3] Write OpenAPI contract tests for event endpoints in backend/tests/contract/eventEndpoints.test.ts (33 comprehensive tests covering all endpoints, auth, authorization, validation, error handling - 100% passing)
 
 #### Backend Unit Tests
 
@@ -318,36 +318,38 @@
 
 #### Domain & Repository
 
-- [ ] T126 [P] [US3] Define Event domain entity in backend/src/domain/entities/Event.ts
-- [ ] T127 [P] [US3] Define EventRSVP domain entity in backend/src/domain/entities/EventRSVP.ts
-- [ ] T128 [P] [US3] Implement Prisma repository for Event in backend/src/infrastructure/database/repositories/eventRepository.ts
-- [ ] T129 [P] [US3] Implement Prisma repository for EventRSVP in backend/src/infrastructure/database/repositories/eventRSVPRepository.ts
+- [x] T126 [P] [US3] Define Event domain entity in backend/src/domain/entities/Event.ts
+- [x] T127 [P] [US3] Define EventRSVP domain entity in backend/src/domain/entities/EventRSVP.ts
+- [x] T128 [P] [US3] Implement Prisma repository for Event in backend/src/infrastructure/database/repositories/eventRepository.ts
+- [x] T129 [P] [US3] Implement Prisma repository for EventRSVP in backend/src/infrastructure/database/repositories/eventRSVPRepository.ts
 
 #### Event CRUD Use Cases
 
-- [ ] T130 [P] [US3] Create CreateEvent use case in backend/src/application/useCases/createEvent.ts
-- [ ] T131 [P] [US3] Create GetEvents use case with filtering in backend/src/application/useCases/getEvents.ts
-- [ ] T132 [P] [US3] Create GetEventById use case in backend/src/application/useCases/getEventById.ts
-- [ ] T133 [P] [US3] Create UpdateEvent use case in backend/src/application/useCases/updateEvent.ts
-- [ ] T134 [P] [US3] Create CancelEvent use case in backend/src/application/useCases/cancelEvent.ts
+- [x] T130 [P] [US3] Create CreateEvent use case in backend/src/application/useCases/createEvent.ts
+- [x] T131 [P] [US3] Create GetEvents use case with filtering in backend/src/application/useCases/getEvents.ts
+- [x] T132 [P] [US3] Create GetEventById use case in backend/src/application/useCases/getEventById.ts
+- [x] T133 [P] [US3] Create UpdateEvent use case in backend/src/application/useCases/updateEvent.ts
+- [x] T134 [P] [US3] Create CancelEvent use case in backend/src/application/useCases/cancelEvent.ts
 
 #### RSVP Use Cases
 
-- [ ] T135 [P] [US3] Create RSVPToEvent use case with capacity checking in backend/src/application/useCases/rsvpToEvent.ts
-- [ ] T136 [P] [US3] Create CancelRSVP use case in backend/src/application/useCases/cancelRSVP.ts
-- [ ] T137 [P] [US3] Create GetEventRSVPs use case in backend/src/application/useCases/getEventRSVPs.ts
+- [x] T135 [P] [US3] Create RSVPToEvent use case with capacity checking in backend/src/application/useCases/rsvpToEvent.ts
+- [x] T136 [P] [US3] Create CancelRSVP use case in backend/src/application/useCases/cancelRSVP.ts
+- [x] T137 [P] [US3] Create GetEventRSVPs use case in backend/src/application/useCases/getEventRSVPs.ts
 
 #### Event API Controllers
 
-- [ ] T138 [US3] Implement POST /api/v1/events controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T139 [US3] Implement GET /api/v1/events controller with query filters in backend/src/presentation/controllers/eventController.ts
-- [ ] T140 [US3] Implement GET /api/v1/events/:id controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T141 [US3] Implement PATCH /api/v1/events/:id controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T142 [US3] Implement DELETE /api/v1/events/:id controller (cancel) in backend/src/presentation/controllers/eventController.ts
-- [ ] T143 [US3] Implement POST /api/v1/events/:id/rsvp controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T144 [US3] Implement DELETE /api/v1/events/:id/rsvp controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T145 [US3] Implement GET /api/v1/events/:id/rsvps controller in backend/src/presentation/controllers/eventController.ts
-- [ ] T146 [US3] Create event routes in backend/src/presentation/routes/eventRoutes.ts
+- [x] T138 [US3] Implement POST /api/v1/events controller in backend/src/presentation/controllers/eventController.ts
+- [x] T139 [US3] Implement GET /api/v1/events controller with query filters in backend/src/presentation/controllers/eventController.ts
+- [x] T140 [US3] Implement GET /api/v1/events/:id controller in backend/src/presentation/controllers/eventController.ts
+- [x] T141 [US3] Implement PATCH /api/v1/events/:id controller in backend/src/presentation/controllers/eventController.ts
+- [x] T142 [US3] Implement DELETE /api/v1/events/:id controller (cancel) in backend/src/presentation/controllers/eventController.ts
+- [x] T143 [US3] Implement POST /api/v1/events/:id/rsvp controller in backend/src/presentation/controllers/eventController.ts
+- [x] T144 [US3] Implement DELETE /api/v1/events/:id/rsvp controller in backend/src/presentation/controllers/eventController.ts
+- [x] T145 [US3] Implement GET /api/v1/events/:id/rsvps controller in backend/src/presentation/controllers/eventController.ts
+- [x] T146 [US3] Create event routes in backend/src/presentation/routes/eventRoutes.ts
+
+**Backend Status**: ✅ Complete - All 33 contract tests passing (November 5, 2025)
 
 #### Event Notification Service
 
