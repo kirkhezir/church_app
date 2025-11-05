@@ -1,16 +1,19 @@
 import { IEventRepository } from '../../domain/interfaces/IEventRepository';
 import { IEventRSVPRepository } from '../../domain/interfaces/IEventRSVPRepository';
+import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
+import { EventNotificationService } from '../services/eventNotificationService';
 
 /**
  * CancelEvent Use Case
  *
  * Allows administrators and staff to cancel events.
- * Marks the event as cancelled and could notify all attendees.
+ * Marks the event as cancelled and notifies all attendees via email.
  */
 
 interface CancelEventInput {
   eventId: string;
   cancelledById: string;
+  reason?: string;
 }
 
 interface CancelEventOutput {
@@ -23,7 +26,9 @@ interface CancelEventOutput {
 export class CancelEvent {
   constructor(
     private eventRepository: IEventRepository,
-    private rsvpRepository: IEventRSVPRepository
+    private rsvpRepository: IEventRSVPRepository,
+    private memberRepository: IMemberRepository,
+    private notificationService: EventNotificationService
   ) {}
 
   /**
@@ -49,7 +54,9 @@ export class CancelEvent {
 
     // Get all RSVPs for notification purposes
     const rsvps = await this.rsvpRepository.findByEventId(input.eventId);
-    const attendeeCount = rsvps.length;
+    const attendeeCount = rsvps.filter(
+      (rsvp) => rsvp.status === 'CONFIRMED' || rsvp.status === 'WAITLISTED'
+    ).length;
 
     // Cancel the event using repository's cancel method
     await this.eventRepository.cancel(input.eventId);
@@ -61,13 +68,11 @@ export class CancelEvent {
       throw new Error('Failed to fetch cancelled event');
     }
 
-    // TODO: Send cancellation notifications to all attendees
-    // This would typically be done via an email service or notification service
-    // For now, we'll just log that notifications should be sent
+    // Send cancellation notifications to all attendees (non-blocking)
     if (attendeeCount > 0) {
-      console.log(
-        `Event "${cancelledEvent.title}" cancelled. ${attendeeCount} attendees should be notified.`
-      );
+      this.sendCancellationNotifications(rsvps, cancelledEvent, input.reason).catch((error) => {
+        console.error('Failed to send event cancellation notifications:', error);
+      });
     }
 
     return {
@@ -76,5 +81,55 @@ export class CancelEvent {
       cancelledAt: cancelledEvent.cancelledAt!,
       message: `Event cancelled successfully. ${attendeeCount} attendees will be notified.`,
     };
+  }
+
+  /**
+   * Send cancellation notifications to all attendees (async, non-blocking)
+   */
+  private async sendCancellationNotifications(
+    rsvps: any[],
+    event: any,
+    reason?: string
+  ): Promise<void> {
+    try {
+      // Get member IDs who have active RSVPs (confirmed or waitlisted)
+      const activeMemberIds = rsvps
+        .filter((rsvp) => rsvp.status === 'CONFIRMED' || rsvp.status === 'WAITLISTED')
+        .map((rsvp) => rsvp.memberId);
+
+      if (activeMemberIds.length === 0) {
+        return;
+      }
+
+      // Fetch all members
+      const members = await Promise.all(
+        activeMemberIds.map((id) => this.memberRepository.findById(id))
+      );
+
+      // Filter out null values and map to notification format
+      const memberDetails = members
+        .filter((member) => member !== null)
+        .map((member) => ({
+          email: member!.email,
+          firstName: member!.firstName,
+          lastName: member!.lastName,
+        }));
+
+      // Send notifications
+      await this.notificationService.sendEventCancellationNotification(
+        memberDetails,
+        {
+          id: event.id,
+          title: event.title,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          location: event.location,
+          category: event.category,
+        },
+        reason
+      );
+    } catch (error) {
+      console.error('Error sending event cancellation notifications:', error);
+    }
   }
 }

@@ -9,20 +9,24 @@ import { CancelRSVP } from '../../application/useCases/cancelRSVP';
 import { GetEventRSVPs } from '../../application/useCases/getEventRSVPs';
 import { EventRepository } from '../../infrastructure/database/repositories/eventRepository';
 import { EventRSVPRepository } from '../../infrastructure/database/repositories/eventRSVPRepository';
+import { MemberRepository } from '../../infrastructure/database/repositories/memberRepository';
+import { eventNotificationService } from '../../application/services/eventNotificationService';
 
 /**
  * EventController
  *
  * Handles HTTP requests for event management and RSVP operations.
- * Wires use cases to Express route handlers.
+ * Wires use cases to Express route handlers with notification support.
  */
 export class EventController {
   private eventRepository: EventRepository;
   private rsvpRepository: EventRSVPRepository;
+  private memberRepository: MemberRepository;
 
   constructor() {
     this.eventRepository = new EventRepository();
     this.rsvpRepository = new EventRSVPRepository();
+    this.memberRepository = new MemberRepository();
   }
 
   /**
@@ -132,11 +136,17 @@ export class EventController {
    */
   async cancelEvent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const cancelEventUseCase = new CancelEvent(this.eventRepository, this.rsvpRepository);
+      const cancelEventUseCase = new CancelEvent(
+        this.eventRepository,
+        this.rsvpRepository,
+        this.memberRepository,
+        eventNotificationService
+      );
 
       const result = await cancelEventUseCase.execute({
         eventId: req.params.id,
         cancelledById: (req as any).user.userId,
+        reason: req.body.reason,
       });
 
       res.status(200).json({
@@ -154,7 +164,12 @@ export class EventController {
    */
   async rsvpToEvent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const rsvpToEventUseCase = new RSVPToEvent(this.eventRepository, this.rsvpRepository);
+      const rsvpToEventUseCase = new RSVPToEvent(
+        this.eventRepository,
+        this.rsvpRepository,
+        this.memberRepository,
+        eventNotificationService
+      );
 
       const result = await rsvpToEventUseCase.execute({
         eventId: req.params.id,
@@ -177,7 +192,12 @@ export class EventController {
    */
   async cancelRSVP(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const cancelRSVPUseCase = new CancelRSVP(this.eventRepository, this.rsvpRepository);
+      const cancelRSVPUseCase = new CancelRSVP(
+        this.eventRepository,
+        this.rsvpRepository,
+        this.memberRepository,
+        eventNotificationService
+      );
 
       const result = await cancelRSVPUseCase.execute({
         eventId: req.params.id,

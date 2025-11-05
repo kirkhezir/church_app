@@ -1,7 +1,9 @@
 import { IEventRepository } from '../../domain/interfaces/IEventRepository';
 import { IEventRSVPRepository } from '../../domain/interfaces/IEventRSVPRepository';
+import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
 import { EventRSVP } from '../../domain/entities/EventRSVP';
 import { RSVPStatus } from '../../domain/valueObjects/RSVPStatus';
+import { EventNotificationService } from '../services/eventNotificationService';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -9,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
  *
  * Allows authenticated members to RSVP to events.
  * Handles capacity checking and waitlist assignment.
+ * Sends confirmation emails to members.
  */
 
 interface RSVPToEventInput {
@@ -30,7 +33,9 @@ interface RSVPToEventOutput {
 export class RSVPToEvent {
   constructor(
     private eventRepository: IEventRepository,
-    private rsvpRepository: IEventRSVPRepository
+    private rsvpRepository: IEventRSVPRepository,
+    private memberRepository: IMemberRepository,
+    private notificationService: EventNotificationService
   ) {}
 
   /**
@@ -111,6 +116,11 @@ export class RSVPToEvent {
       ? Math.max(0, event.maxCapacity - confirmedCount - (status === 'CONFIRMED' ? 1 : 0))
       : -1; // -1 means unlimited
 
+    // Send confirmation email (don't block on email sending)
+    this.sendConfirmationEmail(input.memberId, event, status).catch((error) => {
+      console.error('Failed to send RSVP confirmation email:', error);
+    });
+
     return {
       id: createdRSVP.id,
       eventId: createdRSVP.eventId,
@@ -120,5 +130,42 @@ export class RSVPToEvent {
       availableSpots,
       message,
     };
+  }
+
+  /**
+   * Send RSVP confirmation email (async, non-blocking)
+   */
+  private async sendConfirmationEmail(
+    memberId: string,
+    event: any,
+    status: RSVPStatus
+  ): Promise<void> {
+    try {
+      const member = await this.memberRepository.findById(memberId);
+      if (!member) {
+        console.error('Member not found for notification:', memberId);
+        return;
+      }
+
+      await this.notificationService.sendRSVPConfirmation(
+        {
+          email: member.email,
+          firstName: member.firstName,
+          lastName: member.lastName,
+        },
+        {
+          id: event.id,
+          title: event.title,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          location: event.location,
+          category: event.category,
+        },
+        status === RSVPStatus.CONFIRMED ? 'CONFIRMED' : 'WAITLISTED'
+      );
+    } catch (error) {
+      // Log but don't throw - email failure shouldn't fail the RSVP
+      console.error('Error sending RSVP confirmation email:', error);
+    }
   }
 }

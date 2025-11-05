@@ -1,11 +1,14 @@
 import { IEventRepository } from '../../domain/interfaces/IEventRepository';
 import { IEventRSVPRepository } from '../../domain/interfaces/IEventRSVPRepository';
+import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
+import { EventNotificationService } from '../services/eventNotificationService';
 
 /**
  * CancelRSVP Use Case
  *
  * Allows members to cancel their RSVP to an event.
  * Can promote waitlisted attendees if capacity becomes available.
+ * Sends waitlist promotion emails when applicable.
  */
 
 interface CancelRSVPInput {
@@ -22,7 +25,9 @@ interface CancelRSVPOutput {
 export class CancelRSVP {
   constructor(
     private eventRepository: IEventRepository,
-    private rsvpRepository: IEventRSVPRepository
+    private rsvpRepository: IEventRSVPRepository,
+    private memberRepository: IMemberRepository,
+    private notificationService: EventNotificationService
   ) {}
 
   /**
@@ -79,10 +84,10 @@ export class CancelRSVP {
         await this.rsvpRepository.updateStatus(waitlistedRSVP.id, 'CONFIRMED');
         waitlistPromoted = true;
 
-        // TODO: Send notification to promoted member
-        console.log(
-          `Member ${waitlistedRSVP.memberId} promoted from waitlist for event ${event.title}`
-        );
+        // Send promotion notification (non-blocking)
+        this.sendWaitlistPromotionEmail(waitlistedRSVP.memberId, event).catch((error) => {
+          console.error('Failed to send waitlist promotion email:', error);
+        });
       }
     }
 
@@ -93,5 +98,36 @@ export class CancelRSVP {
         : 'RSVP cancelled successfully',
       waitlistPromoted,
     };
+  }
+
+  /**
+   * Send waitlist promotion email (async, non-blocking)
+   */
+  private async sendWaitlistPromotionEmail(memberId: string, event: any): Promise<void> {
+    try {
+      const member = await this.memberRepository.findById(memberId);
+      if (!member) {
+        console.error('Member not found for waitlist promotion notification:', memberId);
+        return;
+      }
+
+      await this.notificationService.sendWaitlistPromotionEmail(
+        {
+          email: member.email,
+          firstName: member.firstName,
+          lastName: member.lastName,
+        },
+        {
+          id: event.id,
+          title: event.title,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          location: event.location,
+          category: event.category,
+        }
+      );
+    } catch (error) {
+      console.error('Error sending waitlist promotion email:', error);
+    }
   }
 }
