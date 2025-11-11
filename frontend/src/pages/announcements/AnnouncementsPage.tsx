@@ -11,15 +11,17 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { useAnnouncements } from '@/hooks/useAnnouncements';
 import { AnnouncementCard } from '@/components/features/announcements/AnnouncementCard';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BellIcon, ArchiveIcon } from 'lucide-react';
+import { BellIcon, ArchiveIcon, SettingsIcon } from 'lucide-react';
 
 export function AnnouncementsPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [showArchived, setShowArchived] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
@@ -29,6 +31,9 @@ export function AnnouncementsPage() {
     currentPage,
     limit
   );
+
+  // Check if user is admin or staff
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF';
 
   const handleViewDetails = (announcementId: string) => {
     navigate(`/announcements/${announcementId}`);
@@ -54,9 +59,17 @@ export function AnnouncementsPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Church Announcements</h1>
-        <p className="text-gray-600">Stay updated with the latest news and information</p>
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h1 className="mb-2 text-3xl font-bold">Church Announcements</h1>
+          <p className="text-gray-600">Stay updated with the latest news and information</p>
+        </div>
+        {isAdmin && (
+          <Button onClick={() => navigate('/admin/announcements')} variant="default">
+            <SettingsIcon className="mr-2 h-4 w-4" />
+            Manage Announcements
+          </Button>
+        )}
       </div>
 
       {/* Filter Controls */}
