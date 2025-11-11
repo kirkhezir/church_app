@@ -34,6 +34,7 @@ export function AdminAnnouncementsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refetchKey, setRefetchKey] = useState(0);
   const limit = 10;
 
   const {
@@ -59,7 +60,9 @@ export function AdminAnnouncementsPage() {
 
     try {
       await announcementService.archiveAnnouncement(id);
-      window.location.reload(); // Refresh to show updated list
+      setRefetchKey((prev) => prev + 1); // Trigger refetch by changing key
+      // Force page reload to refresh the list
+      window.location.reload();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to archive announcement');
     } finally {
@@ -76,7 +79,9 @@ export function AdminAnnouncementsPage() {
 
     try {
       await announcementService.deleteAnnouncement(id);
-      window.location.reload(); // Refresh to show updated list
+      setRefetchKey((prev) => prev + 1); // Trigger refetch by changing key
+      // Force page reload to refresh the list
+      window.location.reload();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete announcement');
     } finally {
@@ -118,7 +123,7 @@ export function AdminAnnouncementsPage() {
           disabled={loading}
         >
           <BellIcon className="mr-2 h-4 w-4" />
-          Active ({pagination.total})
+          Active {!loading && `(${pagination.total})`}
         </Button>
         <Button
           variant={showArchived ? 'default' : 'outline'}
@@ -126,7 +131,7 @@ export function AdminAnnouncementsPage() {
           disabled={loading}
         >
           <ArchiveIcon className="mr-2 h-4 w-4" />
-          Archived
+          Archived {showArchived && !loading && `(${pagination.total})`}
         </Button>
       </div>
 
@@ -307,7 +312,9 @@ export function AdminAnnouncementsPage() {
   );
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Announcements' }]}>
+    <SidebarLayout
+      breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Manage' }]}
+    >
       {adminContent}
     </SidebarLayout>
   );

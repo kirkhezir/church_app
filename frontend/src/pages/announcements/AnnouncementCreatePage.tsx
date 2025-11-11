@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { announcementService } from '@/services/endpoints/announcementService';
 import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -48,7 +49,7 @@ export function AnnouncementCreatePage() {
     navigate('/announcements');
   };
 
-  return (
+  const createContent = (
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
@@ -80,5 +81,17 @@ export function AnnouncementCreatePage() {
         />
       </div>
     </div>
+  );
+
+  return (
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Announcements', href: '/announcements' },
+        { label: 'Manage', href: '/admin/announcements' },
+        { label: 'Create' },
+      ]}
+    >
+      {createContent}
+    </SidebarLayout>
   );
 }

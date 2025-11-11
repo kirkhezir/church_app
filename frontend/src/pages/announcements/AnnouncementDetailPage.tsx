@@ -15,6 +15,7 @@ import { useAnnouncement } from '@/hooks/useAnnouncements';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon, CalendarIcon, UserIcon, AlertCircleIcon, BellIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -28,17 +29,24 @@ export function AnnouncementDetailPage() {
   };
 
   if (loading) {
-    return (
+    const loadingContent = (
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <Skeleton className="mb-4 h-10 w-32" />
         <Skeleton className="mb-4 h-12 w-3/4" />
         <Skeleton className="mb-4 h-64 w-full" />
       </div>
     );
+    return (
+      <SidebarLayout
+        breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Details' }]}
+      >
+        {loadingContent}
+      </SidebarLayout>
+    );
   }
 
   if (error || !announcement) {
-    return (
+    const errorContent = (
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
@@ -49,12 +57,19 @@ export function AnnouncementDetailPage() {
         </Alert>
       </div>
     );
+    return (
+      <SidebarLayout
+        breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Details' }]}
+      >
+        {errorContent}
+      </SidebarLayout>
+    );
   }
 
   const publishedDate = new Date(announcement.publishedAt);
   const isUrgent = announcement.priority === 'URGENT';
 
-  return (
+  const detailContent = (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Back Button */}
       <Button variant="ghost" onClick={handleBack} className="mb-6">
@@ -102,5 +117,16 @@ export function AnnouncementDetailPage() {
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Announcements', href: '/announcements' },
+        { label: announcement.title },
+      ]}
+    >
+      {detailContent}
+    </SidebarLayout>
   );
 }

@@ -15,6 +15,7 @@ import { announcementService } from '@/services/endpoints/announcementService';
 import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -78,17 +79,28 @@ export function AnnouncementEditPage() {
   };
 
   if (isLoading) {
-    return (
+    const loadingContent = (
       <div className="container mx-auto max-w-3xl px-4 py-8">
         <Skeleton className="mb-4 h-10 w-48" />
         <Skeleton className="mb-4 h-12 w-3/4" />
         <Skeleton className="h-96 w-full" />
       </div>
     );
+    return (
+      <SidebarLayout
+        breadcrumbs={[
+          { label: 'Announcements', href: '/announcements' },
+          { label: 'Manage', href: '/admin/announcements' },
+          { label: 'Edit' },
+        ]}
+      >
+        {loadingContent}
+      </SidebarLayout>
+    );
   }
 
   if (error || !announcement) {
-    return (
+    const errorContent = (
       <div className="container mx-auto max-w-3xl px-4 py-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
@@ -99,9 +111,20 @@ export function AnnouncementEditPage() {
         </Alert>
       </div>
     );
+    return (
+      <SidebarLayout
+        breadcrumbs={[
+          { label: 'Announcements', href: '/announcements' },
+          { label: 'Manage', href: '/admin/announcements' },
+          { label: 'Edit' },
+        ]}
+      >
+        {errorContent}
+      </SidebarLayout>
+    );
   }
 
-  return (
+  const editContent = (
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
@@ -138,5 +161,17 @@ export function AnnouncementEditPage() {
         />
       </div>
     </div>
+  );
+
+  return (
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Announcements', href: '/announcements' },
+        { label: 'Manage', href: '/admin/announcements' },
+        { label: 'Edit' },
+      ]}
+    >
+      {editContent}
+    </SidebarLayout>
   );
 }
