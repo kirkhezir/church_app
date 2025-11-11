@@ -29,5 +29,6 @@
         "huggingface/deepseek-ai/DeepSeek-V3.1:novita"
       ]
     }
-  }
+  },
+  "github.copilot.chat.summarizeAgentConversationHistory.enabled": false
 }
