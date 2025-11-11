@@ -18,6 +18,7 @@ import { AnnouncementCreatePage } from './pages/announcements/AnnouncementCreate
 import { AnnouncementEditPage } from './pages/announcements/AnnouncementEditPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
+import { AdminRoute } from './components/routing/AdminRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 
 // Placeholder components (to be implemented in Phase 4)
@@ -115,19 +116,27 @@ const App: React.FC = () => {
         }
       />
       <Route
+        path="/events/create"
+        element={
+          <AdminRoute>
+            <EventCreatePage />
+          </AdminRoute>
+        }
+      />
+      <Route
         path="/events/:id/edit"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <EventEditPage />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
       <Route
         path="/events/:id/rsvps"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <RSVPListPage />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
 
@@ -163,25 +172,25 @@ const App: React.FC = () => {
       <Route
         path="/admin/announcements"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <AdminAnnouncementsPage />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
       <Route
         path="/admin/announcements/create"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <AnnouncementCreatePage />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
       <Route
         path="/admin/announcements/:id/edit"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <AnnouncementEditPage />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
 

@@ -51,34 +51,34 @@ export const announcementService = {
     page: number = 1,
     limit: number = 10
   ): Promise<AnnouncementsListResponse> {
-    const response = await apiClient.get('/announcements', {
+    const response = await apiClient.get<AnnouncementsListResponse>('/announcements', {
       params: { archived, page, limit },
     });
-    return response.data;
+    return response; // apiClient.get already unwraps response.data
   },
 
   /**
    * Get announcement by ID
    */
   async getAnnouncementById(id: string): Promise<Announcement> {
-    const response = await apiClient.get(`/announcements/${id}`);
-    return response.data;
+    const response = await apiClient.get<Announcement>(`/announcements/${id}`);
+    return response; // apiClient.get already unwraps response.data
   },
 
   /**
    * Create new announcement (admin/staff only)
    */
   async createAnnouncement(data: CreateAnnouncementRequest): Promise<Announcement> {
-    const response = await apiClient.post('/announcements', data);
-    return response.data;
+    const response = await apiClient.post<Announcement>('/announcements', data);
+    return response;
   },
 
   /**
    * Update announcement (admin/staff only)
    */
   async updateAnnouncement(id: string, data: UpdateAnnouncementRequest): Promise<Announcement> {
-    const response = await apiClient.put(`/announcements/${id}`, data);
-    return response.data;
+    const response = await apiClient.put<Announcement>(`/announcements/${id}`, data);
+    return response;
   },
 
   /**
