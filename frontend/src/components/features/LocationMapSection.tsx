@@ -45,7 +45,7 @@ export function LocationMapSection() {
             <div className="mt-4">
               <Button
                 size="lg"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl"
                 onClick={() => window.open(directionsUrl, '_blank')}
               >
                 <Navigation className="mr-2 h-5 w-5" />
