@@ -103,43 +103,108 @@ function TopContactBar() {
 
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 px-4 py-24 text-white md:py-32">
-      {/* Decorative elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.05),transparent)]"></div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 px-4 py-32 text-white md:py-44">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.15),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 animate-pulse bg-[linear-gradient(to_right,transparent_0%,rgba(255,255,255,0.05)_50%,transparent_100%)]"></div>
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl text-center">
-        <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-          Sing Buri Adventist Center
+      {/* Floating Shapes */}
+      <div
+        className="absolute left-10 top-20 h-20 w-20 animate-bounce rounded-full bg-white/10 blur-xl"
+        style={{ animationDelay: '0s' }}
+      ></div>
+      <div
+        className="absolute right-20 top-40 h-32 w-32 animate-pulse rounded-full bg-purple-400/20 blur-2xl"
+        style={{ animationDelay: '1s' }}
+      ></div>
+      <div
+        className="absolute bottom-20 left-1/4 h-24 w-24 animate-bounce rounded-full bg-blue-300/10 blur-xl"
+        style={{ animationDelay: '0.5s' }}
+      ></div>
+
+      <div className="relative z-10 mx-auto max-w-6xl text-center">
+        {/* Badge */}
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-green-400"></span>
+          <span>Welcoming all seekers of faith</span>
+        </div>
+
+        {/* Main Heading with Gradient Text */}
+        <h1 className="mb-6 text-5xl font-extrabold tracking-tight md:text-6xl lg:text-7xl xl:text-8xl">
+          <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+            Sing Buri
+          </span>
+          <br />
+          <span className="mt-2 inline-block">Adventist Center</span>
         </h1>
-        <p className="mb-6 text-3xl font-light md:text-4xl">ศูนย์แอ็ดเวนตีสท์สิงห์บุรี</p>
-        <p className="mb-10 text-xl leading-relaxed md:text-2xl">
-          Welcome to our community of faith, hope, and love
+
+        {/* Tagline with Better Typography */}
+        <p className="mx-auto mb-12 max-w-3xl text-xl font-light leading-relaxed md:text-2xl lg:text-3xl">
+          Welcome to our community of <span className="font-semibold text-yellow-300">faith</span>,{' '}
+          <span className="font-semibold text-green-300">hope</span>, and{' '}
+          <span className="font-semibold text-pink-300">love</span>
         </p>
 
+        {/* Enhanced CTA Buttons */}
         <div className="flex flex-wrap justify-center gap-4">
           <Button
             size="lg"
-            variant="secondary"
-            className="bg-white text-lg font-semibold text-blue-700 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+            className="group relative overflow-hidden bg-white px-8 py-6 text-lg font-bold text-blue-700 shadow-2xl transition-all hover:scale-105 hover:shadow-white/25"
             onClick={() =>
               document.getElementById('worship-times')?.scrollIntoView({ behavior: 'smooth' })
             }
           >
-            <Clock className="mr-2 h-5 w-5" />
-            Service Times
+            <span className="relative z-10 flex items-center">
+              <Clock className="mr-2 h-5 w-5" />
+              Service Times
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 transition-opacity group-hover:opacity-100"></div>
           </Button>
           <Button
             size="lg"
-            className="border-2 border-white bg-transparent text-lg font-semibold text-white shadow-lg transition-all hover:bg-white hover:text-blue-700"
+            className="group border-2 border-white bg-transparent px-8 py-6 text-lg font-bold text-white shadow-2xl transition-all hover:scale-105 hover:bg-white hover:text-blue-700"
             onClick={() =>
               document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' })
             }
           >
-            <MapPin className="mr-2 h-5 w-5" />
+            <MapPin className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
             Visit Us
           </Button>
         </div>
+
+        {/* Stats Bar */}
+        <div className="mt-16 grid grid-cols-3 gap-4 md:gap-8">
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+            <p className="text-3xl font-bold md:text-4xl">20+</p>
+            <p className="text-sm text-blue-100 md:text-base">Members</p>
+          </div>
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+            <p className="text-3xl font-bold md:text-4xl">Every Sabbath</p>
+            <p className="text-sm text-blue-100 md:text-base">Worship Services</p>
+          </div>
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
+            <p className="text-3xl font-bold md:text-4xl">10+</p>
+            <p className="text-sm text-blue-100 md:text-base">Years Serving</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Wave */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg
+          viewBox="0 0 1440 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full"
+        >
+          <path
+            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+            fill="white"
+          />
+        </svg>
       </div>
     </section>
   );
@@ -147,16 +212,55 @@ function HeroSection() {
 
 function TaglineSection() {
   return (
-    <section className="border-b-2 border-gray-100 bg-white px-4 py-12">
-      <div className="mx-auto max-w-5xl text-center">
-        <p className="text-2xl font-light text-gray-700 md:text-3xl">
-          "Where <span className="font-semibold text-blue-600">faith</span>,{' '}
-          <span className="font-semibold text-green-600">hope</span>, and{' '}
-          <span className="font-semibold text-purple-600">love</span> come together"
-        </p>
-        <p className="mt-4 text-lg italic text-gray-500">
-          Experience genuine community and spiritual growth in the heart of Sing Buri
-        </p>
+    <section className="relative bg-gradient-to-b from-white to-gray-50 px-4 py-16">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
+            Where{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              faith
+            </span>
+            ,{' '}
+            <span className="bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
+              hope
+            </span>
+            , and{' '}
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              love
+            </span>{' '}
+            come together
+          </h2>
+          <p className="mx-auto mt-6 max-w-3xl text-xl text-gray-600">
+            Experience genuine community and spiritual growth in the heart of Sing Buri
+          </p>
+        </div>
+
+        {/* Value Proposition Cards */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="group rounded-xl border-2 border-blue-100 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg transition-transform group-hover:scale-110">
+              <Heart className="h-8 w-8" />
+            </div>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">All Are Welcome</h3>
+            <p className="text-gray-600">No matter where you are in your faith journey</p>
+          </div>
+
+          <div className="group rounded-xl border-2 border-green-100 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-green-300 hover:shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg transition-transform group-hover:scale-110">
+              <Users className="h-8 w-8" />
+            </div>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">Genuine Fellowship</h3>
+            <p className="text-gray-600">Build lasting friendships and support</p>
+          </div>
+
+          <div className="group rounded-xl border-2 border-purple-100 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-purple-300 hover:shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg transition-transform group-hover:scale-110">
+              <BookOpen className="h-8 w-8" />
+            </div>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">Bible-Centered</h3>
+            <p className="text-gray-600">Growing together in God's Word</p>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -195,27 +299,44 @@ function QuickInfoSection() {
   ];
 
   return (
-    <section className="bg-gray-50 px-4 py-16">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">Discover Our Community</h2>
+    <section className="relative overflow-hidden bg-gray-50 px-4 py-20">
+      {/* Background Pattern */}
+      <div className="bg-grid-pattern absolute inset-0 opacity-5"></div>
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
+            Discover Our Community
+          </h2>
+          <div className="mx-auto mb-4 h-1 w-24 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
           <p className="text-xl text-gray-600">A place where faith grows and love flourishes</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {infoCards.map((card, index) => (
             <Card
               key={index}
-              className="group overflow-hidden border-none shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="group relative overflow-hidden border-none shadow-xl transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl"
             >
-              <div className={`bg-gradient-to-br ${card.color} p-6 text-white`}>
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
-                  <card.icon className="h-8 w-8" />
+              {/* Gradient Background with Animation */}
+              <div
+                className={`relative bg-gradient-to-br ${card.color} p-8 text-white transition-all duration-300 group-hover:scale-105`}
+              >
+                <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/10"></div>
+                <div className="relative z-10">
+                  <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:rotate-6 group-hover:scale-110">
+                    <card.icon className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
+                  </div>
+                  <h3 className="mb-2 text-2xl font-bold">{card.title}</h3>
+                  <div className="h-1 w-12 rounded-full bg-white/50 transition-all duration-300 group-hover:w-20"></div>
                 </div>
-                <h3 className="text-2xl font-bold">{card.title}</h3>
               </div>
-              <CardContent className="p-6">
+              <CardContent className="bg-white p-6">
                 <p className="text-base leading-relaxed text-gray-700">{card.description}</p>
+                <div className="mt-4 flex items-center text-sm font-medium text-gray-400 transition-all group-hover:text-blue-600">
+                  <span>Learn more</span>
+                  <ArrowUp className="ml-1 h-4 w-4 rotate-90 transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -273,7 +394,6 @@ function FooterSection() {
               A community of faith dedicated to sharing the love of Christ through worship,
               fellowship, and service.
             </p>
-            <p className="text-lg text-gray-400">ศูนย์แอ็ดเวนตีสท์สิงห์บุรี</p>
           </div>
 
           {/* Service Times */}
