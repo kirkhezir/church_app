@@ -16,6 +16,8 @@ import { announcementService } from '@/services/endpoints/announcementService';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SidebarLayout } from '@/components/layout';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   PlusIcon,
   EditIcon,
@@ -82,11 +84,6 @@ export function AdminAnnouncementsPage() {
     }
   };
 
-  const handleToggleArchived = () => {
-    setShowArchived(!showArchived);
-    setCurrentPage(1);
-  };
-
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -99,7 +96,7 @@ export function AdminAnnouncementsPage() {
     }
   };
 
-  return (
+  const adminContent = (
     <div className="container mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
@@ -116,8 +113,8 @@ export function AdminAnnouncementsPage() {
       {/* Filter Controls */}
       <div className="mb-6 flex items-center gap-4">
         <Button
-          variant={showArchived ? 'outline' : 'default'}
-          onClick={() => !showArchived && handleToggleArchived()}
+          variant={!showArchived ? 'default' : 'outline'}
+          onClick={() => setShowArchived(false)}
           disabled={loading}
         >
           <BellIcon className="mr-2 h-4 w-4" />
@@ -125,7 +122,7 @@ export function AdminAnnouncementsPage() {
         </Button>
         <Button
           variant={showArchived ? 'default' : 'outline'}
-          onClick={() => showArchived && handleToggleArchived()}
+          onClick={() => setShowArchived(true)}
           disabled={loading}
         >
           <ArchiveIcon className="mr-2 h-4 w-4" />
@@ -221,33 +218,60 @@ export function AdminAnnouncementsPage() {
                       </td>
                       <td className="px-6 py-4 text-right text-sm font-medium">
                         <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(announcement.id)}
-                            disabled={actionLoading === announcement.id}
-                          >
-                            <EditIcon className="h-4 w-4" />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleEdit(announcement.id)}
+                                  disabled={actionLoading === announcement.id}
+                                >
+                                  <EditIcon className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Edit announcement</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                           {!announcement.archivedAt && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleArchive(announcement.id)}
-                              disabled={actionLoading === announcement.id}
-                            >
-                              <ArchiveIcon className="h-4 w-4" />
-                            </Button>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleArchive(announcement.id)}
+                                    disabled={actionLoading === announcement.id}
+                                  >
+                                    <ArchiveIcon className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Archive announcement</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(announcement.id)}
-                            disabled={actionLoading === announcement.id}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDelete(announcement.id)}
+                                  disabled={actionLoading === announcement.id}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <TrashIcon className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete announcement</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </td>
                     </tr>
@@ -280,5 +304,11 @@ export function AdminAnnouncementsPage() {
         </>
       )}
     </div>
+  );
+
+  return (
+    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Announcements' }]}>
+      {adminContent}
+    </SidebarLayout>
   );
 }

@@ -17,6 +17,7 @@ import { AnnouncementCard } from '@/components/features/announcements/Announceme
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SidebarLayout } from '@/components/layout';
 import { BellIcon, ArchiveIcon, SettingsIcon } from 'lucide-react';
 
 export function AnnouncementsPage() {
@@ -39,9 +40,9 @@ export function AnnouncementsPage() {
     navigate(`/announcements/${announcementId}`);
   };
 
-  const handleToggleArchived = () => {
-    setShowArchived(!showArchived);
-    setCurrentPage(1); // Reset to first page when toggling
+  const handleFilterChange = (archived: boolean) => {
+    setShowArchived(archived);
+    setCurrentPage(1); // Reset to first page when changing filter
   };
 
   const handlePreviousPage = () => {
@@ -56,7 +57,7 @@ export function AnnouncementsPage() {
     }
   };
 
-  return (
+  const announcementContent = (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 flex items-start justify-between">
@@ -75,8 +76,8 @@ export function AnnouncementsPage() {
       {/* Filter Controls */}
       <div className="mb-6 flex items-center gap-4">
         <Button
-          variant={showArchived ? 'outline' : 'default'}
-          onClick={() => !showArchived && handleToggleArchived()}
+          variant={!showArchived ? 'default' : 'outline'}
+          onClick={() => handleFilterChange(false)}
           disabled={loading}
         >
           <BellIcon className="mr-2 h-4 w-4" />
@@ -84,7 +85,7 @@ export function AnnouncementsPage() {
         </Button>
         <Button
           variant={showArchived ? 'default' : 'outline'}
-          onClick={() => showArchived && handleToggleArchived()}
+          onClick={() => handleFilterChange(true)}
           disabled={loading}
         >
           <ArchiveIcon className="mr-2 h-4 w-4" />
@@ -158,5 +159,10 @@ export function AnnouncementsPage() {
         </>
       )}
     </div>
+  );
+
+  // Wrap with SidebarLayout for authenticated users
+  return (
+    <SidebarLayout breadcrumbs={[{ label: 'Announcements' }]}>{announcementContent}</SidebarLayout>
   );
 }
