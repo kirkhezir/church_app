@@ -12,6 +12,11 @@ import { EventDetailPage } from './pages/events/EventDetailPage';
 import { EventCreatePage } from './pages/events/EventCreatePage';
 import { EventEditPage } from './pages/events/EventEditPage';
 import { RSVPListPage } from './pages/events/RSVPListPage';
+import { AnnouncementsPage } from './pages/announcements/AnnouncementsPage';
+import { AnnouncementDetailPage } from './pages/announcements/AnnouncementDetailPage';
+import { AnnouncementCreatePage } from './pages/announcements/AnnouncementCreatePage';
+import { AnnouncementEditPage } from './pages/announcements/AnnouncementEditPage';
+import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 
@@ -22,15 +27,6 @@ const RegisterPage = () => (
     <div className="rounded-lg bg-white p-8 shadow-md">
       <h1 className="mb-4 text-2xl font-bold">Register</h1>
       <p className="text-gray-600">Register page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
-
-const AnnouncementsPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Announcements</h1>
-      <p className="text-gray-600">Announcements page will be implemented in Phase 4</p>
     </div>
   </div>
 );
@@ -144,6 +140,8 @@ const App: React.FC = () => {
           </PrivateRoute>
         }
       />
+
+      {/* Announcements Routes */}
       <Route
         path="/announcements"
         element={
@@ -152,6 +150,42 @@ const App: React.FC = () => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/announcements/:id"
+        element={
+          <PrivateRoute>
+            <AnnouncementDetailPage />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Admin Announcement Routes */}
+      <Route
+        path="/admin/announcements"
+        element={
+          <PrivateRoute>
+            <AdminAnnouncementsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/announcements/create"
+        element={
+          <PrivateRoute>
+            <AnnouncementCreatePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/announcements/:id/edit"
+        element={
+          <PrivateRoute>
+            <AnnouncementEditPage />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Other Private Routes */}
       <Route
         path="/messages"
         element={
