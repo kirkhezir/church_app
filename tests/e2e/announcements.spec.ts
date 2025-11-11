@@ -6,24 +6,24 @@
 
 import { test, expect } from "@playwright/test";
 
-// Test users
+// Test users from seed data
 const ADMIN_USER = {
-  email: "admin@test.com",
+  email: "admin@singburi-adventist.org",
   password: "Admin123!",
 };
 
 const MEMBER_USER = {
-  email: "member@test.com",
+  email: "john.doe@example.com",
   password: "Member123!",
 };
 
 // Helper function to login
 async function login(page, email: string, password: string) {
   await page.goto("http://localhost:5173/login");
-  await page.fill('input[name="email"]', email);
-  await page.fill('input[name="password"]', password);
-  await page.click('button[type="submit"]');
-  await page.waitForURL(/\/dashboard/);
+  await page.getByRole("textbox", { name: "Email" }).fill(email);
+  await page.getByRole("textbox", { name: "Password" }).fill(password);
+  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.waitForURL(/\/dashboard/, { timeout: 10000 });
 }
 
 test.describe("Announcement System E2E", () => {

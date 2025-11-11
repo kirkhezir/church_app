@@ -11,11 +11,11 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAnnouncements } from '../../../hooks/useAnnouncements';
-import { AnnouncementCard } from '../../../components/features/announcements/AnnouncementCard';
-import { Button } from '../../../components/ui/button';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Skeleton } from '../../../components/ui/skeleton';
+import { useAnnouncements } from '@/hooks/useAnnouncements';
+import { AnnouncementCard } from '@/components/features/announcements/AnnouncementCard';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { BellIcon, ArchiveIcon } from 'lucide-react';
 
 export function AnnouncementsPage() {
@@ -98,7 +98,7 @@ export function AnnouncementsPage() {
       {/* Announcements List */}
       {!loading && !error && (
         <>
-          {announcements.length === 0 ? (
+          {!announcements || announcements.length === 0 ? (
             <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-12 text-center">
               <BellIcon className="mx-auto mb-4 h-12 w-12 text-gray-400" />
               <h3 className="mb-2 text-lg font-medium text-gray-900">
@@ -123,7 +123,7 @@ export function AnnouncementsPage() {
           )}
 
           {/* Pagination */}
-          {pagination.totalPages > 1 && (
+          {pagination && pagination.totalPages > 1 && (
             <div className="mt-8 flex items-center justify-between">
               <div className="text-sm text-gray-600">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} total)

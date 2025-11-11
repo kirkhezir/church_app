@@ -11,11 +11,11 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { announcementService } from '../../../services/endpoints/announcementService';
-import { AnnouncementForm } from '../../../components/features/announcements/AnnouncementForm';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
+import { announcementService } from '@/services/endpoints/announcementService';
+import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export function AnnouncementCreatePage() {
   const navigate = useNavigate();

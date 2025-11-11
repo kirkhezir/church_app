@@ -7,9 +7,9 @@
  */
 
 import { BellIcon, AlertCircleIcon, CalendarIcon, UserIcon } from 'lucide-react';
-import { Announcement } from '../../../services/endpoints/announcementService';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { Button } from '../../ui/button';
+import { Announcement } from '@/services/endpoints/announcementService';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 
 interface AnnouncementCardProps {

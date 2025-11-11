@@ -11,12 +11,12 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { announcementService } from '../../../services/endpoints/announcementService';
-import { AnnouncementForm } from '../../../components/features/announcements/AnnouncementForm';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Skeleton } from '../../../components/ui/skeleton';
+import { announcementService } from '@/services/endpoints/announcementService';
+import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 export function AnnouncementEditPage() {
   const { id } = useParams<{ id: string }>();

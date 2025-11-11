@@ -11,10 +11,10 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAnnouncement } from '../../../hooks/useAnnouncements';
-import { Button } from '../../../components/ui/button';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Skeleton } from '../../../components/ui/skeleton';
+import { useAnnouncement } from '@/hooks/useAnnouncements';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeftIcon, CalendarIcon, UserIcon, AlertCircleIcon, BellIcon } from 'lucide-react';
 import { format } from 'date-fns';
 

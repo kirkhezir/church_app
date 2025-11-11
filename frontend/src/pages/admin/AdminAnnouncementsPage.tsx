@@ -11,11 +11,11 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAnnouncements } from '../../../hooks/useAnnouncements';
-import { announcementService } from '../../../services/endpoints/announcementService';
-import { Button } from '../../../components/ui/button';
-import { Alert, AlertDescription } from '../../../components/ui/alert';
-import { Skeleton } from '../../../components/ui/skeleton';
+import { useAnnouncements } from '@/hooks/useAnnouncements';
+import { announcementService } from '@/services/endpoints/announcementService';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   PlusIcon,
   EditIcon,
