@@ -2,8 +2,7 @@
  * EventsListPage Component
  *
  * Displays list of all events with filtering options
- * Public page - accessible to everyone
- * Authenticated members can RSVP from this page
+ * Conditionally uses SidebarLayout for authenticated users
  */
 
 import { useState } from 'react';
@@ -11,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 import { useEvents, useEventRSVP } from '../../hooks/useEvents';
 import { useAuth } from '../../hooks/useAuth';
+import { SidebarLayout } from '../../components/layout';
 import { EventCard } from '../../components/features/events/EventCard';
 import { EventFilters } from '../../components/features/events/EventFilters';
 import { Button } from '../../components/ui/button';
@@ -73,7 +73,8 @@ export function EventsListPage() {
   const canCreateEvents = user && (user.role === 'ADMIN' || user.role === 'STAFF');
   const isAuthenticated = !!user;
 
-  return (
+  // Event list content (used in both authenticated and public views)
+  const eventListContent = (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
@@ -166,4 +167,12 @@ export function EventsListPage() {
       </div>
     </div>
   );
+
+  // Wrap with SidebarLayout if user is authenticated
+  if (isAuthenticated) {
+    return <SidebarLayout breadcrumbs={[{ label: 'Events' }]}>{eventListContent}</SidebarLayout>;
+  }
+
+  // Return plain content for public/unauthenticated users
+  return eventListContent;
 }

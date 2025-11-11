@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useEventDetail, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/contexts/AuthContext';
+import { SidebarLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -49,8 +50,22 @@ export const EventDetailPage: React.FC = () => {
     refetch();
   });
 
+  const isAuthenticated = !!user;
+
+  // Helper to wrap content with SidebarLayout if authenticated
+  const wrapWithLayout = (content: React.ReactNode) => {
+    if (isAuthenticated && event) {
+      return (
+        <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: event.title }]}>
+          {content}
+        </SidebarLayout>
+      );
+    }
+    return content;
+  };
+
   if (loading) {
-    return (
+    return wrapWithLayout(
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="mb-6 h-8 w-32" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -66,7 +81,7 @@ export const EventDetailPage: React.FC = () => {
   }
 
   if (error || !event) {
-    return (
+    return wrapWithLayout(
       <div className="container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate('/events')} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -100,7 +115,7 @@ export const EventDetailPage: React.FC = () => {
   const isCreator = user?.id === event.createdById;
   const canEdit = user && (user.role === 'ADMIN' || user.role === 'STAFF' || isCreator);
 
-  return (
+  const eventDetailContent = (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
@@ -320,6 +335,8 @@ export const EventDetailPage: React.FC = () => {
       </div>
     </div>
   );
+
+  return wrapWithLayout(eventDetailContent);
 };
 
 export default EventDetailPage;
