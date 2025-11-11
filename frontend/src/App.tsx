@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/public/LandingPage';
-import LandingPageEnhanced from './pages/public/LandingPageEnhanced';
 import LoginPage from './pages/auth/LoginPage';
 import PasswordResetRequestPage from './pages/auth/PasswordResetRequestPage';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
@@ -70,8 +69,7 @@ const App: React.FC = () => {
   return (
     <Routes>
       {/* Public Landing Page (no authentication required) */}
-      <Route path="/" element={<LandingPageEnhanced />} />
-      <Route path="/landing-simple" element={<LandingPage />} />
+      <Route path="/" element={<LandingPage />} />
 
       {/* Public Routes */}
       <Route

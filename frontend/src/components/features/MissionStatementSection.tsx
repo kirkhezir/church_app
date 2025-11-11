@@ -1,50 +1,98 @@
 /**
- * Mission Statement Section Component
+ * Mission Statement Section Component - Enhanced
  *
- * Displays the church's mission and purpose
+ * Displays the church's mission and core values with modern design
  */
 
+import { Heart, Users, BookOpen, Church, Sparkles, Globe } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
+
 export function MissionStatementSection() {
+  const coreValues = [
+    {
+      icon: Church,
+      title: 'Worship',
+      description: 'Praising God together through song, prayer, and Scripture',
+    },
+    {
+      icon: Users,
+      title: 'Community',
+      description: 'Building lasting relationships and supporting one another in faith',
+    },
+    {
+      icon: Globe,
+      title: 'Service',
+      description: 'Reaching out to our community with love and compassion',
+    },
+    {
+      icon: BookOpen,
+      title: 'Growth',
+      description: "Deepening our understanding of God's Word through study and reflection",
+    },
+    {
+      icon: Heart,
+      title: 'Love',
+      description: "Demonstrating Christ's love in all we do and say",
+    },
+    {
+      icon: Sparkles,
+      title: 'Hope',
+      description: 'Sharing the hope of salvation and eternal life with all',
+    },
+  ];
+
   return (
-    <section className="bg-white px-4 py-16" aria-labelledby="mission-heading">
-      <div className="mx-auto max-w-4xl">
-        <h2 id="mission-heading" className="mb-8 text-center text-3xl font-bold text-gray-900">
-          Our Mission
-        </h2>
+    <section
+      className="bg-gradient-to-b from-white to-gray-50 px-4 py-16"
+      aria-labelledby="mission-heading"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-12 text-center">
+          <h2 id="mission-heading" className="mb-4 text-4xl font-bold text-gray-900">
+            Our Mission
+          </h2>
+          <div className="mx-auto h-1 w-24 rounded bg-gradient-to-r from-blue-600 to-purple-600"></div>
+        </div>
 
-        <div className="prose prose-lg mx-auto text-gray-700">
-          <p className="mb-6 text-center text-xl leading-relaxed">
-            The Sing Buri Adventist Center is a community of faith dedicated to sharing the love of
-            Christ and serving our local community. We believe in worship, fellowship, and spiritual
-            growth through Bible study and prayer.
-          </p>
+        <div className="mx-auto mb-16 max-w-4xl">
+          <Card className="border-none bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-xl">
+            <CardContent className="p-8 md:p-12">
+              <p className="mb-6 text-xl leading-relaxed md:text-2xl">
+                The Sing Buri Adventist Center is a community of faith dedicated to sharing the love
+                of Christ and serving our local community. We believe in worship, fellowship, and
+                spiritual growth through Bible study and prayer.
+              </p>
+              <p className="text-lg leading-relaxed opacity-90 md:text-xl">
+                Our church family welcomes all who seek to know God and grow in their relationship
+                with Jesus Christ. We are committed to living out the teachings of Scripture and
+                making a positive impact in Sing Buri and beyond.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
 
-          <p className="text-center leading-relaxed">
-            Our church family welcomes all who seek to know God and grow in their relationship with
-            Jesus Christ. We are committed to living out the teachings of Scripture and making a
-            positive impact in Sing Buri and beyond.
+        <div className="mb-8 text-center">
+          <h3 className="mb-4 text-3xl font-bold text-gray-900">Our Core Values</h3>
+          <p className="text-lg text-gray-600">
+            The principles that guide our ministry and community
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 text-center md:grid-cols-3">
-          <div className="rounded-lg bg-gray-50 p-6">
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">Worship</h3>
-            <p className="text-gray-600">
-              Praising God together through song, prayer, and Scripture
-            </p>
-          </div>
-
-          <div className="rounded-lg bg-gray-50 p-6">
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">Community</h3>
-            <p className="text-gray-600">
-              Building lasting relationships and supporting one another in faith
-            </p>
-          </div>
-
-          <div className="rounded-lg bg-gray-50 p-6">
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">Service</h3>
-            <p className="text-gray-600">Reaching out to our community with love and compassion</p>
-          </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {coreValues.map((value, index) => (
+            <Card
+              key={index}
+              className="group overflow-hidden border-none shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <CardContent className="p-6">
+                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg transition-transform group-hover:scale-110">
+                  <value.icon className="h-8 w-8" />
+                </div>
+                <h3 className="mb-2 text-xl font-bold text-gray-900">{value.title}</h3>
+                <p className="leading-relaxed text-gray-600">{value.description}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
