@@ -69,9 +69,7 @@ export default function NotificationSettingsPage() {
 
   if (fetchLoading) {
     return (
-      <SidebarLayout
-        breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Notifications' }]}
-      >
+      <SidebarLayout breadcrumbs={[{ label: 'Notifications' }]}>
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
             <p className="text-center text-gray-600">Loading preferences...</p>
@@ -82,9 +80,7 @@ export default function NotificationSettingsPage() {
   }
 
   return (
-    <SidebarLayout
-      breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Notifications' }]}
-    >
+    <SidebarLayout breadcrumbs={[{ label: 'Notifications' }]}>
       <div className="mx-auto w-full max-w-2xl">
         <Card>
           <CardHeader>

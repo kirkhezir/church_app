@@ -124,9 +124,7 @@ export default function EditProfilePage() {
 
   if (fetchLoading) {
     return (
-      <SidebarLayout
-        breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Edit Profile' }]}
-      >
+      <SidebarLayout breadcrumbs={[{ label: 'Profile' }]}>
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
             <p className="text-center text-gray-600">Loading profile...</p>
@@ -137,9 +135,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <SidebarLayout
-      breadcrumbs={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Edit Profile' }]}
-    >
+    <SidebarLayout breadcrumbs={[{ label: 'Profile' }]}>
       <div className="mx-auto w-full max-w-2xl">
         <Card>
           <CardHeader>
