@@ -4,6 +4,7 @@ import contactRoutes from './contactRoutes';
 import authRoutes from './authRoutes';
 import memberRoutes from './memberRoutes';
 import eventRoutes from './eventRoutes';
+import announcementRoutes from './announcementRoutes';
 
 /**
  * Main API Router
@@ -33,13 +34,12 @@ router.use('/contact', contactRoutes);
 router.use('/auth', authRoutes);
 router.use('/members', memberRoutes);
 router.use('/events', eventRoutes);
+router.use('/announcements', announcementRoutes);
 
 // TODO: Import and mount remaining route modules as they are implemented
 // Example:
-// import announcementRoutes from './announcementRoutes';
 // import messageRoutes from './messageRoutes';
 //
-// router.use('/announcements', announcementRoutes);
 // router.use('/messages', messageRoutes);
 
 logger.info('API routes initialized');
