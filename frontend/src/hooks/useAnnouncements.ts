@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { announcementService, Announcement } from '../services/endpoints/announcementService';
 
+export interface AnnouncementFilters {
+  search?: string;
+  priority?: 'URGENT' | 'NORMAL';
+  authorId?: string;
+  sortBy?: 'date' | 'priority' | 'views';
+  sortOrder?: 'asc' | 'desc';
+}
+
 /**
  * Custom hook for fetching announcements list
  */
@@ -8,7 +16,8 @@ export function useAnnouncements(
   archived: boolean = false,
   page: number = 1,
   limit: number = 10,
-  refreshTrigger: number = 0
+  refreshTrigger: number = 0,
+  filters?: AnnouncementFilters
 ) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [pagination, setPagination] = useState({
@@ -25,7 +34,7 @@ export function useAnnouncements(
       try {
         setLoading(true);
         setError(null);
-        const response = await announcementService.getAnnouncements(archived, page, limit);
+        const response = await announcementService.getAnnouncements(archived, page, limit, filters);
         setAnnouncements(response.data);
         setPagination(response.pagination);
       } catch (err: any) {
@@ -36,7 +45,17 @@ export function useAnnouncements(
     };
 
     fetchAnnouncements();
-  }, [archived, page, limit, refreshTrigger]);
+  }, [
+    archived,
+    page,
+    limit,
+    refreshTrigger,
+    filters?.search,
+    filters?.priority,
+    filters?.authorId,
+    filters?.sortBy,
+    filters?.sortOrder,
+  ]);
 
   return { announcements, pagination, loading, error };
 }

@@ -16,6 +16,7 @@ import { AnnouncementsPage } from './pages/announcements/AnnouncementsPage';
 import { AnnouncementDetailPage } from './pages/announcements/AnnouncementDetailPage';
 import { AnnouncementCreatePage } from './pages/announcements/AnnouncementCreatePage';
 import { AnnouncementEditPage } from './pages/announcements/AnnouncementEditPage';
+import { AnnouncementAnalyticsPage } from './pages/announcements/AnnouncementAnalyticsPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
@@ -190,6 +191,14 @@ const App: React.FC = () => {
         element={
           <AdminRoute>
             <AnnouncementEditPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/announcements/:id/analytics"
+        element={
+          <AdminRoute>
+            <AnnouncementAnalyticsPage />
           </AdminRoute>
         }
       />

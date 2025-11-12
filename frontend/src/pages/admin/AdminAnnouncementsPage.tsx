@@ -6,18 +6,22 @@
  * - List all announcements (active + archived)
  * - Quick actions: Edit, Archive, Delete
  * - Create new announcement button
- * - Filtering and pagination
+ * - Filtering, search, sorting, and pagination
+ * - Bulk actions (archive/delete multiple)
  */
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAnnouncements } from '@/hooks/useAnnouncements';
-import { announcementService } from '@/services/endpoints/announcementService';
+import { useAnnouncements, AnnouncementFilters as FilterState } from '@/hooks/useAnnouncements';
+import { announcementService, Author } from '@/services/endpoints/announcementService';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarLayout } from '@/components/layout';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { AnnouncementFilters } from '@/components/announcements/AnnouncementFilters';
+import { BulkActionBar } from '@/components/announcements/BulkActionBar';
 import {
   PlusIcon,
   EditIcon,
@@ -25,6 +29,7 @@ import {
   TrashIcon,
   AlertCircleIcon,
   BellIcon,
+  BarChart3Icon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -37,7 +42,14 @@ export function AdminAnnouncementsPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeCount, setActiveCount] = useState(0);
   const [archivedCount, setArchivedCount] = useState(0);
-  const [refreshKey, setRefreshKey] = useState(0); // Key to trigger refetch
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    sortBy: 'date',
+    sortOrder: 'desc',
+  });
+  const [authors, setAuthors] = useState<Author[]>([]);
   const limit = 10;
 
   const {
@@ -45,7 +57,7 @@ export function AdminAnnouncementsPage() {
     pagination,
     loading,
     error: fetchError,
-  } = useAnnouncements(showArchived, currentPage, limit, refreshKey);
+  } = useAnnouncements(showArchived, currentPage, limit, refreshKey, filters);
 
   // Fetch counts for both active and archived - independent of main list
   useEffect(() => {
@@ -71,6 +83,24 @@ export function AdminAnnouncementsPage() {
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
+
+  // Fetch authors list for filter dropdown
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      try {
+        const authorList = await announcementService.getAuthors();
+        setAuthors(authorList);
+      } catch (err) {
+        console.error('Failed to fetch authors:', err);
+      }
+    };
+    fetchAuthors();
+  }, []);
+
+  // Clear selection when changing between active/archived or changing pages
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [showArchived, currentPage]);
 
   const handleCreate = () => {
     navigate('/admin/announcements/create');
@@ -139,6 +169,60 @@ export function AdminAnnouncementsPage() {
     }
   };
 
+  // Bulk action handlers
+  const handleBulkArchive = async () => {
+    if (!confirm(`Archive ${selectedIds.length} announcement(s)?`)) return;
+
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const result = await announcementService.bulkArchive(selectedIds);
+      setSuccessMessage(result.message);
+      setSelectedIds([]);
+      setRefreshKey((prev) => prev + 1);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Bulk archive failed');
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (!confirm(`Delete ${selectedIds.length} announcement(s)? This cannot be undone.`)) return;
+
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const result = await announcementService.bulkDelete(selectedIds);
+      setSuccessMessage(result.message);
+      setSelectedIds([]);
+      setRefreshKey((prev) => prev + 1);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Bulk delete failed');
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(announcements.map((a) => a.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds([...selectedIds, id]);
+    } else {
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+    }
+  };
+
+  const handleFiltersChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+    setCurrentPage(1); // Reset to first page when filters change
+  };
+
   const adminContent = (
     <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-6xl sm:px-6 sm:py-8">
       {/* Header */}
@@ -180,6 +264,15 @@ export function AdminAnnouncementsPage() {
           <span className="sm:hidden">Archived</span>
           {!loading && ` (${archivedCount})`}
         </Button>
+      </div>
+
+      {/* Advanced Filters */}
+      <div className="mb-6">
+        <AnnouncementFilters
+          onFiltersChange={handleFiltersChange}
+          authors={authors}
+          loading={loading}
+        />
       </div>
 
       {/* Success Message */}
@@ -237,6 +330,14 @@ export function AdminAnnouncementsPage() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="w-12 px-4 py-3">
+                        <Checkbox
+                          checked={
+                            selectedIds.length === announcements.length && announcements.length > 0
+                          }
+                          onCheckedChange={handleSelectAll}
+                        />
+                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                         Title
                       </th>
@@ -257,6 +358,14 @@ export function AdminAnnouncementsPage() {
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {announcements.map((announcement) => (
                       <tr key={announcement.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4">
+                          <Checkbox
+                            checked={selectedIds.includes(announcement.id)}
+                            onCheckedChange={(checked) =>
+                              handleSelectOne(announcement.id, checked as boolean)
+                            }
+                          />
+                        </td>
                         <td className="px-6 py-4">
                           <div className="max-w-md truncate font-medium text-gray-900">
                             {announcement.title}
@@ -283,6 +392,24 @@ export function AdminAnnouncementsPage() {
                         </td>
                         <td className="px-6 py-4 text-right text-sm font-medium">
                           <div className="flex justify-end gap-2">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      navigate(`/admin/announcements/${announcement.id}/analytics`)
+                                    }
+                                  >
+                                    <BarChart3Icon className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>View analytics</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -448,6 +575,15 @@ export function AdminAnnouncementsPage() {
       breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Manage' }]}
     >
       {adminContent}
+
+      {/* Bulk Action Bar - Floats at bottom when items are selected */}
+      <BulkActionBar
+        selectedCount={selectedIds.length}
+        onArchive={handleBulkArchive}
+        onDelete={handleBulkDelete}
+        onClearSelection={() => setSelectedIds([])}
+        isArchived={showArchived}
+      />
     </SidebarLayout>
   );
 }
