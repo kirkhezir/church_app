@@ -4,7 +4,12 @@ import { announcementService, Announcement } from '../services/endpoints/announc
 /**
  * Custom hook for fetching announcements list
  */
-export function useAnnouncements(archived: boolean = false, page: number = 1, limit: number = 10) {
+export function useAnnouncements(
+  archived: boolean = false,
+  page: number = 1,
+  limit: number = 10,
+  refreshTrigger: number = 0
+) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -31,7 +36,7 @@ export function useAnnouncements(archived: boolean = false, page: number = 1, li
     };
 
     fetchAnnouncements();
-  }, [archived, page, limit]);
+  }, [archived, page, limit, refreshTrigger]);
 
   return { announcements, pagination, loading, error };
 }

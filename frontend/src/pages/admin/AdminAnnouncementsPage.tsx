@@ -34,8 +34,10 @@ export function AdminAnnouncementsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeCount, setActiveCount] = useState(0);
   const [archivedCount, setArchivedCount] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0); // Key to trigger refetch
   const limit = 10;
 
   const {
@@ -43,9 +45,9 @@ export function AdminAnnouncementsPage() {
     pagination,
     loading,
     error: fetchError,
-  } = useAnnouncements(showArchived, currentPage, limit);
+  } = useAnnouncements(showArchived, currentPage, limit, refreshKey);
 
-  // Fetch counts for both active and archived
+  // Fetch counts for both active and archived - independent of main list
   useEffect(() => {
     const fetchCounts = async () => {
       try {
@@ -60,7 +62,15 @@ export function AdminAnnouncementsPage() {
       }
     };
     fetchCounts();
-  }, [announcements]); // Refetch counts when announcements change
+  }, [refreshKey]); // Only refetch when refreshKey changes
+
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   const handleCreate = () => {
     navigate('/admin/announcements/create');
@@ -75,15 +85,17 @@ export function AdminAnnouncementsPage() {
 
     setActionLoading(id);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       await announcementService.archiveAnnouncement(id);
-      // Refresh the list by resetting to page 1 and toggling state
-      setCurrentPage(1);
-      // Force a re-render by briefly toggling and back
-      const wasArchived = showArchived;
-      setShowArchived(!wasArchived);
-      setTimeout(() => setShowArchived(wasArchived), 50);
+      setSuccessMessage('Announcement archived successfully');
+      // Trigger refetch by incrementing refreshKey
+      setRefreshKey((prev) => prev + 1);
+      // If we're on a page that becomes empty, go to previous page
+      if (announcements.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to archive announcement');
     } finally {
@@ -97,15 +109,17 @@ export function AdminAnnouncementsPage() {
 
     setActionLoading(id);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       await announcementService.deleteAnnouncement(id);
-      // Refresh the list by resetting to page 1 and toggling state
-      setCurrentPage(1);
-      // Force a re-render by briefly toggling and back
-      const wasArchived = showArchived;
-      setShowArchived(!wasArchived);
-      setTimeout(() => setShowArchived(wasArchived), 50);
+      setSuccessMessage('Announcement deleted successfully');
+      // Trigger refetch by incrementing refreshKey
+      setRefreshKey((prev) => prev + 1);
+      // If we're on a page that becomes empty, go to previous page
+      if (announcements.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete announcement');
     } finally {
@@ -143,7 +157,7 @@ export function AdminAnnouncementsPage() {
       </div>
 
       {/* Filter Controls */}
-      <div className="mb-6 flex flex-wrap items-center gap-2 sm:gap-4">
+      <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-4">
         <Button
           variant={!showArchived ? 'default' : 'outline'}
           onClick={() => setShowArchived(false)}
@@ -168,10 +182,21 @@ export function AdminAnnouncementsPage() {
         </Button>
       </div>
 
+      {/* Success Message */}
+      {successMessage && (
+        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
+          <AlertDescription className="text-sm text-green-800 sm:text-base">
+            {successMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Error Alert */}
       {(error || fetchError) && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertDescription>{error || fetchError}</AlertDescription>
+        <Alert variant="destructive" className="mb-4 sm:mb-6">
+          <AlertDescription className="text-sm sm:text-base">
+            {error || fetchError}
+          </AlertDescription>
         </Alert>
       )}
 

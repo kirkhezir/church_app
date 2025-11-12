@@ -28,12 +28,11 @@ export async function getAnnouncements(
   try {
     logger.info('Fetching announcements', { includeArchived, page, limit });
 
-    // Fetch all relevant announcements
+    // Fetch announcements based on archived status
+    // includeArchived = true means ONLY archived announcements
+    // includeArchived = false means ONLY active announcements
     const allAnnouncements = includeArchived
-      ? [
-          ...(await announcementRepository.findActive()),
-          ...(await announcementRepository.findArchived()),
-        ]
+      ? await announcementRepository.findArchived()
       : await announcementRepository.findActive();
 
     // Calculate pagination
