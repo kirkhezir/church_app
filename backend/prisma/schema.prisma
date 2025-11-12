@@ -137,6 +137,7 @@ model Announcement {
   authorId    String
   publishedAt DateTime  @default(now())
   archivedAt  DateTime?
+  isDraft     Boolean   @default(false)  // NEW: Draft status
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
@@ -147,6 +148,8 @@ model Announcement {
 
   @@index([publishedAt(sort: Desc)])
   @@index([archivedAt, publishedAt])
+  @@index([isDraft, publishedAt])  // NEW: Index for drafts
+  @@index([authorId])  // NEW: Index for author filtering
   @@map("announcements")
 }
 

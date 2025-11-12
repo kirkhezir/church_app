@@ -7,6 +7,7 @@ export interface Announcement {
   priority: 'URGENT' | 'NORMAL';
   publishedAt: string;
   archivedAt: string | null;
+  isDraft: boolean;
   createdAt: string;
   author: {
     id: string;
@@ -14,18 +15,23 @@ export interface Announcement {
     lastName: string;
     email: string;
   };
+  _count?: {
+    views: number;
+  };
 }
 
 export interface CreateAnnouncementRequest {
   title: string;
   content: string;
   priority?: 'URGENT' | 'NORMAL';
+  isDraft?: boolean;
 }
 
 export interface UpdateAnnouncementRequest {
   title?: string;
   content?: string;
   priority?: 'URGENT' | 'NORMAL';
+  isDraft?: boolean;
 }
 
 export interface AnnouncementsListResponse {
@@ -36,6 +42,42 @@ export interface AnnouncementsListResponse {
     total: number;
     totalPages: number;
   };
+}
+
+export interface AnnouncementFilters {
+  archived?: boolean;
+  page?: number;
+  limit?: number;
+  search?: string;
+  priority?: 'URGENT' | 'NORMAL';
+  authorId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  sortBy?: 'date' | 'priority' | 'views';
+  sortOrder?: 'asc' | 'desc';
+  includeDrafts?: boolean;
+}
+
+export interface Author {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface ViewAnalytics {
+  totalViews: number;
+  firstViewed: string | null;
+  lastViewed: string | null;
+  recentViews: Array<{
+    id: string;
+    viewedAt: string;
+    member: {
+      id: string;
+      firstName: string;
+      lastName: string;
+    };
+  }>;
 }
 
 /**
@@ -49,12 +91,14 @@ export const announcementService = {
   async getAnnouncements(
     archived: boolean = false,
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    filters?: Omit<AnnouncementFilters, 'archived' | 'page' | 'limit'>
   ): Promise<AnnouncementsListResponse> {
+    const params: any = { archived, page, limit, ...filters };
     const response = await apiClient.get<AnnouncementsListResponse>('/announcements', {
-      params: { archived, page, limit },
+      params,
     });
-    return response; // apiClient.get already unwraps response.data
+    return response;
   },
 
   /**
@@ -100,5 +144,50 @@ export const announcementService = {
    */
   async trackView(id: string): Promise<void> {
     await apiClient.post(`/announcements/${id}/view`);
+  },
+
+  /**
+   * Unarchive (restore) announcement (admin/staff only)
+   */
+  async unarchiveAnnouncement(id: string): Promise<void> {
+    await apiClient.post(`/announcements/${id}/unarchive`);
+  },
+
+  /**
+   * Bulk archive announcements (admin/staff only)
+   */
+  async bulkArchive(ids: string[]): Promise<{ message: string; count: number }> {
+    const response = await apiClient.post<{ message: string; count: number }>(
+      '/announcements/bulk-archive',
+      { ids }
+    );
+    return response;
+  },
+
+  /**
+   * Bulk delete announcements (admin/staff only)
+   */
+  async bulkDelete(ids: string[]): Promise<{ message: string; count: number }> {
+    const response = await apiClient.post<{ message: string; count: number }>(
+      '/announcements/bulk-delete',
+      { ids }
+    );
+    return response;
+  },
+
+  /**
+   * Get list of announcement authors
+   */
+  async getAuthors(): Promise<Author[]> {
+    const response = await apiClient.get<Author[]>('/announcements/authors');
+    return response;
+  },
+
+  /**
+   * Get announcement view analytics (admin/staff only)
+   */
+  async getAnalytics(id: string): Promise<ViewAnalytics> {
+    const response = await apiClient.get<ViewAnalytics>(`/announcements/${id}/analytics`);
+    return response;
   },
 };

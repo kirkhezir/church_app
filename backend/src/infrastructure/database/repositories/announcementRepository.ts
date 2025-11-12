@@ -275,6 +275,152 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       where: { announcementId },
     });
   }
+
+  /**
+   * Find announcements with filters and pagination
+   */
+  async findWithFilters(
+    filters: any,
+    orderBy: any,
+    page: number,
+    limit: number
+  ): Promise<PrismaAnnouncement[]> {
+    const skip = (page - 1) * limit;
+
+    const announcements = await prisma.announcement.findMany({
+      where: filters,
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        _count: {
+          select: {
+            views: true,
+          },
+        },
+      },
+      orderBy,
+      skip,
+      take: limit,
+    });
+
+    return announcements as never[];
+  }
+
+  /**
+   * Count announcements with filters
+   */
+  async countWithFilters(filters: any): Promise<number> {
+    return prisma.announcement.count({
+      where: filters,
+    });
+  }
+
+  /**
+   * Unarchive announcement (restore from archive)
+   */
+  async unarchive(id: string): Promise<void> {
+    await prisma.announcement.update({
+      where: { id },
+      data: {
+        archivedAt: null,
+      },
+    });
+  }
+
+  /**
+   * Bulk archive announcements
+   */
+  async bulkArchive(ids: string[]): Promise<number> {
+    const result = await prisma.announcement.updateMany({
+      where: {
+        id: { in: ids },
+        deletedAt: null,
+      },
+      data: {
+        archivedAt: new Date(),
+      },
+    });
+    return result.count;
+  }
+
+  /**
+   * Bulk delete announcements
+   */
+  async bulkDelete(ids: string[]): Promise<number> {
+    const result = await prisma.announcement.updateMany({
+      where: {
+        id: { in: ids },
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+    return result.count;
+  }
+
+  /**
+   * Get all authors who have created announcements
+   */
+  async getAuthors(): Promise<any[]> {
+    const authors = await prisma.member.findMany({
+      where: {
+        announcements: {
+          some: {
+            deletedAt: null,
+          },
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
+      orderBy: {
+        firstName: 'asc',
+      },
+    });
+
+    return authors;
+  }
+
+  /**
+   * Get announcement view analytics
+   */
+  async getViewAnalytics(announcementId: string): Promise<any> {
+    const views = await prisma.memberAnnouncementView.findMany({
+      where: { announcementId },
+      include: {
+        member: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+      orderBy: {
+        viewedAt: 'desc',
+      },
+    });
+
+    const uniqueViews = views.length;
+    const firstViewed = views.length > 0 ? views[views.length - 1].viewedAt : null;
+    const lastViewed = views.length > 0 ? views[0].viewedAt : null;
+
+    return {
+      totalViews: uniqueViews,
+      firstViewed,
+      lastViewed,
+      recentViews: views.slice(0, 10),
+    };
+  }
 }
 
 // Export singleton instance

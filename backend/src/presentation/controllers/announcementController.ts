@@ -7,6 +7,8 @@ import { archiveAnnouncement } from '../../application/useCases/archiveAnnouncem
 import { deleteAnnouncement } from '../../application/useCases/deleteAnnouncement';
 import { trackAnnouncementView } from '../../application/useCases/trackAnnouncementView';
 import { Priority } from '../../domain/valueObjects/Priority';
+import { announcementRepository } from '../../infrastructure/database/repositories/announcementRepository';
+import prisma from '../../infrastructure/database/prismaClient';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -77,8 +79,28 @@ export class AnnouncementController {
       const archived = req.query.archived === 'true';
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
+      const search = req.query.search as string | undefined;
+      const priority = req.query.priority as 'URGENT' | 'NORMAL' | undefined;
+      const authorId = req.query.authorId as string | undefined;
+      const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
+      const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
+      const sortBy = (req.query.sortBy as 'date' | 'priority' | 'views') || 'date';
+      const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
+      const includeDrafts = req.query.includeDrafts === 'true';
 
-      const result = await getAnnouncements(archived, page, limit);
+      const result = await getAnnouncements(
+        archived,
+        page,
+        limit,
+        search,
+        priority,
+        authorId,
+        dateFrom,
+        dateTo,
+        sortBy,
+        sortOrder,
+        includeDrafts
+      );
 
       res.status(200).json(result);
     } catch (error: any) {
@@ -236,6 +258,148 @@ export class AnnouncementController {
       // View tracking errors should not break the API
       logger.warn('View tracking failed', { error: error.message });
       res.status(200).json({ message: 'Request processed' });
+    }
+  }
+
+  /**
+   * POST /api/v1/announcements/:id/unarchive
+   * Unarchive (restore) an announcement (admin/staff only)
+   */
+  async unarchive(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const userId = (req as any).user.userId;
+
+      // Verify user is admin/staff
+      const member = await prisma.member.findUnique({ where: { id: userId } });
+      if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
+        res.status(403).json({
+          error: 'Forbidden',
+          message: 'Only administrators and staff can unarchive announcements',
+        });
+        return;
+      }
+
+      await announcementRepository.unarchive(id);
+
+      res.status(200).json({ message: 'Announcement restored successfully' });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /api/v1/announcements/bulk-archive
+   * Archive multiple announcements (admin/staff only)
+   */
+  async bulkArchive(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { ids } = req.body;
+      const userId = (req as any).user.userId;
+
+      if (!Array.isArray(ids) || ids.length === 0) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'ids must be a non-empty array',
+        });
+        return;
+      }
+
+      // Verify user is admin/staff
+      const member = await prisma.member.findUnique({ where: { id: userId } });
+      if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
+        res.status(403).json({
+          error: 'Forbidden',
+          message: 'Only administrators and staff can archive announcements',
+        });
+        return;
+      }
+
+      const count = await announcementRepository.bulkArchive(ids);
+
+      res.status(200).json({
+        message: `${count} announcement(s) archived successfully`,
+        count,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /api/v1/announcements/bulk-delete
+   * Delete multiple announcements (admin/staff only)
+   */
+  async bulkDelete(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { ids } = req.body;
+      const userId = (req as any).user.userId;
+
+      if (!Array.isArray(ids) || ids.length === 0) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'ids must be a non-empty array',
+        });
+        return;
+      }
+
+      // Verify user is admin/staff
+      const member = await prisma.member.findUnique({ where: { id: userId } });
+      if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
+        res.status(403).json({
+          error: 'Forbidden',
+          message: 'Only administrators and staff can delete announcements',
+        });
+        return;
+      }
+
+      const count = await announcementRepository.bulkDelete(ids);
+
+      res.status(200).json({
+        message: `${count} announcement(s) deleted successfully`,
+        count,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/announcements/authors
+   * Get list of authors who have created announcements
+   */
+  async getAuthors(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const authors = await announcementRepository.getAuthors();
+      res.status(200).json(authors);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/announcements/:id/analytics
+   * Get view analytics for an announcement (admin/staff only)
+   */
+  async getAnalytics(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const userId = (req as any).user.userId;
+
+      // Verify user is admin/staff
+      const member = await prisma.member.findUnique({ where: { id: userId } });
+      if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
+        res.status(403).json({
+          error: 'Forbidden',
+          message: 'Only administrators and staff can view analytics',
+        });
+        return;
+      }
+
+      const analytics = await announcementRepository.getViewAnalytics(id);
+      res.status(200).json(analytics);
+    } catch (error: any) {
+      next(error);
     }
   }
 }

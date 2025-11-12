@@ -71,4 +71,49 @@ router.post('/:id/view', authMiddleware, (req, res, next) =>
   announcementController.trackView(req, res, next)
 );
 
+/**
+ * @route   POST /api/v1/announcements/:id/unarchive
+ * @desc    Unarchive (restore) announcement
+ * @access  Admin, Staff only
+ */
+router.post('/:id/unarchive', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, next) =>
+  announcementController.unarchive(req, res, next)
+);
+
+/**
+ * @route   POST /api/v1/announcements/bulk-archive
+ * @desc    Archive multiple announcements
+ * @access  Admin, Staff only
+ */
+router.post('/bulk-archive', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, next) =>
+  announcementController.bulkArchive(req, res, next)
+);
+
+/**
+ * @route   POST /api/v1/announcements/bulk-delete
+ * @desc    Delete multiple announcements
+ * @access  Admin, Staff only
+ */
+router.post('/bulk-delete', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, next) =>
+  announcementController.bulkDelete(req, res, next)
+);
+
+/**
+ * @route   GET /api/v1/announcements/authors
+ * @desc    Get list of announcement authors
+ * @access  Authenticated members
+ */
+router.get('/authors', authMiddleware, (req, res, next) =>
+  announcementController.getAuthors(req, res, next)
+);
+
+/**
+ * @route   GET /api/v1/announcements/:id/analytics
+ * @desc    Get announcement view analytics
+ * @access  Admin, Staff only
+ */
+router.get('/:id/analytics', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, next) =>
+  announcementController.getAnalytics(req, res, next)
+);
+
 export default router;
