@@ -152,6 +152,7 @@ export function AnnouncementEditPage() {
             title: announcement.title,
             content: announcement.content,
             priority: announcement.priority,
+            isDraft: announcement.isDraft || false,
           }}
           onSubmit={handleSubmit}
           onCancel={handleCancel}

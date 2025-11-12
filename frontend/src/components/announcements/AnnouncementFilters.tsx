@@ -50,8 +50,8 @@ export function AnnouncementFilters({ onFiltersChange, authors, loading = false 
     sortOrder: 'desc',
   });
 
-  // Shorter debounce for real-time feel (300ms)
-  const debouncedSearch = useDebounce(filters.search, 300);
+  // Very short debounce for true real-time feel (150ms - just enough to reduce API spam)
+  const debouncedSearch = useDebounce(filters.search, 150);
 
   // Trigger callback when any filter changes (with debounced search)
   useEffect(() => {
@@ -78,7 +78,7 @@ export function AnnouncementFilters({ onFiltersChange, authors, loading = false 
       <div className="relative">
         <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder="Search announcements in real-time..."
+          placeholder="Search announcements"
           value={filters.search}
           onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           disabled={loading}

@@ -350,185 +350,195 @@ export function AdminAnnouncementsPage() {
           ) : (
             <>
               {/* Desktop Table View */}
-              <div className="hidden overflow-hidden rounded-lg border bg-white shadow md:block">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="w-12 px-4 py-3">
-                        <Checkbox
-                          checked={
-                            selectedIds.length === announcements.length && announcements.length > 0
-                          }
-                          onCheckedChange={handleSelectAll}
-                        />
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Title
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Priority
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Author
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Published
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {announcements.map((announcement) => (
-                      <tr key={announcement.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4">
+              <div className="hidden md:block">
+                <div className="overflow-x-auto rounded-lg border bg-white shadow">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="w-12 px-4 py-3">
                           <Checkbox
-                            checked={selectedIds.includes(announcement.id)}
-                            onCheckedChange={(checked) =>
-                              handleSelectOne(announcement.id, checked as boolean)
+                            checked={
+                              selectedIds.length === announcements.length &&
+                              announcements.length > 0
                             }
+                            onCheckedChange={handleSelectAll}
                           />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="max-w-md truncate font-medium text-gray-900">
-                            {announcement.title}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          {announcement.priority === 'URGENT' ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
-                              <AlertCircleIcon className="h-3 w-3" />
-                              Urgent
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
-                              <BellIcon className="h-3 w-3" />
-                              Normal
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {announcement.author.firstName} {announcement.author.lastName}
-                        </td>
-                        <td className="px-6 py-4">
-                          {announcement.isDraft ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
-                              <SaveIcon className="h-3 w-3" />
-                              Draft
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                              ✓ Published
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {format(new Date(announcement.publishedAt), 'MMM d, yyyy')}
-                        </td>
-                        <td className="px-6 py-4 text-right text-sm font-medium">
-                          <div className="flex justify-end gap-2">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() =>
-                                      navigate(`/admin/announcements/${announcement.id}/analytics`)
-                                    }
-                                  >
-                                    <BarChart3Icon className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>View analytics</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleEdit(announcement.id)}
-                                    disabled={actionLoading === announcement.id}
-                                  >
-                                    <EditIcon className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Edit announcement</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            {!announcement.archivedAt && (
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => handleArchive(announcement.id)}
-                                      disabled={actionLoading === announcement.id}
-                                    >
-                                      <ArchiveIcon className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Archive announcement</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            )}
-                            {announcement.archivedAt && (
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => handleUnarchive(announcement.id)}
-                                      disabled={actionLoading === announcement.id}
-                                      className="text-green-600 hover:text-green-700"
-                                    >
-                                      <ArchiveRestoreIcon className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Restore from archive</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            )}
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleDelete(announcement.id)}
-                                    disabled={actionLoading === announcement.id}
-                                    className="text-red-600 hover:text-red-700"
-                                  >
-                                    <TrashIcon className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Delete announcement</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                        </td>
+                        </th>
+                        <th className="min-w-[200px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Title
+                        </th>
+                        <th className="w-24 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Priority
+                        </th>
+                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Author
+                        </th>
+                        <th className="w-28 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Status
+                        </th>
+                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Published
+                        </th>
+                        <th className="w-40 px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                          Actions
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white">
+                      {announcements.map((announcement) => (
+                        <tr key={announcement.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4">
+                            <Checkbox
+                              checked={selectedIds.includes(announcement.id)}
+                              onCheckedChange={(checked) =>
+                                handleSelectOne(announcement.id, checked as boolean)
+                              }
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="max-w-[250px] truncate font-medium text-gray-900">
+                              {announcement.title}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            {announcement.priority === 'URGENT' ? (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                                <AlertCircleIcon className="h-3 w-3" />
+                                Urgent
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                                <BellIcon className="h-3 w-3" />
+                                Normal
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600">
+                            <div className="truncate">
+                              {announcement.author.firstName} {announcement.author.lastName}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            {announcement.isDraft ? (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+                                <SaveIcon className="h-3 w-3" />
+                                Draft
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                ✓ Published
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600">
+                            {format(new Date(announcement.publishedAt), 'MMM d, yyyy')}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-3 text-right text-sm font-medium">
+                            <div className="flex items-center justify-end gap-1">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8"
+                                      onClick={() =>
+                                        navigate(
+                                          `/admin/announcements/${announcement.id}/analytics`
+                                        )
+                                      }
+                                    >
+                                      <BarChart3Icon className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>View analytics</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8"
+                                      onClick={() => handleEdit(announcement.id)}
+                                      disabled={actionLoading === announcement.id}
+                                    >
+                                      <EditIcon className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Edit announcement</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              {!announcement.archivedAt && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => handleArchive(announcement.id)}
+                                        disabled={actionLoading === announcement.id}
+                                      >
+                                        <ArchiveIcon className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Archive announcement</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                              {announcement.archivedAt && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-green-600 hover:text-green-700"
+                                        onClick={() => handleUnarchive(announcement.id)}
+                                        disabled={actionLoading === announcement.id}
+                                      >
+                                        <ArchiveRestoreIcon className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Restore from archive</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 text-red-600 hover:text-red-700"
+                                      onClick={() => handleDelete(announcement.id)}
+                                      disabled={actionLoading === announcement.id}
+                                    >
+                                      <TrashIcon className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Delete announcement</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* Mobile Card View */}
