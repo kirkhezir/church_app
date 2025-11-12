@@ -70,49 +70,51 @@ export function AnnouncementDetailPage() {
   const isUrgent = announcement.priority === 'URGENT';
 
   const detailContent = (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-4xl sm:px-6 sm:py-8">
       {/* Back Button */}
-      <Button variant="ghost" onClick={handleBack} className="mb-6">
+      <Button variant="ghost" onClick={handleBack} className="mb-4 sm:mb-6">
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
         Back to Announcements
       </Button>
 
       {/* Announcement Content */}
-      <div className="rounded-lg border bg-white p-8 shadow-sm">
+      <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6 md:p-8">
         {/* Priority Badge */}
-        <div className="mb-4">
+        <div className="mb-3 sm:mb-4">
           {isUrgent ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
-              <AlertCircleIcon className="h-4 w-4" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800 sm:px-3 sm:text-sm">
+              <AlertCircleIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               Urgent Announcement
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-              <BellIcon className="h-4 w-4" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 sm:px-3 sm:text-sm">
+              <BellIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               Announcement
             </span>
           )}
         </div>
 
         {/* Title */}
-        <h1 className="mb-6 text-3xl font-bold">{announcement.title}</h1>
+        <h1 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl md:text-3xl">
+          {announcement.title}
+        </h1>
 
         {/* Meta Information */}
-        <div className="mb-6 flex flex-wrap gap-4 border-b border-gray-200 pb-4 text-sm text-gray-600">
+        <div className="mb-4 flex flex-col gap-2 border-b border-gray-200 pb-3 text-xs text-gray-600 sm:mb-6 sm:flex-row sm:flex-wrap sm:gap-4 sm:pb-4 sm:text-sm">
           <div className="flex items-center gap-2">
-            <UserIcon className="h-4 w-4" />
+            <UserIcon className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>
               Posted by {announcement.author.firstName} {announcement.author.lastName}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4" />
+            <CalendarIcon className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>{format(publishedDate, 'MMMM d, yyyy · h:mm a')}</span>
           </div>
         </div>
 
         {/* Content */}
-        <div className="prose prose-gray max-w-none">
+        <div className="prose prose-sm prose-gray sm:prose-base max-w-none">
           <div className="whitespace-pre-wrap text-gray-700">{announcement.content}</div>
         </div>
       </div>

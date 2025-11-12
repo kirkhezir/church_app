@@ -32,12 +32,12 @@ export function AnnouncementCreatePage() {
     setSuccess(false);
 
     try {
-      const announcement = await announcementService.createAnnouncement(data);
+      await announcementService.createAnnouncement(data);
       setSuccess(true);
 
-      // Redirect to announcement detail after short delay
+      // Redirect to admin announcements page after short delay
       setTimeout(() => {
-        navigate(`/announcements/${announcement.id}`);
+        navigate('/admin/announcements');
       }, 1500);
     } catch (error) {
       setIsLoading(false);
@@ -46,33 +46,35 @@ export function AnnouncementCreatePage() {
   };
 
   const handleCancel = () => {
-    navigate('/announcements');
+    navigate('/admin/announcements');
   };
 
   const createContent = (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
-          Back to Announcements
+          Back
         </Button>
-        <h1 className="text-3xl font-bold">Create New Announcement</h1>
-        <p className="mt-2 text-gray-600">Share important information with the church community</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">Create New Announcement</h1>
+        <p className="mt-2 text-sm text-gray-600 sm:text-base">
+          Share important information with the church community
+        </p>
       </div>
 
       {/* Success Message */}
       {success && (
-        <Alert className="mb-6 border-green-500 bg-green-50">
+        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
           <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
+          <AlertDescription className="text-sm text-green-800 sm:text-base">
             Announcement created successfully! Redirecting...
           </AlertDescription>
         </Alert>
       )}
 
       {/* Form */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6">
         <AnnouncementForm
           onSubmit={handleSubmit}
           onCancel={handleCancel}

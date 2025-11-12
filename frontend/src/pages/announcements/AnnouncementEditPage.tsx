@@ -76,10 +76,10 @@ export function AnnouncementEditPage() {
 
   if (isLoading) {
     const loadingContent = (
-      <div className="container mx-auto max-w-3xl px-4 py-8">
-        <Skeleton className="mb-4 h-10 w-48" />
-        <Skeleton className="mb-4 h-12 w-3/4" />
-        <Skeleton className="h-96 w-full" />
+      <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-8">
+        <Skeleton className="mb-4 h-8 w-24 sm:h-10 sm:w-48" />
+        <Skeleton className="mb-4 h-8 w-3/4 sm:h-12" />
+        <Skeleton className="h-64 w-full sm:h-96" />
       </div>
     );
     return (
@@ -97,13 +97,15 @@ export function AnnouncementEditPage() {
 
   if (error || !announcement) {
     const errorContent = (
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+      <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
         <Alert variant="destructive">
-          <AlertDescription>{error || 'Announcement not found'}</AlertDescription>
+          <AlertDescription className="text-sm sm:text-base">
+            {error || 'Announcement not found'}
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -121,29 +123,29 @@ export function AnnouncementEditPage() {
   }
 
   const editContent = (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <h1 className="text-3xl font-bold">Edit Announcement</h1>
-        <p className="mt-2 text-gray-600">Update announcement details</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">Edit Announcement</h1>
+        <p className="mt-2 text-sm text-gray-600 sm:text-base">Update announcement details</p>
       </div>
 
       {/* Success Message */}
       {success && (
-        <Alert className="mb-6 border-green-500 bg-green-50">
+        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
           <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
+          <AlertDescription className="text-sm text-green-800 sm:text-base">
             Announcement updated successfully! Redirecting...
           </AlertDescription>
         </Alert>
       )}
 
       {/* Form */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6">
         <AnnouncementForm
           initialData={{
             title: announcement.title,
