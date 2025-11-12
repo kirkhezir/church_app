@@ -45,17 +45,9 @@ export function useAnnouncements(
     };
 
     fetchAnnouncements();
-  }, [
-    archived,
-    page,
-    limit,
-    refreshTrigger,
-    filters?.search,
-    filters?.priority,
-    filters?.authorId,
-    filters?.sortBy,
-    filters?.sortOrder,
-  ]);
+    // Serialize filters to avoid unnecessary re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [archived, page, limit, refreshTrigger, JSON.stringify(filters)]);
 
   return { announcements, pagination, loading, error };
 }

@@ -27,6 +27,7 @@ export function AnnouncementCreatePage() {
     title: string;
     content: string;
     priority: 'URGENT' | 'NORMAL';
+    isDraft: boolean;
   }) => {
     setIsLoading(true);
     setSuccess(false);

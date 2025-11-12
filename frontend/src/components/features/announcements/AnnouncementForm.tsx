@@ -3,8 +3,10 @@
  *
  * Reusable form for creating and editing announcements
  * Features:
- * - Title and content input with validation
+ * - Title input with validation
+ * - Rich text editor for content
  * - Priority selection (NORMAL/URGENT)
+ * - Draft toggle
  * - Character counters
  * - Error handling
  */
@@ -12,22 +14,25 @@
 import { useState, FormEvent } from 'react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { Textarea } from '../../ui/textarea';
 import { Label } from '../../ui/label';
+import { Switch } from '../../ui/switch';
 import { Alert, AlertDescription } from '../../ui/alert';
 import { RadioGroup, RadioGroupItem } from '../../ui/radio-group';
-import { AlertCircleIcon, BellIcon } from 'lucide-react';
+import { AlertCircleIcon, BellIcon, SaveIcon } from 'lucide-react';
+import { RichTextEditor } from '../../editor/RichTextEditor';
 
 interface AnnouncementFormProps {
   initialData?: {
     title: string;
     content: string;
     priority: 'URGENT' | 'NORMAL';
+    isDraft?: boolean;
   };
   onSubmit: (data: {
     title: string;
     content: string;
     priority: 'URGENT' | 'NORMAL';
+    isDraft: boolean;
   }) => Promise<void>;
   onCancel?: () => void;
   submitLabel?: string;
@@ -44,17 +49,16 @@ export function AnnouncementForm({
   const [title, setTitle] = useState(initialData?.title || '');
   const [content, setContent] = useState(initialData?.content || '');
   const [priority, setPriority] = useState<'URGENT' | 'NORMAL'>(initialData?.priority || 'NORMAL');
+  const [isDraft, setIsDraft] = useState(initialData?.isDraft || false);
   const [error, setError] = useState<string | null>(null);
 
   const titleMaxLength = 150;
-  const contentMaxLength = 5000;
   const titleMinLength = 3;
 
   const titleCharsRemaining = titleMaxLength - title.length;
-  const contentCharsRemaining = contentMaxLength - content.length;
 
   const isTitleValid = title.length >= titleMinLength && title.length <= titleMaxLength;
-  const isContentValid = content.trim().length > 0 && content.length <= contentMaxLength;
+  const isContentValid = content.trim().length > 0;
   const isFormValid = isTitleValid && isContentValid && !isLoading;
 
   const handleSubmit = async (e: FormEvent) => {
@@ -68,12 +72,17 @@ export function AnnouncementForm({
     }
 
     if (!isContentValid) {
-      setError('Content is required and must not exceed 5000 characters');
+      setError('Content is required');
       return;
     }
 
     try {
-      await onSubmit({ title: title.trim(), content: content.trim(), priority });
+      await onSubmit({
+        title: title.trim(),
+        content: content.trim(),
+        priority,
+        isDraft,
+      });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to save announcement');
     }
@@ -150,35 +159,49 @@ export function AnnouncementForm({
         )}
       </div>
 
-      {/* Content Textarea */}
+      {/* Content Rich Text Editor */}
       <div className="space-y-2">
         <Label htmlFor="content">
           Content <span className="text-red-500">*</span>
         </Label>
-        <Textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Enter announcement content..."
-          rows={12}
-          maxLength={contentMaxLength}
+        <RichTextEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Write your announcement here..."
           disabled={isLoading}
-          className={!isContentValid && content.length > 0 ? 'border-red-500' : ''}
         />
-        <div className="flex justify-between text-sm">
-          <span className={content.trim().length === 0 ? 'text-red-500' : 'text-gray-500'}>
-            {content.trim().length === 0 ? 'Content is required' : 'Content looks good'}
-          </span>
-          <span className={contentCharsRemaining < 500 ? 'text-orange-500' : 'text-gray-500'}>
-            {contentCharsRemaining} characters remaining
-          </span>
+        <p className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-gray-500'}`}>
+          {content.trim().length === 0
+            ? 'Content is required'
+            : 'Use the toolbar to format your announcement'}
+        </p>
+      </div>
+
+      {/* Draft Toggle */}
+      <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <div className="flex items-center gap-3">
+          <SaveIcon className="h-5 w-5 text-gray-600" />
+          <div>
+            <Label htmlFor="draft-toggle" className="cursor-pointer font-medium">
+              Save as Draft
+            </Label>
+            <p className="text-sm text-gray-600">
+              Draft announcements won't be published or trigger notifications
+            </p>
+          </div>
         </div>
+        <Switch
+          id="draft-toggle"
+          checked={isDraft}
+          onCheckedChange={setIsDraft}
+          disabled={isLoading}
+        />
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-4">
         <Button type="submit" disabled={!isFormValid} className="flex-1">
-          {isLoading ? 'Saving...' : submitLabel}
+          {isLoading ? 'Saving...' : isDraft ? 'Save Draft' : submitLabel}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>

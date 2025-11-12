@@ -50,6 +50,7 @@ export function AnnouncementEditPage() {
     title: string;
     content: string;
     priority: 'URGENT' | 'NORMAL';
+    isDraft: boolean;
   }) => {
     if (!id) return;
 

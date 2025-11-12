@@ -30,6 +30,7 @@ import {
   AlertCircleIcon,
   BellIcon,
   BarChart3Icon,
+  ArchiveRestoreIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -152,6 +153,28 @@ export function AdminAnnouncementsPage() {
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete announcement');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleUnarchive = async (id: string) => {
+    if (!confirm('Restore this announcement from archive?')) return;
+
+    setActionLoading(id);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      await announcementService.unarchiveAnnouncement(id);
+      setSuccessMessage('Announcement restored successfully');
+      setRefreshKey((prev) => prev + 1);
+      // If we're on a page that becomes empty, go to previous page
+      if (announcements.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to restore announcement');
     } finally {
       setActionLoading(null);
     }
@@ -442,6 +465,26 @@ export function AdminAnnouncementsPage() {
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>Archive announcement</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                            {announcement.archivedAt && (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleUnarchive(announcement.id)}
+                                      disabled={actionLoading === announcement.id}
+                                      className="text-green-600 hover:text-green-700"
+                                    >
+                                      <ArchiveRestoreIcon className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Restore from archive</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
