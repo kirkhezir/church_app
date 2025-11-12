@@ -12,10 +12,11 @@ import logger from '../../infrastructure/logging/logger';
  * - Cannot update archived announcements
  * - Title and content validation applies
  * - Partial updates are supported
+ * - Can toggle draft status
  *
  * @param id - Announcement ID to update
  * @param userId - ID of user performing the update (must be ADMIN/STAFF)
- * @param updates - Fields to update (title, content, priority)
+ * @param updates - Fields to update (title, content, priority, isDraft)
  * @returns Updated announcement
  */
 export async function updateAnnouncement(
@@ -25,6 +26,7 @@ export async function updateAnnouncement(
     title?: string;
     content?: string;
     priority?: Priority;
+    isDraft?: boolean;
   }
 ): Promise<any> {
   try {
@@ -61,10 +63,16 @@ export async function updateAnnouncement(
     const announcement = Announcement.fromPersistence(existing);
     announcement.updateDetails(updates.title?.trim(), updates.content?.trim(), updates.priority);
 
-    // Persist changes
-    const updated = await announcementRepository.update(announcement.toPersistence());
+    // Prepare persistence data
+    const persistenceData = {
+      ...announcement.toPersistence(),
+      ...(updates.isDraft !== undefined && { isDraft: updates.isDraft }),
+    };
 
-    logger.info('Announcement updated successfully', { id });
+    // Persist changes
+    const updated = await announcementRepository.update(persistenceData);
+
+    logger.info('Announcement updated successfully', { id, isDraft: updates.isDraft });
 
     return updated;
   } catch (error: any) {

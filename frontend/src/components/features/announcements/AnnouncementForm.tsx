@@ -19,7 +19,7 @@ import { Switch } from '../../ui/switch';
 import { Alert, AlertDescription } from '../../ui/alert';
 import { RadioGroup, RadioGroupItem } from '../../ui/radio-group';
 import { AlertCircleIcon, BellIcon, SaveIcon } from 'lucide-react';
-import { RichTextEditor } from '../../editor/RichTextEditor';
+import { SimpleTextEditor } from '../../editor/SimpleTextEditor';
 
 interface AnnouncementFormProps {
   initialData?: {
@@ -159,12 +159,12 @@ export function AnnouncementForm({
         )}
       </div>
 
-      {/* Content Rich Text Editor */}
+      {/* Content Editor */}
       <div className="space-y-2">
         <Label htmlFor="content">
           Content <span className="text-red-500">*</span>
         </Label>
-        <RichTextEditor
+        <SimpleTextEditor
           content={content}
           onChange={setContent}
           placeholder="Write your announcement here..."
@@ -173,7 +173,7 @@ export function AnnouncementForm({
         <p className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-gray-500'}`}>
           {content.trim().length === 0
             ? 'Content is required'
-            : 'Use the toolbar to format your announcement'}
+            : 'Write your announcement in plain text'}
         </p>
       </div>
 

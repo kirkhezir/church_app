@@ -22,7 +22,7 @@ export class AnnouncementController {
    */
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { title, content, priority = 'NORMAL' } = req.body;
+      const { title, content, priority = 'NORMAL', isDraft = false } = req.body;
       const userId = (req as any).user.userId;
 
       // Validate required fields
@@ -43,7 +43,22 @@ export class AnnouncementController {
         return;
       }
 
-      const announcement = await createAnnouncement(userId, title, content, priority as Priority);
+      // Validate isDraft is boolean
+      if (typeof isDraft !== 'boolean') {
+        res.status(400).json({
+          error: 'Validation failed',
+          message: 'isDraft must be a boolean value',
+        });
+        return;
+      }
+
+      const announcement = await createAnnouncement(
+        userId,
+        title,
+        content,
+        priority as Priority,
+        isDraft
+      );
 
       res.status(201).json(announcement);
     } catch (error: any) {
@@ -140,7 +155,7 @@ export class AnnouncementController {
     try {
       const { id } = req.params;
       const userId = (req as any).user.userId;
-      const { title, content, priority } = req.body;
+      const { title, content, priority, isDraft } = req.body;
 
       // Validate priority if provided
       if (priority && !['URGENT', 'NORMAL'].includes(priority)) {
@@ -151,10 +166,20 @@ export class AnnouncementController {
         return;
       }
 
+      // Validate isDraft if provided
+      if (isDraft !== undefined && typeof isDraft !== 'boolean') {
+        res.status(400).json({
+          error: 'Validation failed',
+          message: 'isDraft must be a boolean value',
+        });
+        return;
+      }
+
       const announcement = await updateAnnouncement(id, userId, {
         title,
         content,
         priority: priority as Priority,
+        isDraft,
       });
 
       res.status(200).json(announcement);

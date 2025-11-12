@@ -31,6 +31,7 @@ import {
   BellIcon,
   BarChart3Icon,
   ArchiveRestoreIcon,
+  SaveIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -371,6 +372,9 @@ export function AdminAnnouncementsPage() {
                         Author
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                         Published
                       </th>
                       <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
@@ -409,6 +413,18 @@ export function AdminAnnouncementsPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">
                           {announcement.author.firstName} {announcement.author.lastName}
+                        </td>
+                        <td className="px-6 py-4">
+                          {announcement.isDraft ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
+                              <SaveIcon className="h-3 w-3" />
+                              Draft
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                              ✓ Published
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">
                           {format(new Date(announcement.publishedAt), 'MMM d, yyyy')}

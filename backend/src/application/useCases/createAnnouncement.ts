@@ -13,22 +13,25 @@ import logger from '../../infrastructure/logging/logger';
  * - Only ADMIN and STAFF roles can create announcements
  * - Title must be 3-150 characters
  * - Content cannot exceed 5000 characters
- * - If priority is URGENT, email all members with notifications enabled (FR-027)
+ * - If priority is URGENT and NOT a draft, email all members with notifications enabled (FR-027)
+ * - Drafts are not published and don't trigger notifications
  *
  * @param authorId - ID of the member creating the announcement (must be ADMIN/STAFF)
  * @param title - Announcement title (3-150 chars)
  * @param content - Announcement content (max 5000 chars)
  * @param priority - Priority level (URGENT triggers emails)
+ * @param isDraft - If true, save as draft (no emails, not published)
  * @returns Created announcement with author details
  */
 export async function createAnnouncement(
   authorId: string,
   title: string,
   content: string,
-  priority: Priority = Priority.NORMAL
+  priority: Priority = Priority.NORMAL,
+  isDraft: boolean = false
 ): Promise<any> {
   try {
-    logger.info('Creating announcement', { authorId, title, priority });
+    logger.info('Creating announcement', { authorId, title, priority, isDraft });
 
     // Validate author exists and has permission
     const author = await memberRepository.findById(authorId);
@@ -49,16 +52,22 @@ export async function createAnnouncement(
       authorId
     );
 
-    // Persist to database
-    const created = await announcementRepository.create(announcement.toPersistence());
+    // Persist to database with isDraft flag
+    const persistenceData = {
+      ...announcement.toPersistence(),
+      isDraft,
+    };
+
+    const created = await announcementRepository.create(persistenceData);
 
     logger.info('Announcement created successfully', {
       announcementId: created.id,
       priority,
+      isDraft,
     });
 
-    // If urgent, send email notifications to all members
-    if (priority === Priority.URGENT) {
+    // Only send emails if not a draft and priority is URGENT
+    if (!isDraft && priority === Priority.URGENT) {
       // Fire-and-forget: Send emails asynchronously
       sendUrgentAnnouncementEmails(created, author)
         .then(() => {
