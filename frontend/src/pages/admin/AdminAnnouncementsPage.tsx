@@ -9,7 +9,7 @@
  * - Filtering and pagination
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnnouncements } from '@/hooks/useAnnouncements';
 import { announcementService } from '@/services/endpoints/announcementService';
@@ -34,7 +34,6 @@ export function AdminAnnouncementsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [refetchKey, setRefetchKey] = useState(0);
   const limit = 10;
 
   const {
@@ -60,9 +59,12 @@ export function AdminAnnouncementsPage() {
 
     try {
       await announcementService.archiveAnnouncement(id);
-      setRefetchKey((prev) => prev + 1); // Trigger refetch by changing key
-      // Force page reload to refresh the list
-      window.location.reload();
+      // Refresh the list by resetting to page 1 and toggling state
+      setCurrentPage(1);
+      // Force a re-render by briefly toggling and back
+      const wasArchived = showArchived;
+      setShowArchived(!wasArchived);
+      setTimeout(() => setShowArchived(wasArchived), 50);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to archive announcement');
     } finally {
@@ -79,9 +81,12 @@ export function AdminAnnouncementsPage() {
 
     try {
       await announcementService.deleteAnnouncement(id);
-      setRefetchKey((prev) => prev + 1); // Trigger refetch by changing key
-      // Force page reload to refresh the list
-      window.location.reload();
+      // Refresh the list by resetting to page 1 and toggling state
+      setCurrentPage(1);
+      // Force a re-render by briefly toggling and back
+      const wasArchived = showArchived;
+      setShowArchived(!wasArchived);
+      setTimeout(() => setShowArchived(wasArchived), 50);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete announcement');
     } finally {

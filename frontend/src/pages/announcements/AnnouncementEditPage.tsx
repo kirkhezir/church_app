@@ -60,9 +60,9 @@ export function AnnouncementEditPage() {
       await announcementService.updateAnnouncement(id, data);
       setSuccess(true);
 
-      // Redirect to announcement detail after short delay
+      // Redirect to admin announcements page after short delay
       setTimeout(() => {
-        navigate(`/announcements/${id}`);
+        navigate('/admin/announcements');
       }, 1500);
     } catch (error) {
       setIsSaving(false);
@@ -71,11 +71,7 @@ export function AnnouncementEditPage() {
   };
 
   const handleCancel = () => {
-    if (id) {
-      navigate(`/announcements/${id}`);
-    } else {
-      navigate('/announcements');
-    }
+    navigate('/admin/announcements');
   };
 
   if (isLoading) {
@@ -130,7 +126,7 @@ export function AnnouncementEditPage() {
       <div className="mb-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
-          Back to Announcement
+          Back
         </Button>
         <h1 className="text-3xl font-bold">Edit Announcement</h1>
         <p className="mt-2 text-gray-600">Update announcement details</p>

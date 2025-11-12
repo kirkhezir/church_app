@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
@@ -36,7 +37,9 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                     {index > 0 && <BreadcrumbSeparator />}
                     <BreadcrumbItem>
                       {breadcrumb.href ? (
-                        <BreadcrumbLink href={breadcrumb.href}>{breadcrumb.label}</BreadcrumbLink>
+                        <BreadcrumbLink asChild>
+                          <Link to={breadcrumb.href}>{breadcrumb.label}</Link>
+                        </BreadcrumbLink>
                       ) : (
                         <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
                       )}
