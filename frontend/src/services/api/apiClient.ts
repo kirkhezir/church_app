@@ -137,8 +137,10 @@ class ApiClient {
           }
         );
 
-        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-        this.setTokens(accessToken, newRefreshToken);
+        // Backend returns { accessToken } directly (no nested data property)
+        // Backend doesn't return a new refreshToken, so keep the existing one
+        const { accessToken } = response.data;
+        localStorage.setItem('accessToken', accessToken);
 
         return accessToken;
       } finally {

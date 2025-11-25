@@ -59,8 +59,10 @@ export function useMembers(options: UseMembersOptions = {}): UseMembersReturn {
 
       setMembers(response.data);
       setPagination(response.pagination);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch members');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to fetch members');
+      setError(errorMessage);
       console.error('Error fetching members:', err);
     } finally {
       setLoading(false);
@@ -118,8 +120,10 @@ export function useMemberSearch(options: UseMemberSearchOptions): UseMemberSearc
 
         const response = await memberService.searchMembers(query, limit);
         setResults(response.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to search members');
+      } catch (err: any) {
+        const errorMessage =
+          err?.message || (typeof err === 'string' ? err : 'Failed to search members');
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -164,8 +168,10 @@ export function useMemberProfile(options: UseMemberProfileOptions): UseMemberPro
 
       const response = await memberService.getMemberProfile(memberId);
       setMember(response);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch member profile');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to fetch member profile');
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -209,8 +215,10 @@ export function usePrivacySettings(): UsePrivacySettingsReturn {
         setError(null);
 
         await memberService.updatePrivacySettings(settings);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to update privacy settings');
+      } catch (err: any) {
+        const errorMessage =
+          err?.message || (typeof err === 'string' ? err : 'Failed to update privacy settings');
+        setError(errorMessage);
         throw err;
       } finally {
         setLoading(false);

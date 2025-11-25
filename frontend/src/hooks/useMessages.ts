@@ -70,8 +70,10 @@ export function useMessages(options: UseMessagesOptions = {}): UseMessagesReturn
 
       setMessages(response.data);
       setPagination(response.pagination);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch messages');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to fetch messages');
+      setError(errorMessage);
       console.error('Error fetching messages:', err);
     } finally {
       setLoading(false);
@@ -129,8 +131,10 @@ export function useMessageDetail(options: UseMessageDetailOptions): UseMessageDe
 
       const response = await messageService.getMessageById(messageId);
       setMessage(response);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch message');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to fetch message');
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -171,8 +175,8 @@ export function useSendMessage(): UseSendMessageReturn {
 
         const response = await messageService.sendMessage(input);
         return response;
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Failed to send message';
+      } catch (err: any) {
+        const errorMsg = err?.message || (typeof err === 'string' ? err : 'Failed to send message');
         setError(errorMsg);
         throw err;
       } finally {
@@ -208,8 +212,10 @@ export function useDeleteMessage(): UseDeleteMessageReturn {
       setError(null);
 
       await messageService.deleteMessage(messageId);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete message');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to delete message');
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -245,8 +251,10 @@ export function useUnreadCount(autoFetch: boolean = true): UseUnreadCountReturn 
 
       const count = await messageService.getUnreadCount();
       setUnreadCount(count);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch unread count');
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || (typeof err === 'string' ? err : 'Failed to fetch unread count');
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
