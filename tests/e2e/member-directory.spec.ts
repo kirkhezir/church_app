@@ -40,11 +40,11 @@ test.describe("Member Directory E2E", () => {
       await login(page, MEMBER_USER.email, MEMBER_USER.password);
       await page.goto("http://localhost:5173/members");
 
-      // Wait for members to load
-      await page.waitForSelector('[class*="card"]', { timeout: 10000 });
+      // Wait for members to load - look for member name heading
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
 
       // Should show at least one member card
-      const memberCards = page.locator('[class*="card"]');
+      const memberCards = page.locator(".cursor-pointer");
       const count = await memberCards.count();
       expect(count).toBeGreaterThan(0);
     });
@@ -60,23 +60,23 @@ test.describe("Member Directory E2E", () => {
       // Wait for search results to update
       await page.waitForTimeout(500);
 
-      // Results should be filtered
-      await expect(page.locator("text=John")).toBeVisible();
+      // Results should be filtered - look for the member card with John Doe
+      await expect(page.locator('h3:has-text("John Doe")')).toBeVisible();
     });
 
     test("should navigate to member profile on click", async ({ page }) => {
       await login(page, MEMBER_USER.email, MEMBER_USER.password);
       await page.goto("http://localhost:5173/members");
 
-      // Wait for members to load
-      await page.waitForSelector('[class*="card"]', { timeout: 10000 });
+      // Wait for members to load - look for member name heading
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
 
-      // Click on a member card
-      const firstCard = page.locator('[class*="card"]').first();
+      // Click on a member card (the div container with cursor-pointer)
+      const firstCard = page.locator(".cursor-pointer").first();
       await firstCard.click();
 
       // Should navigate to member profile page
-      await page.waitForURL(/\/members\/[a-z0-9-]+/);
+      await page.waitForURL(/\/members\/[a-z0-9-]+/, { timeout: 15000 });
     });
   });
 
@@ -86,11 +86,11 @@ test.describe("Member Directory E2E", () => {
       await page.goto("http://localhost:5173/members");
 
       // Wait for members and click on first card
-      await page.waitForSelector('[class*="card"]', { timeout: 10000 });
-      await page.locator('[class*="card"]').first().click();
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+      await page.locator(".cursor-pointer").first().click();
 
       // Wait for profile page to load
-      await page.waitForURL(/\/members\/[a-z0-9-]+/);
+      await page.waitForURL(/\/members\/[a-z0-9-]+/, { timeout: 15000 });
 
       // Should show back button
       await expect(page.locator("text=Back to Directory")).toBeVisible();
@@ -105,17 +105,17 @@ test.describe("Member Directory E2E", () => {
       await page.goto("http://localhost:5173/members");
 
       // Wait for members and click on first card
-      await page.waitForSelector('[class*="card"]', { timeout: 10000 });
-      await page.locator('[class*="card"]').first().click();
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+      await page.locator(".cursor-pointer").first().click();
 
       // Wait for profile page
-      await page.waitForURL(/\/members\/[a-z0-9-]+/);
+      await page.waitForURL(/\/members\/[a-z0-9-]+/, { timeout: 15000 });
 
       // Click send message button
       await page.click("text=Send Message");
 
       // Should navigate to compose page with recipient pre-filled
-      await page.waitForURL(/\/messages\/compose\?to=/);
+      await page.waitForURL(/\/messages\/compose\?to=/, { timeout: 10000 });
     });
 
     test("should navigate back to directory", async ({ page }) => {
@@ -123,11 +123,11 @@ test.describe("Member Directory E2E", () => {
       await page.goto("http://localhost:5173/members");
 
       // Wait for members and click on first card
-      await page.waitForSelector('[class*="card"]', { timeout: 10000 });
-      await page.locator('[class*="card"]').first().click();
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+      await page.locator(".cursor-pointer").first().click();
 
       // Wait for profile page
-      await page.waitForURL(/\/members\/[a-z0-9-]+/);
+      await page.waitForURL(/\/members\/[a-z0-9-]+/, { timeout: 15000 });
 
       // Click back button
       await page.click("text=Back to Directory");

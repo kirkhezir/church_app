@@ -146,8 +146,8 @@ test.describe("Messaging System E2E", () => {
       // Should redirect to sent folder
       await page.waitForURL(/\/messages\?folder=sent/);
 
-      // Should show the sent message
-      await expect(page.locator("text=E2E Test Message")).toBeVisible();
+      // Should show the sent message (use first() to avoid strict mode)
+      await expect(page.locator("text=E2E Test Message").first()).toBeVisible();
     });
 
     test("should validate required fields", async ({ page }) => {
@@ -211,8 +211,19 @@ test.describe("Messaging System E2E", () => {
         await page.waitForURL(/\/messages/);
       }
 
+      // Logout first before logging in as another user
+      await page.evaluate(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+      });
+
       // Now login as John and view the message
       await page.goto("http://localhost:5173/login");
+      await page.waitForTimeout(1000); // Give time for redirect check
+      await page.waitForSelector('button:has-text("Sign In")', {
+        timeout: 10000,
+      });
       await page
         .getByRole("textbox", { name: "Email" })
         .fill(MEMBER_USER.email);
@@ -224,16 +235,17 @@ test.describe("Messaging System E2E", () => {
 
       // Go to messages inbox
       await page.goto("http://localhost:5173/messages");
+      await page.waitForTimeout(1000);
 
-      // Click on a message if available
-      const messageRows = page.locator('[class*="border-b"]');
+      // Click on a message if available - message rows have cursor-pointer class
+      const messageRows = page.locator(".cursor-pointer");
       const count = await messageRows.count();
 
       if (count > 0) {
         await messageRows.first().click();
 
         // Should navigate to message detail
-        await page.waitForURL(/\/messages\/[a-z0-9-]+/);
+        await page.waitForURL(/\/messages\/[a-z0-9-]+/, { timeout: 10000 });
 
         // Should show back button
         await expect(page.locator("text=Back to Messages")).toBeVisible();
@@ -244,21 +256,22 @@ test.describe("Messaging System E2E", () => {
       await login(page, MEMBER_USER.email, MEMBER_USER.password);
       await page.goto("http://localhost:5173/messages");
 
-      // Check if there are messages
-      const messageRows = page.locator('[class*="border-b"]');
+      // Wait for page to load and check if there are messages
+      await page.waitForTimeout(1000);
+      const messageRows = page.locator('[class*="cursor-pointer"]');
       const count = await messageRows.count();
 
       if (count > 0) {
         // Click on first message
         await messageRows.first().click();
-        await page.waitForURL(/\/messages\/[a-z0-9-]+/);
+        await page.waitForURL(/\/messages\/[a-z0-9-]+/, { timeout: 10000 });
 
         // Click delete button
         page.on("dialog", (dialog) => dialog.accept());
         await page.click("text=Delete");
 
         // Should redirect back to messages
-        await page.waitForURL(/\/messages/);
+        await page.waitForURL(/\/messages/, { timeout: 10000 });
       }
     });
   });
