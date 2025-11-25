@@ -18,35 +18,19 @@ import { AnnouncementCreatePage } from './pages/announcements/AnnouncementCreate
 import { AnnouncementEditPage } from './pages/announcements/AnnouncementEditPage';
 import { AnnouncementAnalyticsPage } from './pages/announcements/AnnouncementAnalyticsPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
+import { MemberDirectoryPage, MemberProfilePage } from './pages/members';
+import { MessagesListPage, MessageDetailPage, ComposeMessagePage } from './pages/messages';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 
-// Placeholder components (to be implemented in Phase 4)
+// Placeholder components
 
 const RegisterPage = () => (
   <div className="flex min-h-screen items-center justify-center bg-gray-100">
     <div className="rounded-lg bg-white p-8 shadow-md">
       <h1 className="mb-4 text-2xl font-bold">Register</h1>
       <p className="text-gray-600">Register page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
-
-const MessagesPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Messages</h1>
-      <p className="text-gray-600">Messages page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
-
-const MembersPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Members</h1>
-      <p className="text-gray-600">Members page will be implemented in Phase 4</p>
     </div>
   </div>
 );
@@ -203,23 +187,51 @@ const App: React.FC = () => {
         }
       />
 
-      {/* Other Private Routes */}
-      <Route
-        path="/messages"
-        element={
-          <PrivateRoute>
-            <MessagesPage />
-          </PrivateRoute>
-        }
-      />
+      {/* Member Directory Routes */}
       <Route
         path="/members"
         element={
           <PrivateRoute>
-            <MembersPage />
+            <MemberDirectoryPage />
           </PrivateRoute>
         }
       />
+      <Route
+        path="/members/:id"
+        element={
+          <PrivateRoute>
+            <MemberProfilePage />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Messaging Routes */}
+      <Route
+        path="/messages"
+        element={
+          <PrivateRoute>
+            <MessagesListPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/messages/compose"
+        element={
+          <PrivateRoute>
+            <ComposeMessagePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/messages/:id"
+        element={
+          <PrivateRoute>
+            <MessageDetailPage />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Profile Settings */}
       <Route
         path="/profile"
         element={
