@@ -670,14 +670,14 @@
 
 #### API Contract & Unit Tests
 
-- [ ] T276 [P] Write contract tests for admin member management endpoints in backend/tests/contracts/adminEndpoints.test.ts (verify POST /api/v1/admin/members, GET /api/v1/admin/members, DELETE /api/v1/admin/members/:id match spec, verify FAIL)
-- [ ] T277 [P] Write unit tests for MFA TOTP generation and validation in backend/tests/unit/infrastructure/mfaService.test.ts (test QR code generation, TOTP validation, backup codes, verify FAIL)
-- [ ] T278 [P] Write unit tests for data export use cases in backend/tests/unit/useCases/exportData.test.ts (test CSV/JSON formatting, filtering, verify FAIL)
+- [x] T276 [P] Write contract tests for admin member management endpoints in backend/tests/contracts/adminEndpoints.test.ts (verify POST /api/v1/admin/members, GET /api/v1/admin/members, DELETE /api/v1/admin/members/:id match spec, verify FAIL)
+- [x] T277 [P] Write unit tests for MFA TOTP generation and validation in backend/tests/unit/infrastructure/mfaService.test.ts (test QR code generation, TOTP validation, backup codes, verify FAIL)
+- [x] T278 [P] Write unit tests for data export use cases in backend/tests/unit/useCases/exportData.test.ts (test CSV/JSON formatting, filtering, verify FAIL)
 
 #### Backend Integration Tests
 
-- [ ] T279 [P] Write integration tests for MFA enrollment and login flow in backend/tests/integration/mfa.test.ts (test full MFA flow with test database, verify FAIL)
-- [ ] T280 Write integration tests for admin member management in backend/tests/integration/adminMemberManagement.test.ts (test create/list/delete member endpoints, verify FAIL)
+- [x] T279 [P] Write integration tests for MFA enrollment and login flow in backend/tests/integration/mfa.test.ts (test full MFA flow with test database, verify FAIL)
+- [x] T280 Write integration tests for admin member management in backend/tests/integration/adminMemberManagement.test.ts (test create/list/delete member endpoints, verify FAIL)
 
 #### Frontend Component Tests
 
@@ -693,60 +693,60 @@
 
 ### Multi-Factor Authentication (MFA) Implementation
 
-- [ ] T285 [P] Install speakeasy and qrcode libraries in backend for TOTP MFA
-- [ ] T286 [P] Create MFAService for TOTP generation, QR code, and validation in backend/src/infrastructure/auth/mfaService.ts
-- [ ] T287 [P] Add MFA fields to Member entity (mfaSecret, mfaEnabled, backupCodes) in backend/prisma/schema.prisma
-- [ ] T288 [P] Create EnrollMFA use case in backend/src/application/useCases/enrollMFA.ts
-- [ ] T289 [P] Create VerifyMFACode use case in backend/src/application/useCases/verifyMFACode.ts
-- [ ] T290 [P] Create GenerateBackupCodes use case in backend/src/application/useCases/generateBackupCodes.ts
-- [ ] T291 Create MFA middleware for admin/staff role enforcement in backend/src/presentation/middleware/mfaMiddleware.ts
-- [ ] T292 Implement POST /api/v1/auth/mfa/enroll controller in backend/src/presentation/controllers/mfaController.ts
-- [ ] T293 Implement POST /api/v1/auth/mfa/verify controller in backend/src/presentation/controllers/mfaController.ts
-- [ ] T294 Implement POST /api/v1/auth/mfa/backup-codes controller in backend/src/presentation/controllers/mfaController.ts
-- [ ] T295 Update login flow to check MFA requirement for admin/staff in authController
-- [ ] T296 [P] Create MFAEnrollmentPage component with QR code display in frontend/src/pages/auth/MFAEnrollmentPage.tsx
-- [ ] T297 [P] Create MFAVerificationPage component in frontend/src/pages/auth/MFAVerificationPage.tsx
-- [ ] T298 [P] Create BackupCodesDisplay component in frontend/src/components/features/BackupCodesDisplay.tsx
-- [ ] T299 Implement mfaService.enrollMFA() in frontend/src/services/endpoints/mfaService.ts
-- [ ] T300 Implement mfaService.verifyCode() in frontend/src/services/endpoints/mfaService.ts
-- [ ] T301 Integrate MFA check into login flow in AuthContext
+- [x] T285 [P] Install speakeasy and qrcode libraries in backend for TOTP MFA
+- [x] T286 [P] Create MFAService for TOTP generation, QR code, and validation in backend/src/infrastructure/auth/mfaService.ts
+- [x] T287 [P] Add MFA fields to Member entity (mfaSecret, mfaEnabled, backupCodes) in backend/prisma/schema.prisma
+- [x] T288 [P] Create EnrollMFA use case in backend/src/application/useCases/enrollMFA.ts
+- [x] T289 [P] Create VerifyMFACode use case in backend/src/application/useCases/verifyMFACode.ts
+- [x] T290 [P] Create GenerateBackupCodes use case in backend/src/application/useCases/generateBackupCodes.ts
+- [x] T291 Create MFA middleware for admin/staff role enforcement in backend/src/presentation/middleware/mfaMiddleware.ts
+- [x] T292 Implement POST /api/v1/auth/mfa/enroll controller in backend/src/presentation/controllers/mfaController.ts
+- [x] T293 Implement POST /api/v1/auth/mfa/verify controller in backend/src/presentation/controllers/mfaController.ts
+- [x] T294 Implement POST /api/v1/auth/mfa/backup-codes controller in backend/src/presentation/controllers/mfaController.ts
+- [x] T295 Update login flow to check MFA requirement for admin/staff in authController
+- [x] T296 [P] Create MFAEnrollmentPage component with QR code display in frontend/src/pages/auth/MFAEnrollmentPage.tsx
+- [x] T297 [P] Create MFAVerificationPage component in frontend/src/pages/auth/MFAVerificationPage.tsx
+- [x] T298 [P] Create BackupCodesDisplay component in frontend/src/components/features/BackupCodesDisplay.tsx
+- [x] T299 Implement mfaService.enrollMFA() in frontend/src/services/endpoints/mfaService.ts
+- [x] T300 Implement mfaService.verifyCode() in frontend/src/services/endpoints/mfaService.ts
+- [x] T301 Integrate MFA check into login flow in AuthContext
 
 ### Admin Member Management
 
-- [ ] T302 [P] Create CreateMemberAccount use case (admin only) in backend/src/application/useCases/createMemberAccount.ts
-- [ ] T303 [P] Create invitation email template in backend/src/infrastructure/email/templates/memberInvitation.ts
-- [ ] T304 Implement POST /api/v1/admin/members controller in backend/src/presentation/controllers/adminController.ts
-- [ ] T305 Implement GET /api/v1/admin/members controller for admin member list in backend/src/presentation/controllers/adminController.ts
-- [ ] T306 Implement DELETE /api/v1/admin/members/:id controller (soft delete) in backend/src/presentation/controllers/adminController.ts
-- [ ] T307 Create admin routes in backend/src/presentation/routes/adminRoutes.ts
-- [ ] T308 [P] Create AdminDashboard page component in frontend/src/pages/admin/AdminDashboard.tsx
-- [ ] T309 [P] Create MemberManagementPage component in frontend/src/pages/admin/MemberManagementPage.tsx
-- [ ] T310 [P] Create CreateMemberForm component in frontend/src/components/features/CreateMemberForm.tsx
-- [ ] T311 [P] Create MemberListTable component with actions in frontend/src/components/features/MemberListTable.tsx
-- [ ] T312 Implement adminService.createMember() in frontend/src/services/endpoints/adminService.ts
-- [ ] T313 Implement adminService.getMembers() in frontend/src/services/endpoints/adminService.ts
-- [ ] T314 Implement adminService.deleteMember() in frontend/src/services/endpoints/adminService.ts
+- [x] T302 [P] Create CreateMemberAccount use case (admin only) in backend/src/application/useCases/createMemberAccount.ts
+- [x] T303 [P] Create invitation email template in backend/src/infrastructure/email/templates/memberInvitation.ts
+- [x] T304 Implement POST /api/v1/admin/members controller in backend/src/presentation/controllers/adminController.ts
+- [x] T305 Implement GET /api/v1/admin/members controller for admin member list in backend/src/presentation/controllers/adminController.ts
+- [x] T306 Implement DELETE /api/v1/admin/members/:id controller (soft delete) in backend/src/presentation/controllers/adminController.ts
+- [x] T307 Create admin routes in backend/src/presentation/routes/adminRoutes.ts
+- [x] T308 [P] Create AdminDashboard page component in frontend/src/pages/admin/AdminDashboard.tsx
+- [x] T309 [P] Create MemberManagementPage component in frontend/src/pages/admin/MemberManagementPage.tsx
+- [x] T310 [P] Create CreateMemberForm component in frontend/src/components/features/CreateMemberForm.tsx
+- [x] T311 [P] Create MemberListTable component with actions in frontend/src/components/features/MemberListTable.tsx
+- [x] T312 Implement adminService.createMember() in frontend/src/services/endpoints/adminService.ts
+- [x] T313 Implement adminService.getMembers() in frontend/src/services/endpoints/adminService.ts
+- [x] T314 Implement adminService.deleteMember() in frontend/src/services/endpoints/adminService.ts
 
 ### Audit Log Viewing (FR-034)
 
-- [ ] T315 [P] Create GetAuditLogs use case with filtering in backend/src/application/useCases/getAuditLogs.ts
-- [ ] T316 Implement GET /api/v1/admin/audit-logs controller in backend/src/presentation/controllers/adminController.ts
-- [ ] T317 [P] Create AuditLogViewerPage component in frontend/src/pages/admin/AuditLogViewerPage.tsx
-- [ ] T318 Implement adminService.getAuditLogs() in frontend/src/services/endpoints/adminService.ts
+- [x] T315 [P] Create GetAuditLogs use case with filtering in backend/src/application/useCases/getAuditLogs.ts
+- [x] T316 Implement GET /api/v1/admin/audit-logs controller in backend/src/presentation/controllers/adminController.ts
+- [x] T317 [P] Create AuditLogViewerPage component in frontend/src/pages/admin/AuditLogViewerPage.tsx
+- [x] T318 Implement adminService.getAuditLogs() in frontend/src/services/endpoints/adminService.ts
 
 ### Data Export (FR-036)
 
-- [ ] T319 [P] Create ExportMemberData use case in backend/src/application/useCases/exportMemberData.ts
-- [ ] T320 [P] Create ExportEventData use case in backend/src/application/useCases/exportEventData.ts
-- [ ] T321 Implement GET /api/v1/admin/export/members controller (CSV/JSON) in backend/src/presentation/controllers/adminController.ts
-- [ ] T322 Implement GET /api/v1/admin/export/events controller (CSV/JSON) in backend/src/presentation/controllers/adminController.ts
-- [ ] T323 [P] Create DataExportPage component in frontend/src/pages/admin/DataExportPage.tsx
-- [ ] T324 Implement adminService.exportData() in frontend/src/services/endpoints/adminService.ts
+- [x] T319 [P] Create ExportMemberData use case in backend/src/application/useCases/exportMemberData.ts
+- [x] T320 [P] Create ExportEventData use case in backend/src/application/useCases/exportEventData.ts
+- [x] T321 Implement GET /api/v1/admin/export/members controller (CSV/JSON) in backend/src/presentation/controllers/adminController.ts
+- [x] T322 Implement GET /api/v1/admin/export/events controller (CSV/JSON) in backend/src/presentation/controllers/adminController.ts
+- [x] T323 [P] Create DataExportPage component in frontend/src/pages/admin/DataExportPage.tsx
+- [x] T324 Implement adminService.exportData() in frontend/src/services/endpoints/adminService.ts
 
 ### Finalization
 
-- [ ] T325 Add all admin and MFA routes to React Router with proper role checks
-- [ ] T326 Run tests and verify all pass (green); refactor if needed
+- [x] T325 Add all admin and MFA routes to React Router with proper role checks
+- [x] T326 Run tests and verify all pass (green); refactor if needed
 - [ ] T327 Run incremental load test for admin operations with MFA enabled
 
 **Checkpoint**: All admin features complete with MFA security - audit logs viewable, data exportable, member management functional

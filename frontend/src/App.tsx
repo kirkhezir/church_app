@@ -4,6 +4,8 @@ import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
 import PasswordResetRequestPage from './pages/auth/PasswordResetRequestPage';
 import PasswordResetPage from './pages/auth/PasswordResetPage';
+import MFAEnrollmentPage from './pages/auth/MFAEnrollmentPage';
+import MFAVerificationPage from './pages/auth/MFAVerificationPage';
 import MemberDashboard from './pages/dashboard/MemberDashboard';
 import EditProfilePage from './pages/dashboard/EditProfilePage';
 import NotificationSettingsPage from './pages/dashboard/NotificationSettingsPage';
@@ -18,6 +20,10 @@ import { AnnouncementCreatePage } from './pages/announcements/AnnouncementCreate
 import { AnnouncementEditPage } from './pages/announcements/AnnouncementEditPage';
 import { AnnouncementAnalyticsPage } from './pages/announcements/AnnouncementAnalyticsPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
+import AdminMemberListPage from './pages/admin/AdminMemberListPage';
+import AdminCreateMemberPage from './pages/admin/AdminCreateMemberPage';
+import AdminAuditLogsPage from './pages/admin/AdminAuditLogsPage';
+import AdminDataExportPage from './pages/admin/AdminDataExportPage';
 import { MemberDirectoryPage, MemberProfilePage } from './pages/members';
 import { MessagesListPage, MessageDetailPage, ComposeMessagePage } from './pages/messages';
 import { PrivateRoute } from './components/routing/PrivateRoute';
@@ -84,6 +90,24 @@ const App: React.FC = () => {
           <PublicRoute>
             <PasswordResetPage />
           </PublicRoute>
+        }
+      />
+
+      {/* MFA Routes */}
+      <Route
+        path="/mfa-verify"
+        element={
+          <PublicRoute>
+            <MFAVerificationPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/mfa-enroll"
+        element={
+          <PrivateRoute>
+            <MFAEnrollmentPage />
+          </PrivateRoute>
         }
       />
 
@@ -183,6 +207,44 @@ const App: React.FC = () => {
         element={
           <AdminRoute>
             <AnnouncementAnalyticsPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Member Management Routes */}
+      <Route
+        path="/admin/members"
+        element={
+          <AdminRoute>
+            <AdminMemberListPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/members/create"
+        element={
+          <AdminRoute>
+            <AdminCreateMemberPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Audit Logs */}
+      <Route
+        path="/admin/audit-logs"
+        element={
+          <AdminRoute>
+            <AdminAuditLogsPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Data Export */}
+      <Route
+        path="/admin/export"
+        element={
+          <AdminRoute>
+            <AdminDataExportPage />
           </AdminRoute>
         }
       />

@@ -16,9 +16,31 @@ export enum AuditAction {
  */
 export class AuditLogService {
   /**
+   * Simple log method for general use
+   */
+  async log(data: {
+    userId: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    changes?: Record<string, unknown>;
+    ipAddress: string;
+    userAgent: string;
+  }): Promise<void> {
+    await this.logAction({
+      action: data.action as AuditAction,
+      entityType: data.entityType,
+      entityId: data.entityId,
+      userId: data.userId,
+      changes: data.changes,
+      ipAddress: data.ipAddress,
+      userAgent: data.userAgent,
+    });
+  }
+
+  /**
    * Log an action to the audit log
    */
-
   async logAction(data: {
     action: AuditAction;
     entityType: string;

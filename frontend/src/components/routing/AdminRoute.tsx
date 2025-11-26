@@ -12,9 +12,9 @@ interface AdminRouteProps {
  * Redirects to dashboard if user doesn't have required role
  */
 export function AdminRoute({ children, allowStaff = true }: AdminRouteProps) {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">

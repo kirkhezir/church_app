@@ -20,14 +20,33 @@ interface Member {
 }
 
 /**
+ * MFA Login Response for completing the MFA flow
+ */
+interface MFALoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  member: Member;
+}
+
+/**
+ * Login result - either complete login or requires MFA
+ */
+interface LoginResult {
+  mfaRequired?: boolean;
+  mfaToken?: string;
+  email?: string;
+}
+
+/**
  * Authentication Context Type
  */
 interface AuthContextType {
   user: Member | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<LoginResult | void>;
   logout: () => Promise<void>;
+  completeMFALogin: (response: MFALoginResponse) => void;
 }
 
 /**
@@ -91,10 +110,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   /**
    * Login user with email and password
+   * Returns MFA token if MFA is required
    */
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<LoginResult | void> => {
     try {
       const response = await authService.login(email, password);
+
+      // Check if MFA is required
+      if ((response as any).mfaRequired) {
+        return {
+          mfaRequired: true,
+          mfaToken: (response as any).mfaToken,
+          email,
+        };
+      }
+
       const { accessToken, refreshToken, member } = response;
 
       // Store tokens in localStorage
@@ -113,6 +143,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Login failed:', error);
       throw error;
     }
+  };
+
+  /**
+   * Complete MFA login after successful verification
+   */
+  const completeMFALogin = (response: MFALoginResponse): void => {
+    const { accessToken, refreshToken, member } = response;
+
+    // Store tokens in localStorage
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
+    // Store user data
+    localStorage.setItem('user', JSON.stringify(member));
+
+    // Set user state
+    setUser(member);
+
+    // Setup 24-hour auto-logout
+    setupLogoutTimer();
   };
 
   /**
@@ -207,6 +257,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading,
     login,
     logout,
+    completeMFALogin,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

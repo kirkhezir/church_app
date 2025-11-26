@@ -39,7 +39,19 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const result = await login(email, password);
+
+      // Check if MFA is required
+      if (result?.mfaRequired) {
+        navigate('/mfa-verify', {
+          state: {
+            mfaToken: result.mfaToken,
+            email: result.email,
+          },
+        });
+        return;
+      }
+
       // Redirect to dashboard after successful login
       navigate('/dashboard');
     } catch (err: any) {

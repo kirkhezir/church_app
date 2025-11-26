@@ -6,6 +6,7 @@ import memberRoutes from './memberRoutes';
 import eventRoutes from './eventRoutes';
 import announcementRoutes from './announcementRoutes';
 import messageRoutes from './messageRoutes';
+import adminRoutes from './adminRoutes';
 
 /**
  * Main API Router
@@ -26,6 +27,7 @@ router.get('/', (_req, res) => {
       events: '/api/v1/events',
       announcements: '/api/v1/announcements',
       messages: '/api/v1/messages',
+      admin: '/api/v1/admin',
     },
   });
 });
@@ -37,6 +39,7 @@ router.use('/members', memberRoutes);
 router.use('/events', eventRoutes);
 router.use('/announcements', announcementRoutes);
 router.use('/messages', messageRoutes);
+router.use('/admin', adminRoutes);
 
 logger.info('API routes initialized');
 

@@ -7,6 +7,7 @@
  * - Account lockout after 5 failed attempts (15-minute lock)
  * - Failed login attempt tracking
  * - Last login timestamp update
+ * - MFA verification when enabled
  */
 
 import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
@@ -20,15 +21,18 @@ interface AuthenticateUserRequest {
 }
 
 interface AuthenticateUserResponse {
-  accessToken: string;
-  refreshToken: string;
-  member: {
+  accessToken?: string;
+  refreshToken?: string;
+  member?: {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
     role: string;
   };
+  // MFA fields when MFA is enabled
+  mfaRequired?: boolean;
+  mfaToken?: string;
 }
 
 export class AuthenticateUser {
@@ -90,7 +94,27 @@ export class AuthenticateUser {
       throw new Error('Invalid credentials');
     }
 
-    // 5. Successful login - generate tokens
+    // 5. Check if MFA is enabled
+    if (member.mfaEnabled) {
+      // Generate MFA token instead of access tokens
+      const mfaToken = this.jwtService.generateMFAToken({
+        userId: member.id,
+        email: member.email,
+        role: member.role,
+      });
+
+      logger.info('MFA required for login', {
+        memberId: member.id,
+        email: member.email,
+      });
+
+      return {
+        mfaRequired: true,
+        mfaToken,
+      };
+    }
+
+    // 6. Successful login (no MFA) - generate tokens
     const accessToken = this.jwtService.generateAccessToken({
       userId: member.id,
       email: member.email,
@@ -103,7 +127,7 @@ export class AuthenticateUser {
       role: member.role,
     });
 
-    // 6. Update member: reset failed attempts, update last login
+    // 7. Update member: reset failed attempts, update last login
     member.failedLoginAttempts = 0;
     member.lastLoginAt = new Date();
     member.accountLocked = false;
@@ -116,7 +140,7 @@ export class AuthenticateUser {
       role: member.role,
     });
 
-    // 7. Return tokens and member info (excluding sensitive data)
+    // 8. Return tokens and member info (excluding sensitive data)
     return {
       accessToken,
       refreshToken,

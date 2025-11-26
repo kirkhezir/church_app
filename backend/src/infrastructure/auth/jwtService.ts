@@ -119,6 +119,44 @@ export class JWTService {
       return null;
     }
   }
+
+  /**
+   * Generate a temporary MFA token for the login flow
+   * This token is short-lived and used only to verify MFA during login
+   */
+  generateMFAToken(payload: JWTPayload): string {
+    return jwt.sign({ ...payload, type: 'mfa' }, this.accessTokenSecret, {
+      expiresIn: '5m', // MFA token expires in 5 minutes
+      issuer: 'church-app',
+      audience: 'church-app-mfa',
+    } as jwt.SignOptions);
+  }
+
+  /**
+   * Verify MFA token
+   */
+  verifyMFAToken(token: string): JWTPayload {
+    try {
+      const decoded = jwt.verify(token, this.accessTokenSecret, {
+        issuer: 'church-app',
+        audience: 'church-app-mfa',
+      }) as JWTPayload & { type: string };
+
+      if (decoded.type !== 'mfa') {
+        throw new Error('Invalid token type');
+      }
+
+      return decoded;
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        throw new Error('MFA token expired');
+      }
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new Error('Invalid MFA token');
+      }
+      throw new Error('MFA token verification failed');
+    }
+  }
 }
 
 // Export singleton instance
