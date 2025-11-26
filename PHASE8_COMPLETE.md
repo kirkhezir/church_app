@@ -102,8 +102,22 @@ Phase 8 implementation of security and admin features is complete. This phase ad
    - Complete enrollment flow tests
 
 2. **Integration Tests**
+
    - `backend/tests/integration/mfa.test.ts` - MFA endpoint tests
    - `backend/tests/integration/admin.test.ts` - Admin endpoint tests
+
+3. **Frontend Component Tests** (T281-T282)
+
+   - `frontend/tests/components/mfa/MFAEnrollment.test.tsx` - MFA enrollment page tests
+   - `frontend/tests/components/admin/CreateMemberForm.test.tsx` - Admin create member form tests
+
+4. **E2E Tests** (T283-T284)
+
+   - `tests/e2e/mfaFlow.spec.ts` - MFA enrollment and login E2E tests
+   - `tests/e2e/adminMemberManagement.spec.ts` - Admin member management E2E tests
+
+5. **Performance/Load Tests** (T327)
+   - `backend/tests/performance/adminMfaLoad.test.ts` - Admin operations load test with MFA
 
 ## Test Results
 
@@ -158,6 +172,11 @@ Phase 8 implementation of security and admin features is complete. This phase ad
 - `frontend/src/pages/admin/AuditLogsPage.tsx`
 - `frontend/src/components/mfa/BackupCodesDisplay.tsx`
 - `frontend/src/components/routing/AdminRoute.tsx`
+- `frontend/tests/components/mfa/MFAEnrollment.test.tsx`
+- `frontend/tests/components/admin/CreateMemberForm.test.tsx`
+- `tests/e2e/mfaFlow.spec.ts`
+- `tests/e2e/adminMemberManagement.spec.ts`
+- `backend/tests/performance/adminMfaLoad.test.ts`
 
 ### Modified Files
 

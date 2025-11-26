@@ -681,13 +681,13 @@
 
 #### Frontend Component Tests
 
-- [ ] T281 [P] Write component tests for MFA enrollment page in frontend/tests/components/MFAEnrollment.test.tsx (test QR display, code input, backup codes, verify FAIL)
-- [ ] T282 [P] Write component tests for CreateMemberForm in frontend/tests/components/CreateMemberForm.test.tsx (test validation, submission, verify FAIL)
+- [x] T281 [P] Write component tests for MFA enrollment page in frontend/tests/components/MFAEnrollment.test.tsx (test QR display, code input, backup codes, verify FAIL)
+- [x] T282 [P] Write component tests for CreateMemberForm in frontend/tests/components/CreateMemberForm.test.tsx (test validation, submission, verify FAIL)
 
 #### End-to-End Tests
 
-- [ ] T283 Write E2E test for MFA enrollment and login in frontend/tests/e2e/mfaFlow.spec.ts (admin enrolls MFA → logout → login with TOTP → verify success, verify FAIL)
-- [ ] T284 Write E2E test for admin member management in frontend/tests/e2e/adminMemberManagement.spec.ts (admin creates member → sends invitation → member registers → admin views list, verify FAIL)
+- [x] T283 Write E2E test for MFA enrollment and login in tests/e2e/mfaFlow.spec.ts (admin enrolls MFA → logout → login with TOTP → verify success, verify FAIL)
+- [x] T284 Write E2E test for admin member management in tests/e2e/adminMemberManagement.spec.ts (admin creates member → sends invitation → member registers → admin views list, verify FAIL)
 
 **🟢 GREEN Phase**: Now implement features to make tests pass
 
@@ -747,7 +747,7 @@
 
 - [x] T325 Add all admin and MFA routes to React Router with proper role checks
 - [x] T326 Run tests and verify all pass (green); refactor if needed
-- [ ] T327 Run incremental load test for admin operations with MFA enabled
+- [x] T327 Run incremental load test for admin operations with MFA enabled (backend/tests/performance/adminMfaLoad.test.ts)
 
 **Checkpoint**: All admin features complete with MFA security - audit logs viewable, data exportable, member management functional
 
