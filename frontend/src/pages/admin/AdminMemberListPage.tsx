@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 import { adminService, Member } from '../../services/endpoints/adminService';
+import { AdminNavigation } from '../../components/layout';
 
 export default function AdminMemberListPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -90,153 +91,156 @@ export default function AdminMemberListPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Member Management</h1>
-        <Link to="/admin/members/create">
-          <Button>+ Add Member</Button>
-        </Link>
-      </div>
+    <>
+      <AdminNavigation />
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Member Management</h1>
+          <Link to="/admin/members/create">
+            <Button>+ Add Member</Button>
+          </Link>
+        </div>
 
-      {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
-            <div className="min-w-[200px] flex-1">
-              <Input
-                placeholder="Search by name or email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All Roles" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Roles</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="STAFF">Staff</SelectItem>
-                <SelectItem value="MEMBER">Member</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button type="submit">Search</Button>
-          </form>
-        </CardContent>
-      </Card>
+        {/* Filters */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
+              <div className="min-w-[200px] flex-1">
+                <Input
+                  placeholder="Search by name or email..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Roles</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="STAFF">Staff</SelectItem>
+                  <SelectItem value="MEMBER">Member</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button type="submit">Search</Button>
+            </form>
+          </CardContent>
+        </Card>
 
-      {/* Member Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Members</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="py-8 text-center">
-              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-              <p className="mt-2 text-gray-600">Loading members...</p>
-            </div>
-          ) : members.length === 0 ? (
-            <div className="py-8 text-center text-gray-600">No members found</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="px-4 py-3 text-left">Name</th>
-                    <th className="px-4 py-3 text-left">Email</th>
-                    <th className="px-4 py-3 text-left">Role</th>
-                    <th className="px-4 py-3 text-left">Member Since</th>
-                    <th className="px-4 py-3 text-left">MFA</th>
-                    <th className="px-4 py-3 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {members.map((member) => (
-                    <tr key={member.id} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        {member.firstName} {member.lastName}
-                      </td>
-                      <td className="px-4 py-3">{member.email}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`rounded px-2 py-1 text-xs font-medium ${getRoleBadgeClass(
-                            member.role
-                          )}`}
-                        >
-                          {member.role}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">{formatDate(member.membershipDate)}</td>
-                      <td className="px-4 py-3">
-                        {member.mfaEnabled ? (
-                          <span className="text-green-600">✓ Enabled</span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        {deleteConfirm === member.id ? (
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleDelete(member.id)}
-                            >
-                              Confirm
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => setDeleteConfirm(null)}
-                            >
-                              Cancel
-                            </Button>
-                          </div>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-red-600 hover:text-red-800"
-                            onClick={() => setDeleteConfirm(member.id)}
-                          >
-                            Delete
-                          </Button>
-                        )}
-                      </td>
+        {/* Member Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Members</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="py-8 text-center">
+                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                <p className="mt-2 text-gray-600">Loading members...</p>
+              </div>
+            ) : members.length === 0 ? (
+              <div className="py-8 text-center text-gray-600">No members found</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="px-4 py-3 text-left">Name</th>
+                      <th className="px-4 py-3 text-left">Email</th>
+                      <th className="px-4 py-3 text-left">Role</th>
+                      <th className="px-4 py-3 text-left">Member Since</th>
+                      <th className="px-4 py-3 text-left">MFA</th>
+                      <th className="px-4 py-3 text-left">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {members.map((member) => (
+                      <tr key={member.id} className="border-b hover:bg-gray-50">
+                        <td className="px-4 py-3">
+                          {member.firstName} {member.lastName}
+                        </td>
+                        <td className="px-4 py-3">{member.email}</td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`rounded px-2 py-1 text-xs font-medium ${getRoleBadgeClass(
+                              member.role
+                            )}`}
+                          >
+                            {member.role}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">{formatDate(member.membershipDate)}</td>
+                        <td className="px-4 py-3">
+                          {member.mfaEnabled ? (
+                            <span className="text-green-600">✓ Enabled</span>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {deleteConfirm === member.id ? (
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDelete(member.id)}
+                              >
+                                Confirm
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setDeleteConfirm(null)}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-red-600 hover:text-red-800"
+                              onClick={() => setDeleteConfirm(member.id)}
+                            >
+                              Delete
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-4 flex justify-center gap-2">
-              <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
-                Previous
-              </Button>
-              <span className="px-4 py-2">
-                Page {page} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-              >
-                Next
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-4 flex justify-center gap-2">
+                <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
+                  Previous
+                </Button>
+                <span className="px-4 py-2">
+                  Page {page} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={page === totalPages}
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }
