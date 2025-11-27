@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 import { adminService, Member } from '../../services/endpoints/adminService';
-import { AdminNavigation } from '../../components/layout';
+import { SidebarLayout } from '../../components/layout';
 
 export default function AdminMemberListPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -91,9 +91,8 @@ export default function AdminMemberListPage() {
   };
 
   return (
-    <>
-      <AdminNavigation />
-      <div className="container mx-auto px-4 py-8">
+    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Members' }]}>
+      <div className="container mx-auto px-4 py-4">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Member Management</h1>
           <Link to="/admin/members/create">
@@ -241,6 +240,6 @@ export default function AdminMemberListPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </SidebarLayout>
   );
 }

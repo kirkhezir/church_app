@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 import { adminService, CreateMemberResponse } from '../../services/endpoints/adminService';
-import { AdminNavigation } from '../../components/layout';
+import { SidebarLayout } from '../../components/layout';
 
 export default function AdminCreateMemberPage() {
   const [formData, setFormData] = useState({
@@ -76,9 +76,14 @@ export default function AdminCreateMemberPage() {
 
   if (success) {
     return (
-      <>
-        <AdminNavigation />
-        <div className="container mx-auto max-w-lg px-4 py-8">
+      <SidebarLayout
+        breadcrumbs={[
+          { label: 'Admin' },
+          { label: 'Members', href: '/admin/members' },
+          { label: 'Create' },
+        ]}
+      >
+        <div className="container mx-auto max-w-lg px-4 py-4">
           <Card>
             <CardHeader className="text-center">
               <div className="mb-4 text-5xl text-green-600">✓</div>
@@ -140,14 +145,19 @@ export default function AdminCreateMemberPage() {
             </CardFooter>
           </Card>
         </div>
-      </>
+      </SidebarLayout>
     );
   }
 
   return (
-    <>
-      <AdminNavigation />
-      <div className="container mx-auto max-w-lg px-4 py-8">
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Admin' },
+        { label: 'Members', href: '/admin/members' },
+        { label: 'Create' },
+      ]}
+    >
+      <div className="container mx-auto max-w-lg px-4 py-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Create New Member</CardTitle>
@@ -248,6 +258,6 @@ export default function AdminCreateMemberPage() {
           </form>
         </Card>
       </div>
-    </>
+    </SidebarLayout>
   );
 }

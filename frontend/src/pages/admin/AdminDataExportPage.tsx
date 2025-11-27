@@ -28,7 +28,7 @@ import {
 } from '../../components/ui/select';
 import { Input } from '../../components/ui/input';
 import { adminService } from '../../services/endpoints/adminService';
-import { AdminNavigation } from '../../components/layout';
+import { SidebarLayout } from '../../components/layout';
 
 export default function AdminDataExportPage() {
   const [exportType, setExportType] = useState<'members' | 'events'>('members');
@@ -93,9 +93,8 @@ export default function AdminDataExportPage() {
   };
 
   return (
-    <>
-      <AdminNavigation />
-      <div className="container mx-auto max-w-2xl px-4 py-8">
+    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Data Export' }]}>
+      <div className="container mx-auto max-w-2xl px-4 py-4">
         <h1 className="mb-6 text-2xl font-bold">Data Export</h1>
 
         <Card>
@@ -225,6 +224,6 @@ export default function AdminDataExportPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </SidebarLayout>
   );
 }

@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 import { adminService, AuditLog } from '../../services/endpoints/adminService';
-import { AdminNavigation } from '../../components/layout';
+import { SidebarLayout } from '../../components/layout';
 
 export default function AdminAuditLogsPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -84,9 +84,8 @@ export default function AdminAuditLogsPage() {
   };
 
   return (
-    <>
-      <AdminNavigation />
-      <div className="container mx-auto px-4 py-8">
+    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Audit Logs' }]}>
+      <div className="container mx-auto px-4 py-4">
         <h1 className="mb-6 text-2xl font-bold">Audit Logs</h1>
 
         {error && (
@@ -224,6 +223,6 @@ export default function AdminAuditLogsPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </SidebarLayout>
   );
 }
