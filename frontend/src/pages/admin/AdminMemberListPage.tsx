@@ -31,7 +31,7 @@ export default function AdminMemberListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export default function AdminMemberListPage() {
         page,
         limit: 20,
         search: search || undefined,
-        role: roleFilter || undefined,
+        role: roleFilter === 'ALL' ? undefined : roleFilter,
       });
       setMembers(response.data);
       setTotalPages(response.pagination.totalPages);
@@ -123,7 +123,7 @@ export default function AdminMemberListPage() {
                   <SelectValue placeholder="All Roles" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Roles</SelectItem>
+                  <SelectItem value="ALL">All Roles</SelectItem>
                   <SelectItem value="ADMIN">Admin</SelectItem>
                   <SelectItem value="STAFF">Staff</SelectItem>
                   <SelectItem value="MEMBER">Member</SelectItem>

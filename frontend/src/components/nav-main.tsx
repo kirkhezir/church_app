@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import {
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -10,6 +11,7 @@ import {
 
 export function NavMain({
   items,
+  label,
 }: {
   items: {
     title: string;
@@ -17,11 +19,13 @@ export function NavMain({
     icon?: LucideIcon;
     isActive?: boolean;
   }[];
+  label?: string;
 }) {
   const location = useLocation();
 
   return (
     <SidebarGroup>
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
           const isActive =

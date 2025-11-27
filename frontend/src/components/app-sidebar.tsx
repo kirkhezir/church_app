@@ -1,5 +1,17 @@
 import * as React from 'react';
-import { Calendar, Home, Megaphone, Mail, Users, User, Settings, Bell } from 'lucide-react';
+import {
+  Calendar,
+  Home,
+  Megaphone,
+  Mail,
+  Users,
+  User,
+  Settings,
+  Bell,
+  Shield,
+  FileText,
+  Download,
+} from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 import { NavMain } from '@/components/nav-main';
@@ -56,6 +68,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     });
   }
 
+  // Admin-only navigation items
+  const adminItems =
+    user.role === 'ADMIN'
+      ? [
+          {
+            title: 'Admin Panel',
+            url: '/admin/members',
+            icon: Shield,
+          },
+          {
+            title: 'Audit Logs',
+            url: '/admin/audit-logs',
+            icon: FileText,
+          },
+          {
+            title: 'Data Export',
+            url: '/admin/export',
+            icon: Download,
+          },
+        ]
+      : [];
+
   // Profile and Settings items
   const settingsItems = [
     {
@@ -106,6 +140,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
+        {adminItems.length > 0 && <NavMain items={adminItems} label="Administration" />}
         <NavMain items={settingsItems} />
       </SidebarContent>
       <SidebarFooter>

@@ -33,8 +33,8 @@ import { AdminNavigation } from '../../components/layout';
 export default function AdminDataExportPage() {
   const [exportType, setExportType] = useState<'members' | 'events'>('members');
   const [format, setFormat] = useState<'json' | 'csv'>('csv');
-  const [roleFilter, setRoleFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('ALL');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ export default function AdminDataExportPage() {
       if (exportType === 'members') {
         const data = await adminService.exportMembers({
           format,
-          role: roleFilter || undefined,
+          role: roleFilter === 'ALL' ? undefined : roleFilter,
           startDate: startDate || undefined,
           endDate: endDate || undefined,
         });
@@ -70,7 +70,7 @@ export default function AdminDataExportPage() {
       } else {
         const data = await adminService.exportEvents({
           format,
-          category: categoryFilter || undefined,
+          category: categoryFilter === 'ALL' ? undefined : categoryFilter,
           startDate: startDate || undefined,
           endDate: endDate || undefined,
         });
@@ -159,7 +159,7 @@ export default function AdminDataExportPage() {
                     <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Roles</SelectItem>
+                    <SelectItem value="ALL">All Roles</SelectItem>
                     <SelectItem value="ADMIN">Admin</SelectItem>
                     <SelectItem value="STAFF">Staff</SelectItem>
                     <SelectItem value="MEMBER">Member</SelectItem>
@@ -177,7 +177,7 @@ export default function AdminDataExportPage() {
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="ALL">All Categories</SelectItem>
                     <SelectItem value="WORSHIP">Worship</SelectItem>
                     <SelectItem value="YOUTH">Youth</SelectItem>
                     <SelectItem value="COMMUNITY">Community</SelectItem>

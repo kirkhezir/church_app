@@ -29,8 +29,8 @@ export default function AdminAuditLogsPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [actionFilter, setActionFilter] = useState('');
-  const [entityTypeFilter, setEntityTypeFilter] = useState('');
+  const [actionFilter, setActionFilter] = useState('ALL');
+  const [entityTypeFilter, setEntityTypeFilter] = useState('ALL');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [page, setPage] = useState(1);
@@ -47,8 +47,8 @@ export default function AdminAuditLogsPage() {
       const response = await adminService.getAuditLogs({
         page,
         limit: 20,
-        action: actionFilter || undefined,
-        entityType: entityTypeFilter || undefined,
+        action: actionFilter === 'ALL' ? undefined : actionFilter,
+        entityType: entityTypeFilter === 'ALL' ? undefined : entityTypeFilter,
         startDate: startDate || undefined,
         endDate: endDate || undefined,
       });
@@ -104,7 +104,7 @@ export default function AdminAuditLogsPage() {
                   <SelectValue placeholder="All Actions" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Actions</SelectItem>
+                  <SelectItem value="ALL">All Actions</SelectItem>
                   <SelectItem value="CREATE">Create</SelectItem>
                   <SelectItem value="UPDATE">Update</SelectItem>
                   <SelectItem value="DELETE">Delete</SelectItem>
@@ -116,7 +116,7 @@ export default function AdminAuditLogsPage() {
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectItem value="ALL">All Types</SelectItem>
                   <SelectItem value="MEMBER">Member</SelectItem>
                   <SelectItem value="EVENT">Event</SelectItem>
                   <SelectItem value="ANNOUNCEMENT">Announcement</SelectItem>
