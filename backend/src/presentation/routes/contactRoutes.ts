@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ContactController } from '../controllers/contactController';
 import { ContactService } from '../../application/services/contactService';
+import { contactFormRateLimiter } from '../middleware/rateLimitMiddleware';
 
 /**
  * Contact Routes Module
@@ -72,6 +73,8 @@ const contactController = new ContactController(contactService);
  *   }'
  * ```
  */
-router.post('/', (req, res) => contactController.submitContactForm(req, res));
+router.post('/', contactFormRateLimiter, (req, res) =>
+  contactController.submitContactForm(req, res)
+);
 
 export default router;

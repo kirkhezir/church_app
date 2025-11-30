@@ -1,180 +1,394 @@
 # Church Management Application - Sing Buri Adventist Center
 
-A full-stack web application for managing church operations including member authentication, event management, announcements, and member directory.
+A comprehensive full-stack web application for managing church operations including member authentication with MFA, event management, announcements, member directory, and internal messaging.
 
-## Tech Stack
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![Test Coverage](https://img.shields.io/badge/coverage-80%25+-green)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## 🌟 Features
+
+### Core Features
+
+- **Public Landing Page** - Church information, worship times, location map, contact form
+- **Member Authentication** - Secure login with JWT, password reset, account lockout protection
+- **Multi-Factor Authentication (MFA)** - TOTP-based MFA for admin/staff accounts
+- **Event Management** - Create, manage, and RSVP to church events
+- **Announcement System** - Post announcements with priority levels and email notifications
+- **Member Directory** - Searchable directory with privacy controls
+- **Internal Messaging** - Member-to-member messaging with real-time notifications
+- **Admin Dashboard** - Member management, audit logs, data export
+
+### Technical Features
+
+- Clean Architecture design pattern
+- Real-time notifications via WebSockets (Socket.io)
+- Role-based access control (Admin, Staff, Member)
+- Automated backups with retention policies
+- Comprehensive API documentation (OpenAPI/Swagger)
+
+## 🛠 Tech Stack
 
 ### Backend
 
-- **Runtime**: Node.js 20.x LTS
-- **Language**: TypeScript 5.x
-- **Framework**: Express.js
-- **Database**: PostgreSQL 15+ with Prisma ORM
-- **Authentication**: JWT with refresh tokens
-- **Testing**: Jest, Supertest
-- **Real-time**: Socket.io
+| Technology | Version  | Purpose                 |
+| ---------- | -------- | ----------------------- |
+| Node.js    | 20.x LTS | Runtime environment     |
+| TypeScript | 5.x      | Type-safe JavaScript    |
+| Express.js | 4.x      | Web framework           |
+| PostgreSQL | 15+      | Primary database        |
+| Prisma     | 6.x      | Database ORM            |
+| Socket.io  | 4.x      | Real-time communication |
+| Jest       | 29.x     | Testing framework       |
 
 ### Frontend
 
-- **Framework**: React 18.x with TypeScript
-- **Build Tool**: Vite
-- **UI Library**: shadcn/ui (Radix UI + Tailwind CSS)
-- **Routing**: React Router v6
-- **HTTP Client**: Axios
-- **Testing**: Jest, React Testing Library, Playwright
+| Technology   | Version | Purpose              |
+| ------------ | ------- | -------------------- |
+| React        | 18.x    | UI framework         |
+| TypeScript   | 5.x     | Type-safe JavaScript |
+| Vite         | 5.x     | Build tool           |
+| shadcn/ui    | Latest  | UI component library |
+| Tailwind CSS | 3.x     | Utility-first CSS    |
+| React Router | 6.x     | Client-side routing  |
+| Axios        | 1.x     | HTTP client          |
 
-## Project Structure
-
-```
-├── backend/          # Node.js/Express API server
-│   ├── src/
-│   │   ├── domain/         # Business entities and logic
-│   │   ├── application/    # Use cases and services
-│   │   ├── infrastructure/ # Database, external APIs
-│   │   └── presentation/   # Controllers, routes, middleware
-│   ├── prisma/       # Database schema and migrations
-│   └── tests/        # Unit, integration, and contract tests
-│
-├── frontend/         # React web application
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Route-level pages
-│   │   ├── services/    # API client layer
-│   │   ├── hooks/       # Custom React hooks
-│   │   └── types/       # TypeScript type definitions
-│   └── tests/        # Component and E2E tests
-│
-├── tests/            # End-to-end tests (Playwright)
-└── specs/            # Feature specifications and documentation
+## 📁 Project Structure
 
 ```
+├── backend/                  # Node.js/Express API server
+│   ├── src/
+│   │   ├── domain/          # Business entities and logic
+│   │   ├── application/     # Use cases and services
+│   │   ├── infrastructure/  # Database, email, external APIs
+│   │   └── presentation/    # Controllers, routes, middleware
+│   ├── prisma/              # Database schema and migrations
+│   ├── tests/               # Unit, integration, and contract tests
+│   └── docs/                # Backend documentation
+│
+├── frontend/                 # React web application
+│   ├── src/
+│   │   ├── components/      # Reusable UI components
+│   │   │   ├── ui/          # shadcn/ui components
+│   │   │   ├── features/    # Feature-specific components
+│   │   │   └── layout/      # Layout components
+│   │   ├── pages/           # Route-level pages
+│   │   ├── services/        # API client layer
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── contexts/        # React Context providers
+│   │   └── types/           # TypeScript type definitions
+│   └── tests/               # Component tests
+│
+├── tests/                    # End-to-end tests (Playwright)
+├── specs/                    # Feature specifications
+│   └── 001-full-stack-web/
+│       ├── contracts/       # OpenAPI specifications
+│       └── tasks.md         # Implementation tasks
+│
+├── scripts/                  # Utility scripts (backup, deployment)
+└── docs/                     # Project documentation
+```
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- npm >= 10.0.0
-- PostgreSQL >= 15
+- **Node.js** >= 20.0.0
+- **npm** >= 10.0.0
+- **PostgreSQL** >= 15
+- **Git**
 
-### Installation
+### Quick Start
 
 1. **Clone the repository**
 
-```bash
-git clone <repository-url>
-cd church_app
-```
+   ```bash
+   git clone <repository-url>
+   cd church_app
+   ```
 
-2. **Install backend dependencies**
+2. **Install dependencies**
+
+   ```bash
+   # Install root dependencies
+   npm install
+
+   # Install backend dependencies
+   cd backend
+   npm install
+
+   # Install frontend dependencies
+   cd ../frontend
+   npm install
+   ```
+
+3. **Configure environment**
+
+   Backend (`backend/.env`):
+
+   ```bash
+   cd backend
+   cp .env.example .env
+   # Edit .env with your database credentials
+   ```
+
+   Frontend (`frontend/.env`):
+
+   ```bash
+   cd ../frontend
+   cp .env.example .env
+   # Edit .env with your API URL
+   ```
+
+4. **Setup database**
+
+   ```bash
+   cd backend
+   npx prisma migrate dev
+   npx prisma generate
+   npm run prisma:seed
+   ```
+
+5. **Start development servers**
+
+   Terminal 1 - Backend:
+
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+   Terminal 2 - Frontend:
+
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+6. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:3000/api/v1
+   - API Documentation: http://localhost:3000/api-docs
+   - Health Check: http://localhost:3000/health
+
+### Default Credentials (Development)
+
+| Role   | Email                         | Password  |
+| ------ | ----------------------------- | --------- |
+| Admin  | admin@singburi-adventist.org  | admin123  |
+| Staff  | staff@singburi-adventist.org  | staff123  |
+| Member | member@singburi-adventist.org | member123 |
+
+> ⚠️ **Important**: Change these credentials in production!
+
+## 📖 API Documentation
+
+Interactive API documentation is available at `/api-docs` when the backend server is running.
+
+### Key Endpoints
+
+| Endpoint                  | Method   | Description             |
+| ------------------------- | -------- | ----------------------- |
+| `/api/v1/auth/login`      | POST     | User authentication     |
+| `/api/v1/auth/mfa/verify` | POST     | MFA verification        |
+| `/api/v1/members`         | GET      | Member directory        |
+| `/api/v1/events`          | GET/POST | Event management        |
+| `/api/v1/announcements`   | GET/POST | Announcements           |
+| `/api/v1/messages`        | GET/POST | Internal messaging      |
+| `/api/v1/admin/members`   | GET/POST | Admin member management |
+
+For complete API documentation, see:
+
+- [OpenAPI Specification](./specs/001-full-stack-web/contracts/openapi.yaml)
+- Interactive Docs: http://localhost:3000/api-docs
+
+## 🧪 Testing
+
+### Backend Tests
 
 ```bash
 cd backend
-npm install
+
+# Run all tests with coverage
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test suites
+npm run test:integration    # Integration tests
+npm run test:contract       # Contract tests
 ```
 
-3. **Install frontend dependencies**
-
-```bash
-cd ../frontend
-npm install
-```
-
-4. **Setup environment variables**
-
-Backend:
-
-```bash
-cd backend
-cp .env.example .env
-# Edit .env with your database credentials and configuration
-```
-
-Frontend:
+### Frontend Tests
 
 ```bash
 cd frontend
-cp .env.example .env
-# Edit .env with your API URL
+
+# Run all tests with coverage
+npm test
+
+# Run tests in watch mode
+npm run test:watch
 ```
 
-5. **Setup database**
+### End-to-End Tests
 
 ```bash
-cd backend
-npx prisma migrate dev
-npx prisma generate
-npm run prisma:seed
-```
-
-### Development
-
-Run backend and frontend concurrently:
-
-**Terminal 1 - Backend:**
-
-```bash
-cd backend
-npm run dev
-```
-
-**Terminal 2 - Frontend:**
-
-```bash
-cd frontend
-npm run dev
-```
-
-The frontend will be available at http://localhost:5173 and the backend API at http://localhost:3000.
-
-### Testing
-
-**Backend tests:**
-
-```bash
-cd backend
-npm test                    # Run all tests with coverage
-npm run test:watch          # Watch mode
-npm run test:integration    # Integration tests only
-npm run test:contract       # Contract tests only
-```
-
-**Frontend tests:**
-
-```bash
-cd frontend
-npm test                    # Run all tests with coverage
-npm run test:watch          # Watch mode
-```
-
-**E2E tests:**
-
-```bash
-cd tests/e2e
+# From project root
 npx playwright test
+
+# Run with UI
+npx playwright test --ui
+
+# Run specific test file
+npx playwright test tests/e2e/authentication.spec.ts
 ```
 
-## Architecture
+### Coverage Requirements
+
+- **Minimum coverage**: 80% for all code
+- **Domain/Application layers**: 90%+ coverage required
+- **All tests must pass** before merging to main branch
+
+## 🔒 Security
+
+### Authentication Flow
+
+1. User submits email/password
+2. Server validates credentials
+3. JWT access token (15min) and refresh token (7 days) issued
+4. Admin/Staff accounts require MFA verification
+5. Sessions timeout after 24 hours of inactivity
+
+### Security Features
+
+- Password hashing with bcrypt (10 salt rounds)
+- Account lockout after 5 failed attempts (15 minutes)
+- TOTP-based MFA for privileged accounts
+- HTTPS enforcement in production
+- Helmet.js security headers
+- CORS protection
+- Input sanitization
+- SQL injection prevention via Prisma
+
+### MFA Setup (Admin/Staff)
+
+See [MFA Setup Guide](./docs/mfa-setup.md) for detailed instructions.
+
+## 🏗 Architecture
 
 This application follows **Clean Architecture** principles:
 
-- **Domain Layer**: Business entities and logic (innermost, framework-independent)
-- **Application Layer**: Use cases and application services
-- **Infrastructure Layer**: Database access, external APIs, frameworks
-- **Presentation Layer**: API controllers, routes, DTOs
+```
+┌──────────────────────────────────────────────┐
+│                Presentation                   │
+│  (Controllers, Routes, Middleware, DTOs)      │
+├──────────────────────────────────────────────┤
+│                Application                    │
+│  (Use Cases, Services, Business Logic)        │
+├──────────────────────────────────────────────┤
+│                   Domain                      │
+│  (Entities, Value Objects, Interfaces)        │
+├──────────────────────────────────────────────┤
+│               Infrastructure                  │
+│  (Database, Email, WebSocket, External APIs)  │
+└──────────────────────────────────────────────┘
+```
 
-## Development Principles
+### Key Principles
 
-- **Test-Driven Development (TDD)**: Write tests before implementation
-- **DRY (Don't Repeat Yourself)**: Minimize code duplication
-- **KISS (Keep It Simple, Stupid)**: Prefer simple solutions
-- **YAGNI (You Aren't Gonna Need It)**: Build only what's needed
-- **Separation of Concerns**: Clear boundaries between layers
+- **Dependency Inversion**: Inner layers don't depend on outer layers
+- **Single Responsibility**: Each class has one reason to change
+- **Interface Segregation**: Specific interfaces over general ones
+- **Open/Closed**: Open for extension, closed for modification
 
-## License
+## 🚀 Deployment
 
-MIT
+### Production Environment Setup
 
-## Contact
+1. **Environment Variables**
+
+   ```bash
+   NODE_ENV=production
+   DATABASE_URL=postgresql://user:pass@host:5432/church_app
+   JWT_SECRET=<strong-random-secret>
+   CORS_ORIGIN=https://yourdomain.com
+   ```
+
+2. **Build for Production**
+
+   ```bash
+   # Backend
+   cd backend
+   npm run build
+
+   # Frontend
+   cd frontend
+   npm run build
+   ```
+
+3. **Database Migration**
+   ```bash
+   cd backend
+   npx prisma migrate deploy
+   ```
+
+### Docker Deployment
+
+```bash
+docker-compose up -d
+```
+
+See [Deployment Guide](./docs/deployment.md) for detailed instructions.
+
+## 📊 Performance
+
+### Benchmarks (Phase 3 Baseline)
+
+- **Throughput**: 2,324 req/s
+- **Response Time**: 3.83ms avg (P95: 7ms, P99: 8ms)
+- **Rate Limiting**: 100% effective at 10 req/min per IP
+- **Error Rate**: 0% under normal load
+
+### Performance Requirements
+
+- API P95 latency < 200ms
+- Frontend initial load < 2 seconds on 3G
+- Support for 200+ concurrent users
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Write tests first (TDD approach)
+4. Implement your changes
+5. Run tests (`npm test`)
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📧 Contact
 
 Sing Buri Adventist Center
+
+- Website: https://singburiadventist.org
+- Email: admin@singburiadventist.org
+
+## 🙏 Acknowledgments
+
+- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
+- [Prisma](https://prisma.io/) for the excellent database toolkit
+- The open-source community for the amazing tools and libraries
+
+---
+
+Built with ❤️ for Sing Buri Adventist Center

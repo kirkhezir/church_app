@@ -14,6 +14,7 @@
 import { Router } from 'express';
 import { MessageController } from '../controllers/messageController';
 import { authMiddleware } from '../middleware/authMiddleware';
+import { messagingRateLimiter } from '../middleware/rateLimitMiddleware';
 
 const router = Router();
 const messageController = new MessageController();
@@ -22,8 +23,9 @@ const messageController = new MessageController();
  * POST /api/v1/messages
  * Send a message to another member
  * Requires authentication
+ * Rate limited: 10 messages per minute
  */
-router.post('/', authMiddleware, messageController.sendMessage);
+router.post('/', authMiddleware, messagingRateLimiter, messageController.sendMessage);
 
 /**
  * GET /api/v1/messages
