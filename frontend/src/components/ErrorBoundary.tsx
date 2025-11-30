@@ -96,9 +96,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   /**
-   * Reset error state and retry
+   * Reset error state and retry (can be called via ref or exposed to children)
    */
-  private handleReset = (): void => {
+  public resetErrorBoundary = (): void => {
     this.setState({
       hasError: false,
       error: null,
