@@ -3,6 +3,9 @@ import supertest from 'supertest';
 import { server } from '../../src/presentation/server';
 import { contactService } from '../../src/presentation/routes/contactRoutes';
 
+// Set test environment
+process.env.NODE_ENV = 'test';
+
 /**
  * Test database client (separate from production)
  */
@@ -95,6 +98,23 @@ export async function createTestMemberAndLogin(data: {
   lastName: string;
   role?: 'ADMIN' | 'STAFF' | 'MEMBER';
 }): Promise<{ token: string; memberId: string }> {
+  // Delete existing member with this email if exists (including related data)
+  const existingMember = await testPrisma.member.findFirst({
+    where: { email: data.email },
+  });
+
+  if (existingMember) {
+    await testPrisma.auditLog.deleteMany({ where: { userId: existingMember.id } });
+    await testPrisma.memberAnnouncementView.deleteMany({ where: { memberId: existingMember.id } });
+    await testPrisma.eventRSVP.deleteMany({ where: { memberId: existingMember.id } });
+    await testPrisma.message.deleteMany({
+      where: { OR: [{ senderId: existingMember.id }, { recipientId: existingMember.id }] },
+    });
+    await testPrisma.event.deleteMany({ where: { createdById: existingMember.id } });
+    await testPrisma.announcement.deleteMany({ where: { authorId: existingMember.id } });
+    await testPrisma.member.delete({ where: { id: existingMember.id } });
+  }
+
   // Register member
   const registerResponse = await request
     .post('/api/v1/auth/register')

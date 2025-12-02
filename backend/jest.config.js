@@ -36,4 +36,6 @@ export default {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
+  // Run tests serially to avoid database conflicts
+  maxWorkers: 1,
 };

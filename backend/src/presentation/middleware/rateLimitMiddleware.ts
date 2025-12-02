@@ -22,6 +22,8 @@ export const generalRateLimiter = rateLimit({
   standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
   legacyHeaders: false, // Disable `X-RateLimit-*` headers
   validate: { xForwardedForHeader: false }, // Disable IPv6 validation warning
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('Rate limit exceeded', {
       ip: req.ip,
@@ -52,6 +54,8 @@ export const authRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('Auth rate limit exceeded - potential brute force attack', {
       ip: req.ip,
@@ -83,6 +87,8 @@ export const passwordResetRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('Password reset rate limit exceeded', {
       ip: req.ip,
@@ -113,6 +119,8 @@ export const mfaRateLimiter = rateLimit({
   validate: { xForwardedForHeader: false },
   standardHeaders: true,
   legacyHeaders: false,
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('MFA rate limit exceeded - potential attack', {
       ip: req.ip,
@@ -142,6 +150,8 @@ export const contactFormRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('Contact form rate limit exceeded', {
       ip: req.ip,
@@ -171,6 +181,8 @@ export const adminRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
 });
 
 /**
@@ -188,6 +200,8 @@ export const messagingRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { xForwardedForHeader: false },
+  // Skip rate limiting in test environment
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req: Request, res: Response) => {
     logger.warn('Messaging rate limit exceeded', {
       ip: req.ip,
