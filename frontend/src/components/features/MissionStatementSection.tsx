@@ -43,6 +43,7 @@ export function MissionStatementSection() {
 
   return (
     <section
+      id="mission"
       className="bg-gradient-to-b from-white to-gray-50 px-4 py-16"
       aria-labelledby="mission-heading"
     >
