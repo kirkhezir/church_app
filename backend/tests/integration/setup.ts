@@ -27,6 +27,8 @@ export { contactService };
  */
 export async function cleanDatabase(): Promise<void> {
   // Delete in order to respect foreign key constraints
+  // Audit logs must be deleted first since they reference members
+  await testPrisma.auditLog.deleteMany();
   await testPrisma.memberAnnouncementView.deleteMany();
   await testPrisma.eventRSVP.deleteMany();
   await testPrisma.message.deleteMany();
