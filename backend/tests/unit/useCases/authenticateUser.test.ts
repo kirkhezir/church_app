@@ -15,6 +15,7 @@ import { IMemberRepository } from '../../../src/domain/interfaces/IMemberReposit
 import { PasswordService } from '../../../src/infrastructure/auth/passwordService';
 import { JWTService } from '../../../src/infrastructure/auth/jwtService';
 import { Member } from '../../../src/domain/entities/Member';
+import { Role } from '../../../src/domain/valueObjects/Role';
 
 // Mock repositories and services
 const mockMemberRepository: jest.Mocked<IMemberRepository> = {
@@ -25,16 +26,25 @@ const mockMemberRepository: jest.Mocked<IMemberRepository> = {
   delete: jest.fn(),
   findAll: jest.fn(),
   findByRole: jest.fn(),
-  search: jest.fn(),
+  searchByName: jest.fn(),
+  count: jest.fn(),
 };
 
-const mockPasswordService = new PasswordService();
-const mockJWTService = new JWTService();
+// Create mock services with jest.fn() methods
+const mockPasswordService = {
+  hash: jest.fn(),
+  verify: jest.fn(),
+} as unknown as PasswordService & { verify: jest.Mock; hash: jest.Mock };
 
-// Spy on methods
-jest.spyOn(mockPasswordService, 'verify');
-jest.spyOn(mockJWTService, 'generateAccessToken');
-jest.spyOn(mockJWTService, 'generateRefreshToken');
+const mockJWTService = {
+  generateAccessToken: jest.fn(),
+  generateRefreshToken: jest.fn(),
+  verifyAccessToken: jest.fn(),
+  verifyRefreshToken: jest.fn(),
+} as unknown as JWTService & {
+  generateAccessToken: jest.Mock;
+  generateRefreshToken: jest.Mock;
+};
 
 describe('AuthenticateUser Use Case', () => {
   let authenticateUser: AuthenticateUser;
@@ -44,6 +54,9 @@ describe('AuthenticateUser Use Case', () => {
     // Reset mocks
     jest.clearAllMocks();
 
+    // Setup mock return values
+    mockPasswordService.hash.mockResolvedValue('hashed-password');
+
     // Create use case instance
     authenticateUser = new AuthenticateUser(
       mockMemberRepository,
@@ -51,32 +64,40 @@ describe('AuthenticateUser Use Case', () => {
       mockJWTService
     );
 
-    // Create test member
-    const hashedPassword = await mockPasswordService.hash('TestPassword123!');
-    testMember = new Member({
-      id: 'test-member-id',
-      email: 'test@example.com',
-      passwordHash: hashedPassword,
-      firstName: 'Test',
-      lastName: 'User',
-      role: 'MEMBER',
-      membershipDate: new Date(),
-      privacySettings: { showPhone: true, showEmail: true, showAddress: true },
-      emailNotifications: true,
-      accountLocked: false,
-      failedLoginAttempts: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    // Create test member with positional constructor arguments
+    testMember = new Member(
+      'test-member-id', // id
+      'test@example.com', // email
+      'hashed-password', // passwordHash (static value since we mock verify)
+      'Test', // firstName
+      'User', // lastName
+      Role.MEMBER, // role
+      new Date(), // membershipDate
+      { showPhone: true, showEmail: true, showAddress: true }, // privacySettings
+      true, // emailNotifications
+      undefined, // phone
+      undefined, // address
+      false, // accountLocked
+      undefined, // lockedUntil
+      0, // failedLoginAttempts
+      undefined, // lastLoginAt
+      false, // mfaEnabled
+      undefined, // mfaSecret
+      undefined, // backupCodes
+      undefined, // passwordResetToken
+      undefined, // passwordResetExpires
+      new Date(), // createdAt
+      new Date() // updatedAt
+    );
   });
 
   describe('Successful Authentication', () => {
     it('should return access and refresh tokens for valid credentials', async () => {
       // Arrange
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
-      (mockJWTService.generateAccessToken as jest.Mock).mockReturnValue('access-token');
-      (mockJWTService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
+      mockPasswordService.verify.mockResolvedValue(true);
+      mockJWTService.generateAccessToken.mockReturnValue('access-token');
+      mockJWTService.generateRefreshToken.mockReturnValue('refresh-token');
 
       // Act
       const result = await authenticateUser.execute({
@@ -100,7 +121,7 @@ describe('AuthenticateUser Use Case', () => {
         testMember.passwordHash
       );
       expect(mockJWTService.generateAccessToken).toHaveBeenCalledWith({
-        id: testMember.id,
+        userId: testMember.id,
         email: testMember.email,
         role: testMember.role,
       });
@@ -110,9 +131,9 @@ describe('AuthenticateUser Use Case', () => {
       // Arrange
       testMember.failedLoginAttempts = 3;
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
-      (mockJWTService.generateAccessToken as jest.Mock).mockReturnValue('access-token');
-      (mockJWTService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
+      mockPasswordService.verify.mockResolvedValue(true);
+      mockJWTService.generateAccessToken.mockReturnValue('access-token');
+      mockJWTService.generateRefreshToken.mockReturnValue('refresh-token');
 
       // Act
       await authenticateUser.execute({
@@ -120,10 +141,10 @@ describe('AuthenticateUser Use Case', () => {
         password: 'TestPassword123!',
       });
 
-      // Assert
+      // Assert - update receives the whole member object
       expect(mockMemberRepository.update).toHaveBeenCalledWith(
-        'test-member-id',
         expect.objectContaining({
+          id: 'test-member-id',
           failedLoginAttempts: 0,
           lastLoginAt: expect.any(Date),
         })
@@ -133,9 +154,9 @@ describe('AuthenticateUser Use Case', () => {
     it('should update lastLoginAt timestamp on successful login', async () => {
       // Arrange
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
-      (mockJWTService.generateAccessToken as jest.Mock).mockReturnValue('access-token');
-      (mockJWTService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
+      mockPasswordService.verify.mockResolvedValue(true);
+      mockJWTService.generateAccessToken.mockReturnValue('access-token');
+      mockJWTService.generateRefreshToken.mockReturnValue('refresh-token');
 
       const beforeLogin = new Date();
 
@@ -145,16 +166,16 @@ describe('AuthenticateUser Use Case', () => {
         password: 'TestPassword123!',
       });
 
-      // Assert
+      // Assert - update receives the whole member object
       expect(mockMemberRepository.update).toHaveBeenCalledWith(
-        'test-member-id',
         expect.objectContaining({
+          id: 'test-member-id',
           lastLoginAt: expect.any(Date),
         })
       );
 
-      const updateCall = (mockMemberRepository.update as jest.Mock).mock.calls[0][1];
-      expect(updateCall.lastLoginAt.getTime()).toBeGreaterThanOrEqual(beforeLogin.getTime());
+      const updateCall = mockMemberRepository.update.mock.calls[0][0];
+      expect(updateCall.lastLoginAt!.getTime()).toBeGreaterThanOrEqual(beforeLogin.getTime());
     });
   });
 
@@ -175,7 +196,7 @@ describe('AuthenticateUser Use Case', () => {
     it('should throw error for incorrect password', async () => {
       // Arrange
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(false);
+      mockPasswordService.verify.mockResolvedValue(false);
 
       // Act & Assert
       await expect(
@@ -189,7 +210,7 @@ describe('AuthenticateUser Use Case', () => {
     it('should increment failed login attempts on incorrect password', async () => {
       // Arrange
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(false);
+      mockPasswordService.verify.mockResolvedValue(false);
 
       // Act
       try {
@@ -201,10 +222,10 @@ describe('AuthenticateUser Use Case', () => {
         // Expected to fail
       }
 
-      // Assert
+      // Assert - update receives the whole member object
       expect(mockMemberRepository.update).toHaveBeenCalledWith(
-        'test-member-id',
         expect.objectContaining({
+          id: 'test-member-id',
           failedLoginAttempts: 1,
         })
       );
@@ -214,7 +235,7 @@ describe('AuthenticateUser Use Case', () => {
       // Arrange
       testMember.failedLoginAttempts = 4; // Already has 4 failed attempts
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(false);
+      mockPasswordService.verify.mockResolvedValue(false);
 
       // Act
       try {
@@ -226,10 +247,10 @@ describe('AuthenticateUser Use Case', () => {
         // Expected to fail
       }
 
-      // Assert
+      // Assert - update receives the whole member object
       expect(mockMemberRepository.update).toHaveBeenCalledWith(
-        'test-member-id',
         expect.objectContaining({
+          id: 'test-member-id',
           failedLoginAttempts: 5,
           accountLocked: true,
           lockedUntil: expect.any(Date),
@@ -237,8 +258,8 @@ describe('AuthenticateUser Use Case', () => {
       );
 
       // Verify locked for 15 minutes
-      const updateCall = (mockMemberRepository.update as jest.Mock).mock.calls[0][1];
-      const lockDuration = updateCall.lockedUntil.getTime() - new Date().getTime();
+      const updateCall = mockMemberRepository.update.mock.calls[0][0];
+      const lockDuration = updateCall.lockedUntil!.getTime() - new Date().getTime();
       const fifteenMinutes = 15 * 60 * 1000;
       expect(lockDuration).toBeGreaterThanOrEqual(fifteenMinutes - 1000); // Allow 1 second tolerance
       expect(lockDuration).toBeLessThanOrEqual(fifteenMinutes + 1000);
@@ -267,9 +288,9 @@ describe('AuthenticateUser Use Case', () => {
       testMember.lockedUntil = new Date(Date.now() - 1000); // Locked until 1 second ago
       testMember.failedLoginAttempts = 5;
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
-      (mockJWTService.generateAccessToken as jest.Mock).mockReturnValue('access-token');
-      (mockJWTService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
+      mockPasswordService.verify.mockResolvedValue(true);
+      mockJWTService.generateAccessToken.mockReturnValue('access-token');
+      mockJWTService.generateRefreshToken.mockReturnValue('refresh-token');
 
       // Act
       const result = await authenticateUser.execute({
@@ -279,12 +300,12 @@ describe('AuthenticateUser Use Case', () => {
 
       // Assert
       expect(result).toHaveProperty('accessToken');
+      // First call unlocks account, second call updates login timestamp
       expect(mockMemberRepository.update).toHaveBeenCalledWith(
-        'test-member-id',
         expect.objectContaining({
+          id: 'test-member-id',
           accountLocked: false,
           failedLoginAttempts: 0,
-          lockedUntil: null,
         })
       );
     });
@@ -295,7 +316,7 @@ describe('AuthenticateUser Use Case', () => {
       testMember.accountLocked = true;
       testMember.lockedUntil = futureDate;
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
+      mockPasswordService.verify.mockResolvedValue(true);
 
       // Act & Assert
       await expect(
@@ -350,9 +371,9 @@ describe('AuthenticateUser Use Case', () => {
     it('should not include password hash in returned member object', async () => {
       // Arrange
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(true);
-      (mockJWTService.generateAccessToken as jest.Mock).mockReturnValue('access-token');
-      (mockJWTService.generateRefreshToken as jest.Mock).mockReturnValue('refresh-token');
+      mockPasswordService.verify.mockResolvedValue(true);
+      mockJWTService.generateAccessToken.mockReturnValue('access-token');
+      mockJWTService.generateRefreshToken.mockReturnValue('refresh-token');
 
       // Act
       const result = await authenticateUser.execute({
@@ -379,7 +400,7 @@ describe('AuthenticateUser Use Case', () => {
 
       // For wrong password
       mockMemberRepository.findByEmail.mockResolvedValue(testMember);
-      (mockPasswordService.verify as jest.Mock).mockResolvedValue(false);
+      mockPasswordService.verify.mockResolvedValue(false);
 
       try {
         await authenticateUser.execute({

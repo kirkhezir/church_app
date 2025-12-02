@@ -196,6 +196,40 @@ Interactive API documentation is available at `/api-docs` when the backend serve
 | `/api/v1/announcements`   | GET/POST | Announcements           |
 | `/api/v1/messages`        | GET/POST | Internal messaging      |
 | `/api/v1/admin/members`   | GET/POST | Admin member management |
+| `/api/v1/contact`         | POST     | Public contact form     |
+| `/api/v1/dashboard`       | GET      | Member dashboard data   |
+
+### API Response Format
+
+All API responses follow a consistent format:
+
+**Success Response:**
+
+```json
+{
+  "success": true,
+  "data": { ... },
+  "message": "Operation successful"
+}
+```
+
+**Error Response:**
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable message"
+  }
+}
+```
+
+### Rate Limiting
+
+- **Contact Form:** 10 requests per minute per IP
+- **Login Attempts:** 5 attempts before 15-minute lockout
+- **API Endpoints:** 100 requests per minute per user
 
 For complete API documentation, see:
 
