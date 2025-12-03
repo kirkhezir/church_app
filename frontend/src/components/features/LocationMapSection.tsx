@@ -68,9 +68,8 @@ export function LocationMapSection() {
                   <p className="mb-2 text-lg font-semibold text-gray-900">
                     Sing Buri Adventist Center
                   </p>
-                  <p className="text-gray-700">Sing Buri Province</p>
-                  <p className="text-gray-700">สิงห์บุรี</p>
-                  <p className="text-gray-700">Thailand</p>
+                  <p className="text-gray-700">Bang Phutsa, Mueang Sing Buri District,</p>
+                  <p className="text-gray-700"> Sing Buri 16000 Thailand</p>
                 </address>
               </CardContent>
             </Card>
@@ -84,10 +83,10 @@ export function LocationMapSection() {
                   <h3 className="text-xl font-bold text-gray-900">Phone</h3>
                 </div>
                 <a
-                  href="tel:+66123456789"
+                  href="tel:+66876106926"
                   className="text-lg text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  +66 (0) 123-456-789
+                  +66 (0) 876-106-926
                 </a>
                 <p className="mt-2 text-sm text-gray-600">
                   Call us for any questions or to schedule a visit
@@ -104,10 +103,10 @@ export function LocationMapSection() {
                   <h3 className="text-xl font-bold text-gray-900">Email</h3>
                 </div>
                 <a
-                  href="mailto:contact@singburiadventist.org"
+                  href="mailto:singburiadventistcenter@gmail.com"
                   className="break-all text-lg text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  contact@singburiadventist.org
+                  singburiadventistcenter@gmail.com
                 </a>
                 <p className="mt-2 text-sm text-gray-600">Send us a message anytime</p>
               </CardContent>

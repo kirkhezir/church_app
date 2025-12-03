@@ -87,14 +87,14 @@ function TopContactBar() {
           className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
         >
           <Mail className="h-4 w-4" />
-          <span>contact@singburiadventist.org</span>
+          <span>singburiadventistcenter@gmail.com</span>
         </a>
         <a
-          href="tel:+66123456789"
+          href="tel:+66876106926"
           className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
         >
           <Phone className="h-4 w-4" />
-          <span>+66 (0) 123-456-789</span>
+          <span>+66 (0) 876-106-926</span>
         </a>
       </div>
     </div>
@@ -178,7 +178,7 @@ function HeroSection() {
         {/* Stats Bar */}
         <div className="mt-16 grid grid-cols-3 gap-4 md:gap-8">
           <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
-            <p className="text-3xl font-bold md:text-4xl">20+</p>
+            <p className="text-3xl font-bold md:text-4xl">15+</p>
             <p className="text-sm text-blue-100 md:text-base">Members</p>
           </div>
           <div className="rounded-lg bg-white/10 p-4 backdrop-blur-sm">
@@ -406,7 +406,8 @@ function FooterSection() {
               <div className="rounded-lg bg-gray-800/50 p-3">
                 <p className="mb-1 font-medium text-white">Sabbath (Saturday)</p>
                 <p className="text-sm text-gray-400">9:00 AM - Sabbath School</p>
-                <p className="text-sm text-gray-400">10:30 AM - Divine Service</p>
+                <p className="text-sm text-gray-400">11:00 AM - Divine Service</p>
+                <p className="text-sm text-gray-400">2:30 PM - AY Service</p>
               </div>
             </div>
           </div>
@@ -422,21 +423,23 @@ function FooterSection() {
                 className="flex items-start gap-2 rounded-lg bg-gray-800/50 p-3 transition-all hover:bg-gray-800"
               >
                 <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                <span className="text-sm">Sing Buri Province, Thailand</span>
+                <span className="text-sm">
+                  Bang Phutsa, Mueang Sing Buri District, Sing Buri 16000
+                </span>
               </a>
               <a
                 href="tel:+66123456789"
                 className="flex items-center gap-2 rounded-lg bg-gray-800/50 p-3 transition-all hover:bg-gray-800"
               >
                 <Phone className="h-4 w-4 text-blue-400" />
-                <span className="text-sm">+66 (0) 123-456-789</span>
+                <span className="text-sm">+66 (0) 876-106-926</span>
               </a>
               <a
                 href="mailto:contact@singburiadventist.org"
                 className="flex items-center gap-2 rounded-lg bg-gray-800/50 p-3 transition-all hover:bg-gray-800"
               >
                 <Mail className="h-4 w-4 text-blue-400" />
-                <span className="break-all text-sm">contact@singburiadventist.org</span>
+                <span className="break-all text-sm">singburiadventistcenter@gmail.com</span>
               </a>
             </div>
           </div>

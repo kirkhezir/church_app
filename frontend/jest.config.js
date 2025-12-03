@@ -36,4 +36,6 @@ export default {
   },
   coverageDirectory: 'coverage',
   verbose: true,
+  // Increase timeout for userEvent tests
+  testTimeout: 30000,
 };

@@ -50,8 +50,7 @@ const renderWithRouter = (component: React.ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 
-// Skip these tests temporarily - they have timeout issues with userEvent
-describe.skip('AdminCreateMemberPage', () => {
+describe('AdminCreateMemberPage', () => {
   const mockCreateMemberResponse = {
     id: 'member-123',
     email: 'newmember@church.com',
@@ -77,9 +76,10 @@ describe.skip('AdminCreateMemberPage', () => {
     it('should have all required form fields', () => {
       renderWithRouter(<AdminCreateMemberPage />);
 
+      // Check for form labels - use getAllByText for labels that may appear multiple times
       expect(screen.getByText(/First Name/i)).toBeInTheDocument();
       expect(screen.getByText(/Last Name/i)).toBeInTheDocument();
-      expect(screen.getByText(/Email/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Email/i).length).toBeGreaterThan(0);
       expect(screen.getByText(/Role/i)).toBeInTheDocument();
     });
 
@@ -99,17 +99,14 @@ describe.skip('AdminCreateMemberPage', () => {
   });
 
   describe('Form Input', () => {
-    it('should update form fields when typing', async () => {
-      const user = userEvent.setup();
+    it('should update form fields when typing', () => {
       renderWithRouter(<AdminCreateMemberPage />);
 
-      // Get inputs by their associated label text
-      const firstNameInput = screen.getByRole('textbox', { name: '' });
       const inputs = screen.getAllByRole('textbox');
 
-      // Find specific inputs
-      await user.type(inputs[0], 'John'); // First Name
-      await user.type(inputs[1], 'Doe'); // Last Name
+      // Use fireEvent for faster tests
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       expect(inputs[0]).toHaveValue('John');
       expect(inputs[1]).toHaveValue('Doe');
@@ -118,69 +115,66 @@ describe.skip('AdminCreateMemberPage', () => {
 
   describe('Form Submission', () => {
     it('should call adminService.createMember with form data', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
-      // Fill form using all textboxes
+      // Fill form using fireEvent (faster than userEvent)
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John'); // First Name
-      await user.type(inputs[1], 'Doe'); // Last Name
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       // Find email input by type
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       // Find phone input
       const phoneInput = document.querySelector('input[type="tel"]') as HTMLInputElement;
       if (phoneInput) {
-        await user.type(phoneInput, '+66812345678');
+        fireEvent.change(phoneInput, { target: { value: '+66812345678' } });
       }
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(mockCreateMember).toHaveBeenCalled();
       });
-    }, 15000);
+    });
 
     it('should show loading state while submitting', async () => {
-      const user = userEvent.setup();
       // Make createMember hang
       mockCreateMember.mockImplementation(() => new Promise(() => {}));
 
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByText('Creating...')).toBeInTheDocument();
       });
-    }, 15000);
+    });
   });
 
   describe('Success State', () => {
     it('should show success message after member creation', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByText('Member Created Successfully')).toBeInTheDocument();
@@ -188,18 +182,17 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should display temporary password in success state', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByText(/Temporary Password/i)).toBeInTheDocument();
@@ -208,18 +201,17 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should have "Add Another" button in success state', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /Add Another/i })).toBeInTheDocument();
@@ -227,24 +219,23 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should reset form when "Add Another" is clicked', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /Add Another/i })).toBeInTheDocument();
       });
 
-      await user.click(screen.getByRole('button', { name: /Add Another/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Add Another/i }));
 
       // Should be back to form state
       await waitFor(() => {
@@ -253,18 +244,17 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should have link to view all members', async () => {
-      const user = userEvent.setup();
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /View All Members/i })).toBeInTheDocument();
@@ -274,20 +264,19 @@ describe.skip('AdminCreateMemberPage', () => {
 
   describe('Error Handling', () => {
     it('should display error message on submission failure', async () => {
-      const user = userEvent.setup();
       mockCreateMember.mockRejectedValue(new Error('Email already exists'));
 
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'Duplicate');
-      await user.type(inputs[1], 'User');
+      fireEvent.change(inputs[0], { target: { value: 'Duplicate' } });
+      fireEvent.change(inputs[1], { target: { value: 'User' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'existing@church.com');
+      fireEvent.change(emailInput, { target: { value: 'existing@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByText(/Email already exists/i)).toBeInTheDocument();
@@ -295,20 +284,19 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should display generic error message when error has no message', async () => {
-      const user = userEvent.setup();
       mockCreateMember.mockRejectedValue(new Error());
 
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         expect(screen.getByText(/Failed to create member/i)).toBeInTheDocument();
@@ -316,20 +304,19 @@ describe.skip('AdminCreateMemberPage', () => {
     });
 
     it('should stay on form when error occurs', async () => {
-      const user = userEvent.setup();
       mockCreateMember.mockRejectedValue(new Error('Server error'));
 
       renderWithRouter(<AdminCreateMemberPage />);
 
       const inputs = screen.getAllByRole('textbox');
-      await user.type(inputs[0], 'John');
-      await user.type(inputs[1], 'Doe');
+      fireEvent.change(inputs[0], { target: { value: 'John' } });
+      fireEvent.change(inputs[1], { target: { value: 'Doe' } });
 
       const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-      await user.type(emailInput, 'john@church.com');
+      fireEvent.change(emailInput, { target: { value: 'john@church.com' } });
 
       const submitButton = screen.getByRole('button', { name: /Create Member/i });
-      await user.click(submitButton);
+      fireEvent.click(submitButton);
 
       await waitFor(() => {
         // Form should still be visible
@@ -339,12 +326,11 @@ describe.skip('AdminCreateMemberPage', () => {
   });
 
   describe('Navigation', () => {
-    it('should navigate to members list when Cancel is clicked', async () => {
-      const user = userEvent.setup();
+    it('should navigate to members list when Cancel is clicked', () => {
       renderWithRouter(<AdminCreateMemberPage />);
 
       const cancelButton = screen.getByRole('button', { name: /Cancel/i });
-      await user.click(cancelButton);
+      fireEvent.click(cancelButton);
 
       expect(mockNavigate).toHaveBeenCalledWith('/admin/members');
     });

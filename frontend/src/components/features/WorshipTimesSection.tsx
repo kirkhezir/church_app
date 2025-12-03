@@ -57,7 +57,7 @@ export function WorshipTimesSection() {
             <CardContent className="p-6">
               <div className="flex items-center gap-3 text-3xl font-bold text-gray-900">
                 <Clock className="h-8 w-8 text-purple-600" />
-                <time dateTime="10:30">10:30 AM</time>
+                <time dateTime="11:00">11:00 AM</time>
               </div>
               <p className="mt-4 text-gray-600">
                 Worship service with inspiring music, prayer, and biblical messages.
