@@ -110,9 +110,13 @@ describe('Contract Tests: Admin Endpoints', () => {
   });
 
   afterAll(async () => {
-    // Cleanup all created members
+    // Cleanup all created members (delete related records first)
     const allIds = [adminId, staffId, memberId, ...createdMemberIds].filter(Boolean);
     if (allIds.length > 0) {
+      // Delete audit logs first (foreign key constraint)
+      await prisma.auditLog.deleteMany({
+        where: { userId: { in: allIds } },
+      });
       await prisma.member.deleteMany({
         where: { id: { in: allIds } },
       });
@@ -123,6 +127,10 @@ describe('Contract Tests: Admin Endpoints', () => {
   afterEach(async () => {
     // Cleanup members created during tests
     if (createdMemberIds.length > 0) {
+      // Delete audit logs first
+      await prisma.auditLog.deleteMany({
+        where: { userId: { in: createdMemberIds } },
+      });
       await prisma.member.deleteMany({
         where: { id: { in: createdMemberIds } },
       });

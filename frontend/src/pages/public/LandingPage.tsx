@@ -25,7 +25,7 @@ import ContactForm from '../../components/features/ContactForm';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Top Contact Bar */}
       <TopContactBar />
 
@@ -58,7 +58,7 @@ export function LandingPage() {
 
       {/* Back to Top Button */}
       <BackToTopButton />
-    </div>
+    </main>
   );
 }
 
