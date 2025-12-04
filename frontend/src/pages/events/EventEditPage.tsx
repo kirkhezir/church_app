@@ -28,7 +28,7 @@ export const EventEditPage: React.FC = () => {
 
   const { event, loading, error } = useEventDetail({
     eventId: id!,
-    enabled: !!id,
+    autoFetch: !!id,
   });
 
   // Check if event is cancelled (cannot edit cancelled events)

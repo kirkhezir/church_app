@@ -130,7 +130,7 @@ export function sanitizePhone(phone: string): string | null {
   if (typeof phone !== 'string') return null;
 
   // Remove common phone number formatting characters
-  const cleaned = phone.replace(/[\s\-\(\)\.]/g, '');
+  const cleaned = phone.replace(/[\s\-().]/g, '');
 
   // Check if it looks like a phone number (digits with optional + prefix)
   if (!/^\+?[0-9]{6,15}$/.test(cleaned)) {
@@ -172,7 +172,7 @@ export function detectSQLInjection(value: string): boolean {
 
   const sqlPatterns = [
     /(\b(union|select|insert|update|delete|drop|create|alter|exec|execute|xp_)\b)/i,
-    /(--|\#|\/\*)/,
+    /(--|#|\/\*)/,
     /(\bor\b\s+\d+\s*=\s*\d+)/i,
     /(\band\b\s+\d+\s*=\s*\d+)/i,
     /(';\s*(drop|delete|update|insert))/i,

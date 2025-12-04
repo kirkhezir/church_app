@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import {
   Calendar,
@@ -43,7 +43,7 @@ export const EventDetailPage: React.FC = () => {
 
   const { event, loading, error, refetch } = useEventDetail({
     eventId: id!,
-    enabled: !!id,
+    autoFetch: !!id,
   });
 
   const { rsvping, rsvpError, rsvpToEvent, cancelRSVP } = useEventRSVP(() => {
@@ -132,7 +132,7 @@ export const EventDetailPage: React.FC = () => {
       </div>
 
       {/* Cancelled Badge */}
-      {isCancelled && (
+      {isCancelled && event.cancelledAt && (
         <Alert variant="destructive" className="mb-6">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>

@@ -60,6 +60,11 @@ export const EventForm: React.FC<EventFormProps> = ({
   const [errors, setErrors] = useState<Partial<Record<keyof EventFormData, string>>>({});
   const [submitError, setSubmitError] = useState<string>('');
 
+  // Format datetime for input field (YYYY-MM-DDTHH:MM)
+  const formatDateTimeForInput = (dateString: string): string => {
+    return format(new Date(dateString), "yyyy-MM-dd'T'HH:mm");
+  };
+
   // Initialize form data when editing an existing event
   useEffect(() => {
     if (event) {
@@ -75,11 +80,6 @@ export const EventForm: React.FC<EventFormProps> = ({
       });
     }
   }, [event]);
-
-  // Format datetime for input field (YYYY-MM-DDTHH:MM)
-  const formatDateTimeForInput = (dateString: string): string => {
-    return format(new Date(dateString), "yyyy-MM-dd'T'HH:mm");
-  };
 
   const handleChange = (field: keyof EventFormData, value: string | number | EventCategory) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

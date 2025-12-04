@@ -81,10 +81,10 @@ export class GetEventById {
       rsvpCount,
       availableSpots,
       creator: {
-        id: (event as any).creator.id,
-        firstName: (event as any).creator.firstName,
-        lastName: (event as any).creator.lastName,
-        email: (event as any).creator.email,
+        id: event.creator.id,
+        firstName: event.creator.firstName,
+        lastName: event.creator.lastName,
+        email: event.creator.email,
       },
     };
   }

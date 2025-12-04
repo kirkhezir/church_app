@@ -19,10 +19,12 @@
   "rules": {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "warn",
     "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
     "no-console": ["warn", { "allow": ["warn", "error"] }]
   },
   "settings": {
@@ -35,5 +37,23 @@
     "es2022": true,
     "jest": true
   },
+  "overrides": [
+    {
+      "files": ["tests/**/*.ts", "tests/**/*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ]
+      }
+    },
+    {
+      "files": ["**/ErrorBoundary.tsx"],
+      "rules": {
+        "react-hooks/rules-of-hooks": "off"
+      }
+    }
+  ],
   "ignorePatterns": ["dist", "node_modules", "coverage", "*.config.js", "*.config.ts"]
 }

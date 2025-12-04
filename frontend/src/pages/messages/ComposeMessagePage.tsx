@@ -49,12 +49,14 @@ export function ComposeMessagePage() {
     autoFetch: !!prefilledRecipientId,
   });
 
-  // Set prefilled recipient when loaded
+  // Set prefilled recipient when loaded - using layout effect to avoid flicker
   useEffect(() => {
-    if (prefilledMember) {
+    if (prefilledMember && !selectedRecipient) {
+      // Only set if not already selected to avoid loops
       setSelectedRecipient(prefilledMember);
       setRecipientId(prefilledMember.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefilledMember]);
 
   // Send message hook

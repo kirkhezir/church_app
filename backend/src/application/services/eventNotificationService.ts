@@ -1,4 +1,4 @@
-import { EmailService } from '../../infrastructure/email/emailService';
+import { EmailService, emailService } from '../../infrastructure/email/emailService';
 import { logger } from '../../infrastructure/logging/logger';
 
 /**
@@ -631,6 +631,4 @@ View updated event: ${eventUrl}
 }
 
 // Export singleton instance
-export const eventNotificationService = new EventNotificationService(
-  require('../../infrastructure/email/emailService').emailService
-);
+export const eventNotificationService = new EventNotificationService(emailService);

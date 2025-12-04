@@ -53,7 +53,7 @@ export const RSVPListPage: React.FC = () => {
     error: eventError,
   } = useEventDetail({
     eventId: id!,
-    enabled: !!id,
+    autoFetch: !!id,
   });
 
   // Fetch RSVPs when component mounts or tab changes
@@ -66,8 +66,8 @@ export const RSVPListPage: React.FC = () => {
 
       try {
         const status = activeTab === 'all' ? undefined : activeTab;
-        const data = await eventService.getEventRSVPs(id, status);
-        setRsvps(data);
+        const response = await eventService.getEventRSVPs(id, status);
+        setRsvps(response.rsvps);
       } catch (err) {
         console.error('Failed to fetch RSVPs:', err);
         setError(err instanceof Error ? err.message : 'Failed to load RSVPs');

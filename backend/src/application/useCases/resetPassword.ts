@@ -138,7 +138,7 @@ export class ResetPassword {
       };
     }
 
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       return {
         valid: false,
         message: 'Password must contain at least one special character.',

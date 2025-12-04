@@ -110,9 +110,9 @@ export class CancelEvent {
       const memberDetails = members
         .filter((member) => member !== null)
         .map((member) => ({
-          email: member!.email,
-          firstName: member!.firstName,
-          lastName: member!.lastName,
+          email: member.email,
+          firstName: member.firstName,
+          lastName: member.lastName,
         }));
 
       // Send notifications

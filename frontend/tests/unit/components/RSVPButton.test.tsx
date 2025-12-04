@@ -3,6 +3,8 @@
  * Tests RSVP button states, authentication handling, and capacity checking
  */
 
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+
 // Mock apiClient before any imports to avoid import.meta issues
 jest.mock('@/services/api/apiClient');
 

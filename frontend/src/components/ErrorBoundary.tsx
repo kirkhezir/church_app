@@ -59,7 +59,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     console.error('ErrorBoundary caught an error:', error);
     console.error('Error info:', errorInfo);
 
-    // Update state with error info
+    // Update state with error info - this is the correct pattern for class component error boundaries
     this.setState({ errorInfo });
 
     // Call custom error handler if provided

@@ -6,9 +6,7 @@
  */
 
 import {
-  Calendar,
   MapPin,
-  Clock,
   Mail,
   Phone,
   BookOpen,

@@ -39,10 +39,10 @@ export const validate = (schema: ZodSchema, target: ValidationTarget = 'body') =
           req.body = validated;
           break;
         case 'query':
-          req.query = validated as any;
+          req.query = validated;
           break;
         case 'params':
-          req.params = validated as any;
+          req.params = validated;
           break;
       }
 
