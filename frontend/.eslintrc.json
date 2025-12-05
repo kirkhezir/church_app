@@ -40,6 +40,9 @@
   "overrides": [
     {
       "files": ["tests/**/*.ts", "tests/**/*.tsx"],
+      "parserOptions": {
+        "project": null
+      },
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unused-vars": [

@@ -142,8 +142,8 @@ export function ContactForm() {
             Get In Touch
           </h2>
           <p className="text-lg text-gray-600">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon
-            as possible.
+            Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll
+            respond as soon as possible.
           </p>
         </div>
 
@@ -151,7 +151,7 @@ export function ContactForm() {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 text-white">
             <h3 className="text-2xl font-bold">Send Us A Message</h3>
             <p className="mt-2 opacity-90">
-              Fill out the form below and we'll get back to you shortly
+              Fill out the form below and we&apos;ll get back to you shortly
             </p>
           </div>
 

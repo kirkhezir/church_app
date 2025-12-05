@@ -258,7 +258,7 @@ function TaglineSection() {
               <BookOpen className="h-8 w-8" />
             </div>
             <h3 className="mb-2 text-lg font-bold text-gray-900">Bible-Centered</h3>
-            <p className="text-gray-600">Growing together in God's Word</p>
+            <p className="text-gray-600">Growing together in God&apos;s Word</p>
           </div>
         </div>
       </div>
@@ -352,8 +352,8 @@ function CallToActionSection() {
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="mb-6 text-4xl font-bold">Come Worship With Us</h2>
         <p className="mb-8 text-xl leading-relaxed">
-          Whether you're seeking spiritual growth, community, or simply a place to belong, our doors
-          are open. Join us this Sabbath and experience the warmth of our fellowship.
+          Whether you&apos;re seeking spiritual growth, community, or simply a place to belong, our
+          doors are open. Join us this Sabbath and experience the warmth of our fellowship.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Button

@@ -183,7 +183,7 @@ export function MessageDetailPage() {
             <Mail className="mx-auto h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-lg font-semibold">Message not found</h3>
             <p className="mt-2 text-muted-foreground">
-              This message doesn't exist or has been deleted.
+              This message doesn&apos;t exist or has been deleted.
             </p>
             <Button variant="outline" className="mt-4" onClick={() => navigate('/messages')}>
               Back to Messages

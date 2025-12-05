@@ -110,7 +110,7 @@ export default function MemberDashboard() {
           Welcome back, {dashboard.profile.firstName}!
         </h1>
         <p className="mt-1 text-sm text-gray-600">
-          Here's what's happening in your church community
+          Here&apos;s what&apos;s happening in your church community
         </p>
       </div>
 

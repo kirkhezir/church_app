@@ -52,12 +52,12 @@ export default function PasswordResetRequestPage() {
           <CardContent className="space-y-4">
             <Alert>
               <AlertDescription>
-                If an account exists with that email address, we've sent password reset
+                If an account exists with that email address, we&apos;ve sent password reset
                 instructions. Please check your email and follow the link to reset your password.
               </AlertDescription>
             </Alert>
             <div className="text-center text-sm text-gray-600">
-              <p>Didn't receive the email? Check your spam folder.</p>
+              <p>Didn&apos;t receive the email? Check your spam folder.</p>
               <p className="mt-2">The reset link will expire in 1 hour.</p>
             </div>
             <Button asChild className="w-full">

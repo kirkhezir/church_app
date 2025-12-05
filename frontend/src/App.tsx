@@ -112,7 +112,7 @@ const NotFoundPage = () => (
   <div className="flex min-h-screen items-center justify-center bg-gray-100">
     <div className="rounded-lg bg-white p-8 shadow-md">
       <h1 className="mb-4 text-2xl font-bold">404 - Not Found</h1>
-      <p className="text-gray-600">The page you're looking for doesn't exist.</p>
+      <p className="text-gray-600">The page you&apos;re looking for doesn&apos;t exist.</p>
     </div>
   </div>
 );

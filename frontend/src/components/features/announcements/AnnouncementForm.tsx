@@ -186,7 +186,7 @@ export function AnnouncementForm({
               Save as Draft
             </Label>
             <p className="text-sm text-gray-600">
-              Draft announcements won't be published or trigger notifications
+              Draft announcements won&apos;t be published or trigger notifications
             </p>
           </div>
         </div>

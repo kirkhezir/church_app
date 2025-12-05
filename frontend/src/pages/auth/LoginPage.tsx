@@ -124,7 +124,7 @@ export default function LoginPage() {
             </Button>
 
             <p className="text-center text-sm text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <span className="text-gray-500">Contact your church administrator</span>
             </p>
           </CardFooter>

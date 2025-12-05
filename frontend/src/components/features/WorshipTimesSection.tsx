@@ -73,7 +73,7 @@ export function WorshipTimesSection() {
             All are welcome to join us in worship and fellowship!
           </p>
           <p className="mt-2 text-gray-600">
-            First-time visitors, please feel free to introduce yourself. We'd love to meet you!
+            First-time visitors, please feel free to introduce yourself. We&apos;d love to meet you!
           </p>
         </div>
       </div>

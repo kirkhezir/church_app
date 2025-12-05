@@ -168,7 +168,7 @@ export function MemberProfilePage() {
             <User className="mx-auto h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-lg font-semibold">Member not found</h3>
             <p className="mt-2 text-muted-foreground">
-              The member you're looking for doesn't exist or has been removed.
+              The member you&apos;re looking for doesn&apos;t exist or has been removed.
             </p>
             <Button variant="outline" className="mt-4" onClick={() => navigate('/members')}>
               Back to Directory

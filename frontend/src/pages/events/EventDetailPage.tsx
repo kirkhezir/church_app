@@ -269,7 +269,7 @@ export const EventDetailPage: React.FC = () => {
                   )}
                   {event.hasUserRSVPd && (
                     <p className="text-center text-sm text-muted-foreground">
-                      You're attending this event
+                      You&apos;re attending this event
                     </p>
                   )}
                 </>

@@ -182,7 +182,7 @@ describe('AnnouncementForm', () => {
       render(<AnnouncementForm onSubmit={mockOnSubmit} />);
 
       const urgentRadio = screen.getByLabelText(/Urgent/i);
-      await userEvent.click(urgentRadio);
+      fireEvent.click(urgentRadio);
 
       expect(urgentRadio).toBeChecked();
     });
@@ -191,7 +191,7 @@ describe('AnnouncementForm', () => {
       render(<AnnouncementForm onSubmit={mockOnSubmit} />);
 
       const urgentRadio = screen.getByLabelText(/Urgent/i);
-      await userEvent.click(urgentRadio);
+      fireEvent.click(urgentRadio);
 
       // Should show email notification warning
       await waitFor(() => {

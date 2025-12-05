@@ -98,8 +98,8 @@ If you lose access to your authenticator app, you can use one of these codes to 
       <CardContent className="space-y-6">
         <Alert>
           <AlertDescription>
-            <strong>Important:</strong> If you lose access to your authenticator app, you'll need
-            these codes to sign in. Each code can only be used once. Store them safely!
+            <strong>Important:</strong> If you lose access to your authenticator app, you&apos;ll
+            need these codes to sign in. Each code can only be used once. Store them safely!
           </AlertDescription>
         </Alert>
 

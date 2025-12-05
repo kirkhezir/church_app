@@ -454,4 +454,4 @@ docker compose exec backend sh
 
 ---
 
-_Last updated: November 2025_
+_Last updated: December 2024_

@@ -139,7 +139,7 @@ export function EventCard({
             <>
               {event.hasUserRSVPd ? (
                 <Button variant="secondary" size="sm" disabled className="flex-1">
-                  Already RSVP'd
+                  Already RSVP&apos;d
                 </Button>
               ) : (
                 <Button

@@ -210,7 +210,7 @@ function TaglineSection() {
           Because <span className="text-blue-600">Google</span>{' '}
           <span className="text-purple-600">Yahoo</span>{' '}
           <span className="text-orange-600">Bing</span> <span className="text-red-600">Baidu</span>{' '}
-          <span className="text-red-500">YouTube</span> doesn't have all the answers…
+          <span className="text-red-500">YouTube</span> doesn&apos;t have all the answers…
         </h2>
       </div>
     </section>
@@ -405,8 +405,8 @@ function WelcomeSection() {
               could possibly share with anyone.
             </p>
             <p className="mb-6 text-lg leading-relaxed text-gray-700">
-              We share God's love in various ways in our homes, local community, and throughout the
-              world. We look forward to meeting you!
+              We share God&apos;s love in various ways in our homes, local community, and throughout
+              the world. We look forward to meeting you!
             </p>
             <p className="text-xl font-semibold text-gray-900">Pastor Ross Marlow</p>
           </div>
@@ -429,7 +429,9 @@ function NewsletterSection() {
     <section className="bg-amber-900 px-4 py-16 text-white">
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="mb-4 text-3xl font-bold">Newsletter Subscription</h2>
-        <p className="mb-8 text-lg">Find out what's happening at your local community church.</p>
+        <p className="mb-8 text-lg">
+          Find out what&apos;s happening at your local community church.
+        </p>
         <form className="mx-auto flex max-w-md gap-2">
           <Input
             type="email"

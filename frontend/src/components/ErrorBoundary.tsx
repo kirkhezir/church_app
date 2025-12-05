@@ -138,7 +138,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <h1 className="mb-2 text-2xl font-bold text-gray-900">Something went wrong</h1>
 
             <p className="mb-6 text-gray-600">
-              We're sorry, but something unexpected happened. Our team has been notified and is
+              We&apos;re sorry, but something unexpected happened. Our team has been notified and is
               working to fix the issue.
             </p>
 
