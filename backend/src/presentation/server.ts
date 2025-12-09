@@ -15,7 +15,12 @@ import {
   sqlInjectionDetectionMiddleware,
 } from './middleware/sanitizationMiddleware';
 import { websocketServer } from '../infrastructure/websocket/websocketServer';
+import { initSentry, setupSentryErrorHandler } from '../infrastructure/monitoring/sentry';
+import healthRoutes from './routes/healthRoutes';
 import apiRouter from './routes/index';
+
+// Initialize Sentry early (before Express)
+initSentry();
 
 /**
  * Express Server Configuration
@@ -102,18 +107,11 @@ export class Server {
   }
 
   /**
-   * Configure API routes
+   * Configure routes
    */
   private configureRoutes(): void {
-    // Health check endpoint
-    this.app.get('/health', (_req, res) => {
-      res.status(200).json({
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
-      });
-    });
+    // Health check endpoints
+    this.app.use('/health', healthRoutes);
 
     // Swagger API Documentation
     this.configureSwagger();
@@ -172,6 +170,9 @@ export class Server {
   private configureErrorHandling(): void {
     // 404 handler (must be after all routes)
     this.app.use(notFoundMiddleware);
+
+    // Sentry error handler (captures errors before our handler)
+    setupSentryErrorHandler(this.app as unknown as import('express').Express);
 
     // Global error handler (must be last)
     this.app.use(errorMiddleware);

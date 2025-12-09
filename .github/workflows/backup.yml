@@ -1,0 +1,142 @@
+name: Automated Database Backup
+
+on:
+  schedule:
+    # Run daily at 2:00 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      backup_type:
+        description: "Type of backup"
+        required: true
+        default: "daily"
+        type: choice
+        options:
+          - daily
+          - weekly
+          - manual
+
+env:
+  BACKUP_RETENTION_DAYS: 30
+
+jobs:
+  backup:
+    name: Database Backup
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create backup
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          # Parse database URL
+          DB_HOST=$(echo $DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
+          DB_PORT=$(echo $DATABASE_URL | sed -n 's/.*:\([0-9]*\)\/.*/\1/p')
+          DB_NAME=$(echo $DATABASE_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
+          DB_USER=$(echo $DATABASE_URL | sed -n 's/.*:\/\/\([^:]*\):.*/\1/p')
+
+          # Create backup filename
+          TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+          BACKUP_TYPE=${{ github.event.inputs.backup_type || 'daily' }}
+          BACKUP_FILE="church_app_${BACKUP_TYPE}_${TIMESTAMP}.sql.gz"
+
+          # Create backup
+          echo "Creating backup: $BACKUP_FILE"
+          pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME | gzip > $BACKUP_FILE
+
+          # Calculate checksum
+          sha256sum $BACKUP_FILE > ${BACKUP_FILE}.sha256
+
+          # Output backup info
+          echo "BACKUP_FILE=$BACKUP_FILE" >> $GITHUB_ENV
+          echo "BACKUP_SIZE=$(ls -lh $BACKUP_FILE | awk '{print $5}')" >> $GITHUB_ENV
+
+      - name: Upload to S3
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+          S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+        run: |
+          aws s3 cp $BACKUP_FILE s3://$S3_BUCKET/database-backups/
+          aws s3 cp ${BACKUP_FILE}.sha256 s3://$S3_BUCKET/database-backups/
+          echo "Backup uploaded to S3: s3://$S3_BUCKET/database-backups/$BACKUP_FILE"
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ github.run_number }}
+          path: |
+            ${{ env.BACKUP_FILE }}
+            ${{ env.BACKUP_FILE }}.sha256
+          retention-days: 7
+
+      - name: Cleanup old S3 backups
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+          S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+        run: |
+          # Remove backups older than retention period
+          CUTOFF_DATE=$(date -d "-$BACKUP_RETENTION_DAYS days" +%Y-%m-%d)
+          aws s3 ls s3://$S3_BUCKET/database-backups/ | while read -r line; do
+            CREATE_DATE=$(echo $line | awk '{print $1}')
+            FILE_NAME=$(echo $line | awk '{print $4}')
+            if [[ "$CREATE_DATE" < "$CUTOFF_DATE" ]]; then
+              echo "Deleting old backup: $FILE_NAME"
+              aws s3 rm s3://$S3_BUCKET/database-backups/$FILE_NAME
+            fi
+          done
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Database backup completed successfully"
+          echo "📦 Backup file: $BACKUP_FILE"
+          echo "📊 Backup size: $BACKUP_SIZE"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Database backup failed!"
+          exit 1
+
+  verify:
+    name: Verify Backup
+    runs-on: ubuntu-latest
+    needs: backup
+    if: ${{ github.event.inputs.backup_type == 'weekly' || github.event.schedule }}
+
+    steps:
+      - name: Download backup artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: database-backup-${{ github.run_number }}
+
+      - name: Verify backup integrity
+        run: |
+          # Find the backup file
+          BACKUP_FILE=$(ls *.sql.gz | head -1)
+
+          # Verify checksum
+          echo "Verifying checksum..."
+          sha256sum -c ${BACKUP_FILE}.sha256
+
+          # Check if backup is valid
+          echo "Checking backup validity..."
+          gunzip -t $BACKUP_FILE
+
+          echo "✅ Backup verification passed"

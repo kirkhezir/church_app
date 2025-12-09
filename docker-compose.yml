@@ -57,8 +57,21 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Sing Buri Adventist Center}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-noreply@singburi-adventist.org}
+      # Redis
+      REDIS_ENABLED: "true"
+      REDIS_URL: redis://:${REDIS_PASSWORD:-change_me}@redis:6379
+      # Sentry
+      SENTRY_ENABLED: ${SENTRY_ENABLED:-true}
+      SENTRY_DSN: ${SENTRY_DSN}
+      SENTRY_ENVIRONMENT: production
+      # Push Notifications
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@singburi-adventist.org}
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - "3000:3000"
@@ -105,7 +118,7 @@ services:
       - church_app_network
 
   # ==========================================
-  # Redis Cache (Optional - for session/caching)
+  # Redis Cache
   # ==========================================
   redis:
     image: redis:7-alpine
@@ -123,8 +136,6 @@ services:
       retries: 5
     networks:
       - church_app_network
-    profiles:
-      - with-redis
 
 # ==========================================
 # Networks
