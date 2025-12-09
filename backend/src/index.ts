@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { server } from './presentation/server';
 import { logger } from './infrastructure/logging/logger';
 import prisma from './infrastructure/database/prismaClient';
+import { cacheService } from './infrastructure/cache/cacheService';
 
 /**
  * Backend Application Entry Point
@@ -15,6 +16,9 @@ const gracefulShutdown = async (signal: string) => {
   try {
     // Stop the server
     await server.stop();
+
+    // Disconnect from Redis
+    await cacheService.disconnect();
 
     // Disconnect from database
     await prisma.$disconnect();
