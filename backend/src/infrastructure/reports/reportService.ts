@@ -154,8 +154,11 @@ class ReportService {
     doc.moveDown(2);
 
     // Summary
-    const totalRsvps = events.reduce((sum, e) => sum + e.rsvps.length, 0);
-    const cancelledCount = events.filter((e) => e.cancelledAt).length;
+    const totalRsvps = events.reduce(
+      (sum: number, e: (typeof events)[0]) => sum + e.rsvps.length,
+      0
+    );
+    const cancelledCount = events.filter((e: (typeof events)[0]) => e.cancelledAt).length;
 
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Summary');
     doc.moveDown(0.5);
@@ -234,8 +237,13 @@ class ReportService {
     doc.moveDown(2);
 
     // Summary
-    const urgentCount = announcements.filter((a) => a.priority === 'URGENT').length;
-    const totalViews = announcements.reduce((sum, a) => sum + a.views.length, 0);
+    const urgentCount = announcements.filter(
+      (a: (typeof announcements)[0]) => a.priority === 'URGENT'
+    ).length;
+    const totalViews = announcements.reduce(
+      (sum: number, a: (typeof announcements)[0]) => sum + a.views.length,
+      0
+    );
 
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Summary');
     doc.moveDown(0.5);
@@ -341,9 +349,15 @@ class ReportService {
     doc.moveDown(2);
 
     // Attendance summary
-    const confirmed = event.rsvps.filter((r) => r.status === 'CONFIRMED').length;
-    const waitlisted = event.rsvps.filter((r) => r.status === 'WAITLISTED').length;
-    const cancelled = event.rsvps.filter((r) => r.status === 'CANCELLED').length;
+    const confirmed = event.rsvps.filter(
+      (r: (typeof event.rsvps)[0]) => r.status === 'CONFIRMED'
+    ).length;
+    const waitlisted = event.rsvps.filter(
+      (r: (typeof event.rsvps)[0]) => r.status === 'WAITLISTED'
+    ).length;
+    const cancelled = event.rsvps.filter(
+      (r: (typeof event.rsvps)[0]) => r.status === 'CANCELLED'
+    ).length;
 
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Attendance Summary');
     doc.moveDown(0.5);
@@ -367,7 +381,9 @@ class ReportService {
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Attendee List (Confirmed)');
     doc.moveDown();
 
-    const confirmedRsvps = event.rsvps.filter((r) => r.status === 'CONFIRMED');
+    const confirmedRsvps = event.rsvps.filter(
+      (r: (typeof event.rsvps)[0]) => r.status === 'CONFIRMED'
+    );
     if (confirmedRsvps.length === 0) {
       doc.font(FONTS.italic).fontSize(11).fillColor(COLORS.muted).text('No confirmed attendees');
     } else {

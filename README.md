@@ -18,6 +18,8 @@ A comprehensive full-stack web application for managing church operations includ
 - **Member Directory** - Searchable directory with privacy controls
 - **Internal Messaging** - Member-to-member messaging with real-time notifications
 - **Admin Dashboard** - Member management, audit logs, data export
+- **Push Notifications** - Web push notifications for events and announcements
+- **PDF Reports** - Generate member directory, events, and attendance reports
 
 ### Technical Features
 
@@ -26,6 +28,10 @@ A comprehensive full-stack web application for managing church operations includ
 - Role-based access control (Admin, Staff, Member)
 - Automated backups with retention policies
 - Comprehensive API documentation (OpenAPI/Swagger)
+- Error monitoring with Sentry integration
+- Health check endpoints for monitoring
+- CDN-optimized static asset delivery
+- Staging environment configuration
 
 ## 🛠 Tech Stack
 
@@ -198,6 +204,10 @@ Interactive API documentation is available at `/api-docs` when the backend serve
 | `/api/v1/admin/members`   | GET/POST | Admin member management |
 | `/api/v1/contact`         | POST     | Public contact form     |
 | `/api/v1/dashboard`       | GET      | Member dashboard data   |
+| `/api/v1/push/subscribe`  | POST     | Push notification sub   |
+| `/api/v1/reports/members` | GET      | Generate member PDF     |
+| `/health`                 | GET      | Health check endpoint   |
+| `/health/detailed`        | GET      | Detailed health status  |
 
 ### API Response Format
 

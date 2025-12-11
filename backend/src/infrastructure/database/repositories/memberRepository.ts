@@ -98,7 +98,7 @@ export class MemberRepository implements IMemberRepository {
       take,
     });
 
-    return members.map((member) => this.toDomain(member));
+    return members.map((member: PrismaMember) => this.toDomain(member));
   }
 
   /**
@@ -114,7 +114,7 @@ export class MemberRepository implements IMemberRepository {
       orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
     });
 
-    return members.map((member) => this.toDomain(member));
+    return members.map((member: PrismaMember) => this.toDomain(member));
   }
 
   /**
@@ -140,7 +140,7 @@ export class MemberRepository implements IMemberRepository {
       take: 50,
     });
 
-    return members.map((member) => this.toDomain(member));
+    return members.map((member: PrismaMember) => this.toDomain(member));
   }
 
   /**

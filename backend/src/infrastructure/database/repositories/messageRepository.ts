@@ -61,7 +61,7 @@ export class MessageRepository implements IMessageRepository {
       take,
     });
 
-    return messages.map((m) => this.toDomain(m));
+    return messages.map((m: PrismaMessage) => this.toDomain(m));
   }
 
   /**
@@ -86,7 +86,7 @@ export class MessageRepository implements IMessageRepository {
       take,
     });
 
-    return messages.map((m) => this.toDomain(m));
+    return messages.map((m: PrismaMessage) => this.toDomain(m));
   }
 
   /**
@@ -293,7 +293,7 @@ export class MessageRepository implements IMessageRepository {
       take,
     });
 
-    return messages.map((m) => ({
+    return messages.map((m: (typeof messages)[0]) => ({
       message: this.toDomain(m),
       sender: {
         id: m.sender.id,
@@ -356,7 +356,7 @@ export class MessageRepository implements IMessageRepository {
       take,
     });
 
-    return messages.map((m) => ({
+    return messages.map((m: (typeof messages)[0]) => ({
       message: this.toDomain(m),
       recipient: {
         id: m.recipient.id,

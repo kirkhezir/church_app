@@ -109,7 +109,7 @@ export class GetMemberDirectory {
     });
 
     // Apply privacy controls
-    const data = members.map((member) =>
+    const data = members.map((member: (typeof members)[0]) =>
       applyPrivacyControls(
         {
           ...member,
