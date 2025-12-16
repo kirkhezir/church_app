@@ -1,0 +1,192 @@
+---
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: church-app-backend
+  labels:
+    app: church-app
+    component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: church-app
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: church-app
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: your-registry/church-app-backend:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: church-app-secrets
+            - configMapRef:
+                name: church-app-config
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: church-app-backend
+spec:
+  selector:
+    app: church-app
+    component: backend
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: church-app-frontend
+  labels:
+    app: church-app
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: church-app
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: church-app
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: your-registry/church-app-frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: church-app-frontend
+spec:
+  selector:
+    app: church-app
+    component: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: church-app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  tls:
+    - hosts:
+        - yourdomain.com
+      secretName: church-app-tls
+  rules:
+    - host: yourdomain.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: church-app-backend
+                port:
+                  number: 80
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: church-app-backend
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: church-app-frontend
+                port:
+                  number: 80
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: church-app-config
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  CORS_ORIGIN: "https://yourdomain.com"
+  REDIS_ENABLED: "true"
+  SENTRY_ENABLED: "true"
+  SENTRY_ENVIRONMENT: "production"
+---
+# Secrets (template - do not commit with real values)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: church-app-secrets
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://user:password@postgres:5432/church_app"
+  JWT_SECRET: "your-jwt-secret"
+  REDIS_URL: "redis://:password@redis:6379"
+  SENTRY_DSN: "https://your-sentry-dsn@sentry.io/project"
+  VAPID_PUBLIC_KEY: "your-vapid-public-key"
+  VAPID_PRIVATE_KEY: "your-vapid-private-key"
+  SMTP_USER: "your-smtp-user"
+  SMTP_PASSWORD: "your-smtp-password"

@@ -31,7 +31,7 @@ export default {
   coverageDirectory: 'coverage',
   verbose: true,
   testTimeout: 10000,
-  setupFilesAfterEnv: ['<rootDir>/tests/integration/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   forceExit: true,
   clearMocks: true,
   resetMocks: true,

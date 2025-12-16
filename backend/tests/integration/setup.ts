@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import supertest from 'supertest';
 import { server } from '../../src/presentation/server';
 import { contactService } from '../../src/presentation/routes/contactRoutes';
@@ -9,8 +10,10 @@ process.env.NODE_ENV = 'test';
 /**
  * Test database client (separate from production)
  */
+const testConnectionString = process.env.DATABASE_URL_TEST || process.env.DATABASE_URL;
+const testAdapter = new PrismaPg({ connectionString: testConnectionString! });
 export const testPrisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL_TEST || process.env.DATABASE_URL,
+  adapter: testAdapter,
 });
 
 /**

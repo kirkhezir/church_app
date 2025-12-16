@@ -69,6 +69,11 @@ const AdminMemberListPage = lazy(() => import('./pages/admin/AdminMemberListPage
 const AdminCreateMemberPage = lazy(() => import('./pages/admin/AdminCreateMemberPage'));
 const AdminAuditLogsPage = lazy(() => import('./pages/admin/AdminAuditLogsPage'));
 const AdminDataExportPage = lazy(() => import('./pages/admin/AdminDataExportPage'));
+const AdminHealthPage = lazy(() => import('./pages/admin/AdminHealthPage'));
+const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage'));
+
+// Settings page
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage'));
 
 // Member and Message pages
 const MemberDirectoryPage = lazy(() =>
@@ -318,6 +323,26 @@ const App: React.FC = () => {
           }
         />
 
+        {/* Admin System Health */}
+        <Route
+          path="/admin/health"
+          element={
+            <AdminRoute>
+              <AdminHealthPage />
+            </AdminRoute>
+          }
+        />
+
+        {/* Admin Reports */}
+        <Route
+          path="/admin/reports"
+          element={
+            <AdminRoute>
+              <AdminReportsPage />
+            </AdminRoute>
+          }
+        />
+
         {/* Member Directory Routes */}
         <Route
           path="/members"
@@ -376,6 +401,14 @@ const App: React.FC = () => {
           element={
             <PrivateRoute>
               <NotificationSettingsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <PrivateRoute>
+              <SettingsPage />
             </PrivateRoute>
           }
         />
