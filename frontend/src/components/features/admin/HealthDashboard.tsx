@@ -30,26 +30,28 @@ import {
   type ComponentHealth,
 } from '@/services/endpoints/healthService';
 
-function StatusIcon({ status }: { status: 'healthy' | 'unhealthy' | 'degraded' }) {
+function StatusIcon({ status }: { status: 'up' | 'down' | 'degraded' }) {
   switch (status) {
-    case 'healthy':
+    case 'up':
       return <CheckCircle2 className="h-5 w-5 text-green-500" />;
     case 'degraded':
       return <AlertCircle className="h-5 w-5 text-yellow-500" />;
-    case 'unhealthy':
+    case 'down':
       return <XCircle className="h-5 w-5 text-red-500" />;
   }
 }
 
-function StatusBadge({ status }: { status: 'healthy' | 'unhealthy' | 'degraded' }) {
+function StatusBadge({ status }: { status: 'up' | 'down' | 'degraded' | 'healthy' | 'unhealthy' }) {
   const variants: Record<string, 'default' | 'destructive' | 'secondary' | 'outline'> = {
+    up: 'default',
     healthy: 'default',
     degraded: 'secondary',
+    down: 'destructive',
     unhealthy: 'destructive',
   };
 
   return (
-    <Badge variant={variants[status]} className="capitalize">
+    <Badge variant={variants[status] || 'secondary'} className="capitalize">
       {status}
     </Badge>
   );
@@ -58,7 +60,7 @@ function StatusBadge({ status }: { status: 'healthy' | 'unhealthy' | 'degraded' 
 interface ComponentCardProps {
   name: string;
   icon: React.ElementType;
-  health: ComponentHealth & { details?: Record<string, unknown> };
+  health: ComponentHealth;
 }
 
 function ComponentCard({ name, icon: Icon, health }: ComponentCardProps) {
@@ -88,19 +90,18 @@ function ComponentCard({ name, icon: Icon, health }: ComponentCardProps) {
 
 function MemoryCard({
   health,
+  memoryMetrics,
 }: {
-  health: ComponentHealth & {
-    details?: {
-      heapUsed: number;
-      heapTotal: number;
-      rss: number;
-      external: number;
-    };
+  health: ComponentHealth;
+  memoryMetrics?: {
+    heapUsed: number;
+    heapTotal: number;
+    heapUsedPercentage: number;
+    rss: number;
+    external: number;
   };
 }) {
-  const heapPercentage = health.details
-    ? Math.round((health.details.heapUsed / health.details.heapTotal) * 100)
-    : 0;
+  const heapPercentage = memoryMetrics ? Math.round(memoryMetrics.heapUsedPercentage) : 0;
 
   return (
     <Card>
@@ -116,7 +117,8 @@ function MemoryCard({
       <CardContent>
         <div className="space-y-4">
           <StatusBadge status={health.status} />
-          {health.details && (
+          {health.message && <p className="text-sm text-muted-foreground">{health.message}</p>}
+          {memoryMetrics && (
             <>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -128,19 +130,19 @@ function MemoryCard({
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-muted-foreground">Heap Used</p>
-                  <p className="font-medium">{formatBytes(health.details.heapUsed)}</p>
+                  <p className="font-medium">{formatBytes(memoryMetrics.heapUsed)}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Heap Total</p>
-                  <p className="font-medium">{formatBytes(health.details.heapTotal)}</p>
+                  <p className="font-medium">{formatBytes(memoryMetrics.heapTotal)}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">RSS</p>
-                  <p className="font-medium">{formatBytes(health.details.rss)}</p>
+                  <p className="font-medium">{formatBytes(memoryMetrics.rss)}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">External</p>
-                  <p className="font-medium">{formatBytes(health.details.external)}</p>
+                  <p className="font-medium">{formatBytes(memoryMetrics.external)}</p>
                 </div>
               </div>
             </>
@@ -265,16 +267,16 @@ export function HealthDashboard() {
                   <HardDrive className="h-5 w-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">Node.js</p>
-                    <p className="font-medium">{health.process.nodeVersion}</p>
+                    <p className="font-medium">
+                      {health.metrics?.processInfo?.nodeVersion || 'N/A'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Cpu className="h-5 w-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">Platform</p>
-                    <p className="font-medium">
-                      {health.process.platform} ({health.process.arch})
-                    </p>
+                    <p className="font-medium">{health.metrics?.processInfo?.platform || 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -283,17 +285,20 @@ export function HealthDashboard() {
 
           {/* Components */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <ComponentCard name="Database" icon={Database} health={health.components.database} />
-            {health.components.redis && (
-              <ComponentCard name="Redis Cache" icon={Server} health={health.components.redis} />
+            <ComponentCard name="Database" icon={Database} health={health.checks.database} />
+            {health.checks.cache && (
+              <ComponentCard name="Redis Cache" icon={Server} health={health.checks.cache} />
             )}
-            <MemoryCard health={health.components.memory} />
-            {health.components.sentry && (
+            <MemoryCard health={health.checks.memory} memoryMetrics={health.metrics?.memoryUsage} />
+            {health.checks.monitoring && (
               <ComponentCard
                 name="Error Monitoring"
                 icon={Activity}
-                health={health.components.sentry}
+                health={health.checks.monitoring}
               />
+            )}
+            {health.checks.disk && (
+              <ComponentCard name="Disk" icon={HardDrive} health={health.checks.disk} />
             )}
           </div>
         </>

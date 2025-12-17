@@ -4,43 +4,49 @@
  * Monitors system health and status
  */
 
-interface SimpleHealth {
+export interface SimpleHealth {
   status: string;
   timestamp: string;
   uptime: number;
   environment: string;
 }
 
-interface ComponentHealth {
-  status: 'healthy' | 'unhealthy' | 'degraded';
+export interface ComponentHealth {
+  status: 'up' | 'down' | 'degraded';
   message?: string;
   latency?: number;
 }
 
-interface DetailedHealth {
+export interface DetailedHealth {
   status: 'healthy' | 'unhealthy' | 'degraded';
   timestamp: string;
   uptime: number;
   environment: string;
   version: string;
-  components: {
+  checks: {
     database: ComponentHealth;
-    redis?: ComponentHealth;
-    memory: ComponentHealth & {
-      details?: {
-        heapUsed: number;
-        heapTotal: number;
-        rss: number;
-        external: number;
+    cache?: ComponentHealth;
+    memory: ComponentHealth;
+    disk?: ComponentHealth;
+    monitoring?: ComponentHealth;
+  };
+  metrics: {
+    memoryUsage: {
+      heapUsed: number;
+      heapTotal: number;
+      heapUsedPercentage: number;
+      rss: number;
+      external: number;
+    };
+    processInfo: {
+      pid: number;
+      nodeVersion: string;
+      platform: string;
+      cpuUsage: {
+        user: number;
+        system: number;
       };
     };
-    sentry?: ComponentHealth;
-  };
-  process: {
-    pid: number;
-    nodeVersion: string;
-    platform: string;
-    arch: string;
   };
 }
 

@@ -4,10 +4,6 @@
  * Handles background push notification events
  */
 
-/// <reference lib="webworker" />
-
-declare const self: ServiceWorkerGlobalScope;
-
 // Cache version
 const CACHE_VERSION = 'v1';
 const CACHE_NAME = `church-app-${CACHE_VERSION}`;
@@ -35,7 +31,7 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     console.log('Push notification received:', data);
 
-    const options: NotificationOptions = {
+    const options = {
       body: data.body || 'New notification',
       icon: data.icon || '/icons/icon-192x192.png',
       badge: data.badge || '/icons/badge-72x72.png',
@@ -51,9 +47,7 @@ self.addEventListener('push', (event) => {
       options.vibrate = [200, 100, 200];
     }
 
-    event.waitUntil(
-      self.registration.showNotification(data.title || 'Church App', options)
-    );
+    event.waitUntil(self.registration.showNotification(data.title || 'Church App', options));
   } catch (error) {
     console.error('Error showing push notification:', error);
   }
@@ -108,7 +102,7 @@ self.addEventListener('notificationclick', (event) => {
           client.focus();
           // Navigate to the URL if different
           if (client.url !== url) {
-            (client as WindowClient).navigate(url);
+            client.navigate(url);
           }
           return;
         }
@@ -153,5 +147,3 @@ self.addEventListener('pushsubscriptionchange', (event) => {
       })
   );
 });
-
-export {};
