@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
+import { Toaster } from './components/ui/toaster';
 import './styles/globals.css';
 
 // Initialize Sentry before rendering
@@ -42,6 +43,7 @@ ReactDOM.createRoot(root).render(
       <BrowserRouter>
         <AuthProvider>
           <App />
+          <Toaster />
         </AuthProvider>
       </BrowserRouter>
     </SentryErrorBoundary>

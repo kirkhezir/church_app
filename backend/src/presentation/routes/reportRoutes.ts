@@ -8,9 +8,13 @@ import { Router, Response, NextFunction } from 'express';
 import { reportService } from '../../infrastructure/reports/reportService';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/authMiddleware';
 import { requireRole } from '../middleware/roleMiddleware';
+import { reportRateLimiter } from '../middleware/rateLimitMiddleware';
 import { logger } from '../../infrastructure/logging/logger';
 
 const router = Router();
+
+// Apply rate limiting to all report routes
+router.use(reportRateLimiter);
 
 /**
  * GET /reports/members

@@ -215,3 +215,52 @@ export const messagingRateLimiter = rateLimit({
     });
   },
 });
+
+/**
+ * Rate limiter for report generation
+ * PDF reports are CPU-intensive, limit generation frequency
+ */
+export const reportRateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 10, // 10 reports per 5 minutes
+  message: {
+    error: 'TooManyReportRequests',
+    message: 'Report generation limit reached. Please wait before generating more reports.',
+    retryAfter: 300,
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
+  skip: () => process.env.NODE_ENV === 'test',
+  handler: (req: Request, res: Response) => {
+    logger.warn('Report generation rate limit exceeded', {
+      ip: req.ip,
+      userId: (req as any).user?.userId,
+      path: req.path,
+      userAgent: req.get('user-agent'),
+    });
+    res.status(429).json({
+      error: 'TooManyReportRequests',
+      message: 'Report generation limit reached. Please wait before generating more reports.',
+      retryAfter: 300,
+    });
+  },
+});
+
+/**
+ * Rate limiter for push notification subscription
+ * Prevents abuse of push subscription endpoints
+ */
+export const pushSubscriptionRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // 10 subscription requests per minute
+  message: {
+    error: 'TooManyPushRequests',
+    message: 'Too many push notification requests. Please try again later.',
+    retryAfter: 60,
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
+  skip: () => process.env.NODE_ENV === 'test',
+});

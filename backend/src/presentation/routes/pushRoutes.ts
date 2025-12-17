@@ -7,9 +7,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { pushNotificationService } from '../../infrastructure/notifications/pushNotificationService';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/authMiddleware';
+import { pushSubscriptionRateLimiter } from '../middleware/rateLimitMiddleware';
 import { logger } from '../../infrastructure/logging/logger';
 
 const router = Router();
+
+// Apply rate limiting to subscription endpoints
+router.use('/subscribe', pushSubscriptionRateLimiter);
 
 /**
  * GET /push/vapid-key
