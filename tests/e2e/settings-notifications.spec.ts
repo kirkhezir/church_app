@@ -8,9 +8,11 @@ test.describe("Push Notification Settings", () => {
   test.beforeEach(async ({ page }) => {
     // Login as member
     await page.goto("/login");
-    await page.fill('input[name="email"]', "john.doe@example.com");
-    await page.fill('input[name="password"]', "Member123!");
-    await page.click('button[type="submit"]');
+    await page
+      .getByRole("textbox", { name: "Email" })
+      .fill("john.doe@example.com");
+    await page.getByRole("textbox", { name: "Password" }).fill("Member123!");
+    await page.getByRole("button", { name: "Sign In" }).click();
 
     // Wait for dashboard
     await page.waitForURL(/dashboard/);
@@ -77,9 +79,11 @@ test.describe("Push Notification Settings - Permissions", () => {
 
     // Login
     await page.goto("/login");
-    await page.fill('input[name="email"]', "john.doe@example.com");
-    await page.fill('input[name="password"]', "Member123!");
-    await page.click('button[type="submit"]');
+    await page
+      .getByRole("textbox", { name: "Email" })
+      .fill("john.doe@example.com");
+    await page.getByRole("textbox", { name: "Password" }).fill("Member123!");
+    await page.getByRole("button", { name: "Sign In" }).click();
     await page.waitForURL(/dashboard/);
 
     // Go to settings

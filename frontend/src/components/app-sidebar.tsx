@@ -11,6 +11,8 @@ import {
   Shield,
   FileText,
   Download,
+  Activity,
+  BarChart3,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -76,6 +78,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: 'Admin Panel',
             url: '/admin/members',
             icon: Shield,
+          },
+          {
+            title: 'Reports',
+            url: '/admin/reports',
+            icon: BarChart3,
+          },
+          {
+            title: 'System Health',
+            url: '/admin/health',
+            icon: Activity,
           },
           {
             title: 'Audit Logs',

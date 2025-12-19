@@ -8,9 +8,11 @@ test.describe("Admin Health Dashboard", () => {
   test.beforeEach(async ({ page }) => {
     // Login as admin
     await page.goto("/login");
-    await page.fill('input[name="email"]', "admin@singburi-adventist.org");
-    await page.fill('input[name="password"]', "Admin123!");
-    await page.click('button[type="submit"]');
+    await page
+      .getByRole("textbox", { name: "Email" })
+      .fill("admin@singburi-adventist.org");
+    await page.getByRole("textbox", { name: "Password" }).fill("Admin123!");
+    await page.getByRole("button", { name: "Sign In" }).click();
 
     // Wait for dashboard
     await page.waitForURL(/dashboard|mfa-verify/);
@@ -37,14 +39,20 @@ test.describe("Admin Health Dashboard", () => {
   test("should display database health component", async ({ page }) => {
     await page.goto("/admin/health");
 
-    const databaseCard = page.locator("text=Database");
+    // Wait for the page to fully load
+    await page.waitForSelector("text=System Health", { timeout: 15000 });
+
+    const databaseCard = page.getByText("Database", { exact: true });
     await expect(databaseCard).toBeVisible({ timeout: 10000 });
   });
 
   test("should display memory health component", async ({ page }) => {
     await page.goto("/admin/health");
 
-    const memoryCard = page.locator("text=Memory");
+    // Wait for the page to fully load
+    await page.waitForSelector("text=System Health", { timeout: 15000 });
+
+    const memoryCard = page.getByText("Memory", { exact: true });
     await expect(memoryCard).toBeVisible({ timeout: 10000 });
   });
 
@@ -90,11 +98,12 @@ test.describe("Admin Health Dashboard", () => {
   test("should show status badges", async ({ page }) => {
     await page.goto("/admin/health");
 
-    // Wait for status badges to load
-    await page.waitForSelector('[class*="badge"]', { timeout: 10000 });
+    // Wait for the page to fully load
+    await page.waitForSelector("text=System Health", { timeout: 15000 });
+    await page.waitForSelector("text=Overall Status", { timeout: 15000 });
 
-    // Should have at least one status badge
-    const badges = page.locator('[class*="badge"]');
-    await expect(badges.first()).toBeVisible();
+    // Should have at least one status badge (up, down, degraded)
+    const badges = page.locator("text=/up|down|degraded/i");
+    await expect(badges.first()).toBeVisible({ timeout: 10000 });
   });
 });

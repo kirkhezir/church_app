@@ -8,9 +8,11 @@ test.describe("Admin Reports Page", () => {
   test.beforeEach(async ({ page }) => {
     // Login as admin
     await page.goto("/login");
-    await page.fill('input[name="email"]', "admin@singburi-adventist.org");
-    await page.fill('input[name="password"]', "Admin123!");
-    await page.click('button[type="submit"]');
+    await page
+      .getByRole("textbox", { name: "Email" })
+      .fill("admin@singburi-adventist.org");
+    await page.getByRole("textbox", { name: "Password" }).fill("Admin123!");
+    await page.getByRole("button", { name: "Sign In" }).click();
 
     // Wait for dashboard
     await page.waitForURL(/dashboard|mfa-verify/);

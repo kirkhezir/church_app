@@ -5,7 +5,6 @@
  */
 
 import { apiClient } from '../api/apiClient';
-import { AxiosResponse } from 'axios';
 
 export type ReportType = 'members' | 'events' | 'announcements' | 'attendance';
 
@@ -19,11 +18,11 @@ interface ReportOptions {
  * Download member directory report
  */
 export async function downloadMemberReport(): Promise<void> {
-  const response: AxiosResponse<Blob> = await apiClient.get('/reports/members', {
+  const blob: Blob = await apiClient.get('/reports/members', {
     responseType: 'blob',
   });
 
-  downloadBlob(response.data, 'member-directory.pdf');
+  downloadBlob(blob, 'member-directory.pdf');
 }
 
 /**
@@ -34,29 +33,23 @@ export async function downloadEventsReport(startDate?: string, endDate?: string)
   if (startDate) params.append('startDate', startDate);
   if (endDate) params.append('endDate', endDate);
 
-  const response: AxiosResponse<Blob> = await apiClient.get(
-    `/reports/events?${params.toString()}`,
-    {
-      responseType: 'blob',
-    }
-  );
+  const blob: Blob = await apiClient.get(`/reports/events?${params.toString()}`, {
+    responseType: 'blob',
+  });
 
   const filename = `events-report-${startDate || 'all'}-${endDate || 'all'}.pdf`;
-  downloadBlob(response.data, filename);
+  downloadBlob(blob, filename);
 }
 
 /**
  * Download event attendance report
  */
 export async function downloadAttendanceReport(eventId: string): Promise<void> {
-  const response: AxiosResponse<Blob> = await apiClient.get(
-    `/reports/events/${eventId}/attendance`,
-    {
-      responseType: 'blob',
-    }
-  );
+  const blob: Blob = await apiClient.get(`/reports/events/${eventId}/attendance`, {
+    responseType: 'blob',
+  });
 
-  downloadBlob(response.data, `event-${eventId}-attendance.pdf`);
+  downloadBlob(blob, `event-${eventId}-attendance.pdf`);
 }
 
 /**
@@ -70,15 +63,12 @@ export async function downloadAnnouncementsReport(
   if (startDate) params.append('startDate', startDate);
   if (endDate) params.append('endDate', endDate);
 
-  const response: AxiosResponse<Blob> = await apiClient.get(
-    `/reports/announcements?${params.toString()}`,
-    {
-      responseType: 'blob',
-    }
-  );
+  const blob: Blob = await apiClient.get(`/reports/announcements?${params.toString()}`, {
+    responseType: 'blob',
+  });
 
   const filename = `announcements-report-${startDate || 'all'}-${endDate || 'all'}.pdf`;
-  downloadBlob(response.data, filename);
+  downloadBlob(blob, filename);
 }
 
 /**
