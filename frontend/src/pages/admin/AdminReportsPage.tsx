@@ -5,11 +5,14 @@
  */
 
 import { ReportDownloadPanel } from '@/components/features/reports/ReportDownloadPanel';
+import { SidebarLayout } from '@/components/layout';
 
 export default function AdminReportsPage() {
+  const breadcrumbs = [{ label: 'Admin', href: '/admin/members' }, { label: 'Reports' }];
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <SidebarLayout breadcrumbs={breadcrumbs}>
       <ReportDownloadPanel />
-    </div>
+    </SidebarLayout>
   );
 }
