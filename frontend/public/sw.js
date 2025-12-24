@@ -1,24 +1,159 @@
 /**
- * Service Worker for Push Notifications
+ * Service Worker for Push Notifications and Offline Support
  *
- * Handles background push notification events
+ * Handles background push notification events and caching
  */
 
-// Cache version
-const CACHE_VERSION = 'v1';
-const CACHE_NAME = `church-app-${CACHE_VERSION}`;
+// Cache version - increment to force cache refresh
+const CACHE_VERSION = 'v2';
+const STATIC_CACHE = `church-app-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `church-app-dynamic-${CACHE_VERSION}`;
+const API_CACHE = `church-app-api-${CACHE_VERSION}`;
 
-// Install event
+// Assets to cache on install
+const STATIC_ASSETS = ['/', '/index.html', '/manifest.json', '/offline.html'];
+
+// API endpoints to cache
+const CACHEABLE_API_ROUTES = ['/api/v1/events', '/api/v1/announcements', '/api/v1/members'];
+
+// Cache expiration times (in seconds)
+const CACHE_EXPIRATION = {
+  static: 7 * 24 * 60 * 60, // 7 days
+  api: 5 * 60, // 5 minutes
+  dynamic: 24 * 60 * 60, // 1 day
+};
+
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   console.log('Service Worker installing.');
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then((cache) => {
+      console.log('Caching static assets');
+      return cache.addAll(STATIC_ASSETS);
+    })
+  );
   self.skipWaiting();
 });
 
-// Activate event
+// Activate event - clean old caches
 self.addEventListener('activate', (event) => {
   console.log('Service Worker activating.');
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => {
+            return (
+              key.startsWith('church-app-') &&
+              key !== STATIC_CACHE &&
+              key !== DYNAMIC_CACHE &&
+              key !== API_CACHE
+            );
+          })
+          .map((key) => {
+            console.log('Deleting old cache:', key);
+            return caches.delete(key);
+          })
+      );
+    })
+  );
+  self.clients.claim();
 });
+
+// Fetch event - network first with cache fallback
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+
+  // Skip chrome-extension and other non-http requests
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
+  // API requests - network first, cache fallback
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(networkFirstWithCache(request, API_CACHE));
+    return;
+  }
+
+  // Static assets - cache first, network fallback
+  if (isStaticAsset(url.pathname)) {
+    event.respondWith(cacheFirstWithNetwork(request, STATIC_CACHE));
+    return;
+  }
+
+  // Dynamic content - stale while revalidate
+  event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE));
+});
+
+// Cache strategies
+async function networkFirstWithCache(request, cacheName) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await caches.match(request);
+    if (cached) {
+      return cached;
+    }
+    // Return offline response for API
+    return new Response(JSON.stringify({ error: 'Offline', message: 'No internet connection' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 503,
+    });
+  }
+}
+
+async function cacheFirstWithNetwork(request, cacheName) {
+  const cached = await caches.match(request);
+  if (cached) {
+    return cached;
+  }
+  try {
+    const response = await fetch(request);
+    const cache = await caches.open(cacheName);
+    cache.put(request, response.clone());
+    return response;
+  } catch (error) {
+    return caches.match('/offline.html');
+  }
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  const cached = await caches.match(request);
+  const fetchPromise = fetch(request).then((response) => {
+    caches.open(cacheName).then((cache) => {
+      cache.put(request, response.clone());
+    });
+    return response;
+  });
+  return cached || fetchPromise;
+}
+
+function isStaticAsset(pathname) {
+  const staticExtensions = [
+    '.js',
+    '.css',
+    '.png',
+    '.jpg',
+    '.jpeg',
+    '.gif',
+    '.svg',
+    '.ico',
+    '.woff',
+    '.woff2',
+  ];
+  return staticExtensions.some((ext) => pathname.endsWith(ext));
+}
 
 // Push notification event
 self.addEventListener('push', (event) => {

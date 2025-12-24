@@ -401,6 +401,82 @@ See [Deployment Guide](./docs/deployment.md) for detailed instructions.
 - Frontend initial load < 2 seconds on 3G
 - Support for 200+ concurrent users
 
+## 🚀 Production Deployment
+
+### Quick Deploy with Docker
+
+```bash
+# 1. Generate production secrets
+./scripts/generate-secrets.sh
+
+# 2. Configure environment
+cp .env.production.example .env
+# Edit .env with your values
+
+# 3. Setup SSL certificates
+./scripts/setup-ssl.sh yourdomain.com admin@yourdomain.com letsencrypt
+
+# 4. Deploy
+./scripts/deploy.sh production
+```
+
+### Docker Compose Services
+
+| Service  | Port   | Description   |
+| -------- | ------ | ------------- |
+| backend  | 3000   | API server    |
+| frontend | 80/443 | Nginx + React |
+| postgres | 5432   | Database      |
+| redis    | 6379   | Cache         |
+
+### Environment Variables
+
+See [.env.production.example](.env.production.example) for all required variables.
+
+**Required:**
+
+- `JWT_SECRET` - 64-char secret for JWT signing
+- `DATABASE_URL` - PostgreSQL connection string
+- `REDIS_PASSWORD` - Redis authentication
+- `CORS_ORIGIN` - Allowed origins
+
+### Monitoring Stack
+
+```bash
+# Start monitoring (Prometheus, Grafana, Alertmanager)
+docker compose -f docker-compose.monitoring.yml up -d
+
+# Access:
+# - Grafana: http://localhost:3002
+# - Prometheus: http://localhost:9090
+# - Alertmanager: http://localhost:9093
+```
+
+### Backup & Recovery
+
+```bash
+# Create backup
+./scripts/backup-database.sh
+
+# Restore from backup
+./scripts/restore-database.sh backups/backup_file.sql.gz
+
+# Sync to S3
+./scripts/sync-backups-s3.sh
+```
+
+### CI/CD Pipeline
+
+The project includes GitHub Actions workflows:
+
+- **ci-cd.yml** - Main CI/CD pipeline
+- **deploy-staging.yml** - Auto-deploy to staging
+- **release.yml** - Release workflow with changelog
+- **security-scan.yml** - Security scanning
+- **backup.yml** - Automated backups
+
+For detailed deployment instructions, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
