@@ -1,0 +1,16 @@
+# Grafana Dashboards Provisioning
+# ============================================
+
+apiVersion: 1
+
+providers:
+  - name: "Church App Dashboards"
+    orgId: 1
+    folder: "Church App"
+    folderUid: "church-app"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

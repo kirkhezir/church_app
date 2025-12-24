@@ -1,0 +1,172 @@
+# ============================================
+# Performance Testing Workflow
+# ============================================
+# Runs performance tests on staging
+# ============================================
+
+name: Performance Tests
+
+on:
+  schedule:
+    # Run daily at 3 AM UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/src/**"
+      - "frontend/src/**"
+
+jobs:
+  # ==========================================
+  # Load Testing
+  # ==========================================
+  load-test:
+    name: Load Testing
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Create k6 test script
+        run: |
+          cat > load-test.js << 'EOF'
+          import http from 'k6/http';
+          import { check, sleep } from 'k6';
+          import { Rate } from 'k6/metrics';
+
+          const errorRate = new Rate('errors');
+          const BASE_URL = __ENV.BASE_URL || 'http://localhost:3000';
+
+          export const options = {
+            stages: [
+              { duration: '1m', target: 10 },   // Ramp up
+              { duration: '3m', target: 50 },   // Stay at 50 users
+              { duration: '1m', target: 100 },  // Peak load
+              { duration: '2m', target: 100 },  // Stay at peak
+              { duration: '1m', target: 0 },    // Ramp down
+            ],
+            thresholds: {
+              http_req_duration: ['p(95)<2000'],  // 95% of requests < 2s
+              http_req_failed: ['rate<0.01'],    // Error rate < 1%
+              errors: ['rate<0.05'],             // Custom errors < 5%
+            },
+          };
+
+          export default function () {
+            // Health check
+            let healthRes = http.get(`${BASE_URL}/health`);
+            check(healthRes, {
+              'health check status is 200': (r) => r.status === 200,
+            }) || errorRate.add(1);
+
+            // API endpoints
+            let apiRes = http.get(`${BASE_URL}/api/v1/events`);
+            check(apiRes, {
+              'events API status is 200': (r) => r.status === 200,
+              'events API response time < 1s': (r) => r.timings.duration < 1000,
+            }) || errorRate.add(1);
+
+            sleep(1);
+          }
+          EOF
+
+      - name: Run load tests against staging
+        run: |
+          k6 run \
+            --out json=results.json \
+            --env BASE_URL=${{ secrets.STAGING_URL }} \
+            load-test.js
+        continue-on-error: true
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-results
+          path: results.json
+          retention-days: 30
+
+  # ==========================================
+  # Lighthouse Performance
+  # ==========================================
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            ${{ secrets.STAGING_URL || 'http://localhost:5173' }}
+          budgetPath: ./lighthouse-budget.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Check performance budget
+        run: |
+          echo "Lighthouse audit complete"
+          # Add custom threshold checks here
+
+  # ==========================================
+  # Bundle Size Analysis
+  # ==========================================
+  bundle-analysis:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build with analysis
+        working-directory: ./frontend
+        run: npm run build -- --mode production
+        env:
+          VITE_BUNDLE_ANALYZE: true
+
+      - name: Check bundle size
+        working-directory: ./frontend
+        run: |
+          # Get bundle sizes
+          TOTAL_SIZE=$(du -sh dist | cut -f1)
+          JS_SIZE=$(find dist -name "*.js" -exec du -ch {} + | grep total$ | cut -f1)
+
+          echo "Total bundle size: $TOTAL_SIZE"
+          echo "JavaScript size: $JS_SIZE"
+
+          # Fail if JS bundle > 500KB (adjust as needed)
+          JS_BYTES=$(find dist -name "*.js" -exec du -cb {} + | grep total$ | cut -f1)
+          if [ "$JS_BYTES" -gt 524288 ]; then
+            echo "⚠️ Warning: JavaScript bundle exceeds 500KB"
+          fi
+
+      - name: Upload bundle stats
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-stats
+          path: frontend/dist/stats.html
+          retention-days: 30

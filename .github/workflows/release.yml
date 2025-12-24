@@ -1,0 +1,254 @@
+# ============================================
+# Release Workflow
+# ============================================
+# Creates releases with changelog and artifacts
+# ============================================
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  # ==========================================
+  # Validate
+  # ==========================================
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Releasing version: $VERSION"
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+            echo "Invalid version format: $VERSION"
+            echo "Expected format: vX.Y.Z or vX.Y.Z-suffix"
+            exit 1
+          fi
+
+  # ==========================================
+  # Build Release Artifacts
+  # ==========================================
+  build:
+    name: Build Release
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ needs.validate.outputs.version }}
+            ${{ env.REGISTRY }}/${{ github.repository }}/backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ needs.validate.outputs.version }}
+            ${{ env.REGISTRY }}/${{ github.repository }}/frontend:latest
+          build-args: |
+            VITE_API_URL=/api/v1
+            VITE_APP_NAME=Sing Buri Adventist Center
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ==========================================
+  # Create Release
+  # ==========================================
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configuration: |
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature", "enhancement"]
+                },
+                {
+                  "title": "## 🐛 Bug Fixes",
+                  "labels": ["bug", "fix"]
+                },
+                {
+                  "title": "## 🔒 Security",
+                  "labels": ["security"]
+                },
+                {
+                  "title": "## 📚 Documentation",
+                  "labels": ["documentation"]
+                },
+                {
+                  "title": "## 🧪 Tests",
+                  "labels": ["test"]
+                },
+                {
+                  "title": "## 🔧 Maintenance",
+                  "labels": ["maintenance", "chore"]
+                }
+              ],
+              "template": "#{{CHANGELOG}}\n\n**Full Changelog**: #{{RELEASE_DIFF}}"
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate.outputs.version }}
+          name: Release ${{ needs.validate.outputs.version }}
+          body: |
+            ## 🎉 Release ${{ needs.validate.outputs.version }}
+
+            ### Docker Images
+            ```
+            docker pull ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ needs.validate.outputs.version }}
+            docker pull ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ needs.validate.outputs.version }}
+            ```
+
+            ### Deployment
+            ```bash
+            # Update to this version
+            cd /opt/church_app
+            export VERSION=${{ needs.validate.outputs.version }}
+            docker compose pull
+            docker compose up -d
+            ```
+
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: ${{ contains(needs.validate.outputs.version, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================
+  # Deploy to Production
+  # ==========================================
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate, release]
+    environment: production
+
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /opt/church_app
+
+            # Backup before deploy
+            ./scripts/backup-database.sh "pre-release-${{ needs.validate.outputs.version }}"
+
+            # Pull specific version
+            export VERSION=${{ needs.validate.outputs.version }}
+            docker compose pull
+
+            # Deploy
+            docker compose up -d --remove-orphans
+
+            # Run migrations
+            docker compose exec -T backend npx prisma migrate deploy
+
+            # Health check
+            sleep 15
+            curl -f http://localhost/health || exit 1
+
+            # Cleanup old images
+            docker image prune -f
+
+            echo "Deployed version: ${{ needs.validate.outputs.version }}"
+
+      - name: Notify deployment success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          channel: "#deployments"
+          text: "✅ Released ${{ needs.validate.outputs.version }} to production"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify deployment failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: "#deployments"
+          text: "❌ Failed to deploy ${{ needs.validate.outputs.version }} to production"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
