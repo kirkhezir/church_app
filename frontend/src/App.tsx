@@ -71,6 +71,7 @@ const AdminAuditLogsPage = lazy(() => import('./pages/admin/AdminAuditLogsPage')
 const AdminDataExportPage = lazy(() => import('./pages/admin/AdminDataExportPage'));
 const AdminHealthPage = lazy(() => import('./pages/admin/AdminHealthPage'));
 const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage'));
+const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 
 // Settings page
 const SettingsPage = lazy(() => import('./pages/settings/SettingsPage'));
@@ -339,6 +340,16 @@ const App: React.FC = () => {
           element={
             <AdminRoute>
               <AdminReportsPage />
+            </AdminRoute>
+          }
+        />
+
+        {/* Admin Analytics */}
+        <Route
+          path="/admin/analytics"
+          element={
+            <AdminRoute>
+              <AdminAnalyticsPage />
             </AdminRoute>
           }
         />

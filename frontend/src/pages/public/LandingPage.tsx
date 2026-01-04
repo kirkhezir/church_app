@@ -22,10 +22,15 @@ import WorshipTimesSection from '../../components/features/WorshipTimesSection';
 import LocationMapSection from '../../components/features/LocationMapSection';
 import MissionStatementSection from '../../components/features/MissionStatementSection';
 import ContactForm from '../../components/features/ContactForm';
+import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
+import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
 
 export function LandingPage() {
   return (
     <main className="min-h-screen">
+      {/* Offline Indicator */}
+      <OfflineIndicator />
+
       {/* Top Contact Bar */}
       <TopContactBar />
 
@@ -58,6 +63,9 @@ export function LandingPage() {
 
       {/* Back to Top Button */}
       <BackToTopButton />
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </main>
   );
 }

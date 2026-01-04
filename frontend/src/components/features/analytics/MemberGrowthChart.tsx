@@ -6,7 +6,6 @@
 
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { cn } from '../../../lib/utils';
 
 interface MemberGrowthData {
   month: string;
@@ -64,10 +63,8 @@ export function MemberGrowthChart({ data, title = 'Member Growth' }: MemberGrowt
 
             {/* Chart area */}
             <div className="ml-8 flex h-full items-end gap-1">
-              {data.slice(-12).map((item, index, arr) => {
+              {data.slice(-12).map((item) => {
                 const heightPercent = (item.totalMembers / maxValue) * 100;
-                const prevHeight =
-                  index > 0 ? (arr[index - 1].totalMembers / maxValue) * 100 : heightPercent;
 
                 return (
                   <div

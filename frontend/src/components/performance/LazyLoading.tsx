@@ -74,38 +74,27 @@ export function preloadComponent<T extends ComponentType<any>>(
 
 /**
  * Lazy loaded page components
+ * Note: Add more pages as needed. These are examples of commonly lazy-loaded pages.
  */
 export const LazyPages = {
   // Dashboard
-  Dashboard: lazyLoad(() => import('../../pages/DashboardPage')),
+  Dashboard: lazyLoad(() => import('../../pages/dashboard/MemberDashboard')),
 
   // Events
-  EventsListPage: lazyLoad(() => import('../../pages/events/EventsListPage')),
-  EventDetailPage: lazyLoad(() => import('../../pages/events/EventDetailPage')),
-  CreateEventPage: lazyLoad(() => import('../../pages/events/CreateEventPage')),
-
-  // Announcements
-  AnnouncementsListPage: lazyLoad(() => import('../../pages/announcements/AnnouncementsListPage')),
-  AnnouncementDetailPage: lazyLoad(
-    () => import('../../pages/announcements/AnnouncementDetailPage')
+  EventDetailPage: lazyLoad(() =>
+    import('../../pages/events/EventDetailPage').then((m) => ({ default: m.EventDetailPage }))
+  ),
+  EventCreatePage: lazyLoad(() =>
+    import('../../pages/events/EventCreatePage').then((m) => ({ default: m.EventCreatePage }))
   ),
 
-  // Members
-  MemberDirectoryPage: lazyLoad(() => import('../../pages/members/MemberDirectoryPage')),
-  MemberProfilePage: lazyLoad(() => import('../../pages/members/MemberProfilePage')),
-
-  // Messages
-  MessagesPage: lazyLoad(() => import('../../pages/messages/MessagesPage')),
-  ComposeMessagePage: lazyLoad(() => import('../../pages/messages/ComposeMessagePage')),
-
   // Admin
-  AdminPanelPage: lazyLoad(() => import('../../pages/admin/AdminPanelPage')),
   AdminReportsPage: lazyLoad(() => import('../../pages/admin/AdminReportsPage')),
   AdminHealthPage: lazyLoad(() => import('../../pages/admin/AdminHealthPage')),
+  AdminAnalyticsPage: lazyLoad(() => import('../../pages/admin/AdminAnalyticsPage')),
 
   // Settings
   SettingsPage: lazyLoad(() => import('../../pages/settings/SettingsPage')),
-  ProfileSettingsPage: lazyLoad(() => import('../../pages/settings/ProfileSettingsPage')),
 };
 
 /**
@@ -113,9 +102,9 @@ export const LazyPages = {
  */
 export function preloadCommonPages(): void {
   // Preload after initial page load
-  setTimeout(() => {
-    preloadComponent(() => import('../../pages/DashboardPage'));
-    preloadComponent(() => import('../../pages/events/EventsListPage'));
-    preloadComponent(() => import('../../pages/announcements/AnnouncementsListPage'));
-  }, 2000);
+  if (typeof window !== 'undefined') {
+    window.setTimeout(() => {
+      preloadComponent(() => import('../../pages/dashboard/MemberDashboard'));
+    }, 2000);
+  }
 }

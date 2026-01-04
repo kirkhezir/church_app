@@ -69,14 +69,6 @@ export function OptimizedImage({
     onError?.();
   };
 
-  // Generate srcset for responsive images
-  const generateSrcSet = (baseSrc: string) => {
-    if (!baseSrc || baseSrc.startsWith('data:')) return undefined;
-    // Add width descriptors for responsive loading
-    const widths = [320, 640, 960, 1280, 1920];
-    return widths.map((w) => `${baseSrc}?w=${w} ${w}w`).join(', ');
-  };
-
   // Default blur placeholder
   const defaultBlurDataURL =
     'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNWU3ZWIiLz48L3N2Zz4=';

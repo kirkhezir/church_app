@@ -156,5 +156,3 @@ export function formatBytes(bytes: number): string {
 
   return `${value.toFixed(2)} ${units[unitIndex]}`;
 }
-
-export type { SimpleHealth, DetailedHealth, ComponentHealth, HealthMetrics };

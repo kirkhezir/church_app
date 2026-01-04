@@ -21,7 +21,6 @@ import {
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
 import { cn } from '../../../lib/utils';
 

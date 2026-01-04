@@ -96,13 +96,17 @@ export function requestIdleCallback(
   callback: IdleRequestCallback,
   options?: IdleRequestOptions
 ): number {
-  if ('requestIdleCallback' in window) {
-    return window.requestIdleCallback(callback, options);
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    return (
+      window as Window & {
+        requestIdleCallback: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number;
+      }
+    ).requestIdleCallback(callback, options);
   }
 
   // Fallback for browsers that don't support requestIdleCallback
   const start = Date.now();
-  return window.setTimeout(() => {
+  return (setTimeout as typeof globalThis.setTimeout)(() => {
     callback({
       didTimeout: false,
       timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
@@ -114,10 +118,10 @@ export function requestIdleCallback(
  * Cancel idle callback
  */
 export function cancelIdleCallback(handle: number): void {
-  if ('cancelIdleCallback' in window) {
-    window.cancelIdleCallback(handle);
+  if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+    (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(handle);
   } else {
-    window.clearTimeout(handle);
+    (clearTimeout as typeof globalThis.clearTimeout)(handle);
   }
 }
 

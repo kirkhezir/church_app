@@ -11,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { MobileBottomNav } from '@/components/features/mobile/MobileBottomNav';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ interface SidebarLayoutProps {
 
 /**
  * Sidebar Layout Component
- * Main layout with collapsible sidebar navigation
+ * Main layout with collapsible sidebar navigation and mobile bottom nav
  */
 export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcrumbs }) => {
   return (
@@ -50,7 +51,10 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
             </Breadcrumb>
           )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
+        <main className="flex flex-1 flex-col gap-4 p-4 pb-20 md:pb-4">{children}</main>
+
+        {/* Mobile Bottom Navigation - only visible on small screens */}
+        <MobileBottomNav />
       </SidebarInset>
     </SidebarProvider>
   );

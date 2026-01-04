@@ -5,7 +5,7 @@
  */
 
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Bell, MessageSquare, User, MoreHorizontal } from 'lucide-react';
+import { Home, Calendar, Bell, MessageSquare, User } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import { Badge } from '../../../components/ui/badge';
 
