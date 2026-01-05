@@ -80,9 +80,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             icon: Shield,
           },
           {
+            title: 'Analytics',
+            url: '/admin/analytics',
+            icon: BarChart3,
+          },
+          {
             title: 'Reports',
             url: '/admin/reports',
-            icon: BarChart3,
+            icon: FileText,
           },
           {
             title: 'System Health',

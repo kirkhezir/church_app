@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { ArrowLeft, Users, Mail, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
 import { useEventDetail } from '@/hooks/useEvents';
 import { eventService } from '@/services/endpoints/eventService';
+import { SidebarLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -81,32 +82,36 @@ export const RSVPListPage: React.FC = () => {
 
   if (eventLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Skeleton className="mb-6 h-8 w-32" />
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-8 w-64" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-64 w-full" />
-          </CardContent>
-        </Card>
-      </div>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'RSVPs' }]}>
+        <div className="container mx-auto px-4 py-8">
+          <Skeleton className="mb-6 h-8 w-32" />
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-8 w-64" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </SidebarLayout>
     );
   }
 
   if (eventError || !event) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate('/events')}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Events
-        </Button>
-        <Alert variant="destructive" className="mt-6">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{eventError || 'Event not found'}</AlertDescription>
-        </Alert>
-      </div>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'RSVPs' }]}>
+        <div className="container mx-auto px-4 py-8">
+          <Button variant="ghost" onClick={() => navigate('/events')}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Events
+          </Button>
+          <Alert variant="destructive" className="mt-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>{eventError || 'Event not found'}</AlertDescription>
+          </Alert>
+        </div>
+      </SidebarLayout>
     );
   }
 
@@ -116,128 +121,143 @@ export const RSVPListPage: React.FC = () => {
   const cancelledCount = rsvps.filter((r) => r.status === RSVPStatus.CANCELLED).length;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate(`/events/${id}`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Event
-        </Button>
-        <Button onClick={() => navigate(`/events/${id}/edit`)}>Edit Event</Button>
-      </div>
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Events', href: '/events' },
+        { label: event.title, href: `/events/${id}` },
+        { label: 'RSVPs' },
+      ]}
+    >
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <Button variant="ghost" onClick={() => navigate(`/events/${id}`)}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Event
+          </Button>
+          <Button onClick={() => navigate(`/events/${id}/edit`)}>Edit Event</Button>
+        </div>
 
-      {/* Event Info Card */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>{event.title}</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            {format(new Date(event.startDateTime), 'EEEE, MMMM d, yyyy h:mm a')} • {event.location}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-6">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-2xl font-bold">{event.rsvpCount || 0}</p>
-                <p className="text-sm text-muted-foreground">Total RSVPs</p>
-              </div>
-            </div>
-            {event.maxCapacity && (
+        {/* Event Info Card */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>{event.title}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {format(new Date(event.startDateTime), 'EEEE, MMMM d, yyyy h:mm a')} •{' '}
+              {event.location}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-6">
               <div className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-2xl font-bold">{event.maxCapacity}</p>
-                  <p className="text-sm text-muted-foreground">Capacity</p>
+                  <p className="text-2xl font-bold">{event.rsvpCount || 0}</p>
+                  <p className="text-sm text-muted-foreground">Total RSVPs</p>
                 </div>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* RSVP List Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Event Attendees</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Tabs for filtering by status */}
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
-            <TabsList>
-              <TabsTrigger value="all">All ({confirmedCount + waitlistedCount})</TabsTrigger>
-              <TabsTrigger value={RSVPStatus.CONFIRMED}>Confirmed ({confirmedCount})</TabsTrigger>
-              <TabsTrigger value={RSVPStatus.WAITLISTED}>
-                Waitlisted ({waitlistedCount})
-              </TabsTrigger>
-              <TabsTrigger value={RSVPStatus.CANCELLED}>Cancelled ({cancelledCount})</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value={activeTab} className="mt-6">
-              {loading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                </div>
-              ) : error ? (
-                <Alert variant="destructive">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              ) : rsvps.length === 0 ? (
-                <div className="py-8 text-center text-muted-foreground">
-                  <Users className="mx-auto mb-2 h-12 w-12 opacity-50" />
-                  <p>No RSVPs found for this filter.</p>
-                </div>
-              ) : (
-                <div className="rounded-lg border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>RSVP Date</TableHead>
-                        <TableHead>Last Updated</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {rsvps.map((rsvp) => (
-                        <TableRow key={rsvp.id}>
-                          <TableCell className="font-medium">
-                            {rsvp.member
-                              ? `${rsvp.member.firstName} ${rsvp.member.lastName}`
-                              : 'Unknown'}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Mail className="h-4 w-4 text-muted-foreground" />
-                              {rsvp.member?.email || 'N/A'}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={statusColors[rsvp.status]}>
-                              <span className="flex items-center gap-1">
-                                {statusIcons[rsvp.status]}
-                                {statusLabels[rsvp.status]}
-                              </span>
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{format(new Date(rsvp.rsvpedAt), 'MMM d, yyyy')}</TableCell>
-                          <TableCell>
-                            {format(new Date(rsvp.updatedAt), 'MMM d, yyyy h:mm a')}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+              {event.maxCapacity && (
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p className="text-2xl font-bold">{event.maxCapacity}</p>
+                    <p className="text-sm text-muted-foreground">Capacity</p>
+                  </div>
                 </div>
               )}
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* RSVP List Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Event Attendees</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* Tabs for filtering by status */}
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
+              <TabsList>
+                <TabsTrigger value="all">All ({confirmedCount + waitlistedCount})</TabsTrigger>
+                <TabsTrigger value={RSVPStatus.CONFIRMED}>Confirmed ({confirmedCount})</TabsTrigger>
+                <TabsTrigger value={RSVPStatus.WAITLISTED}>
+                  Waitlisted ({waitlistedCount})
+                </TabsTrigger>
+                <TabsTrigger value={RSVPStatus.CANCELLED}>Cancelled ({cancelledCount})</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value={activeTab} className="mt-6">
+                {loading ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                ) : error ? (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                ) : rsvps.length === 0 ? (
+                  <div className="py-8 text-center text-muted-foreground">
+                    <Users className="mx-auto mb-2 h-12 w-12 opacity-50" />
+                    <p>No RSVPs found for this filter.</p>
+                  </div>
+                ) : (
+                  <div className="rounded-lg border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>RSVP Date</TableHead>
+                          <TableHead>Last Updated</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {rsvps.map((rsvp) => (
+                          <TableRow key={rsvp.id}>
+                            <TableCell className="font-medium">
+                              {rsvp.member
+                                ? `${rsvp.member.firstName} ${rsvp.member.lastName}`
+                                : 'Unknown'}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4 text-muted-foreground" />
+                                {rsvp.member?.email || 'N/A'}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={statusColors[rsvp.status]}>
+                                <span className="flex items-center gap-1">
+                                  {statusIcons[rsvp.status]}
+                                  {statusLabels[rsvp.status]}
+                                </span>
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {rsvp.rsvpedAt
+                                ? format(new Date(rsvp.rsvpedAt), 'MMM d, yyyy')
+                                : 'N/A'}
+                            </TableCell>
+                            <TableCell>
+                              {rsvp.updatedAt
+                                ? format(new Date(rsvp.updatedAt), 'MMM d, yyyy h:mm a')
+                                : 'N/A'}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </div>
+    </SidebarLayout>
   );
 };
 
