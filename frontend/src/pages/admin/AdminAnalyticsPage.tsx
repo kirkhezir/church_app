@@ -5,7 +5,7 @@
  * and engagement metrics for admins
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { BarChart3, Users, Calendar, TrendingUp, RefreshCw, Download } from 'lucide-react';
 import { SidebarLayout } from '../../components/layout';
 import { Button } from '../../components/ui/button';
@@ -32,47 +32,15 @@ import {
   EngagementMetrics,
   ActivityHeatMap,
 } from '../../components/features/analytics/EngagementMetrics';
+import {
+  analyticsService,
+  DashboardOverview,
+  MemberGrowthData,
+  AttendanceData,
+  EngagementData,
+} from '../../services/endpoints/analyticsService';
 
-// Mock data for initial implementation
-const mockAttendanceData = [
-  { date: '2025-12-01', eventName: 'Sunday Worship', attendance: 145, capacity: 200 },
-  { date: '2025-12-08', eventName: 'Sunday Worship', attendance: 158, capacity: 200 },
-  { date: '2025-12-15', eventName: 'Sunday Worship', attendance: 162, capacity: 200 },
-  { date: '2025-12-22', eventName: 'Sunday Worship', attendance: 189, capacity: 200 },
-  { date: '2025-12-29', eventName: 'Sunday Worship', attendance: 134, capacity: 200 },
-  { date: '2026-01-05', eventName: 'Sunday Worship', attendance: 171, capacity: 200 },
-];
-
-const mockGrowthData = [
-  { month: '2025-08', newMembers: 8, totalMembers: 342, churnedMembers: 4 },
-  { month: '2025-09', newMembers: 12, totalMembers: 352, churnedMembers: 3 },
-  { month: '2025-10', newMembers: 6, totalMembers: 356, churnedMembers: 4 },
-  { month: '2025-11', newMembers: 15, totalMembers: 369, churnedMembers: 2 },
-  { month: '2025-12', newMembers: 11, totalMembers: 378, churnedMembers: 3 },
-  { month: '2026-01', newMembers: 9, totalMembers: 385, churnedMembers: 3 },
-];
-
-const mockDemographics = [
-  { label: 'Age 0-17', value: 52, color: '#3b82f6' },
-  { label: 'Age 18-30', value: 78, color: '#22c55e' },
-  { label: 'Age 31-45', value: 112, color: '#eab308' },
-  { label: 'Age 46-60', value: 89, color: '#f97316' },
-  { label: 'Age 61+', value: 54, color: '#a855f7' },
-];
-
-const mockEngagementData = {
-  activeUsersLast7Days: 198,
-  activeUsersLast30Days: 312,
-  totalUsers: 385,
-  eventRsvps: 89,
-  messagesSent: 234,
-  announcementsViewed: 1567,
-  profileUpdates: 45,
-  averageSessionDuration: 12,
-  peakUsageHour: 10,
-  mostActiveDay: 'Sunday',
-};
-
+// Mock data for heatmap (not yet in backend)
 const mockHeatMapData = [
   { day: 'Sun', hour: 9, count: 45 },
   { day: 'Sun', hour: 10, count: 89 },
@@ -84,41 +52,128 @@ const mockHeatMapData = [
   { day: 'Sat', hour: 10, count: 23 },
 ];
 
+// Mock demographics since backend doesn't have age data
+const mockDemographics = [
+  { label: 'Age 0-17', value: 52, color: '#3b82f6' },
+  { label: 'Age 18-30', value: 78, color: '#22c55e' },
+  { label: 'Age 31-45', value: 112, color: '#eab308' },
+  { label: 'Age 46-60', value: 89, color: '#f97316' },
+  { label: 'Age 61+', value: 54, color: '#a855f7' },
+];
+
 export default function AdminAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState('6months');
   const [activeTab, setActiveTab] = useState('overview');
 
-  // In a real implementation, this would fetch from the API
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-      setLoading(true);
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        // In real implementation:
-        // const response = await api.get('/api/v1/analytics/dashboard');
-        setError(null);
-      } catch (err: any) {
-        setError('Failed to load analytics data');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Analytics data state
+  const [dashboard, setDashboard] = useState<DashboardOverview | null>(null);
+  const [growthData, setGrowthData] = useState<MemberGrowthData[]>([]);
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const [engagementData, setEngagementData] = useState<EngagementData | null>(null);
 
-    fetchAnalytics();
+  const getMonthsFromRange = (range: string): number => {
+    switch (range) {
+      case '1month':
+        return 1;
+      case '3months':
+        return 3;
+      case '6months':
+        return 6;
+      case '1year':
+        return 12;
+      default:
+        return 6;
+    }
+  };
+
+  const fetchAnalytics = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const months = getMonthsFromRange(timeRange);
+
+      const [dashboardRes, growthRes, attendanceRes, engagementRes] = await Promise.all([
+        analyticsService.getDashboard(),
+        analyticsService.getMemberGrowth(months),
+        analyticsService.getAttendance(8),
+        analyticsService.getEngagement(),
+      ]);
+
+      setDashboard(dashboardRes);
+      setGrowthData(growthRes);
+      setAttendanceData(attendanceRes.attendance);
+      setEngagementData(engagementRes);
+    } catch (err: unknown) {
+      console.error('Failed to fetch analytics:', err);
+      setError('Failed to load analytics data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }, [timeRange]);
 
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
+
   const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 500);
+    fetchAnalytics();
   };
 
   const handleExport = () => {
-    // TODO: Implement export functionality
-    console.log('Exporting analytics data...');
+    // Create CSV content
+    const csvContent = [
+      'Metric,Value',
+      `Total Members,${dashboard?.totalMembers || 0}`,
+      `New Members This Month,${dashboard?.newMembersThisMonth || 0}`,
+      `Active Users,${dashboard?.activeUsers || 0}`,
+      `Active Users %,${dashboard?.activeUsersPercentage || 0}%`,
+      `Upcoming Events,${dashboard?.upcomingEvents || 0}`,
+      `Total RSVPs,${dashboard?.totalRsvps || 0}`,
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `analytics-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
+
+  // Transform data for charts
+  const chartAttendanceData = attendanceData.map((d) => ({
+    date: d.date,
+    eventName: d.eventTitle,
+    attendance: d.attendance,
+    capacity: d.capacity,
+  }));
+
+  const chartGrowthData = growthData.map((d) => ({
+    month: d.month,
+    newMembers: d.newMembers,
+    totalMembers: d.totalMembers,
+    churnedMembers: d.churnedMembers,
+  }));
+
+  const chartEngagementData = engagementData
+    ? {
+        ...engagementData,
+        profileUpdates: 0, // Not tracked in backend yet
+      }
+    : {
+        activeUsersLast7Days: 0,
+        activeUsersLast30Days: 0,
+        totalUsers: 0,
+        eventRsvps: 0,
+        messagesSent: 0,
+        announcementsViewed: 0,
+        profileUpdates: 0,
+        averageSessionDuration: 0,
+        peakUsageHour: 0,
+        mostActiveDay: 'Sunday',
+      };
 
   const content = (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -188,9 +243,10 @@ export default function AdminAnalyticsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">385</div>
+              <div className="text-2xl font-bold">{dashboard?.totalMembers || 0}</div>
               <p className="text-xs text-muted-foreground">
-                <span className="text-green-500">+9</span> from last month
+                <span className="text-green-500">+{dashboard?.newMembersThisMonth || 0}</span> from
+                last month
               </p>
             </CardContent>
           </Card>
@@ -201,9 +257,16 @@ export default function AdminAnalyticsPage() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">160</div>
+              <div className="text-2xl font-bold">
+                {attendanceData.length > 0
+                  ? Math.round(
+                      attendanceData.reduce((sum, d) => sum + d.attendance, 0) /
+                        attendanceData.length
+                    )
+                  : 0}
+              </div>
               <p className="text-xs text-muted-foreground">
-                <span className="text-green-500">+5%</span> vs last quarter
+                Based on {attendanceData.length} recent events
               </p>
             </CardContent>
           </Card>
@@ -214,8 +277,10 @@ export default function AdminAnalyticsPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">81%</div>
-              <p className="text-xs text-muted-foreground">312 active in last 30 days</p>
+              <div className="text-2xl font-bold">{dashboard?.activeUsersPercentage || 0}%</div>
+              <p className="text-xs text-muted-foreground">
+                {dashboard?.activeUsers || 0} active in last 30 days
+              </p>
             </CardContent>
           </Card>
 
@@ -225,8 +290,10 @@ export default function AdminAnalyticsPage() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">89 total RSVPs</p>
+              <div className="text-2xl font-bold">{dashboard?.upcomingEvents || 0}</div>
+              <p className="text-xs text-muted-foreground">
+                {dashboard?.totalRsvps || 0} total RSVPs
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -250,11 +317,11 @@ export default function AdminAnalyticsPage() {
           ) : (
             <>
               <div className="grid gap-6 lg:grid-cols-2">
-                <AttendanceChart data={mockAttendanceData} />
-                <MemberGrowthChart data={mockGrowthData} />
+                <AttendanceChart data={chartAttendanceData} />
+                <MemberGrowthChart data={chartGrowthData} />
               </div>
               <div className="grid gap-6 lg:grid-cols-2">
-                <AttendanceSummary data={mockAttendanceData} />
+                <AttendanceSummary data={chartAttendanceData} />
                 <MemberDemographics data={mockDemographics} />
               </div>
             </>
@@ -266,8 +333,8 @@ export default function AdminAnalyticsPage() {
             <Skeleton className="h-96 w-full" />
           ) : (
             <>
-              <AttendanceChart data={mockAttendanceData} />
-              <AttendanceSummary data={mockAttendanceData} />
+              <AttendanceChart data={chartAttendanceData} />
+              <AttendanceSummary data={chartAttendanceData} />
             </>
           )}
         </TabsContent>
@@ -277,7 +344,7 @@ export default function AdminAnalyticsPage() {
             <Skeleton className="h-96 w-full" />
           ) : (
             <>
-              <MemberGrowthChart data={mockGrowthData} />
+              <MemberGrowthChart data={chartGrowthData} />
               <MemberDemographics data={mockDemographics} />
             </>
           )}
@@ -288,7 +355,7 @@ export default function AdminAnalyticsPage() {
             <Skeleton className="h-96 w-full" />
           ) : (
             <>
-              <EngagementMetrics data={mockEngagementData} />
+              <EngagementMetrics data={chartEngagementData} />
               <ActivityHeatMap data={mockHeatMapData} />
             </>
           )}

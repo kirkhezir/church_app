@@ -13,13 +13,16 @@ A comprehensive full-stack web application for managing church operations includ
 - **Public Landing Page** - Church information, worship times, location map, contact form
 - **Member Authentication** - Secure login with JWT, password reset, account lockout protection
 - **Multi-Factor Authentication (MFA)** - TOTP-based MFA for admin/staff accounts
-- **Event Management** - Create, manage, and RSVP to church events
+- **Event Management** - Create, manage, and RSVP to church events with calendar view
 - **Announcement System** - Post announcements with priority levels and email notifications
-- **Member Directory** - Searchable directory with privacy controls
+- **Member Directory** - Searchable directory with advanced filters, bulk actions, and export
 - **Internal Messaging** - Member-to-member messaging with real-time notifications
 - **Admin Dashboard** - Member management, audit logs, data export
+- **Analytics Dashboard** - Church growth metrics, attendance tracking, member engagement analytics
 - **Push Notifications** - Web push notifications for events and announcements
 - **PDF Reports** - Generate member directory, events, and attendance reports
+- **PWA Support** - Install as progressive web app with offline capabilities
+- **Mobile Responsive** - Mobile-optimized bottom navigation and responsive layouts
 
 ### Technical Features
 
@@ -179,11 +182,10 @@ A comprehensive full-stack web application for managing church operations includ
 
 ### Default Credentials (Development)
 
-| Role   | Email                         | Password  |
-| ------ | ----------------------------- | --------- |
-| Admin  | admin@singburi-adventist.org  | admin123  |
-| Staff  | staff@singburi-adventist.org  | staff123  |
-| Member | member@singburi-adventist.org | member123 |
+| Role  | Email                        | Password  |
+| ----- | ---------------------------- | --------- |
+| Admin | admin@singburi-adventist.org | Admin123! |
+| Staff | staff@singburi-adventist.org | Staff123! |
 
 > ⚠️ **Important**: Change these credentials in production!
 

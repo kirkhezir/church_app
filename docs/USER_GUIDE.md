@@ -142,6 +142,32 @@ Export church data for reporting:
 3. Click "Export"
 4. Download the generated file
 
+### Analytics Dashboard
+
+Access comprehensive church metrics:
+
+1. Go to Admin → Analytics
+2. View dashboard with key metrics:
+   - **Total Members** - Current membership count
+   - **Active Users** - Members active in last 30 days
+   - **Events This Month** - Upcoming events and RSVPs
+   - **Average Attendance** - Based on worship services
+
+**Analytics Tabs:**
+
+| Tab        | Content                                      |
+| ---------- | -------------------------------------------- |
+| Overview   | Combined view of all metrics                 |
+| Attendance | Worship service attendance trends            |
+| Growth     | Member growth over time, new vs churned      |
+| Engagement | Active users, RSVPs, messages, announcements |
+
+**Features:**
+
+- **Time Range Filter** - View data for 1 month, 3 months, 6 months, or 1 year
+- **Refresh** - Update data with latest statistics
+- **Export** - Download analytics data as CSV
+
 ---
 
 ## Events
