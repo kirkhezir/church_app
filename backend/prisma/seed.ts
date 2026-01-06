@@ -65,6 +65,7 @@ async function main(): Promise<void> {
   // Clear existing data (in development only)
   if (process.env.NODE_ENV !== 'production') {
     console.log('🗑️  Clearing existing data...');
+    await prisma.userSession.deleteMany();
     await prisma.pushSubscription.deleteMany();
     await prisma.auditLog.deleteMany();
     await prisma.memberAnnouncementView.deleteMany();
@@ -86,6 +87,7 @@ async function main(): Promise<void> {
       lastName: 'User',
       phone: '+66812345678',
       address: '123 Church Street, Sing Buri, Thailand',
+      dateOfBirth: new Date('1975-05-15'), // Age 50+
       role: Role.ADMIN,
       membershipDate: new Date('2020-01-01'),
       privacySettings: {
@@ -109,6 +111,7 @@ async function main(): Promise<void> {
       firstName: 'Staff',
       lastName: 'Member',
       phone: '+66823456789',
+      dateOfBirth: new Date('1988-08-20'), // Age 37
       role: Role.STAFF,
       membershipDate: new Date('2021-06-15'),
       privacySettings: {
@@ -135,6 +138,7 @@ async function main(): Promise<void> {
         lastName: 'Doe',
         phone: '+66834567890',
         address: '456 Main Road, Sing Buri, Thailand',
+        dateOfBirth: new Date('1995-03-25'), // Age 30
         role: Role.MEMBER,
         membershipDate: new Date('2022-03-10'),
         privacySettings: {
@@ -152,6 +156,7 @@ async function main(): Promise<void> {
         firstName: 'Jane',
         lastName: 'Smith',
         phone: '+66845678901',
+        dateOfBirth: new Date('2000-07-12'), // Age 25
         role: Role.MEMBER,
         membershipDate: new Date('2023-01-20'),
         privacySettings: {
@@ -169,6 +174,7 @@ async function main(): Promise<void> {
         firstName: 'Peter',
         lastName: 'Pan',
         phone: '+66856789012',
+        dateOfBirth: new Date('2010-11-30'), // Age 15 (youth)
         role: Role.MEMBER,
         membershipDate: new Date('2023-05-15'),
         privacySettings: {
@@ -182,6 +188,25 @@ async function main(): Promise<void> {
   ]);
   console.log(`✅ Created ${members.length} regular members`);
 
+  // Generate diverse ages for Thai members
+  const birthYears = [
+    1955,
+    1960,
+    1965,
+    1970,
+    1975, // 61+ group
+    1980,
+    1985,
+    1978, // 46-60 group
+    1990,
+    1992,
+    1995, // 31-45 group
+    1998,
+    2000,
+    2002,
+    2005, // 18-30 group
+  ];
+
   // Create additional members with Thai names for more realistic data
   console.log('👥 Creating additional Thai members...');
   const additionalMembers = [];
@@ -191,6 +216,7 @@ async function main(): Promise<void> {
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`;
     const membershipYear = 2020 + Math.floor(i / 5);
     const membershipMonth = (i % 12) + 1;
+    const birthYear = birthYears[i % birthYears.length];
 
     additionalMembers.push(
       prisma.member.create({
@@ -201,6 +227,9 @@ async function main(): Promise<void> {
           lastName,
           phone: `+6680${String(1000000 + i).slice(1)}`,
           address: `${100 + i * 10} ${['Pracha', 'Sombun', 'Chai'][i % 3]} Road, Sing Buri, Thailand`,
+          dateOfBirth: new Date(
+            `${birthYear}-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`
+          ),
           role: Role.MEMBER,
           membershipDate: new Date(
             `${membershipYear}-${String(membershipMonth).padStart(2, '0')}-15`
