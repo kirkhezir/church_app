@@ -49,6 +49,7 @@ model Member {
   lastName             String
   phone                String?
   address              String?
+  dateOfBirth          DateTime? // For demographics tracking
   role                 Role      @default(MEMBER)
   membershipDate       DateTime
   privacySettings      Json      // { showPhone: boolean, showEmail: boolean, showAddress: boolean }
@@ -80,6 +81,7 @@ model Member {
   announcementViews    MemberAnnouncementView[]
   auditLogs            AuditLog[]
   pushSubscriptions    PushSubscription[]
+  sessions             UserSession[]
 
   @@index([email])
   @@index([role])
@@ -222,4 +224,22 @@ model PushSubscription {
   @@unique([memberId, endpoint])
   @@index([memberId])
   @@map("push_subscriptions")
+}
+
+// Session tracking for analytics
+model UserSession {
+  id           String    @id @default(uuid())
+  memberId     String
+  sessionStart DateTime  @default(now())
+  sessionEnd   DateTime?
+  duration     Int?      // in seconds
+  userAgent    String?
+  ipAddress    String?
+  
+  // Relationships
+  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  
+  @@index([memberId, sessionStart])
+  @@index([sessionStart])
+  @@map("user_sessions")
 }

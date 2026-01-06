@@ -277,12 +277,50 @@ router.get(
         { type: 'MFA Disabled', count: mfaDisabled, color: '#94a3b8' },
       ];
 
+      // Age demographics (if dateOfBirth available)
+      const membersWithDob = await prisma.member.findMany({
+        where: { deletedAt: null, dateOfBirth: { not: null } },
+        select: { dateOfBirth: true },
+      });
+
+      const now = new Date();
+      const ageGroups = {
+        '0-17': 0,
+        '18-30': 0,
+        '31-45': 0,
+        '46-60': 0,
+        '61+': 0,
+      };
+
+      membersWithDob.forEach((member) => {
+        if (member.dateOfBirth) {
+          const age = Math.floor(
+            (now.getTime() - member.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+          );
+          if (age < 18) ageGroups['0-17']++;
+          else if (age <= 30) ageGroups['18-30']++;
+          else if (age <= 45) ageGroups['31-45']++;
+          else if (age <= 60) ageGroups['46-60']++;
+          else ageGroups['61+']++;
+        }
+      });
+
+      const ageDistribution = [
+        { label: 'Age 0-17', value: ageGroups['0-17'], color: '#3b82f6' },
+        { label: 'Age 18-30', value: ageGroups['18-30'], color: '#22c55e' },
+        { label: 'Age 31-45', value: ageGroups['31-45'], color: '#eab308' },
+        { label: 'Age 46-60', value: ageGroups['46-60'], color: '#f97316' },
+        { label: 'Age 61+', value: ageGroups['61+'], color: '#a855f7' },
+      ];
+
       return res.json({
         success: true,
         data: {
           roleDistribution,
           securityStats,
+          ageDistribution,
           totalMembers,
+          membersWithDobCount: membersWithDob.length,
         },
       });
     } catch (error) {
@@ -349,6 +387,70 @@ router.get(
         },
       });
 
+      // Calculate activity heatmap data from audit logs
+      const activityLogs = await prisma.auditLog.findMany({
+        where: {
+          timestamp: { gte: thirtyDaysAgo },
+        },
+        select: {
+          timestamp: true,
+        },
+      });
+
+      // Group by day and hour
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const heatmapData: { day: string; hour: number; count: number }[] = [];
+      const activityMap = new Map<string, number>();
+
+      activityLogs.forEach((log) => {
+        const date = new Date(log.timestamp);
+        const day = dayNames[date.getDay()];
+        const hour = date.getHours();
+        const key = `${day}-${hour}`;
+        activityMap.set(key, (activityMap.get(key) || 0) + 1);
+      });
+
+      activityMap.forEach((count, key) => {
+        const [day, hour] = key.split('-');
+        heatmapData.push({ day, hour: parseInt(hour), count });
+      });
+
+      // Find peak usage hour and most active day
+      let peakHour = 10;
+      let peakCount = 0;
+      const dayActivity = new Map<string, number>();
+
+      activityMap.forEach((count, key) => {
+        const [day, hour] = key.split('-');
+        dayActivity.set(day, (dayActivity.get(day) || 0) + count);
+        if (count > peakCount) {
+          peakCount = count;
+          peakHour = parseInt(hour);
+        }
+      });
+
+      let mostActiveDay = 'Sunday';
+      let maxDayActivity = 0;
+      dayActivity.forEach((count, day) => {
+        if (count > maxDayActivity) {
+          maxDayActivity = count;
+          mostActiveDay =
+            day === 'Sun'
+              ? 'Sunday'
+              : day === 'Mon'
+                ? 'Monday'
+                : day === 'Tue'
+                  ? 'Tuesday'
+                  : day === 'Wed'
+                    ? 'Wednesday'
+                    : day === 'Thu'
+                      ? 'Thursday'
+                      : day === 'Fri'
+                        ? 'Friday'
+                        : 'Saturday';
+        }
+      });
+
       return res.json({
         success: true,
         data: {
@@ -358,9 +460,10 @@ router.get(
           eventRsvps,
           messagesSent,
           announcementsViewed: announcementViews,
-          averageSessionDuration: 12, // Placeholder - would need session tracking
-          peakUsageHour: 10, // Placeholder
-          mostActiveDay: 'Sunday',
+          averageSessionDuration: 12, // Would need session tracking table
+          peakUsageHour: peakHour,
+          mostActiveDay,
+          heatmapData,
         },
       });
     } catch (error) {

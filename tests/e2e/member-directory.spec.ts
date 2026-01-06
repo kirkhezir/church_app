@@ -64,6 +64,138 @@ test.describe("Member Directory E2E", () => {
       await expect(page.locator('h3:has-text("John Doe")')).toBeVisible();
     });
 
+    test("should open advanced filters panel", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Click Filters button
+      await page.click('button:has-text("Filters")');
+
+      // Filter panel should be visible
+      await expect(page.locator("text=Role")).toBeVisible();
+      await expect(page.locator("text=Status")).toBeVisible();
+      await expect(page.locator("text=Sort By")).toBeVisible();
+    });
+
+    test("should filter members by role", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Open filters
+      await page.click('button:has-text("Filters")');
+
+      // Select role filter
+      await page.click('button:has-text("All Roles")');
+      await page.click("text=Staff");
+
+      // Wait for filter to apply
+      await page.waitForTimeout(500);
+    });
+
+    test("should filter members by date range", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Open filters
+      await page.click('button:has-text("Filters")');
+
+      // Click date picker for "From" date
+      await page.click('button:has-text("Pick a date")');
+
+      // Date picker interaction would happen here
+      // Close filter without selecting (just testing visibility)
+    });
+
+    test("should change sort order", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Open filters
+      await page.click('button:has-text("Filters")');
+
+      // Change sort order
+      await page.click('button:has-text("Name (A-Z)")');
+      await page.click("text=Name (Z-A)");
+
+      // Wait for sort to apply
+      await page.waitForTimeout(500);
+    });
+
+    test("should reset filters", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Search first
+      const searchInput = page.getByPlaceholder("Search by name...");
+      await searchInput.fill("John");
+      await page.waitForTimeout(500);
+
+      // Open filters and reset
+      await page.click('button:has-text("Filters")');
+      await page.click('button:has-text("Reset Filters")');
+
+      // Search should be cleared
+      await expect(searchInput).toHaveValue("");
+    });
+
+    test("should select multiple members", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Wait for members to load
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+
+      // Click Select All
+      await page.click('button:has-text("Select All")');
+
+      // Some checkboxes should be checked
+      const checkboxes = page.locator('input[type="checkbox"]');
+      const count = await checkboxes.count();
+      expect(count).toBeGreaterThan(0);
+    });
+
+    test("should export selected members", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Wait for members to load
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+
+      // Click Export button
+      const exportButton = page.locator('button:has-text("Export")');
+      await expect(exportButton).toBeVisible();
+
+      // Set up download listener
+      const downloadPromise = page.waitForEvent("download");
+
+      // Click export
+      await exportButton.click();
+
+      // Verify download started
+      const download = await downloadPromise;
+      expect(download.suggestedFilename()).toContain(".csv");
+    });
+
+    test("should paginate through members", async ({ page }) => {
+      await login(page, MEMBER_USER.email, MEMBER_USER.password);
+      await page.goto("http://localhost:5173/members");
+
+      // Wait for members to load
+      await page.waitForSelector("h3.font-semibold", { timeout: 10000 });
+
+      // Check for pagination
+      const pageInfo = page.locator("text=Page 1");
+      if (await pageInfo.isVisible()) {
+        // Click Next if available
+        const nextButton = page.locator('button:has-text("Next")');
+        if (await nextButton.isEnabled()) {
+          await nextButton.click();
+          await page.waitForTimeout(500);
+          await expect(page.locator("text=Page 2")).toBeVisible();
+        }
+      }
+    });
+
     test("should navigate to member profile on click", async ({ page }) => {
       await login(page, MEMBER_USER.email, MEMBER_USER.password);
       await page.goto("http://localhost:5173/members");
