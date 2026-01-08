@@ -10,6 +10,7 @@ import adminRoutes from './adminRoutes';
 import pushRoutes from './pushRoutes';
 import reportRoutes from './reportRoutes';
 import analyticsRoutes from './analyticsRoutes';
+import uploadRoutes from './uploadRoutes';
 
 /**
  * Main API Router
@@ -34,6 +35,7 @@ router.get('/', (_req, res) => {
       push: '/api/v1/push',
       reports: '/api/v1/reports',
       analytics: '/api/v1/analytics',
+      upload: '/api/v1/upload',
     },
   });
 });
@@ -48,6 +50,7 @@ router.use('/messages', messageRoutes);
 router.use('/admin', adminRoutes);
 router.use('/push', pushRoutes);
 router.use('/reports', reportRoutes);
+router.use('/upload', uploadRoutes);
 router.use('/analytics', analyticsRoutes);
 
 logger.info('API routes initialized');

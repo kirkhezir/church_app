@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Event, EventCategory } from '@/types/api';
+import { ImageUploader } from '../upload/ImageUploader';
 
 const categoryOptions = [
   { value: EventCategory.WORSHIP, label: 'Worship Service' },
@@ -329,17 +330,15 @@ export const EventForm: React.FC<EventFormProps> = ({
         </div>
       </div>
 
-      {/* Image URL */}
+      {/* Event Image */}
       <div className="space-y-2">
-        <Label htmlFor="imageUrl">Image URL (Optional)</Label>
-        <Input
-          id="imageUrl"
-          type="url"
-          value={formData.imageUrl}
-          onChange={(e) => handleChange('imageUrl', e.target.value)}
-          placeholder="https://example.com/image.jpg"
+        <Label>Event Image (Optional)</Label>
+        <ImageUploader
+          uploadType="event"
+          currentImageUrl={formData.imageUrl}
+          onUploadComplete={(url) => handleChange('imageUrl', url)}
           disabled={isLoading}
-          className={errors.imageUrl ? 'border-destructive' : ''}
+          maxSizeMB={10}
         />
         {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl}</p>}
       </div>

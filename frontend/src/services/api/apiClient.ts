@@ -192,6 +192,18 @@ class ApiClient {
   }
 
   /**
+   * POST request with FormData (for file uploads)
+   */
+  async postFormData<T>(url: string, formData: FormData): Promise<T> {
+    const response = await this.client.post<T>(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+
+  /**
    * Get the underlying Axios instance
    */
   getClient(): AxiosInstance {
