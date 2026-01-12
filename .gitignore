@@ -71,3 +71,23 @@ playwright/.cache/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Sensitive files - NEVER COMMIT
+production-env-vars.txt
+*.secrets
+*.credentials
+token.txt
+test-login.json
+
+# Deployment helper scripts with secrets
+prepare-deployment.ps1
+setup-neon-database.ps1
+
+# Documentation with credentials (use .example versions instead)
+DEPLOY_NOW.md
+DEPLOYMENT_IN_PROGRESS.md
+SETUP_COMPLETE_FINAL.md
+CLOUDINARY_SETUP_COMPLETE.md
+NEON_SETUP_STEPS.md
+NEON_DATABASE_SETUP.md
+NEON_QUICK_START.md

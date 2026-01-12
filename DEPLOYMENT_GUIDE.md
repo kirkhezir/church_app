@@ -75,13 +75,14 @@ In Render dashboard, add these environment variables:
 # Database (from Vercel Neon integration)
 DATABASE_URL=postgresql://user:pass@host/singburiadventistcenter
 
-# JWT Secret (generate new one)
-JWT_SECRET=your-secure-random-secret-here
+# JWT Secret (generate new one - use strong random string)
+JWT_SECRET=<generate-64-char-secret>
+JWT_REFRESH_SECRET=<generate-64-char-secret>
 
-# Cloudinary (ALREADY CONFIGURED LOCALLY)
-CLOUDINARY_CLOUD_NAME=dw47h2yyd
-CLOUDINARY_API_KEY=688569912156569
-CLOUDINARY_API_SECRET=x2_9z0J8h6pP5tCoqUDMsI7L03Y
+# Cloudinary (get from Cloudinary Dashboard)
+CLOUDINARY_CLOUD_NAME=<your-cloud-name>
+CLOUDINARY_API_KEY=<your-api-key>
+CLOUDINARY_API_SECRET=<your-api-secret>
 
 # CORS (your Vercel frontend URL)
 CORS_ORIGIN=https://your-app.vercel.app
@@ -209,12 +210,13 @@ npm run prisma:seed
 ### **Backend (.env) - LOCAL DEVELOPMENT**
 
 ```bash
-# Already configured in backend/.env:
-DATABASE_URL=your-local-or-neon-db-url
-JWT_SECRET=dev-secret-change-in-production
-CLOUDINARY_CLOUD_NAME=dw47h2yyd
-CLOUDINARY_API_KEY=688569912156569
-CLOUDINARY_API_SECRET=x2_9z0J8h6pP5tCoqUDMsI7L03Y
+# Configure in backend/.env (never commit real values):
+DATABASE_URL=<your-neon-connection-string>
+JWT_SECRET=<generate-64-char-secret>
+JWT_REFRESH_SECRET=<generate-64-char-secret>
+CLOUDINARY_CLOUD_NAME=<your-cloud-name>
+CLOUDINARY_API_KEY=<your-api-key>
+CLOUDINARY_API_SECRET=<your-api-secret>
 CORS_ORIGIN=http://localhost:5173
 ```
 
