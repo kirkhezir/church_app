@@ -21,11 +21,13 @@
 ### STEP 1: Deploy Frontend to Vercel (5 minutes)
 
 1. **Go to Vercel:**
+
    - Open: https://vercel.com/new
    - Sign in with GitHub
    - Import your `church_app` repository
 
 2. **Configure Project:**
+
    ```
    Framework Preset: Vite (auto-detected)
    Root Directory: frontend
@@ -34,6 +36,7 @@
    ```
 
 3. **Add Environment Variables:**
+
    ```
    VITE_API_URL=<your-render-backend-url>/api/v1
    VITE_WS_URL=<your-render-backend-url>
@@ -46,11 +49,13 @@
 ### STEP 2: Deploy Backend to Render.com (10 minutes)
 
 1. **Go to Render:**
+
    - Open: https://render.com
    - Sign up with GitHub
    - New → Web Service
 
 2. **Configure Service:**
+
    ```
    Name: church-app-backend
    Region: Singapore (or closest)
@@ -64,6 +69,7 @@
 3. **Add Environment Variables (from your secure storage):**
 
    **Required Variables:**
+
    ```bash
    # Database - Get from Neon Dashboard
    DATABASE_URL=<your-neon-connection-string>
@@ -111,6 +117,7 @@
 ### STEP 3: Link Frontend & Backend
 
 1. **Update Vercel Environment:**
+
    - Vercel Dashboard → Settings → Environment Variables
    - Set `VITE_API_URL` to your Render backend URL
 
@@ -123,22 +130,26 @@
 ## 🔐 How to Get Your Credentials
 
 ### Neon Database:
+
 1. Go to https://console.neon.tech
 2. Select your project
 3. Connection Details → Copy connection string
 
 ### Cloudinary:
+
 1. Go to https://console.cloudinary.com
 2. Dashboard → Account Details
 3. Copy: Cloud Name, API Key, API Secret
 
 ### Generate JWT Secrets:
+
 ```powershell
 # Run in PowerShell (do this twice for both secrets):
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object {[char]$_})
 ```
 
 ### Generate VAPID Keys:
+
 ```bash
 npx web-push generate-vapid-keys
 ```
@@ -181,14 +192,17 @@ Total: $0/month
 ## 🆘 Troubleshooting
 
 ### Frontend can't reach backend:
+
 - Check CORS_ORIGIN matches your Vercel URL
 - Check VITE_API_URL is correct
 
 ### Database connection fails:
+
 - Verify connection string has `?sslmode=require`
 - Check Neon project is active
 
 ### Image upload fails:
+
 - Verify Cloudinary credentials
 - Check browser console for errors
 
