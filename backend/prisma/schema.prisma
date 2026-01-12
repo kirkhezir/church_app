@@ -1,6 +1,3 @@
-// Prisma schema for Church Management Application
-// Database: PostgreSQL 15+
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,14 +6,174 @@ datasource db {
   provider = "postgresql"
 }
 
-// ============================================================================
-// ENUMS
-// ============================================================================
+model announcements {
+  id                        String                      @id
+  title                     String
+  content                   String
+  priority                  Priority                    @default(NORMAL)
+  authorId                  String
+  publishedAt               DateTime                    @default(now())
+  archivedAt                DateTime?
+  isDraft                   Boolean                     @default(false)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime
+  deletedAt                 DateTime?
+  members                   members                     @relation(fields: [authorId], references: [id])
+  member_announcement_views member_announcement_views[]
 
-enum Role {
-  ADMIN
-  STAFF
-  MEMBER
+  @@index([archivedAt, publishedAt])
+  @@index([authorId])
+  @@index([isDraft, publishedAt])
+  @@index([publishedAt(sort: Desc)])
+}
+
+model audit_logs {
+  id         String   @id
+  userId     String
+  action     String
+  entityType String
+  entityId   String
+  changes    Json?
+  ipAddress  String
+  userAgent  String
+  timestamp  DateTime @default(now())
+  members    members  @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId, timestamp])
+}
+
+model event_rsvps {
+  id        String     @id
+  eventId   String
+  memberId  String
+  status    RSVPStatus @default(CONFIRMED)
+  rsvpedAt  DateTime   @default(now())
+  updatedAt DateTime
+  events    events     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  members   members    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, memberId])
+  @@index([eventId])
+}
+
+model events {
+  id            String        @id
+  title         String
+  description   String
+  startDateTime DateTime
+  endDateTime   DateTime
+  location      String
+  category      EventCategory
+  maxCapacity   Int?
+  imageUrl      String?
+  createdById   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+  cancelledAt   DateTime?
+  deletedAt     DateTime?
+  event_rsvps   event_rsvps[]
+  members       members       @relation(fields: [createdById], references: [id])
+
+  @@index([createdById])
+  @@index([startDateTime, category])
+}
+
+model member_announcement_views {
+  id             String        @id
+  memberId       String
+  announcementId String
+  viewedAt       DateTime      @default(now())
+  announcements  announcements @relation(fields: [announcementId], references: [id])
+  members        members       @relation(fields: [memberId], references: [id])
+
+  @@unique([memberId, announcementId])
+}
+
+model members {
+  id                                     String                      @id
+  email                                  String                      @unique
+  passwordHash                           String
+  firstName                              String
+  lastName                               String
+  phone                                  String?
+  address                                String?
+  dateOfBirth                            DateTime?
+  role                                   Role                        @default(MEMBER)
+  membershipDate                         DateTime
+  privacySettings                        Json
+  emailNotifications                     Boolean                     @default(true)
+  accountLocked                          Boolean                     @default(false)
+  lockedUntil                            DateTime?
+  failedLoginAttempts                    Int                         @default(0)
+  lastLoginAt                            DateTime?
+  mfaEnabled                             Boolean                     @default(false)
+  mfaSecret                              String?
+  backupCodes                            Json?
+  passwordResetToken                     String?
+  passwordResetExpires                   DateTime?
+  createdAt                              DateTime                    @default(now())
+  updatedAt                              DateTime
+  deletedAt                              DateTime?
+  announcements                          announcements[]
+  audit_logs                             audit_logs[]
+  event_rsvps                            event_rsvps[]
+  events                                 events[]
+  member_announcement_views              member_announcement_views[]
+  messages_messages_recipientIdTomembers messages[]                  @relation("messages_recipientIdTomembers")
+  messages_messages_senderIdTomembers    messages[]                  @relation("messages_senderIdTomembers")
+  push_subscriptions                     push_subscriptions[]
+  user_sessions                          user_sessions[]
+
+  @@index([email])
+  @@index([membershipDate])
+  @@index([role])
+}
+
+model messages {
+  id                                    String    @id
+  senderId                              String
+  recipientId                           String
+  subject                               String
+  body                                  String
+  isRead                                Boolean   @default(false)
+  readAt                                DateTime?
+  sentAt                                DateTime  @default(now())
+  deletedBySender                       Boolean   @default(false)
+  deletedByRecipient                    Boolean   @default(false)
+  members_messages_recipientIdTomembers members   @relation("messages_recipientIdTomembers", fields: [recipientId], references: [id])
+  members_messages_senderIdTomembers    members   @relation("messages_senderIdTomembers", fields: [senderId], references: [id])
+
+  @@index([recipientId, isRead])
+  @@index([senderId, sentAt])
+}
+
+model push_subscriptions {
+  id        String   @id
+  memberId  String
+  endpoint  String
+  p256dh    String   @db.VarChar(500)
+  auth      String   @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  members   members  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, endpoint])
+  @@index([memberId])
+}
+
+model user_sessions {
+  id           String    @id
+  memberId     String
+  sessionStart DateTime  @default(now())
+  sessionEnd   DateTime?
+  duration     Int?
+  userAgent    String?
+  ipAddress    String?
+  members      members   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId, sessionStart])
+  @@index([sessionStart])
 }
 
 enum EventCategory {
@@ -26,220 +183,19 @@ enum EventCategory {
   FELLOWSHIP
 }
 
+enum Priority {
+  URGENT
+  NORMAL
+}
+
 enum RSVPStatus {
   CONFIRMED
   WAITLISTED
   CANCELLED
 }
 
-enum Priority {
-  URGENT
-  NORMAL
-}
-
-// ============================================================================
-// ENTITIES
-// ============================================================================
-
-model Member {
-  id                   String    @id @default(uuid())
-  email                String    @unique
-  passwordHash         String
-  firstName            String
-  lastName             String
-  phone                String?
-  address              String?
-  dateOfBirth          DateTime? // For demographics tracking
-  role                 Role      @default(MEMBER)
-  membershipDate       DateTime
-  privacySettings      Json      // { showPhone: boolean, showEmail: boolean, showAddress: boolean }
-  emailNotifications   Boolean   @default(true)
-  accountLocked        Boolean   @default(false)
-  lockedUntil          DateTime?
-  failedLoginAttempts  Int       @default(0)
-  lastLoginAt          DateTime?
-  
-  // MFA fields
-  mfaEnabled           Boolean   @default(false)
-  mfaSecret            String?
-  backupCodes          Json?     // Array of backup codes (hashed)
-  
-  // Password reset fields
-  passwordResetToken   String?
-  passwordResetExpires DateTime?
-  
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  deletedAt            DateTime?
-
-  // Relationships
-  createdEvents        Event[]           @relation("EventCreator")
-  rsvps                EventRSVP[]
-  sentMessages         Message[]         @relation("MessageSender")
-  receivedMessages     Message[]         @relation("MessageRecipient")
-  announcements        Announcement[]    @relation("AnnouncementAuthor")
-  announcementViews    MemberAnnouncementView[]
-  auditLogs            AuditLog[]
-  pushSubscriptions    PushSubscription[]
-  sessions             UserSession[]
-
-  @@index([email])
-  @@index([role])
-  @@index([membershipDate])
-  @@map("members")
-}
-
-model Event {
-  id              String        @id @default(uuid())
-  title           String
-  description     String        @db.Text
-  startDateTime   DateTime
-  endDateTime     DateTime
-  location        String
-  category        EventCategory
-  maxCapacity     Int?
-  imageUrl        String?
-  createdById     String
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  cancelledAt     DateTime?
-  deletedAt       DateTime?
-
-  // Relationships
-  creator         Member        @relation("EventCreator", fields: [createdById], references: [id])
-  rsvps           EventRSVP[]
-
-  @@index([startDateTime, category])
-  @@index([createdById])
-  @@map("events")
-}
-
-model EventRSVP {
-  id        String      @id @default(uuid())
-  eventId   String
-  memberId  String
-  status    RSVPStatus  @default(CONFIRMED)
-  rsvpedAt  DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  // Relationships
-  event     Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  member    Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, memberId])
-  @@index([eventId])
-  @@map("event_rsvps")
-}
-
-model Announcement {
-  id          String    @id @default(uuid())
-  title       String
-  content     String    @db.Text
-  priority    Priority  @default(NORMAL)
-  authorId    String
-  publishedAt DateTime  @default(now())
-  archivedAt  DateTime?
-  isDraft     Boolean   @default(false)  // NEW: Draft status
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  // Relationships
-  author      Member    @relation("AnnouncementAuthor", fields: [authorId], references: [id])
-  views       MemberAnnouncementView[]
-
-  @@index([publishedAt(sort: Desc)])
-  @@index([archivedAt, publishedAt])
-  @@index([isDraft, publishedAt])  // NEW: Index for drafts
-  @@index([authorId])  // NEW: Index for author filtering
-  @@map("announcements")
-}
-
-model Message {
-  id                  String    @id @default(uuid())
-  senderId            String
-  recipientId         String
-  subject             String
-  body                String    @db.Text
-  isRead              Boolean   @default(false)
-  readAt              DateTime?
-  sentAt              DateTime  @default(now())
-  deletedBySender     Boolean   @default(false)
-  deletedByRecipient  Boolean   @default(false)
-
-  // Relationships
-  sender              Member    @relation("MessageSender", fields: [senderId], references: [id])
-  recipient           Member    @relation("MessageRecipient", fields: [recipientId], references: [id])
-
-  @@index([recipientId, isRead])
-  @@index([senderId, sentAt])
-  @@map("messages")
-}
-
-model MemberAnnouncementView {
-  id              String       @id @default(uuid())
-  memberId        String
-  announcementId  String
-  viewedAt        DateTime     @default(now())
-
-  // Relationships
-  member          Member       @relation(fields: [memberId], references: [id])
-  announcement    Announcement @relation(fields: [announcementId], references: [id])
-
-  @@unique([memberId, announcementId])
-  @@map("member_announcement_views")
-}
-
-model AuditLog {
-  id          String    @id @default(uuid())
-  userId      String
-  action      String    // CREATE, UPDATE, DELETE
-  entityType  String    // MEMBER, EVENT, ANNOUNCEMENT, MESSAGE
-  entityId    String
-  changes     Json?     // { before: {}, after: {} }
-  ipAddress   String
-  userAgent   String
-  timestamp   DateTime  @default(now())
-
-  // Relationships
-  user        Member    @relation(fields: [userId], references: [id])
-
-  @@index([userId, timestamp])
-  @@index([entityType, entityId])
-  @@map("audit_logs")
-}
-
-model PushSubscription {
-  id        String   @id @default(uuid())
-  memberId  String
-  endpoint  String   @db.Text
-  p256dh    String   @db.VarChar(500)
-  auth      String   @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relationships
-  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
-  @@unique([memberId, endpoint])
-  @@index([memberId])
-  @@map("push_subscriptions")
-}
-
-// Session tracking for analytics
-model UserSession {
-  id           String    @id @default(uuid())
-  memberId     String
-  sessionStart DateTime  @default(now())
-  sessionEnd   DateTime?
-  duration     Int?      // in seconds
-  userAgent    String?
-  ipAddress    String?
-  
-  // Relationships
-  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  
-  @@index([memberId, sessionStart])
-  @@index([sessionStart])
-  @@map("user_sessions")
+enum Role {
+  ADMIN
+  STAFF
+  MEMBER
 }
