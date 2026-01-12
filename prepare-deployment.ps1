@@ -10,7 +10,8 @@ Write-Host ""
 # Check if git is initialized
 if (Test-Path .git) {
     Write-Host "✅ Git repository detected" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "⚠️ No git repository found" -ForegroundColor Yellow
     $initGit = Read-Host "Initialize git? (y/n)"
     if ($initGit -eq "y") {
@@ -26,7 +27,8 @@ Write-Host ""
 # Check if frontend is built
 if (Test-Path "frontend/dist") {
     Write-Host "✅ Frontend build exists" -ForegroundColor Green
-} else {
+}
+else {
     Write-Host "⚠️ Frontend not built" -ForegroundColor Yellow
     Write-Host "Building now..." -ForegroundColor Cyan
     Set-Location frontend
@@ -39,8 +41,8 @@ Write-Host ""
 Write-Host "🔐 Generating JWT Secrets for Production..." -ForegroundColor Cyan
 Write-Host ""
 
-$jwtSecret = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object {[char]$_})
-$jwtRefreshSecret = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object {[char]$_})
+$jwtSecret = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
+$jwtRefreshSecret = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object { [char]$_ })
 
 Write-Host "JWT_SECRET:" -ForegroundColor Yellow
 Write-Host $jwtSecret -ForegroundColor White

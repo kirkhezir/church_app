@@ -8,12 +8,14 @@
 ## ✅ Completed Steps
 
 ### 1. Frontend Build
+
 - ✅ TypeScript compiled
 - ✅ Vite build successful
 - ✅ Main bundle: 104.93 kB (optimized)
 - ✅ Total assets: 84.60 kB CSS + JS chunks
 
 ### 2. Configuration Files Created
+
 - ✅ `render.yaml` - Backend deployment config
 - ✅ Environment variables documented
 
@@ -22,10 +24,12 @@
 ## 🔄 In Progress
 
 ### Frontend Deployment (Vercel)
+
 - Installing Vercel CLI...
 - Will deploy to: `https://your-app.vercel.app`
 
 ### Backend Deployment (Render.com)
+
 - Next: Manual deployment via dashboard
 - Configuration ready in `render.yaml`
 
@@ -36,18 +40,21 @@
 ### Frontend to Vercel (Automated)
 
 **After Vercel CLI installs:**
+
 ```bash
 cd frontend
 vercel --prod
 ```
 
 **Follow prompts:**
+
 - Login with GitHub/Email
 - Link to existing project or create new
 - Project name: `church-app`
 - Settings will be detected automatically
 
 **Environment Variables Needed:**
+
 ```env
 VITE_API_URL=https://church-app-backend.onrender.com/api/v1
 VITE_WS_URL=https://church-app-backend.onrender.com
@@ -58,11 +65,13 @@ VITE_WS_URL=https://church-app-backend.onrender.com
 ### Backend to Render.com (Manual)
 
 **Step 1: Create Render Account**
+
 1. Go to https://render.com
 2. Sign up with GitHub
 3. Authorize access to repository
 
 **Step 2: Create Web Service**
+
 1. Dashboard → **New** → **Web Service**
 2. Connect repository: `church_app`
 3. Configure service:
@@ -82,6 +91,7 @@ VITE_WS_URL=https://church-app-backend.onrender.com
 Click **Environment** → **Add Environment Variable**
 
 **Required Variables:**
+
 ```bash
 # Database (from Neon)
 DATABASE_URL=postgresql://neondb_owner:npg_0uVXjU2lSORx@ep-lively-smoke-a1fxbfp5-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
@@ -123,12 +133,14 @@ VAPID_SUBJECT=mailto:admin@singburi-adventist.org
 ```
 
 **Generate New JWT Secrets:**
+
 ```powershell
 # Run in PowerShell:
 -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object {[char]$_})
 ```
 
 **Step 4: Deploy**
+
 - Click **Create Web Service**
 - Wait for build (2-3 minutes)
 - Check logs for errors
@@ -165,12 +177,14 @@ After frontend deploys, update Render environment:
 ## ✅ Verification Checklist
 
 ### Frontend (Vercel)
+
 - [ ] Deployment successful
 - [ ] No build errors
 - [ ] Site loads at production URL
 - [ ] Environment variables set
 
 ### Backend (Render.com)
+
 - [ ] Deployment successful
 - [ ] No build errors
 - [ ] Health check passes: `/health`
@@ -178,6 +192,7 @@ After frontend deploys, update Render environment:
 - [ ] Database connected
 
 ### Integration
+
 - [ ] Frontend can reach backend API
 - [ ] CORS configured correctly
 - [ ] WebSocket connection works
@@ -189,9 +204,11 @@ After frontend deploys, update Render environment:
 ## 🐛 Common Issues & Fixes
 
 ### Issue 1: Frontend can't reach backend
+
 **Cause:** Wrong API URL or CORS misconfigured
 
 **Fix:**
+
 ```bash
 # Check VITE_API_URL in Vercel env vars
 # Check CORS_ORIGIN in Render env vars
@@ -199,9 +216,11 @@ After frontend deploys, update Render environment:
 ```
 
 ### Issue 2: Backend won't start
+
 **Cause:** Missing environment variables
 
 **Fix:**
+
 ```bash
 # Check Render logs for specific error
 # Verify all required env vars are set
@@ -209,9 +228,11 @@ After frontend deploys, update Render environment:
 ```
 
 ### Issue 3: Database connection fails
+
 **Cause:** Connection string format
 
 **Fix:**
+
 ```bash
 # Ensure DATABASE_URL has ?sslmode=require
 # Check Neon database is active
@@ -219,9 +240,11 @@ After frontend deploys, update Render environment:
 ```
 
 ### Issue 4: Image upload fails
+
 **Cause:** Cloudinary credentials
 
 **Fix:**
+
 ```bash
 # Verify CLOUDINARY_CLOUD_NAME is correct
 # Check API_KEY and API_SECRET match

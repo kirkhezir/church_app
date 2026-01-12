@@ -25,6 +25,7 @@ I've prepared everything - you just need to complete these final manual steps.
 #### **Option A: GitHub Integration (Easiest)**
 
 1. **Commit your code** (if not already):
+
    ```powershell
    git add .
    git commit -m "Ready for production deployment"
@@ -32,23 +33,27 @@ I've prepared everything - you just need to complete these final manual steps.
    ```
 
 2. **Go to Vercel:**
+
    - Open: https://vercel.com/new
    - Sign in with GitHub
    - Click **Import Project**
    - Select your `church_app` repository
 
 3. **Configure Project:**
+
    - Framework Preset: **Vite** (auto-detected)
    - Root Directory: `frontend`
    - Build Command: `npm run build` (auto-detected)
    - Output Directory: `dist` (auto-detected)
 
 4. **Add Environment Variables:**
+
    ```
    VITE_API_URL=https://church-app-backend.onrender.com/api/v1
    VITE_WS_URL=https://church-app-backend.onrender.com
    ```
-   *(Note: Use temporary URL for now, update after backend deploys)*
+
+   _(Note: Use temporary URL for now, update after backend deploys)_
 
 5. **Click Deploy!**
    - Wait 1-2 minutes
@@ -67,16 +72,19 @@ vercel --prod # Deploy to production
 ### STEP 2: Deploy Backend to Render.com (10 minutes)
 
 1. **Go to Render:**
+
    - Open: https://render.com (already opened in browser)
    - Sign up with GitHub
    - Authorize access to your repository
 
 2. **Create Web Service:**
+
    - Click **New** → **Web Service**
    - Connect your `church_app` repository
    - Click **Connect**
 
 3. **Configure Service:**
+
    ```
    Name: church-app-backend
    Region: Singapore (or closest to you)
@@ -133,6 +141,7 @@ vercel --prod # Deploy to production
    ```
 
    **Generate NEW JWT Secrets:**
+
    ```powershell
    # Run this twice in PowerShell:
    -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 64 | ForEach-Object {[char]$_})
@@ -175,10 +184,12 @@ vercel --prod # Deploy to production
 1. **Open your Vercel URL:** `https://your-app.vercel.app`
 
 2. **Login:**
+
    - Email: `admin@singburi-adventist.org`
    - Password: `Admin123!`
 
 3. **Test Features:**
+
    - ✅ Dashboard loads
    - ✅ Create event with image upload
    - ✅ View member directory
@@ -186,6 +197,7 @@ vercel --prod # Deploy to production
    - ✅ Test real-time notifications
 
 4. **Check Backend Health:**
+
    - Visit: `https://church-app-backend.onrender.com/health`
    - Should show: `{"status":"healthy","timestamp":"..."}`
 
@@ -199,12 +211,15 @@ vercel --prod # Deploy to production
 ## 🐛 Troubleshooting
 
 ### Frontend can't reach backend
+
 **Check:**
+
 1. VITE_API_URL is correct (no trailing slash)
 2. Backend is running (visit /health endpoint)
 3. CORS_ORIGIN matches frontend URL
 
 **Fix:**
+
 ```
 Vercel: Update VITE_API_URL
 Render: Update CORS_ORIGIN
@@ -212,24 +227,31 @@ Redeploy both services
 ```
 
 ### Backend won't start
+
 **Check Render logs:**
+
 1. Dashboard → Your Service → **Logs**
 2. Look for errors
 
 **Common issues:**
+
 - Missing environment variables
 - DATABASE_URL format wrong
 - JWT_SECRET not set
 
 ### Database connection fails
+
 **Fix:**
+
 ```
 Make sure DATABASE_URL has ?sslmode=require
 Check Neon database is active at console.neon.tech
 ```
 
 ### Image upload fails
+
 **Check:**
+
 1. Cloudinary credentials in Render
 2. Frontend can reach /upload endpoints
 3. Check browser console for errors
@@ -251,7 +273,7 @@ Backend:
   Build: Automatic on git push
   Cost: $0/month
   Note: Sleeps after 15 min inactivity
-        First request takes ~50s to wake
+    First request takes ~50s to wake
 
 Database:
   Platform: Neon PostgreSQL
@@ -275,14 +297,17 @@ Total: $0/month forever!
 ### Optional Improvements
 
 1. **Custom Domain** (Vercel):
+
    - Add your domain: `app.singburi-adventist.org`
    - Free SSL included
 
 2. **Real Email Service** (Replace Ethereal):
+
    - Options: Brevo (300/day free), SendGrid (100/day free)
    - Update SMTP settings in Render
 
 3. **Monitoring**:
+
    - Render provides basic metrics
    - Vercel shows analytics
    - Cloudinary has usage dashboard
@@ -296,14 +321,17 @@ Total: $0/month forever!
 ## 📞 Need Help?
 
 **Vercel Support:**
+
 - Docs: https://vercel.com/docs
 - Support: https://vercel.com/support
 
 **Render Support:**
+
 - Docs: https://render.com/docs
 - Community: https://render.com/community
 
 **Your Current Credentials:**
+
 - Admin: admin@singburi-adventist.org / Admin123!
 - Staff: staff@singburi-adventist.org / Staff123!
 
@@ -314,6 +342,7 @@ Total: $0/month forever!
 Just follow the steps above and your church app will be live in ~15 minutes!
 
 **Summary:**
+
 1. ✅ Push to GitHub (if needed)
 2. 🚀 Deploy frontend on Vercel (5 min)
 3. 🌐 Deploy backend on Render (10 min)
