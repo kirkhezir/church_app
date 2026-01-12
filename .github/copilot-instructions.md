@@ -82,4 +82,105 @@ When implementing features, leverage available MCP servers for enhanced developm
 - 001-full-stack-web: Added TypeScript 5.x (Node.js 20.x LTS for backend, React 18.x for frontend)
 
 <!-- MANUAL ADDITIONS START -->
+
+## 🔐 Security & Credential Management Guidelines
+
+**CRITICAL: Never expose credentials in any committed files.**
+
+### Golden Rules
+
+1. **NEVER commit credentials to Git**
+
+   - ❌ No passwords, API keys, secrets, or tokens in code
+   - ❌ No credentials in markdown documentation
+   - ❌ No credentials in config files (except `.env.example` with placeholders)
+   - ✅ Always use environment variables via `.env` files
+
+2. **Always use `.env` files (gitignored)**
+
+   - ✅ Store ALL secrets in `backend/.env` (already in `.gitignore`)
+   - ✅ Use `.env.example` files with placeholder values only
+   - ✅ Never commit actual `.env` files
+   - ✅ Document required variables without exposing values
+
+3. **Use placeholders in documentation**
+
+   ```bash
+   # ❌ WRONG - Real credential
+   CLOUDINARY_API_SECRET=x2_9z0J8h6pP5tCoqUDMsI7L03Y
+
+   # ✅ CORRECT - Placeholder
+   CLOUDINARY_API_SECRET=<your-api-secret-here>
+   ```
+
+4. **Separate development from production**
+   - ✅ Different credentials for dev/staging/production
+   - ✅ Never reuse production secrets in development
+   - ✅ Rotate credentials when environment changes
+
+### Credential Types & Sensitivity
+
+| Type               | Sensitivity | Examples              | Storage           |
+| ------------------ | ----------- | --------------------- | ----------------- |
+| Database passwords | 🔴 CRITICAL | PostgreSQL, Neon      | `.env` only       |
+| API secrets        | 🔴 CRITICAL | Cloudinary, Stripe    | `.env` only       |
+| JWT secrets        | 🔴 CRITICAL | Token signing keys    | `.env` only       |
+| Private keys       | 🔴 CRITICAL | VAPID, SSH            | `.env` only       |
+| API keys           | 🟡 HIGH     | Service identifiers   | `.env` only       |
+| SMTP passwords     | 🟡 HIGH     | Email credentials     | `.env` only       |
+| Test credentials   | 🟢 LOW      | Seeded user passwords | Code (acceptable) |
+
+### Protected Files (Never Commit)
+
+Add to `.gitignore`:
+
+```gitignore
+# Credentials & Secrets
+.env
+.env.local
+.env.*.local
+*.secrets
+*.credentials
+production-env-vars.txt
+token.txt
+*-secrets.json
+
+# Scripts with hardcoded credentials
+*-deployment.ps1
+setup-*-database.ps1
+```
+
+### Safe Documentation Practices
+
+✅ **DO:**
+
+- Use `<placeholder>` or `<your-value-here>` syntax
+- Reference where to obtain credentials (dashboard links)
+- Provide instructions without actual values
+- Use `.env.example` files with fake/placeholder data
+
+❌ **DON'T:**
+
+- Include real connection strings in markdown
+- Show actual API keys in setup guides
+- Copy-paste credentials from `.env` to docs
+- Leave credentials in commit messages
+
+### Security Checklist
+
+Before committing:
+
+- [ ] No credentials in staged files (`git diff --cached`)
+- [ ] Check for API keys, passwords, tokens
+- [ ] Verify `.env` is gitignored
+- [ ] Documentation uses placeholders only
+- [ ] No connection strings with real passwords
+
+### Tools & Resources
+
+- **Secret Scanning:** Use GitHub secret scanning (auto-enabled)
+- **Pre-commit Hooks:** Install git-secrets or similar
+- **Security Guide:** `SECURITY_GUIDE.md`
+- **Incident Response:** `SECURITY_INCIDENT_REPORT.md`
+
 <!-- MANUAL ADDITIONS END -->
