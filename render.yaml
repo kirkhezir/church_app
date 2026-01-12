@@ -1,0 +1,58 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: church-app-backend
+    runtime: node
+    region: singapore
+    plan: free
+    branch: main
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRY
+        value: 15m
+      - key: JWT_REFRESH_EXPIRY
+        value: 7d
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false  # Set manually
+      - key: CLOUDINARY_API_KEY
+        sync: false  # Set manually
+      - key: CLOUDINARY_API_SECRET
+        sync: false  # Set manually
+      - key: SMTP_HOST
+        value: smtp.ethereal.email
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_SECURE
+        value: false
+      - key: SMTP_USER
+        sync: false  # Set manually
+      - key: SMTP_PASS
+        sync: false  # Set manually
+      - key: SMTP_FROM_NAME
+        value: Sing Buri Adventist Center
+      - key: SMTP_FROM_EMAIL
+        value: noreply@singburi-adventist.org
+      - key: SESSION_TIMEOUT_HOURS
+        value: 24
+      - key: ACCOUNT_LOCKOUT_DURATION_MINUTES
+        value: 15
+      - key: MAX_FAILED_LOGIN_ATTEMPTS
+        value: 5
+      - key: VAPID_PUBLIC_KEY
+        sync: false  # Set manually
+      - key: VAPID_PRIVATE_KEY
+        sync: false  # Set manually
+      - key: VAPID_SUBJECT
+        value: mailto:admin@singburi-adventist.org
