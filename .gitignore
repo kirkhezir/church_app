@@ -78,10 +78,15 @@ production-env-vars.txt
 *.credentials
 token.txt
 test-login.json
+render-env-vars.txt
+
+# VS Code MCP config (may contain API keys)
+.vscode/mcp.json
 
 # Deployment helper scripts with secrets
 prepare-deployment.ps1
 setup-neon-database.ps1
+setup-heliohost-database.ps1
 
 # Documentation with credentials (use .example versions instead)
 DEPLOY_NOW.md
@@ -91,5 +96,4 @@ CLOUDINARY_SETUP_COMPLETE.md
 NEON_SETUP_STEPS.md
 NEON_DATABASE_SETUP.md
 NEON_QUICK_START.md
-
-render-env-vars.txt
+HELIOHOST_SETUP_GUIDE.md

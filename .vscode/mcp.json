@@ -1,0 +1,28 @@
+{
+  "servers": {
+    "upstash/context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
+      }
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"],
+      "type": "stdio"
+    },
+    "Vercel": {
+      "url": "https://mcp.vercel.com",
+      "type": "http"
+    },
+    "render": {
+      "url": "https://mcp.render.com/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "${env:RENDER_API_KEY}"
+      }
+    }
+  },
+  "inputs": []
+}

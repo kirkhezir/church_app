@@ -85,6 +85,8 @@ When implementing features, leverage available MCP servers for enhanced developm
 
 ## 🔐 Security & Credential Management Guidelines
 
+**⚠️ CRITICAL: This file MUST always be included in context when working on this project.**
+
 **CRITICAL: Never expose credentials in any committed files.**
 
 ### Golden Rules
@@ -94,6 +96,8 @@ When implementing features, leverage available MCP servers for enhanced developm
    - ❌ No passwords, API keys, secrets, or tokens in code
    - ❌ No credentials in markdown documentation
    - ❌ No credentials in config files (except `.env.example` with placeholders)
+   - ❌ No credentials in `.vscode/mcp.json` - use environment variable references
+   - ❌ No credentials in terminal output that gets logged
    - ✅ Always use environment variables via `.env` files
 
 2. **Always use `.env` files (gitignored)**
@@ -118,6 +122,31 @@ When implementing features, leverage available MCP servers for enhanced developm
    - ✅ Never reuse production secrets in development
    - ✅ Rotate credentials when environment changes
 
+### VS Code MCP Configuration Security
+
+**IMPORTANT:** The `.vscode/mcp.json` file should NEVER contain hardcoded API keys.
+
+```jsonc
+// ❌ WRONG - Hardcoded credential
+{
+  "headers": {
+    "Authorization": "rnd_actualApiKeyHere123"
+  }
+}
+
+// ✅ CORRECT - Environment variable reference
+{
+  "headers": {
+    "Authorization": "${env:RENDER_API_KEY}"
+  }
+}
+```
+
+**Required Environment Variables for MCP:**
+- `CONTEXT7_API_KEY` - Context7 MCP server API key
+- `RENDER_API_KEY` - Render.com API key (format: `rnd_xxx`)
+- Vercel uses browser-based OAuth (no API key needed)
+
 ### Credential Types & Sensitivity
 
 | Type               | Sensitivity | Examples              | Storage           |
@@ -126,13 +155,14 @@ When implementing features, leverage available MCP servers for enhanced developm
 | API secrets        | 🔴 CRITICAL | Cloudinary, Stripe    | `.env` only       |
 | JWT secrets        | 🔴 CRITICAL | Token signing keys    | `.env` only       |
 | Private keys       | 🔴 CRITICAL | VAPID, SSH            | `.env` only       |
+| MCP API keys       | 🔴 CRITICAL | Render, Context7      | System env vars   |
 | API keys           | 🟡 HIGH     | Service identifiers   | `.env` only       |
 | SMTP passwords     | 🟡 HIGH     | Email credentials     | `.env` only       |
 | Test credentials   | 🟢 LOW      | Seeded user passwords | Code (acceptable) |
 
 ### Protected Files (Never Commit)
 
-Add to `.gitignore`:
+These files are in `.gitignore`:
 
 ```gitignore
 # Credentials & Secrets
@@ -142,12 +172,20 @@ Add to `.gitignore`:
 *.secrets
 *.credentials
 production-env-vars.txt
+render-env-vars.txt
 token.txt
 *-secrets.json
+
+# VS Code config with API keys
+.vscode/mcp.json
 
 # Scripts with hardcoded credentials
 *-deployment.ps1
 setup-*-database.ps1
+setup-heliohost-database.ps1
+
+# Documentation that may contain credentials
+HELIOHOST_SETUP_GUIDE.md
 ```
 
 ### Safe Documentation Practices
@@ -165,6 +203,15 @@ setup-*-database.ps1
 - Show actual API keys in setup guides
 - Copy-paste credentials from `.env` to docs
 - Leave credentials in commit messages
+- Create helper files with credentials (e.g., `render-env-vars.txt`)
+
+### When Creating New Files
+
+**ALWAYS check if the file might contain credentials:**
+1. Setup scripts → Add to `.gitignore`
+2. Environment configs → Use `.example` suffix with placeholders
+3. MCP configs → Use `${env:VAR_NAME}` syntax
+4. Deployment docs → Use `<placeholder>` syntax only
 
 ### Security Checklist
 
@@ -175,6 +222,8 @@ Before committing:
 - [ ] Verify `.env` is gitignored
 - [ ] Documentation uses placeholders only
 - [ ] No connection strings with real passwords
+- [ ] `.vscode/mcp.json` uses env var references only
+- [ ] No new credential-containing files created
 
 ### Tools & Resources
 

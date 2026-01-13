@@ -111,6 +111,18 @@ export class Server {
    * Configure routes
    */
   private configureRoutes(): void {
+    // Root endpoint - Basic health check for Render/deployment platforms
+    this.app.get('/', (_req, res) => {
+      res.status(200).json({
+        status: 'ok',
+        service: 'church-app-backend',
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        health: '/health',
+        docs: '/api-docs'
+      });
+    });
+
     // Health check endpoints
     this.app.use('/health', healthRoutes);
 
