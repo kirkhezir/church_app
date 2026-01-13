@@ -96,7 +96,9 @@ export function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/v1/contact', {
+      // Use environment variable for API URL, fallback to relative path for development
+      const apiUrl = import.meta.env.VITE_API_URL || '/api/v1';
+      const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
