@@ -1,0 +1,43 @@
+# ============================================
+# RENDER.COM ENVIRONMENT VARIABLES
+# ============================================
+# Copy these to Render Dashboard → Environment
+# ============================================
+
+# Database
+DATABASE_URL=postgresql://neondb_owner:npg_O8WMKYnCi0kt@ep-lively-smoke-a1fxbfp5-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+
+# JWT Authentication
+JWT_SECRET=nI3865g1HdUAzjW2XFeRsJMbDhYufO0c7GLEyaVq9ZltPoBTx4NwKkmiSvQCpr
+JWT_REFRESH_SECRET=Ol0qI4z8idZV5Pt3wG2N7xvh6pRMbeDJ1EykQgauKFWmojnrfsSBCcAUHYXTL9
+JWT_ACCESS_EXPIRY=15m
+JWT_REFRESH_EXPIRY=7d
+
+# SMTP Email
+SMTP_HOST=smtp.ethereal.email
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=tmqew2hn5rge7xpx@ethereal.email
+SMTP_PASS=5Rvz6cHD5m4eQHR8dV
+SMTP_FROM_NAME=Sing Buri Adventist Center
+SMTP_FROM_EMAIL=noreply@singburi-adventist.org
+
+# Application
+PORT=3000
+NODE_ENV=production
+CORS_ORIGIN=https://church-app-frontend-tau.vercel.app
+
+# Session
+SESSION_TIMEOUT_HOURS=24
+ACCOUNT_LOCKOUT_DURATION_MINUTES=15
+MAX_FAILED_LOGIN_ATTEMPTS=5
+
+# VAPID Keys
+VAPID_PUBLIC_KEY=BMDWJbsFTf_Yxm4dqDA0s2BxrkI2BpbaJXvtLsALEG_bUwah0ZPWmt86QAKwXNtkpOMal5eLqddVh4oRzlyKJpk
+VAPID_PRIVATE_KEY=YnuxtbBaujjGC25MeuCBoaK2wpzHFp-tzB00-NCeW_4
+VAPID_SUBJECT=mailto:admin@singburi-adventist.org
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=remnants
+CLOUDINARY_API_KEY=219832847847538
+CLOUDINARY_API_SECRET=doMDtlN4piKrqYdqw7mgxRtERNE

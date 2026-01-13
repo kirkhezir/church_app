@@ -373,7 +373,7 @@ export class UploadController {
    * GET /api/v1/upload/usage
    * Get Cloudinary usage statistics (Admin only)
    */
-  getUsage = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  getUsage = async (_req: Request, res: Response, _next: NextFunction): Promise<void> => {
     try {
       if (!cloudinaryService.isReady()) {
         res.status(503).json({

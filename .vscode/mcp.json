@@ -1,24 +1,28 @@
 {
-	"servers": {
-		"upstash/context7": {
-			"type": "http",
-			"url": "https://mcp.context7.com/mcp",
-			"headers": {
-				"CONTEXT7_API_KEY": "ctx7sk-6dab4a04-cca3-448b-a241-56ca2e889277"
-			}
-		},
-		"shadcn": {
-			"command": "npx",
-			"args": [
-				"shadcn@latest",
-				"mcp"
-			],
-			"type": "stdio"
-		},
-		"Vercel": {
-			"url": "https://mcp.vercel.com",
-			"type": "http"
-		}
-	},
-	"inputs": []
+  "servers": {
+    "upstash/context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-6dab4a04-cca3-448b-a241-56ca2e889277"
+      }
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"],
+      "type": "stdio"
+    },
+    "Vercel": {
+      "url": "https://mcp.vercel.com",
+      "type": "http"
+    },
+    "render": {
+      "url": "https://mcp.render.com/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "rnd_pXiS9uQCcXwEbZzdRmL2jkK3oze0"
+      }
+    }
+  },
+  "inputs": []
 }

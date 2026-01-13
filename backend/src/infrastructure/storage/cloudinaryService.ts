@@ -115,7 +115,7 @@ export class CloudinaryService {
           },
           {
             quality: transformation.quality || DEFAULT_TRANSFORMATION.quality,
-            fetch_format: transformation.format || DEFAULT_TRANSFORMATION.fetch_format,
+            fetch_format: (transformation as any).format || DEFAULT_TRANSFORMATION.fetch_format,
           },
         ],
         tags: ['church-app', ...tags],
