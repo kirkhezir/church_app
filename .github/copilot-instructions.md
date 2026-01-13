@@ -143,6 +143,7 @@ When implementing features, leverage available MCP servers for enhanced developm
 ```
 
 **Required Environment Variables for MCP:**
+
 - `CONTEXT7_API_KEY` - Context7 MCP server API key
 - `RENDER_API_KEY` - Render.com API key (format: `rnd_xxx`)
 - Vercel uses browser-based OAuth (no API key needed)
@@ -208,6 +209,7 @@ HELIOHOST_SETUP_GUIDE.md
 ### When Creating New Files
 
 **ALWAYS check if the file might contain credentials:**
+
 1. Setup scripts → Add to `.gitignore`
 2. Environment configs → Use `.example` suffix with placeholders
 3. MCP configs → Use `${env:VAR_NAME}` syntax

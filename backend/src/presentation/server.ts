@@ -119,7 +119,7 @@ export class Server {
         version: '1.0.0',
         timestamp: new Date().toISOString(),
         health: '/health',
-        docs: '/api-docs'
+        docs: '/api-docs',
       });
     });
 

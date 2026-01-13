@@ -36,7 +36,7 @@ class PrismaClientSingleton {
         adapter,
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
       }) as ExtendedPrismaClient;
-      
+
       // Add camelCase aliases for snake_case model names
       client.member = client.members;
       client.event = client.events;
@@ -46,7 +46,7 @@ class PrismaClientSingleton {
       client.auditLog = client.audit_logs;
       client.pushSubscription = client.push_subscriptions;
       client.memberAnnouncementView = client.member_announcement_views;
-      
+
       this.instance = client;
     }
     return this.instance;
