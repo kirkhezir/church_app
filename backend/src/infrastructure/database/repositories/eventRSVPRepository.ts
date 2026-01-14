@@ -11,11 +11,11 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Find RSVP by ID
    */
   async findById(id: string): Promise<PrismaEventRSVP | null> {
-    return (await prisma.eventRSVP.findUnique({
+    return (await prisma.event_rsvps.findUnique({
       where: { id },
       include: {
-        event: true,
-        member: {
+        events: true,
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -31,7 +31,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Find RSVP by event and member
    */
   async findByEventAndMember(eventId: string, memberId: string): Promise<PrismaEventRSVP | null> {
-    return (await prisma.eventRSVP.findUnique({
+    return (await prisma.event_rsvps.findUnique({
       where: {
         eventId_memberId: {
           eventId,
@@ -39,8 +39,8 @@ export class EventRSVPRepository implements IEventRSVPRepository {
         },
       },
       include: {
-        event: true,
-        member: {
+        events: true,
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -56,10 +56,10 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Find all RSVPs for an event
    */
   async findByEventId(eventId: string): Promise<PrismaEventRSVP[]> {
-    return (await prisma.eventRSVP.findMany({
+    return (await prisma.event_rsvps.findMany({
       where: { eventId },
       include: {
-        member: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -77,12 +77,12 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Find all RSVPs for a member
    */
   async findByMemberId(memberId: string): Promise<PrismaEventRSVP[]> {
-    return (await prisma.eventRSVP.findMany({
+    return (await prisma.event_rsvps.findMany({
       where: { memberId },
       include: {
-        event: {
+        events: {
           include: {
-            creator: {
+            members: {
               select: {
                 id: true,
                 firstName: true,
@@ -100,7 +100,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Get count of confirmed RSVPs for an event
    */
   async getConfirmedCount(eventId: string): Promise<number> {
-    return await prisma.eventRSVP.count({
+    return await prisma.event_rsvps.count({
       where: {
         eventId,
         status: 'CONFIRMED',
@@ -117,16 +117,17 @@ export class EventRSVPRepository implements IEventRSVPRepository {
     memberId: string;
     status: 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
   }): Promise<PrismaEventRSVP> {
-    return (await prisma.eventRSVP.create({
+    return (await prisma.event_rsvps.create({
       data: {
         id: data.id,
         eventId: data.eventId,
         memberId: data.memberId,
         status: data.status,
+        updatedAt: new Date(),
       },
       include: {
-        event: true,
-        member: {
+        events: true,
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -145,15 +146,15 @@ export class EventRSVPRepository implements IEventRSVPRepository {
     id: string,
     status: 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED'
   ): Promise<PrismaEventRSVP> {
-    return (await prisma.eventRSVP.update({
+    return (await prisma.event_rsvps.update({
       where: { id },
       data: {
         status,
         updatedAt: new Date(),
       },
       include: {
-        event: true,
-        member: {
+        events: true,
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -169,7 +170,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Delete RSVP
    */
   async delete(id: string): Promise<void> {
-    await prisma.eventRSVP.delete({
+    await prisma.event_rsvps.delete({
       where: { id },
     });
   }
@@ -178,7 +179,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
    * Delete RSVP by event and member
    */
   async deleteByEventAndMember(eventId: string, memberId: string): Promise<void> {
-    await prisma.eventRSVP.deleteMany({
+    await prisma.event_rsvps.deleteMany({
       where: {
         eventId,
         memberId,

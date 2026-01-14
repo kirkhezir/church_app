@@ -61,7 +61,7 @@ export class RSVPToEvent {
 
     // Check if event has already started or ended
     const now = new Date();
-    if (event.startDate < now) {
+    if (event.startDateTime < now) {
       throw new Error('Cannot RSVP to an event that has already started');
     }
 
@@ -156,8 +156,8 @@ export class RSVPToEvent {
         {
           id: event.id,
           title: event.title,
-          startDate: event.startDate,
-          endDate: event.endDate,
+          startDate: event.startDateTime,
+          endDate: event.endDateTime,
           location: event.location,
           category: event.category,
         },

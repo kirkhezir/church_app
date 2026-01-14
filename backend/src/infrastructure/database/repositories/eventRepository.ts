@@ -40,7 +40,7 @@ export class EventRepository implements IEventRepository {
         event_rsvps: {
           where: { status: 'CONFIRMED' },
           include: {
-            member: {
+            members: {
               select: {
                 id: true,
                 firstName: true,
