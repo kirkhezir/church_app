@@ -2,6 +2,7 @@ import { PrismaClient, Role, EventCategory, Priority, RSVPStatus } from '@prisma
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { randomUUID } from 'crypto';
 
 // Load environment variables
 dotenv.config();
@@ -65,22 +66,24 @@ async function main(): Promise<void> {
   // Clear existing data (in development only)
   if (process.env.NODE_ENV !== 'production') {
     console.log('🗑️  Clearing existing data...');
-    await prisma.userSession.deleteMany();
-    await prisma.pushSubscription.deleteMany();
-    await prisma.auditLog.deleteMany();
-    await prisma.memberAnnouncementView.deleteMany();
-    await prisma.message.deleteMany();
-    await prisma.announcement.deleteMany();
-    await prisma.eventRSVP.deleteMany();
-    await prisma.event.deleteMany();
-    await prisma.member.deleteMany();
+    await prisma.user_sessions.deleteMany();
+    await prisma.push_subscriptions.deleteMany();
+    await prisma.audit_logs.deleteMany();
+    await prisma.member_announcement_views.deleteMany();
+    await prisma.messages.deleteMany();
+    await prisma.announcements.deleteMany();
+    await prisma.event_rsvps.deleteMany();
+    await prisma.events.deleteMany();
+    await prisma.members.deleteMany();
   }
 
   // Create admin user
   console.log('👤 Creating admin user...');
   const adminPasswordHash = await bcrypt.hash('Admin123!', 10);
-  const admin = await prisma.member.create({
+  const admin = await prisma.members.create({
     data: {
+      id: randomUUID(),
+      updatedAt: new Date(),
       email: 'admin@singburi-adventist.org',
       passwordHash: adminPasswordHash,
       firstName: 'Admin',
@@ -104,8 +107,10 @@ async function main(): Promise<void> {
   // Create staff user
   console.log('👤 Creating staff user...');
   const staffPasswordHash = await bcrypt.hash('Staff123!', 10);
-  const staff = await prisma.member.create({
+  const staff = await prisma.members.create({
     data: {
+      id: randomUUID(),
+      updatedAt: new Date(),
       email: 'staff@singburi-adventist.org',
       passwordHash: staffPasswordHash,
       firstName: 'Staff',
@@ -130,8 +135,10 @@ async function main(): Promise<void> {
   const memberPasswordHash = await bcrypt.hash('Member123!', 10);
 
   const members = await Promise.all([
-    prisma.member.create({
+    prisma.members.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         email: 'john.doe@example.com',
         passwordHash: memberPasswordHash,
         firstName: 'John',
@@ -149,8 +156,10 @@ async function main(): Promise<void> {
         emailNotifications: true,
       },
     }),
-    prisma.member.create({
+    prisma.members.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         email: 'jane.smith@example.com',
         passwordHash: memberPasswordHash,
         firstName: 'Jane',
@@ -167,8 +176,10 @@ async function main(): Promise<void> {
         emailNotifications: true,
       },
     }),
-    prisma.member.create({
+    prisma.members.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         email: 'peter.pan@example.com',
         passwordHash: memberPasswordHash,
         firstName: 'Peter',
@@ -219,8 +230,10 @@ async function main(): Promise<void> {
     const birthYear = birthYears[i % birthYears.length];
 
     additionalMembers.push(
-      prisma.member.create({
+      prisma.members.create({
         data: {
+          id: randomUUID(),
+          updatedAt: new Date(),
           email,
           passwordHash: memberPasswordHash,
           firstName,
@@ -257,8 +270,10 @@ async function main(): Promise<void> {
   const nextMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
   const events = await Promise.all([
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Sunday Worship Service',
         description: 'Join us for our weekly worship service with inspiring music and messages.',
         startDateTime: new Date(nextWeek.setHours(10, 0, 0, 0)),
@@ -269,8 +284,10 @@ async function main(): Promise<void> {
         createdById: admin.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Bible Study Group',
         description: 'Deep dive into the Book of Acts. All are welcome!',
         startDateTime: new Date(nextWeek.setHours(19, 0, 0, 0)),
@@ -281,8 +298,10 @@ async function main(): Promise<void> {
         createdById: staff.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Community Outreach Day',
         description: 'Serving our local community with food distribution and clothing donations.',
         startDateTime: new Date(nextMonth.setHours(9, 0, 0, 0)),
@@ -301,8 +320,10 @@ async function main(): Promise<void> {
   const threeWeeks = new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000);
 
   const additionalEvents = await Promise.all([
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Youth Fellowship Night',
         description:
           'Fun games, music, and discussion for our youth members (ages 13-25). Bring a friend!',
@@ -314,8 +335,10 @@ async function main(): Promise<void> {
         createdById: staff.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Sabbath Afternoon Potluck',
         description: 'Join us for a fellowship lunch after service. Please bring a dish to share!',
         startDateTime: new Date(nextWeek.setHours(13, 0, 0, 0)),
@@ -326,8 +349,10 @@ async function main(): Promise<void> {
         createdById: admin.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Prayer Meeting',
         description: 'Mid-week prayer and devotion. Come strengthen your faith with us.',
         startDateTime: new Date(twoWeeks.setHours(19, 0, 0, 0)),
@@ -338,8 +363,10 @@ async function main(): Promise<void> {
         createdById: staff.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Health & Wellness Seminar',
         description:
           'Learn about healthy living principles. Topics include nutrition, exercise, and mental health.',
@@ -351,8 +378,10 @@ async function main(): Promise<void> {
         createdById: admin.id,
       },
     }),
-    prisma.event.create({
+    prisma.events.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: "Women's Ministry Meeting",
         description:
           "Monthly gathering for women. This month's topic: Finding Peace in Busy Times.",
@@ -389,7 +418,7 @@ async function main(): Promise<void> {
       const status = statuses[Math.floor(Math.random() * statuses.length)];
 
       rsvpPromises.push(
-        prisma.eventRSVP
+        prisma.event_rsvps
           .create({
             data: {
               eventId: event.id,
@@ -409,8 +438,10 @@ async function main(): Promise<void> {
   // Create announcements
   console.log('📢 Creating announcements...');
   const announcements = await Promise.all([
-    prisma.announcement.create({
+    prisma.announcements.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Welcome to Our New Church Management System!',
         content: `We are excited to announce the launch of our new church management system. 
         
@@ -425,8 +456,10 @@ Please take a moment to update your profile and explore the features!`,
         authorId: admin.id,
       },
     }),
-    prisma.announcement.create({
+    prisma.announcements.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Upcoming Community Outreach Event',
         content: `Join us next month for our community outreach day! We'll be serving our local community with food distribution and clothing donations. 
 
@@ -440,8 +473,10 @@ What to bring:
         authorId: staff.id,
       },
     }),
-    prisma.announcement.create({
+    prisma.announcements.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Sabbath School Classes Resume',
         content: `Dear church family,
 
@@ -458,8 +493,10 @@ See you on Sabbath!`,
         authorId: admin.id,
       },
     }),
-    prisma.announcement.create({
+    prisma.announcements.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Church Building Maintenance Notice',
         content: `Please be advised that the church building will undergo maintenance work on Monday and Tuesday of next week.
 
@@ -473,8 +510,10 @@ We apologize for any inconvenience and appreciate your understanding.`,
         authorId: admin.id,
       },
     }),
-    prisma.announcement.create({
+    prisma.announcements.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         title: 'Health Screening Available',
         content: `Free health screening will be available after service this Sabbath!
 
@@ -501,7 +540,7 @@ Brought to you by our Health Ministries team. No appointment necessary.
     const numViews = 3 + Math.floor(Math.random() * 10);
     for (let i = 0; i < numViews && i < allMembers.length; i++) {
       viewPromises.push(
-        prisma.memberAnnouncementView
+        prisma.member_announcement_views
           .create({
             data: {
               memberId: allMembers[i].id,
@@ -521,16 +560,18 @@ Brought to you by our Health Ministries team. No appointment necessary.
   // Create sample messages
   console.log('💬 Creating sample messages...');
   const messagePromises = [
-    prisma.message.create({
+    prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId: members[0].id,
         recipientId: members[1].id,
         subject: 'Welcome to the church!',
         body: 'Hi Jane! Welcome to our church family. Looking forward to getting to know you better! Let me know if you have any questions about our programs.',
       },
     }),
-    prisma.message.create({
+    prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId: members[1].id,
         recipientId: members[0].id,
         subject: 'Re: Welcome to the church!',
@@ -539,16 +580,18 @@ Brought to you by our Health Ministries team. No appointment necessary.
         readAt: new Date(),
       },
     }),
-    prisma.message.create({
+    prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId: admin.id,
         recipientId: staff.id,
         subject: 'Event Planning Meeting',
         body: "Hi, can we schedule a meeting to discuss the upcoming community outreach event? I'd like to review the volunteer list and logistics.",
       },
     }),
-    prisma.message.create({
+    prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId: staff.id,
         recipientId: admin.id,
         subject: 'Re: Event Planning Meeting',
@@ -557,8 +600,9 @@ Brought to you by our Health Ministries team. No appointment necessary.
         readAt: new Date(),
       },
     }),
-    prisma.message.create({
+    prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId: members[2].id,
         recipientId: staff.id,
         subject: 'Question about Bible Study',

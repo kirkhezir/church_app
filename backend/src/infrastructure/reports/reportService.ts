@@ -126,7 +126,7 @@ class ReportService {
    * Generate an events report PDF
    */
   async generateEventsReport(startDate: Date, endDate: Date): Promise<Buffer> {
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: {
         startDateTime: { gte: startDate, lte: endDate },
         deletedAt: null,
@@ -212,7 +212,7 @@ class ReportService {
    * Generate an announcements report PDF
    */
   async generateAnnouncementsReport(startDate: Date, endDate: Date): Promise<Buffer> {
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: {
         createdAt: { gte: startDate, lte: endDate },
         deletedAt: null,
@@ -304,7 +304,7 @@ class ReportService {
    * Generate event attendance report for a specific event
    */
   async generateEventAttendanceReport(eventId: string): Promise<Buffer> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
         creator: { select: { firstName: true, lastName: true } },
@@ -484,3 +484,4 @@ class ReportService {
 
 // Export singleton instance
 export const reportService = new ReportService();
+

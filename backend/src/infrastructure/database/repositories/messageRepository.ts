@@ -4,6 +4,21 @@ import { IMessageRepository } from '../../../domain/interfaces/IMessageRepositor
 import { Message } from '../../../domain/entities/Message';
 
 /**
+ * Transform Prisma message result to API format
+ * Renames long Prisma relation names to user-friendly names
+ */
+function transformMessage(message: any): any {
+  if (!message) return null;
+  const { members_messages_senderIdTomembers, members_messages_recipientIdTomembers, ...rest } =
+    message;
+  return {
+    ...rest,
+    sender: members_messages_senderIdTomembers,
+    recipient: members_messages_recipientIdTomembers,
+  };
+}
+
+/**
  * Message Repository Implementation
  * Implements repository interface using Prisma ORM
  */
@@ -30,7 +45,7 @@ export class MessageRepository implements IMessageRepository {
    * Find message by ID
    */
   async findById(id: string): Promise<Message | null> {
-    const message = await prisma.message.findUnique({
+    const message = await prisma.messages.findUnique({
       where: { id },
     });
 
@@ -50,7 +65,7 @@ export class MessageRepository implements IMessageRepository {
   ): Promise<Message[]> {
     const { unreadOnly = false, skip = 0, take = 20 } = options || {};
 
-    const messages = await prisma.message.findMany({
+    const messages = await prisma.messages.findMany({
       where: {
         recipientId: userId,
         deletedByRecipient: false,
@@ -76,7 +91,7 @@ export class MessageRepository implements IMessageRepository {
   ): Promise<Message[]> {
     const { skip = 0, take = 20 } = options || {};
 
-    const messages = await prisma.message.findMany({
+    const messages = await prisma.messages.findMany({
       where: {
         senderId: userId,
         deletedBySender: false,
@@ -93,7 +108,7 @@ export class MessageRepository implements IMessageRepository {
    * Count inbox messages for a user
    */
   async countInbox(userId: string, unreadOnly?: boolean): Promise<number> {
-    return prisma.message.count({
+    return prisma.messages.count({
       where: {
         recipientId: userId,
         deletedByRecipient: false,
@@ -106,7 +121,7 @@ export class MessageRepository implements IMessageRepository {
    * Count sent messages for a user
    */
   async countSent(userId: string): Promise<number> {
-    return prisma.message.count({
+    return prisma.messages.count({
       where: {
         senderId: userId,
         deletedBySender: false,
@@ -118,7 +133,7 @@ export class MessageRepository implements IMessageRepository {
    * Count unread messages for a user
    */
   async countUnread(userId: string): Promise<number> {
-    return prisma.message.count({
+    return prisma.messages.count({
       where: {
         recipientId: userId,
         deletedByRecipient: false,
@@ -131,7 +146,7 @@ export class MessageRepository implements IMessageRepository {
    * Create new message
    */
   async create(message: Message): Promise<Message> {
-    const created = await prisma.message.create({
+    const created = await prisma.messages.create({
       data: {
         id: message.id,
         senderId: message.senderId,
@@ -153,7 +168,7 @@ export class MessageRepository implements IMessageRepository {
    * Update message
    */
   async update(message: Message): Promise<Message> {
-    const updated = await prisma.message.update({
+    const updated = await prisma.messages.update({
       where: { id: message.id },
       data: {
         isRead: message.isRead,
@@ -170,7 +185,7 @@ export class MessageRepository implements IMessageRepository {
    * Mark message as read
    */
   async markAsRead(id: string): Promise<Message | null> {
-    const message = await prisma.message.update({
+    const message = await prisma.messages.update({
       where: { id },
       data: {
         isRead: true,
@@ -185,7 +200,7 @@ export class MessageRepository implements IMessageRepository {
    * Soft delete message for user
    */
   async softDelete(id: string, userId: string): Promise<Message | null> {
-    const message = await prisma.message.findUnique({
+    const message = await prisma.messages.findUnique({
       where: { id },
     });
 
@@ -206,7 +221,7 @@ export class MessageRepository implements IMessageRepository {
       return null; // User is not a participant
     }
 
-    const updated = await prisma.message.update({
+    const updated = await prisma.messages.update({
       where: { id },
       data: updateData,
     });
@@ -222,13 +237,13 @@ export class MessageRepository implements IMessageRepository {
     sender: { id: string; firstName: string; lastName: string };
     recipient: { id: string; firstName: string; lastName: string };
   } | null> {
-    const result = await prisma.message.findUnique({
+    const result = await prisma.messages.findUnique({
       where: { id },
       include: {
-        sender: {
+        members_messages_senderIdTomembers: {
           select: { id: true, firstName: true, lastName: true },
         },
-        recipient: {
+        members_messages_recipientIdTomembers: {
           select: { id: true, firstName: true, lastName: true },
         },
       },
@@ -240,8 +255,8 @@ export class MessageRepository implements IMessageRepository {
 
     return {
       message: this.toDomain(result),
-      sender: result.sender,
-      recipient: result.recipient,
+      sender: result.members_messages_senderIdTomembers,
+      recipient: result.members_messages_recipientIdTomembers,
     };
   }
 
@@ -270,14 +285,14 @@ export class MessageRepository implements IMessageRepository {
   > {
     const { unreadOnly = false, skip = 0, take = 20 } = options || {};
 
-    const messages = await prisma.message.findMany({
+    const messages = await prisma.messages.findMany({
       where: {
         recipientId: userId,
         deletedByRecipient: false,
         ...(unreadOnly ? { isRead: false } : {}),
       },
       include: {
-        sender: {
+        members_messages_senderIdTomembers: {
           select: {
             id: true,
             firstName: true,
@@ -296,12 +311,12 @@ export class MessageRepository implements IMessageRepository {
     return messages.map((m: (typeof messages)[0]) => ({
       message: this.toDomain(m),
       sender: {
-        id: m.sender.id,
-        firstName: m.sender.firstName,
-        lastName: m.sender.lastName,
-        email: m.sender.email,
-        phone: m.sender.phone,
-        privacySettings: m.sender.privacySettings as {
+        id: m.members_messages_senderIdTomembers.id,
+        firstName: m.members_messages_senderIdTomembers.firstName,
+        lastName: m.members_messages_senderIdTomembers.lastName,
+        email: m.members_messages_senderIdTomembers.email,
+        phone: m.members_messages_senderIdTomembers.phone,
+        privacySettings: m.members_messages_senderIdTomembers.privacySettings as {
           showPhone: boolean;
           showEmail: boolean;
           showAddress: boolean;
@@ -334,13 +349,13 @@ export class MessageRepository implements IMessageRepository {
   > {
     const { skip = 0, take = 20 } = options || {};
 
-    const messages = await prisma.message.findMany({
+    const messages = await prisma.messages.findMany({
       where: {
         senderId: userId,
         deletedBySender: false,
       },
       include: {
-        recipient: {
+        members_messages_recipientIdTomembers: {
           select: {
             id: true,
             firstName: true,
@@ -359,12 +374,12 @@ export class MessageRepository implements IMessageRepository {
     return messages.map((m: (typeof messages)[0]) => ({
       message: this.toDomain(m),
       recipient: {
-        id: m.recipient.id,
-        firstName: m.recipient.firstName,
-        lastName: m.recipient.lastName,
-        email: m.recipient.email,
-        phone: m.recipient.phone,
-        privacySettings: m.recipient.privacySettings as {
+        id: m.members_messages_recipientIdTomembers.id,
+        firstName: m.members_messages_recipientIdTomembers.firstName,
+        lastName: m.members_messages_recipientIdTomembers.lastName,
+        email: m.members_messages_recipientIdTomembers.email,
+        phone: m.members_messages_recipientIdTomembers.phone,
+        privacySettings: m.members_messages_recipientIdTomembers.privacySettings as {
           showPhone: boolean;
           showEmail: boolean;
           showAddress: boolean;

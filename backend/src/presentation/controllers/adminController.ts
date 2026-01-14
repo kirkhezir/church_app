@@ -48,7 +48,7 @@ const exportMemberData = new ExportMemberData({
 });
 
 const exportEventData = new ExportEventData({
-  findMany: (options) => prisma.event.findMany(options),
+  findMany: (options) => prisma.events.findMany(options),
 });
 
 /**
@@ -321,3 +321,4 @@ export async function exportEvents(req: Request, res: Response, next: NextFuncti
     next(error);
   }
 }
+

@@ -42,7 +42,7 @@ router.get(
       });
 
       // Get upcoming events count
-      const upcomingEvents = await prisma.event.count({
+      const upcomingEvents = await prisma.events.count({
         where: {
           startDateTime: { gte: now },
           deletedAt: null,
@@ -67,7 +67,7 @@ router.get(
       });
 
       // Get unread messages count
-      const unreadMessages = await prisma.message.count({
+      const unreadMessages = await prisma.messages.count({
         where: {
           isRead: false,
         },
@@ -179,7 +179,7 @@ router.get(
       logger.info(`Fetching attendance data for ${limit} events`);
 
       // Get recent worship events with RSVP counts
-      const worshipEvents = await prisma.event.findMany({
+      const worshipEvents = await prisma.events.findMany({
         where: {
           category: 'WORSHIP',
           startDateTime: { lte: new Date() },
@@ -187,7 +187,7 @@ router.get(
         },
         include: {
           _count: {
-            select: { rsvps: true },
+            select: { event_rsvps: true },
           },
         },
         orderBy: { startDateTime: 'desc' },
@@ -374,7 +374,7 @@ router.get(
       });
 
       // Messages sent this month
-      const messagesSent = await prisma.message.count({
+      const messagesSent = await prisma.messages.count({
         where: {
           sentAt: { gte: startOfMonth },
         },
@@ -473,3 +473,5 @@ router.get(
 );
 
 export default router;
+
+

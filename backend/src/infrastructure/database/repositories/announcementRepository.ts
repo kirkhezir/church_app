@@ -3,6 +3,20 @@ import prisma from '../prismaClient';
 import { IAnnouncementRepository } from '../../../domain/interfaces/IAnnouncementRepository';
 
 /**
+ * Transform Prisma result to API format
+ * Renames 'members' to 'author' and '_count.member_announcement_views' to '_count.views'
+ */
+function transformAnnouncement(announcement: any): any {
+  if (!announcement) return null;
+  const { members, _count, ...rest } = announcement;
+  return {
+    ...rest,
+    author: members,
+    _count: _count ? { views: _count.member_announcement_views ?? 0 } : { views: 0 },
+  };
+}
+
+/**
  * Announcement Repository Implementation
  * Implements repository interface using Prisma ORM
  */
@@ -11,10 +25,10 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Find announcement by ID
    */
   async findById(id: string): Promise<PrismaAnnouncement | null> {
-    const announcement = await prisma.announcement.findUnique({
+    const announcement = await prisma.announcements.findUnique({
       where: { id, deletedAt: null },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -24,26 +38,26 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         },
         _count: {
           select: {
-            views: true,
+            member_announcement_views: true,
           },
         },
       },
     });
 
-    return announcement as never;
+    return transformAnnouncement(announcement) as never;
   }
 
   /**
    * Find all active announcements (not archived)
    */
   async findActive(): Promise<PrismaAnnouncement[]> {
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: {
         deletedAt: null,
         archivedAt: null,
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -53,27 +67,27 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         },
         _count: {
           select: {
-            views: true,
+            member_announcement_views: true,
           },
         },
       },
       orderBy: [{ priority: 'desc' }, { publishedAt: 'desc' }],
     });
 
-    return announcements as never[];
+    return announcements.map(transformAnnouncement) as never[];
   }
 
   /**
    * Find archived announcements
    */
   async findArchived(): Promise<PrismaAnnouncement[]> {
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: {
         deletedAt: null,
         archivedAt: { not: null },
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -83,28 +97,28 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         },
         _count: {
           select: {
-            views: true,
+            member_announcement_views: true,
           },
         },
       },
       orderBy: { archivedAt: 'desc' },
     });
 
-    return announcements as never[];
+    return announcements.map(transformAnnouncement) as never[];
   }
 
   /**
    * Find urgent announcements
    */
   async findUrgent(): Promise<PrismaAnnouncement[]> {
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: {
         deletedAt: null,
         archivedAt: null,
         priority: 'URGENT',
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -116,21 +130,21 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       orderBy: { publishedAt: 'desc' },
     });
 
-    return announcements as never[];
+    return announcements.map(transformAnnouncement) as never[];
   }
 
   /**
    * Find recent announcements
    */
   async findRecent(limit: number = 10): Promise<PrismaAnnouncement[]> {
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: {
         deletedAt: null,
         archivedAt: null,
         publishedAt: { lte: new Date() }, // Only published announcements
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -140,7 +154,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         },
         _count: {
           select: {
-            views: true,
+            member_announcement_views: true,
           },
         },
       },
@@ -148,14 +162,14 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       take: limit,
     });
 
-    return announcements as never[];
+    return announcements.map(transformAnnouncement) as never[];
   }
 
   /**
    * Create new announcement
    */
   async create(announcement: any): Promise<PrismaAnnouncement> {
-    const created = await prisma.announcement.create({
+    const created = await prisma.announcements.create({
       data: {
         id: announcement.id,
         title: announcement.title,
@@ -165,7 +179,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         publishedAt: announcement.publishedAt || new Date(),
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -176,14 +190,14 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       },
     });
 
-    return created as never;
+    return transformAnnouncement(created) as never;
   }
 
   /**
    * Update existing announcement
    */
   async update(announcement: any): Promise<PrismaAnnouncement> {
-    const updated = await prisma.announcement.update({
+    const updated = await prisma.announcements.update({
       where: { id: announcement.id },
       data: {
         title: announcement.title,
@@ -192,7 +206,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         updatedAt: new Date(),
       },
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -203,14 +217,14 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       },
     });
 
-    return updated as never;
+    return transformAnnouncement(updated) as never;
   }
 
   /**
    * Archive announcement
    */
   async archive(id: string): Promise<void> {
-    await prisma.announcement.update({
+    await prisma.announcements.update({
       where: { id },
       data: {
         archivedAt: new Date(),
@@ -222,7 +236,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Delete announcement (soft delete)
    */
   async delete(id: string): Promise<void> {
-    await prisma.announcement.update({
+    await prisma.announcements.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -287,10 +301,10 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   ): Promise<PrismaAnnouncement[]> {
     const skip = (page - 1) * limit;
 
-    const announcements = await prisma.announcement.findMany({
+    const announcements = await prisma.announcements.findMany({
       where: filters,
       include: {
-        author: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -300,7 +314,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         },
         _count: {
           select: {
-            views: true,
+            member_announcement_views: true,
           },
         },
       },
@@ -309,14 +323,14 @@ export class AnnouncementRepository implements IAnnouncementRepository {
       take: limit,
     });
 
-    return announcements as never[];
+    return announcements.map(transformAnnouncement) as never[];
   }
 
   /**
    * Count announcements with filters
    */
   async countWithFilters(filters: any): Promise<number> {
-    return prisma.announcement.count({
+    return prisma.announcements.count({
       where: filters,
     });
   }
@@ -325,7 +339,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Unarchive announcement (restore from archive)
    */
   async unarchive(id: string): Promise<void> {
-    await prisma.announcement.update({
+    await prisma.announcements.update({
       where: { id },
       data: {
         archivedAt: null,
@@ -337,7 +351,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Bulk archive announcements
    */
   async bulkArchive(ids: string[]): Promise<number> {
-    const result = await prisma.announcement.updateMany({
+    const result = await prisma.announcements.updateMany({
       where: {
         id: { in: ids },
         deletedAt: null,
@@ -353,7 +367,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Bulk delete announcements
    */
   async bulkDelete(ids: string[]): Promise<number> {
-    const result = await prisma.announcement.updateMany({
+    const result = await prisma.announcements.updateMany({
       where: {
         id: { in: ids },
       },
@@ -415,10 +429,10 @@ export class AnnouncementRepository implements IAnnouncementRepository {
     const lastViewed = views.length > 0 ? views[0].viewedAt : null;
 
     return {
-      totalViews: uniqueViews,
+      totalmember_announcement_views: uniqueViews,
       firstViewed,
       lastViewed,
-      recentViews: views.slice(0, 10),
+      recentmember_announcement_views: views.slice(0, 10),
     };
   }
 }

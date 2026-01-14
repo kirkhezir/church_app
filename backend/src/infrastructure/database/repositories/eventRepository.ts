@@ -3,6 +3,21 @@ import prisma from '../prismaClient';
 import { IEventRepository } from '../../../domain/interfaces/IEventRepository';
 
 /**
+ * Transform Prisma event result to API format
+ * Renames 'members' to 'creator' and '_count.event_rsvps' to '_count.rsvps'
+ */
+function transformEvent(event: any): any {
+  if (!event) return null;
+  const { members, event_rsvps, _count, ...rest } = event;
+  return {
+    ...rest,
+    creator: members,
+    rsvps: event_rsvps,
+    _count: _count ? { rsvps: _count.event_rsvps ?? 0 } : undefined,
+  };
+}
+
+/**
  * Event Repository Implementation
  * Implements repository interface using Prisma ORM
  */
@@ -11,10 +26,10 @@ export class EventRepository implements IEventRepository {
    * Find event by ID
    */
   async findById(id: string): Promise<PrismaEvent | null> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id, deletedAt: null },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -22,7 +37,7 @@ export class EventRepository implements IEventRepository {
             email: true,
           },
         },
-        rsvps: {
+        event_rsvps: {
           where: { status: 'CONFIRMED' },
           include: {
             member: {
@@ -38,17 +53,17 @@ export class EventRepository implements IEventRepository {
       },
     });
 
-    return event;
+    return transformEvent(event);
   }
 
   /**
    * Find all events (excluding deleted)
    */
   async findAll(): Promise<PrismaEvent[]> {
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: { deletedAt: null },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -58,7 +73,7 @@ export class EventRepository implements IEventRepository {
         },
         _count: {
           select: {
-            rsvps: {
+            event_rsvps: {
               where: { status: 'CONFIRMED' },
             },
           },
@@ -67,21 +82,21 @@ export class EventRepository implements IEventRepository {
       orderBy: { startDateTime: 'asc' },
     });
 
-    return events as never[];
+    return events.map(transformEvent) as never[];
   }
 
   /**
    * Find events by category
    */
   async findByCategory(category: string): Promise<PrismaEvent[]> {
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: {
         category: category as never,
         deletedAt: null,
         cancelledAt: null,
       },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -91,7 +106,7 @@ export class EventRepository implements IEventRepository {
         },
         _count: {
           select: {
-            rsvps: {
+            event_rsvps: {
               where: { status: 'CONFIRMED' },
             },
           },
@@ -100,7 +115,7 @@ export class EventRepository implements IEventRepository {
       orderBy: { startDateTime: 'asc' },
     });
 
-    return events as never[];
+    return events.map(transformEvent) as never[];
   }
 
   /**
@@ -109,14 +124,14 @@ export class EventRepository implements IEventRepository {
   async findUpcoming(limit: number = 10): Promise<PrismaEvent[]> {
     const now = new Date();
 
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: {
         startDateTime: { gte: now },
         deletedAt: null,
         cancelledAt: null,
       },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -126,7 +141,7 @@ export class EventRepository implements IEventRepository {
         },
         _count: {
           select: {
-            rsvps: {
+            event_rsvps: {
               where: { status: 'CONFIRMED' },
             },
           },
@@ -136,14 +151,14 @@ export class EventRepository implements IEventRepository {
       take: limit,
     });
 
-    return events as never[];
+    return events.map(transformEvent) as never[];
   }
 
   /**
    * Find events by creator
    */
   async findByCreator(creatorId: string): Promise<PrismaEvent[]> {
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: {
         createdById: creatorId,
         deletedAt: null,
@@ -151,7 +166,7 @@ export class EventRepository implements IEventRepository {
       include: {
         _count: {
           select: {
-            rsvps: {
+            event_rsvps: {
               where: { status: 'CONFIRMED' },
             },
           },
@@ -160,14 +175,14 @@ export class EventRepository implements IEventRepository {
       orderBy: { startDateTime: 'desc' },
     });
 
-    return events as never[];
+    return events.map(transformEvent) as never[];
   }
 
   /**
    * Create new event
    */
   async create(event: any): Promise<PrismaEvent> {
-    const created = await prisma.event.create({
+    const created = await prisma.events.create({
       data: {
         id: event.id,
         title: event.title,
@@ -181,7 +196,7 @@ export class EventRepository implements IEventRepository {
         createdById: event.createdById,
       },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -192,14 +207,14 @@ export class EventRepository implements IEventRepository {
       },
     });
 
-    return created as never;
+    return transformEvent(created) as never;
   }
 
   /**
    * Update existing event
    */
   async update(event: any): Promise<PrismaEvent> {
-    const updated = await prisma.event.update({
+    const updated = await prisma.events.update({
       where: { id: event.id },
       data: {
         title: event.title,
@@ -213,7 +228,7 @@ export class EventRepository implements IEventRepository {
         updatedAt: new Date(),
       },
       include: {
-        creator: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -224,14 +239,14 @@ export class EventRepository implements IEventRepository {
       },
     });
 
-    return updated as never;
+    return transformEvent(updated) as never;
   }
 
   /**
    * Cancel event (soft cancel)
    */
   async cancel(id: string): Promise<void> {
-    await prisma.event.update({
+    await prisma.events.update({
       where: { id },
       data: {
         cancelledAt: new Date(),
@@ -243,7 +258,7 @@ export class EventRepository implements IEventRepository {
    * Delete event (soft delete)
    */
   async delete(id: string): Promise<void> {
-    await prisma.event.update({
+    await prisma.events.update({
       where: { id },
       data: {
         deletedAt: new Date(),
