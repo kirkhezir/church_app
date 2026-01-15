@@ -29,12 +29,12 @@ router.get(
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
       // Get total members count (non-deleted)
-      const totalMembers = await prisma.member.count({
+      const totalMembers = await prisma.members.count({
         where: { deletedAt: null },
       });
 
       // Get new members this month
-      const newMembersThisMonth = await prisma.member.count({
+      const newMembersThisMonth = await prisma.members.count({
         where: {
           createdAt: { gte: startOfMonth },
           deletedAt: null,
@@ -51,7 +51,7 @@ router.get(
       });
 
       // Get total RSVPs this month
-      const totalRsvps = await prisma.eventRSVP.count({
+      const totalRsvps = await prisma.event_rsvps.count({
         where: {
           rsvpedAt: { gte: startOfMonth },
           status: 'CONFIRMED',
@@ -59,7 +59,7 @@ router.get(
       });
 
       // Get active users (logged in last 30 days)
-      const activeUsers = await prisma.member.count({
+      const activeUsers = await prisma.members.count({
         where: {
           deletedAt: null,
           lastLoginAt: { gte: thirtyDaysAgo },
@@ -112,7 +112,7 @@ router.get(
         const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
 
-        const newMembers = await prisma.member.count({
+        const newMembers = await prisma.members.count({
           where: {
             createdAt: {
               gte: monthStart,
@@ -122,7 +122,7 @@ router.get(
           },
         });
 
-        const totalAtMonth = await prisma.member.count({
+        const totalAtMonth = await prisma.members.count({
           where: {
             createdAt: { lt: monthEnd },
             deletedAt: null,
@@ -130,7 +130,7 @@ router.get(
         });
 
         // Calculate deleted members for churn
-        const deletedThisMonth = await prisma.member.count({
+        const deletedThisMonth = await prisma.members.count({
           where: {
             deletedAt: {
               gte: monthStart,
@@ -196,7 +196,7 @@ router.get(
 
       const data = worshipEvents.reverse().map((event) => ({
         date: event.startDateTime.toISOString().split('T')[0],
-        attendance: event._count.rsvps,
+        attendance: event._count.event_rsvps,
         capacity: event.maxCapacity || 200,
         eventTitle: event.title,
       }));
@@ -251,14 +251,16 @@ router.get(
       logger.info('Fetching member demographics');
 
       // Get total active member count
-      const totalMembers = await prisma.member.count({
+      const totalMembers = await prisma.members.count({
         where: { deletedAt: null },
       });
 
       // Get member role distribution
-      const adminCount = await prisma.member.count({ where: { role: 'ADMIN', deletedAt: null } });
-      const staffCount = await prisma.member.count({ where: { role: 'STAFF', deletedAt: null } });
-      const memberCount = await prisma.member.count({ where: { role: 'MEMBER', deletedAt: null } });
+      const adminCount = await prisma.members.count({ where: { role: 'ADMIN', deletedAt: null } });
+      const staffCount = await prisma.members.count({ where: { role: 'STAFF', deletedAt: null } });
+      const memberCount = await prisma.members.count({
+        where: { role: 'MEMBER', deletedAt: null },
+      });
 
       const roleDistribution = [
         { type: 'Admin', count: adminCount, color: '#ef4444' },
@@ -267,7 +269,7 @@ router.get(
       ];
 
       // MFA enabled stats
-      const mfaEnabled = await prisma.member.count({
+      const mfaEnabled = await prisma.members.count({
         where: { mfaEnabled: true, deletedAt: null },
       });
       const mfaDisabled = totalMembers - mfaEnabled;
@@ -278,7 +280,7 @@ router.get(
       ];
 
       // Age demographics (if dateOfBirth available)
-      const membersWithDob = await prisma.member.findMany({
+      const membersWithDob = await prisma.members.findMany({
         where: { deletedAt: null, dateOfBirth: { not: null } },
         select: { dateOfBirth: true },
       });
@@ -347,26 +349,26 @@ router.get(
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
       // Active users
-      const activeUsersLast7Days = await prisma.member.count({
+      const activeUsersLast7Days = await prisma.members.count({
         where: {
           deletedAt: null,
           lastLoginAt: { gte: sevenDaysAgo },
         },
       });
 
-      const activeUsersLast30Days = await prisma.member.count({
+      const activeUsersLast30Days = await prisma.members.count({
         where: {
           deletedAt: null,
           lastLoginAt: { gte: thirtyDaysAgo },
         },
       });
 
-      const totalUsers = await prisma.member.count({
+      const totalUsers = await prisma.members.count({
         where: { deletedAt: null },
       });
 
       // Event RSVPs this month
-      const eventRsvps = await prisma.eventRSVP.count({
+      const eventRsvps = await prisma.event_rsvps.count({
         where: {
           rsvpedAt: { gte: startOfMonth },
           status: 'CONFIRMED',
@@ -381,14 +383,14 @@ router.get(
       });
 
       // Announcements viewed (count views)
-      const announcementViews = await prisma.memberAnnouncementView.count({
+      const announcementViews = await prisma.member_announcement_views.count({
         where: {
           viewedAt: { gte: startOfMonth },
         },
       });
 
       // Calculate activity heatmap data from audit logs
-      const activityLogs = await prisma.auditLog.findMany({
+      const activityLogs = await prisma.audit_logs.findMany({
         where: {
           timestamp: { gte: thirtyDaysAgo },
         },
@@ -473,5 +475,3 @@ router.get(
 );
 
 export default router;
-
-

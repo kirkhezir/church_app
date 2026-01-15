@@ -51,8 +51,9 @@ export class AuditLogService {
     userAgent?: string;
   }): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
+          id: crypto.randomUUID(),
           action: data.action,
           entityType: data.entityType,
           entityId: data.entityId,
@@ -155,7 +156,7 @@ export class AuditLogService {
         entityId,
       },
       include: {
-        user: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -179,7 +180,7 @@ export class AuditLogService {
         userId,
       },
       include: {
-        user: {
+        members: {
           select: {
             id: true,
             firstName: true,
@@ -212,7 +213,7 @@ export class AuditLogService {
         ...(entityType && { entityType }),
       },
       include: {
-        user: {
+        members: {
           select: {
             id: true,
             firstName: true,

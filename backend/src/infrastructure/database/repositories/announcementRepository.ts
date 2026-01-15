@@ -1,4 +1,4 @@
-import { Announcement as PrismaAnnouncement } from '@prisma/client';
+import { announcements as PrismaAnnouncement } from '@prisma/client';
 import prisma from '../prismaClient';
 import { IAnnouncementRepository } from '../../../domain/interfaces/IAnnouncementRepository';
 
@@ -177,6 +177,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         priority: announcement.priority as never,
         authorId: announcement.authorId,
         publishedAt: announcement.publishedAt || new Date(),
+        updatedAt: new Date(),
       },
       include: {
         members: {
@@ -248,7 +249,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Mark announcement as viewed by member
    */
   async markAsViewed(announcementId: string, memberId: string): Promise<void> {
-    await prisma.memberAnnouncementView.upsert({
+    await prisma.member_announcement_views.upsert({
       where: {
         memberId_announcementId: {
           memberId,
@@ -259,6 +260,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
         viewedAt: new Date(),
       },
       create: {
+        id: crypto.randomUUID(),
         memberId,
         announcementId,
       },
@@ -269,7 +271,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
    * Check if member has viewed announcement
    */
   async hasViewed(announcementId: string, memberId: string): Promise<boolean> {
-    const view = await prisma.memberAnnouncementView.findUnique({
+    const view = await prisma.member_announcement_views.findUnique({
       where: {
         memberId_announcementId: {
           memberId,
@@ -411,7 +413,7 @@ export class AnnouncementRepository implements IAnnouncementRepository {
     const views = await prisma.memberAnnouncementView.findMany({
       where: { announcementId },
       include: {
-        member: {
+        members: {
           select: {
             id: true,
             firstName: true,

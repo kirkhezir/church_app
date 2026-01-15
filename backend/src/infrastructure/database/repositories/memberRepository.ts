@@ -1,4 +1,4 @@
-import { Member as PrismaMember } from '@prisma/client';
+import { members as PrismaMember } from '@prisma/client';
 import prisma from '../prismaClient';
 import { IMemberRepository } from '../../../domain/interfaces/IMemberRepository';
 import { Member } from '../../../domain/entities/Member';
@@ -54,7 +54,7 @@ export class MemberRepository implements IMemberRepository {
    * Find member by ID
    */
   async findById(id: string): Promise<Member | null> {
-    const member = await prisma.member.findFirst({
+    const member = await prisma.members.findFirst({
       where: {
         id,
         deletedAt: null,
@@ -68,7 +68,7 @@ export class MemberRepository implements IMemberRepository {
    * Find member by email
    */
   async findByEmail(email: string): Promise<Member | null> {
-    const member = await prisma.member.findFirst({
+    const member = await prisma.members.findFirst({
       where: {
         email,
         deletedAt: null,
@@ -88,7 +88,7 @@ export class MemberRepository implements IMemberRepository {
   }): Promise<Member[]> {
     const { skip = 0, take = 50, includeInactive = false } = options || {};
 
-    const members = await prisma.member.findMany({
+    const members = await prisma.members.findMany({
       where: {
         deletedAt: null,
         ...(includeInactive ? {} : { isActive: true }),
@@ -105,7 +105,7 @@ export class MemberRepository implements IMemberRepository {
    * Find members by role
    */
   async findByRole(role: string): Promise<Member[]> {
-    const members = await prisma.member.findMany({
+    const members = await prisma.members.findMany({
       where: {
         role: role as never,
         deletedAt: null,
@@ -121,7 +121,7 @@ export class MemberRepository implements IMemberRepository {
    * Search members by name
    */
   async searchByName(query: string): Promise<Member[]> {
-    const members = await prisma.member.findMany({
+    const members = await prisma.members.findMany({
       where: {
         deletedAt: null,
         accountLocked: false,
@@ -147,7 +147,7 @@ export class MemberRepository implements IMemberRepository {
    * Create new member
    */
   async create(member: Member): Promise<Member> {
-    const created = await prisma.member.create({
+    const created = await prisma.members.create({
       data: {
         id: member.id,
         email: member.email,
@@ -167,6 +167,7 @@ export class MemberRepository implements IMemberRepository {
         mfaEnabled: member.mfaEnabled,
         mfaSecret: member.mfaSecret,
         backupCodes: member.backupCodes as never,
+        updatedAt: new Date(),
       },
     });
 
@@ -177,7 +178,7 @@ export class MemberRepository implements IMemberRepository {
    * Update member
    */
   async update(member: Member): Promise<Member> {
-    const updated = await prisma.member.update({
+    const updated = await prisma.members.update({
       where: { id: member.id },
       data: {
         email: member.email,
@@ -208,7 +209,7 @@ export class MemberRepository implements IMemberRepository {
    * Soft delete member
    */
   async delete(id: string): Promise<void> {
-    await prisma.member.update({
+    await prisma.members.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -221,7 +222,7 @@ export class MemberRepository implements IMemberRepository {
    * Count total members
    */
   async count(): Promise<number> {
-    return prisma.member.count({
+    return prisma.members.count({
       where: {
         deletedAt: null,
         accountLocked: false,
@@ -233,7 +234,7 @@ export class MemberRepository implements IMemberRepository {
    * Hard delete member (for testing only)
    */
   async hardDelete(id: string): Promise<void> {
-    await prisma.member.delete({
+    await prisma.members.delete({
       where: { id },
     });
   }

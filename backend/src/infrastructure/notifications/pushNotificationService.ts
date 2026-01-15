@@ -88,7 +88,7 @@ class PushNotificationService {
   async saveSubscription(memberId: string, subscription: ClientSubscription): Promise<boolean> {
     try {
       // Store subscription in database
-      await prisma.pushSubscription.upsert({
+      await prisma.push_subscriptions.upsert({
         where: {
           memberId_endpoint: {
             memberId,
@@ -101,10 +101,12 @@ class PushNotificationService {
           updatedAt: new Date(),
         },
         create: {
+          id: crypto.randomUUID(),
           memberId,
           endpoint: subscription.endpoint,
           p256dh: subscription.keys.p256dh,
           auth: subscription.keys.auth,
+          updatedAt: new Date(),
         },
       });
 
@@ -121,7 +123,7 @@ class PushNotificationService {
    */
   async removeSubscription(memberId: string, endpoint: string): Promise<boolean> {
     try {
-      await prisma.pushSubscription.delete({
+      await prisma.push_subscriptions.delete({
         where: {
           memberId_endpoint: {
             memberId,
@@ -143,7 +145,7 @@ class PushNotificationService {
    */
   async removeAllSubscriptions(memberId: string): Promise<number> {
     try {
-      const result = await prisma.pushSubscription.deleteMany({
+      const result = await prisma.push_subscriptions.deleteMany({
         where: { memberId },
       });
 
@@ -165,7 +167,7 @@ class PushNotificationService {
     }
 
     try {
-      const subscriptions = await prisma.pushSubscription.findMany({
+      const subscriptions = await prisma.push_subscriptions.findMany({
         where: { memberId },
       });
 
@@ -199,7 +201,7 @@ class PushNotificationService {
 
       // Clean up expired subscriptions
       if (failedEndpoints.length > 0) {
-        await prisma.pushSubscription.deleteMany({
+        await prisma.push_subscriptions.deleteMany({
           where: {
             memberId,
             endpoint: { in: failedEndpoints },
@@ -242,8 +244,8 @@ class PushNotificationService {
     }
 
     try {
-      const subscriptions = await prisma.pushSubscription.findMany({
-        include: { member: { select: { id: true } } },
+      const subscriptions = await prisma.push_subscriptions.findMany({
+        include: { members: { select: { id: true } } },
       });
 
       if (subscriptions.length === 0) {

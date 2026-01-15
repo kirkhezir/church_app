@@ -296,7 +296,7 @@ export class AnnouncementController {
       const userId = (req as any).user.userId;
 
       // Verify user is admin/staff
-      const member = await prisma.member.findUnique({ where: { id: userId } });
+      const member = await prisma.members.findUnique({ where: { id: userId } });
       if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
         res.status(403).json({
           error: 'Forbidden',
@@ -331,7 +331,7 @@ export class AnnouncementController {
       }
 
       // Verify user is admin/staff
-      const member = await prisma.member.findUnique({ where: { id: userId } });
+      const member = await prisma.members.findUnique({ where: { id: userId } });
       if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
         res.status(403).json({
           error: 'Forbidden',
@@ -369,7 +369,7 @@ export class AnnouncementController {
       }
 
       // Verify user is admin/staff
-      const member = await prisma.member.findUnique({ where: { id: userId } });
+      const member = await prisma.members.findUnique({ where: { id: userId } });
       if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
         res.status(403).json({
           error: 'Forbidden',
@@ -412,7 +412,7 @@ export class AnnouncementController {
       const userId = (req as any).user.userId;
 
       // Verify user is admin/staff
-      const member = await prisma.member.findUnique({ where: { id: userId } });
+      const member = await prisma.members.findUnique({ where: { id: userId } });
       if (!member || (member.role !== 'ADMIN' && member.role !== 'STAFF')) {
         res.status(403).json({
           error: 'Forbidden',
@@ -431,3 +431,5 @@ export class AnnouncementController {
 
 // Export singleton instance
 export const announcementController = new AnnouncementController();
+
+

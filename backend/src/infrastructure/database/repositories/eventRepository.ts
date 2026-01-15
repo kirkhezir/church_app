@@ -1,4 +1,4 @@
-import { Event as PrismaEvent } from '@prisma/client';
+import { events as PrismaEvent } from '@prisma/client';
 import prisma from '../prismaClient';
 import { IEventRepository } from '../../../domain/interfaces/IEventRepository';
 
@@ -194,6 +194,7 @@ export class EventRepository implements IEventRepository {
         maxCapacity: event.maxCapacity,
         imageUrl: event.imageUrl,
         createdById: event.createdById,
+        updatedAt: new Date(),
       },
       include: {
         members: {
@@ -297,7 +298,7 @@ export class EventRepository implements IEventRepository {
    * Add RSVP to event
    */
   async addRSVP(eventId: string, memberId: string): Promise<void> {
-    await prisma.eventRSVP.upsert({
+    await prisma.event_rsvps.upsert({
       where: {
         eventId_memberId: {
           eventId,
@@ -309,9 +310,11 @@ export class EventRepository implements IEventRepository {
         updatedAt: new Date(),
       },
       create: {
+        id: crypto.randomUUID(),
         eventId,
         memberId,
         status: 'CONFIRMED',
+        updatedAt: new Date(),
       },
     });
   }
@@ -320,7 +323,7 @@ export class EventRepository implements IEventRepository {
    * Remove RSVP from event
    */
   async removeRSVP(eventId: string, memberId: string): Promise<void> {
-    await prisma.eventRSVP.update({
+    await prisma.event_rsvps.update({
       where: {
         eventId_memberId: {
           eventId,

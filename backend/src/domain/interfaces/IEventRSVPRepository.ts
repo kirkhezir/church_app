@@ -1,4 +1,4 @@
-import { EventRSVP as PrismaEventRSVP } from '@prisma/client';
+import { event_rsvps as PrismaEventRSVP } from '@prisma/client';
 
 /**
  * EventRSVP Repository Interface

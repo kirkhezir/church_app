@@ -132,8 +132,8 @@ class ReportService {
         deletedAt: null,
       },
       include: {
-        creator: { select: { firstName: true, lastName: true } },
-        rsvps: {
+        members: { select: { firstName: true, lastName: true } },
+        event_rsvps: {
           where: { status: 'CONFIRMED' },
           select: { id: true },
         },
@@ -155,7 +155,7 @@ class ReportService {
 
     // Summary
     const totalRsvps = events.reduce(
-      (sum: number, e: (typeof events)[0]) => sum + e.rsvps.length,
+      (sum: number, e: (typeof events)[0]) => sum + e.event_rsvps.length,
       0
     );
     const cancelledCount = events.filter((e: (typeof events)[0]) => e.cancelledAt).length;
@@ -192,7 +192,9 @@ class ReportService {
         .text(
           `${new Date(event.startDateTime).toLocaleString()} | ${event.location} | ${event.category}`
         )
-        .text(`RSVPs: ${event.rsvps.length}${event.maxCapacity ? `/${event.maxCapacity}` : ''}`);
+        .text(
+          `RSVPs: ${event.event_rsvps.length}${event.maxCapacity ? `/${event.maxCapacity}` : ''}`
+        );
 
       doc.moveDown(1);
     }
@@ -218,8 +220,8 @@ class ReportService {
         deletedAt: null,
       },
       include: {
-        author: { select: { firstName: true, lastName: true } },
-        views: { select: { id: true } },
+        members: { select: { firstName: true, lastName: true } },
+        member_announcement_views: { select: { id: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -241,7 +243,7 @@ class ReportService {
       (a: (typeof announcements)[0]) => a.priority === 'URGENT'
     ).length;
     const totalViews = announcements.reduce(
-      (sum: number, a: (typeof announcements)[0]) => sum + a.views.length,
+      (sum: number, a: (typeof announcements)[0]) => sum + a.member_announcement_views.length,
       0
     );
 
@@ -275,7 +277,7 @@ class ReportService {
         .fontSize(10)
         .fillColor(COLORS.muted)
         .text(
-          `By ${announcement.author.firstName} ${announcement.author.lastName} | ${new Date(announcement.createdAt).toLocaleDateString()} | ${announcement.views.length} views`
+          `By ${announcement.members.firstName} ${announcement.members.lastName} | ${new Date(announcement.createdAt).toLocaleDateString()} | ${announcement.member_announcement_views.length} views`
         );
 
       // Content preview (first 200 chars)
@@ -307,10 +309,10 @@ class ReportService {
     const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        creator: { select: { firstName: true, lastName: true } },
-        rsvps: {
+        members: { select: { firstName: true, lastName: true } },
+        event_rsvps: {
           include: {
-            member: {
+            members: {
               select: { firstName: true, lastName: true, email: true, phone: true },
             },
           },
@@ -344,19 +346,19 @@ class ReportService {
       .text(`Date: ${new Date(event.startDateTime).toLocaleString()}`)
       .text(`Location: ${event.location}`)
       .text(`Category: ${event.category}`)
-      .text(`Organizer: ${event.creator.firstName} ${event.creator.lastName}`);
+      .text(`Organizer: ${event.members.firstName} ${event.members.lastName}`);
 
     doc.moveDown(2);
 
     // Attendance summary
-    const confirmed = event.rsvps.filter(
-      (r: (typeof event.rsvps)[0]) => r.status === 'CONFIRMED'
+    const confirmed = event.event_rsvps.filter(
+      (r: (typeof event.event_rsvps)[0]) => r.status === 'CONFIRMED'
     ).length;
-    const waitlisted = event.rsvps.filter(
-      (r: (typeof event.rsvps)[0]) => r.status === 'WAITLISTED'
+    const waitlisted = event.event_rsvps.filter(
+      (r: (typeof event.event_rsvps)[0]) => r.status === 'WAITLISTED'
     ).length;
-    const cancelled = event.rsvps.filter(
-      (r: (typeof event.rsvps)[0]) => r.status === 'CANCELLED'
+    const cancelled = event.event_rsvps.filter(
+      (r: (typeof event.event_rsvps)[0]) => r.status === 'CANCELLED'
     ).length;
 
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Attendance Summary');
@@ -368,7 +370,7 @@ class ReportService {
       .text(`Confirmed: ${confirmed}`)
       .text(`Waitlisted: ${waitlisted}`)
       .text(`Cancelled: ${cancelled}`)
-      .text(`Total RSVPs: ${event.rsvps.length}`);
+      .text(`Total RSVPs: ${event.event_rsvps.length}`);
 
     if (event.maxCapacity) {
       const percentage = Math.round((confirmed / event.maxCapacity) * 100);
@@ -381,8 +383,8 @@ class ReportService {
     doc.font(FONTS.bold).fontSize(14).fillColor(COLORS.primary).text('Attendee List (Confirmed)');
     doc.moveDown();
 
-    const confirmedRsvps = event.rsvps.filter(
-      (r: (typeof event.rsvps)[0]) => r.status === 'CONFIRMED'
+    const confirmedRsvps = event.event_rsvps.filter(
+      (r: (typeof event.event_rsvps)[0]) => r.status === 'CONFIRMED'
     );
     if (confirmedRsvps.length === 0) {
       doc.font(FONTS.italic).fontSize(11).fillColor(COLORS.muted).text('No confirmed attendees');
@@ -398,7 +400,7 @@ class ReportService {
           .fontSize(10)
           .fillColor(COLORS.text)
           .text(
-            `${index}. ${rsvp.member.lastName}, ${rsvp.member.firstName} - ${rsvp.member.email}${rsvp.member.phone ? ` | ${rsvp.member.phone}` : ''}`
+            `${index}. ${rsvp.members.lastName}, ${rsvp.members.firstName} - ${rsvp.members.email}${rsvp.members.phone ? ` | ${rsvp.members.phone}` : ''}`
           );
         index++;
       }
@@ -484,4 +486,3 @@ class ReportService {
 
 // Export singleton instance
 export const reportService = new ReportService();
-

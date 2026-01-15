@@ -1,22 +1,7 @@
-import { Message as PrismaMessage } from '@prisma/client';
+import { messages as PrismaMessage } from '@prisma/client';
 import prisma from '../prismaClient';
 import { IMessageRepository } from '../../../domain/interfaces/IMessageRepository';
 import { Message } from '../../../domain/entities/Message';
-
-/**
- * Transform Prisma message result to API format
- * Renames long Prisma relation names to user-friendly names
- */
-function transformMessage(message: any): any {
-  if (!message) return null;
-  const { members_messages_senderIdTomembers, members_messages_recipientIdTomembers, ...rest } =
-    message;
-  return {
-    ...rest,
-    sender: members_messages_senderIdTomembers,
-    recipient: members_messages_recipientIdTomembers,
-  };
-}
 
 /**
  * Message Repository Implementation

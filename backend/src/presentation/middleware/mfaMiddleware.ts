@@ -38,7 +38,7 @@ export async function requireMFA(req: Request, res: Response, next: NextFunction
     }
 
     // Get member from database to check MFA status
-    const member = await prisma.member.findUnique({
+    const member = await prisma.members.findUnique({
       where: { id: user.userId },
       select: {
         id: true,
@@ -137,3 +137,5 @@ export async function requireAdminWithMFA(
   // Check MFA status
   await requireMFA(req, res, next);
 }
+
+
