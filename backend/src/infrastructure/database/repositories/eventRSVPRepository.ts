@@ -1,9 +1,9 @@
-import { EventRSVP as PrismaEventRSVP } from '@prisma/client';
+import { event_rsvps as PrismaEventRSVP } from '@prisma/client';
 import prisma from '../prismaClient';
 import { IEventRSVPRepository } from '../../../domain/interfaces/IEventRSVPRepository';
 
 /**
- * EventRSVP Repository Implementation
+ * event_rsvps Repository Implementation
  * Implements repository interface using Prisma ORM
  */
 export class EventRSVPRepository implements IEventRSVPRepository {
@@ -28,7 +28,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
   }
 
   /**
-   * Find RSVP by event and member
+   * Find RSVP by events and members
    */
   async findByEventAndMember(eventId: string, memberId: string): Promise<PrismaEventRSVP | null> {
     return (await prisma.event_rsvps.findUnique({
@@ -53,7 +53,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
   }
 
   /**
-   * Find all RSVPs for an event
+   * Find all RSVPs for an events
    */
   async findByEventId(eventId: string): Promise<PrismaEventRSVP[]> {
     return (await prisma.event_rsvps.findMany({
@@ -74,7 +74,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
   }
 
   /**
-   * Find all RSVPs for a member
+   * Find all RSVPs for a members
    */
   async findByMemberId(memberId: string): Promise<PrismaEventRSVP[]> {
     return (await prisma.event_rsvps.findMany({
@@ -97,7 +97,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
   }
 
   /**
-   * Get count of confirmed RSVPs for an event
+   * Get count of confirmed RSVPs for an events
    */
   async getConfirmedCount(eventId: string): Promise<number> {
     return await prisma.event_rsvps.count({
@@ -176,7 +176,7 @@ export class EventRSVPRepository implements IEventRSVPRepository {
   }
 
   /**
-   * Delete RSVP by event and member
+   * Delete RSVP by events and members
    */
   async deleteByEventAndMember(eventId: string, memberId: string): Promise<void> {
     await prisma.event_rsvps.deleteMany({
@@ -187,3 +187,6 @@ export class EventRSVPRepository implements IEventRSVPRepository {
     });
   }
 }
+
+
+

@@ -39,12 +39,12 @@ const createMemberAccount = new CreateMemberAccount(
 );
 
 const getAuditLogs = new GetAuditLogs({
-  findMany: (options) => prisma.auditLog.findMany(options),
-  count: (options) => prisma.auditLog.count(options),
+  findMany: (options) => prisma.audit_logs.findMany(options),
+  count: (options) => prisma.audit_logs.count(options),
 });
 
 const exportMemberData = new ExportMemberData({
-  findMany: (options) => prisma.member.findMany(options),
+  findMany: (options) => prisma.members.findMany(options),
 });
 
 const exportEventData = new ExportEventData({
@@ -124,10 +124,10 @@ export async function listMembers(req: Request, res: Response, next: NextFunctio
     }
 
     // Get total count
-    const total = await prisma.member.count({ where });
+    const total = await prisma.members.count({ where });
 
     // Get members
-    const members = await prisma.member.findMany({
+    const members = await prisma.members.findMany({
       where,
       skip,
       take: limit,
@@ -179,7 +179,7 @@ export async function deleteMember(req: Request, res: Response, next: NextFuncti
     }
 
     // Check if member exists
-    const member = await prisma.member.findUnique({
+    const member = await prisma.members.findUnique({
       where: { id: memberId },
     });
 
@@ -194,7 +194,7 @@ export async function deleteMember(req: Request, res: Response, next: NextFuncti
     }
 
     // Soft delete
-    await prisma.member.update({
+    await prisma.members.update({
       where: { id: memberId },
       data: { deletedAt: new Date() },
     });
@@ -321,4 +321,3 @@ export async function exportEvents(req: Request, res: Response, next: NextFuncti
     next(error);
   }
 }
-

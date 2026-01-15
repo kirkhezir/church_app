@@ -101,7 +101,7 @@ export class GetAuditLogs {
       take: limit,
       orderBy: { timestamp: 'desc' },
       include: {
-        user: {
+        members: {
           select: {
             firstName: true,
             lastName: true,
@@ -112,24 +112,28 @@ export class GetAuditLogs {
     });
 
     return {
-      data: logs.map((log) => ({
-        id: log.id,
-        userId: log.userId,
-        action: log.action,
-        entityType: log.entityType,
-        entityId: log.entityId,
-        changes: log.changes,
-        ipAddress: log.ipAddress,
-        userAgent: log.userAgent,
-        timestamp: log.timestamp,
-        user: log.user
-          ? {
-              firstName: log.user.firstName,
-              lastName: log.user.lastName,
-              email: log.user.email,
-            }
-          : undefined,
-      })),
+      data: logs.map((log) => {
+        // Handle both 'user' and 'members' property names (Prisma relation naming)
+        const userData = log.user || log.members;
+        return {
+          id: log.id,
+          userId: log.userId,
+          action: log.action,
+          entityType: log.entityType,
+          entityId: log.entityId,
+          changes: log.changes,
+          ipAddress: log.ipAddress,
+          userAgent: log.userAgent,
+          timestamp: log.timestamp,
+          user: userData
+            ? {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+              }
+            : undefined,
+        };
+      }),
       pagination: {
         total,
         page,

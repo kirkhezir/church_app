@@ -77,25 +77,29 @@ export class GetEventRSVPs {
     const availableSpots = event.maxCapacity ? Math.max(0, event.maxCapacity - confirmedCount) : -1; // -1 means unlimited
 
     // Transform RSVPs to summary format
-    const rsvps: RSVPSummary[] = filteredRSVPs.map((rsvp: any) => ({
-      id: rsvp.id,
-      eventId: rsvp.eventId,
-      memberId: rsvp.memberId,
-      memberName: rsvp.member ? `${rsvp.member.firstName} ${rsvp.member.lastName}` : undefined,
-      memberEmail: rsvp.member?.email,
-      status: rsvp.status,
-      notes: undefined,
-      rsvpedAt: rsvp.rsvpedAt,
-      // Include member object for detailed views
-      member: rsvp.member
-        ? {
-            id: rsvp.member.id,
-            firstName: rsvp.member.firstName,
-            lastName: rsvp.member.lastName,
-            email: rsvp.member.email,
-          }
-        : undefined,
-    }));
+    const rsvps: RSVPSummary[] = filteredRSVPs.map((rsvp: any) => {
+      // Handle both 'member' and 'members' property names (Prisma relation naming)
+      const memberData = rsvp.member || rsvp.members;
+      return {
+        id: rsvp.id,
+        eventId: rsvp.eventId,
+        memberId: rsvp.memberId,
+        memberName: memberData ? `${memberData.firstName} ${memberData.lastName}` : undefined,
+        memberEmail: memberData?.email,
+        status: rsvp.status,
+        notes: undefined,
+        rsvpedAt: rsvp.rsvpedAt,
+        // Include member object for detailed views
+        member: memberData
+          ? {
+              id: memberData.id,
+              firstName: memberData.firstName,
+              lastName: memberData.lastName,
+              email: memberData.email,
+            }
+          : undefined,
+      };
+    });
 
     return {
       eventId: event.id,
