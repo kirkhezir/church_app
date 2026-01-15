@@ -11,6 +11,7 @@
  */
 
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { PasswordService } from '../../infrastructure/auth/passwordService';
 import { EmailService } from '../../infrastructure/email/emailService';
 import { AuditLogService } from '../services/auditLogService';
@@ -75,6 +76,7 @@ export class CreateMemberAccount {
 
     // Create member record
     const memberData = {
+      id: uuidv4(),
       email: request.email.toLowerCase(),
       firstName: request.firstName,
       lastName: request.lastName,
