@@ -15,7 +15,9 @@ import {
   BookOpen,
   Users,
   ArrowUp,
+  LogIn,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import WorshipTimesSection from '../../components/features/WorshipTimesSection';
@@ -25,13 +27,29 @@ import ContactForm from '../../components/features/ContactForm';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
 
+// New enhanced landing page components
+import {
+  AnnouncementBanner,
+  TestimonialsSection,
+  FAQSection,
+  UpcomingEventsSection,
+  PhotoGallerySection,
+  MinistryCardsSection,
+  ProgressCountersSection,
+  NewsletterPopup,
+  MemberPortalLink,
+} from '../../components/features/landing';
+
 export function LandingPage() {
   return (
     <main className="min-h-screen">
       {/* Offline Indicator */}
       <OfflineIndicator />
 
-      {/* Top Contact Bar */}
+      {/* Announcement Banner */}
+      <AnnouncementBanner />
+
+      {/* Top Contact Bar with Login Link */}
       <TopContactBar />
 
       {/* Hero Section */}
@@ -43,14 +61,39 @@ export function LandingPage() {
       {/* Quick Info Cards */}
       <QuickInfoSection />
 
+      {/* Upcoming Events (from API) */}
+      <UpcomingEventsSection />
+
       {/* Worship Times */}
       <WorshipTimesSection />
+
+      {/* Progress Counters / Stats */}
+      <ProgressCountersSection />
+
+      {/* Testimonials */}
+      <TestimonialsSection />
+
+      {/* Photo Gallery */}
+      <PhotoGallerySection />
+
+      {/* Ministry Cards */}
+      <MinistryCardsSection />
 
       {/* Mission Statement */}
       <MissionStatementSection />
 
+      {/* FAQ Section */}
+      <FAQSection />
+
       {/* Location Map */}
       <LocationMapSection />
+
+      {/* Member Portal Link (inline) */}
+      <section className="bg-gray-50 px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          <MemberPortalLink variant="inline" />
+        </div>
+      </section>
 
       {/* Call to Action */}
       <CallToActionSection />
@@ -66,6 +109,9 @@ export function LandingPage() {
 
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
+
+      {/* Newsletter Popup (appears after scroll/delay) */}
+      <NewsletterPopup delay={45000} scrollTrigger={60} />
     </main>
   );
 }
@@ -90,20 +136,30 @@ function TopContactBar() {
   return (
     <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 px-4 py-3 text-white shadow-md">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-4 text-sm md:justify-between">
-        <a
-          href="mailto:contact@singburiadventist.org"
-          className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="mailto:singburiadventistcenter@gmail.com"
+            className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
+          >
+            <Mail className="h-4 w-4" />
+            <span className="hidden sm:inline">singburiadventistcenter@gmail.com</span>
+            <span className="sm:hidden">Email Us</span>
+          </a>
+          <a
+            href="tel:+66876106926"
+            className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
+          >
+            <Phone className="h-4 w-4" />
+            <span>+66 (0) 876-106-926</span>
+          </a>
+        </div>
+        <Link
+          to="/login"
+          className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 font-medium backdrop-blur-sm transition-all hover:bg-white/20"
         >
-          <Mail className="h-4 w-4" />
-          <span>singburiadventistcenter@gmail.com</span>
-        </a>
-        <a
-          href="tel:+66876106926"
-          className="flex items-center gap-2 font-medium transition-all hover:scale-105 hover:text-blue-100"
-        >
-          <Phone className="h-4 w-4" />
-          <span>+66 (0) 876-106-926</span>
-        </a>
+          <LogIn className="h-4 w-4" />
+          <span>Member Login</span>
+        </Link>
       </div>
     </div>
   );
