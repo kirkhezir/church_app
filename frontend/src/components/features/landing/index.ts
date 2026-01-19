@@ -13,3 +13,5 @@ export { MinistryCardsSection } from './MinistryCardsSection';
 export { ProgressCountersSection } from './ProgressCountersSection';
 export { NewsletterPopup } from './NewsletterPopup';
 export { MemberPortalLink } from './MemberPortalLink';
+export { NavigationHeader } from './NavigationHeader';
+export { AboutSection } from './AboutSection';

@@ -3,32 +3,37 @@
  *
  * Animated statistics showing church impact
  * Numbers animate when scrolled into view
+ *
+ * NOTE: Stats should be consistent with Hero section
+ * Current values: 30+ members, 10+ years, 15+ baptisms, weekly services
  */
 
 import { useEffect, useState, useRef } from 'react';
-import { Users, Heart, Calendar, BookOpen } from 'lucide-react';
+import { Users, Heart, Calendar, Clock } from 'lucide-react';
 
 interface Stat {
   id: string;
   label: string;
   value: number;
   suffix?: string;
+  displayValue?: string; // For non-numeric displays
   icon: React.ComponentType<{ className?: string }>;
   color: string;
 }
 
+// IMPORTANT: Keep these stats consistent with HeroSection
 const stats: Stat[] = [
   {
     id: 'members',
-    label: 'Church Members',
-    value: 50,
+    label: 'Church Family Members',
+    value: 30,
     suffix: '+',
     icon: Users,
     color: 'from-blue-500 to-blue-600',
   },
   {
     id: 'years',
-    label: 'Years of Ministry',
+    label: 'Years Serving Sing Buri',
     value: 10,
     suffix: '+',
     icon: Calendar,
@@ -36,18 +41,18 @@ const stats: Stat[] = [
   },
   {
     id: 'baptisms',
-    label: 'Baptisms',
-    value: 25,
+    label: 'Lives Transformed',
+    value: 15,
     suffix: '+',
     icon: Heart,
     color: 'from-pink-500 to-pink-600',
   },
   {
-    id: 'studies',
-    label: 'Bible Studies',
-    value: 100,
-    suffix: '+',
-    icon: BookOpen,
+    id: 'services',
+    label: 'Weekly Services',
+    value: 3,
+    suffix: '',
+    icon: Clock,
     color: 'from-green-500 to-green-600',
   },
 ];

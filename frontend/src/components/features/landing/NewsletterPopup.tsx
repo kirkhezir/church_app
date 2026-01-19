@@ -3,6 +3,13 @@
  *
  * Newsletter subscription popup that appears after
  * scrolling or after a time delay
+ *
+ * BEST PRACTICES:
+ * - Only show to returning visitors (not first-time)
+ * - Long delay before showing (60s+)
+ * - High scroll threshold (80%+)
+ * - Remember dismissal for 7 days
+ * - Don't interrupt important user flows
  */
 
 import { useState, useEffect } from 'react';
@@ -19,15 +26,18 @@ import { Label } from '../../ui/label';
 import { Mail, X, CheckCircle, Send, Bell } from 'lucide-react';
 
 interface NewsletterPopupProps {
-  /** Delay before showing popup (ms) */
+  /** Delay before showing popup (ms) - default 60s */
   delay?: number;
-  /** Scroll percentage to trigger popup (0-100) */
+  /** Scroll percentage to trigger popup (0-100) - default 80% */
   scrollTrigger?: number;
+  /** Only show to returning visitors */
+  onlyReturningVisitors?: boolean;
 }
 
 export function NewsletterPopup({
-  delay = 30000, // 30 seconds default
-  scrollTrigger = 50, // 50% scroll
+  delay = 60000, // 60 seconds - more respectful
+  scrollTrigger = 80, // 80% scroll - user is engaged
+  onlyReturningVisitors = true,
 }: NewsletterPopupProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -38,11 +48,24 @@ export function NewsletterPopup({
   useEffect(() => {
     // Check if user has already dismissed or subscribed
     const hasDismissed = localStorage.getItem('newsletterDismissed');
+    const dismissedAt = localStorage.getItem('newsletterDismissedAt');
     const hasSubscribed = localStorage.getItem('newsletterSubscribed');
+    const visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
 
-    if (hasDismissed || hasSubscribed) {
-      return;
+    // Update visit count
+    localStorage.setItem('visitCount', String(visitCount + 1));
+
+    // Don't show if subscribed
+    if (hasSubscribed) return;
+
+    // Check if dismissed recently (within 7 days)
+    if (hasDismissed && dismissedAt) {
+      const daysSinceDismissed = (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
+      if (daysSinceDismissed < 7) return;
     }
+
+    // Only show to returning visitors (2+ visits)
+    if (onlyReturningVisitors && visitCount < 1) return;
 
     let timeoutId: NodeJS.Timeout;
     let hasTriggered = false;
@@ -74,11 +97,12 @@ export function NewsletterPopup({
       clearTimeout(timeoutId);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [delay, scrollTrigger]);
+  }, [delay, scrollTrigger, onlyReturningVisitors]);
 
   const handleDismiss = () => {
     setIsOpen(false);
     localStorage.setItem('newsletterDismissed', 'true');
+    localStorage.setItem('newsletterDismissedAt', String(Date.now()));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
