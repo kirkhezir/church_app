@@ -8,9 +8,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [001-full-stack-web, develop]
   pull_request:
-    branches: [main]
+    branches: [001-full-stack-web]
 
 env:
   NODE_VERSION: "20.x"
@@ -283,7 +283,7 @@ jobs:
     name: Build Docker Images
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/001-full-stack-web'
 
     permissions:
       contents: read
@@ -351,7 +351,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/001-full-stack-web'
     environment: production
 
     steps:

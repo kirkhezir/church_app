@@ -11,7 +11,7 @@ on:
     # Run weekly on Sundays at midnight
     - cron: "0 0 * * 0"
   pull_request:
-    branches: [main, develop]
+    branches: [001-full-stack-web, develop]
   workflow_dispatch:
 
 permissions:
