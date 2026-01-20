@@ -55,7 +55,9 @@ jobs:
 
       - name: Start backend
         working-directory: ./backend
-        run: npm run dev &
+        run: |
+          npm run dev > backend.log 2>&1 &
+          echo $! > backend.pid
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
           JWT_SECRET: test-secret-for-ci
@@ -63,14 +65,17 @@ jobs:
 
       - name: Start frontend
         working-directory: ./frontend
-        run: npm run dev &
+        run: |
+          npm run dev > frontend.log 2>&1 &
+          echo $! > frontend.pid
         env:
           VITE_API_URL: http://localhost:3000/api/v1
+          PORT: 5173
 
       - name: Wait for services
         run: |
-          npx wait-on http://localhost:3000/health -t 60000 -i 2000
-          npx wait-on http://localhost:5173 -t 60000 -i 2000
+          npx wait-on http://localhost:3000/health -t 60000 -i 2000 || (cat backend/backend.log && exit 1)
+          npx wait-on http://localhost:5173 -t 60000 -i 2000 || (cat frontend/frontend.log && exit 1)
 
       - name: Run Playwright tests
         run: npx playwright test
