@@ -42,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Setup database
         working-directory: ./backend
@@ -69,8 +69,8 @@ jobs:
 
       - name: Wait for services
         run: |
-          npx wait-on http://localhost:3000/health
-          npx wait-on http://localhost:5173
+          npx wait-on http://localhost:3000/health -t 60000 -i 2000
+          npx wait-on http://localhost:5173 -t 60000 -i 2000
 
       - name: Run Playwright tests
         run: npx playwright test
