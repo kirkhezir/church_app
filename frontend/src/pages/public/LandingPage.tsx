@@ -30,7 +30,6 @@ import {
   ChevronDown,
   Users,
   BookOpen,
-  Calendar,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -89,28 +88,31 @@ export function LandingPage() {
       <AboutSection />
       <WorshipTimesSection />
 
+      {/* Social proof before asking for action */}
+      <TestimonialsSection />
+
       <section id="events" className="relative">
         <UpcomingEventsSection />
+      </section>
+
+      <section id="ministries">
+        <MinistryCardsSection />
       </section>
 
       <section id="gallery">
         <PhotoGallerySection />
       </section>
 
-      <TestimonialsSection />
-
-      <section id="ministries">
-        <MinistryCardsSection />
-      </section>
-
       <FAQSection />
 
-      <section id="contact" className="bg-slate-50">
+      {/* First-Time Visitor CTA - strategic placement before contact */}
+      <FirstTimeVisitorSection />
+
+      <section id="contact" className="bg-white">
         <LocationMapSection />
         <ContactForm />
       </section>
 
-      <CallToActionBanner />
       <FooterSection />
       <BackToTopButton />
       <PWAInstallPrompt />
@@ -424,40 +426,101 @@ function AboutSection() {
 }
 
 // =============================================================================
-// CALL TO ACTION BANNER - Simple, Effective
+// FIRST-TIME VISITOR SECTION - Targeted, Actionable
 // =============================================================================
-function CallToActionBanner() {
+function FirstTimeVisitorSection() {
   return (
-    <section className="bg-gradient-to-r from-blue-600 to-indigo-700 py-12 sm:py-16">
-      <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-        <Calendar className="mx-auto mb-4 h-10 w-10 text-blue-200" />
-        <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Join Us This Sabbath</h2>
-        <p className="mx-auto mb-6 max-w-xl text-blue-100">
-          Experience the warmth of our fellowship. Our doors are open to everyone seeking spiritual
-          growth, community, or a place to belong.
-        </p>
-        <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-          <Button
-            size="lg"
-            onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="bg-white px-6 font-semibold text-blue-600 hover:bg-slate-100"
-          >
-            <Mail className="mr-2 h-5 w-5" />
-            Get in Touch
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="border-2 border-white/30 bg-transparent font-semibold text-white hover:bg-white hover:text-blue-600"
-          >
-            <MapPin className="mr-2 h-5 w-5" />
-            Get Directions
-          </Button>
+    <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-16 sm:py-20">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* Content */}
+          <div className="text-center lg:text-left">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-blue-100">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              First Time? Welcome!
+            </div>
+            <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+              Planning Your First Visit?
+            </h2>
+            <p className="mb-6 text-lg text-blue-100">
+              We'd love to welcome you! Here's what to expect when you join us for Sabbath worship.
+            </p>
+            <ul className="mb-8 space-y-3 text-left">
+              {[
+                'Arrive 10-15 minutes early for parking',
+                'Greeters will help you find your way',
+                "Children's programs available during service",
+                'Stay for fellowship lunch after service',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-blue-50">
+                  <svg
+                    className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
+              <Button
+                size="lg"
+                onClick={() =>
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className="bg-white px-6 font-semibold text-blue-700 shadow-lg hover:bg-blue-50"
+              >
+                <Mail className="mr-2 h-5 w-5" />
+                Let Us Know You're Coming
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() =>
+                  window.open(
+                    'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',
+                    '_blank'
+                  )
+                }
+                className="border-2 border-white/30 bg-white/10 font-semibold text-white backdrop-blur-sm hover:bg-white hover:text-blue-700"
+              >
+                <MapPin className="mr-2 h-5 w-5" />
+                Get Directions
+              </Button>
+            </div>
+          </div>
+
+          {/* Visual - Service Schedule Card */}
+          <div className="hidden lg:block">
+            <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+                <Clock className="h-5 w-5 text-amber-300" />
+                This Sabbath's Schedule
+              </h3>
+              <div className="space-y-4">
+                {[
+                  { time: '9:00 AM', event: 'Sabbath School', desc: 'Bible study for all ages' },
+                  { time: '11:00 AM', event: 'Divine Service', desc: 'Main worship service' },
+                  { time: '12:30 PM', event: 'Fellowship Lunch', desc: 'Join us for a meal' },
+                  { time: '2:30 PM', event: 'AY Program', desc: 'Youth activities' },
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4 rounded-lg bg-white/5 p-3">
+                    <div className="text-sm font-bold text-amber-300">{item.time}</div>
+                    <div>
+                      <div className="font-medium text-white">{item.event}</div>
+                      <div className="text-sm text-blue-200">{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
