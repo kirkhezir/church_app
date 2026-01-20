@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Skeleton } from '../../ui/skeleton';
-import { Calendar, MapPin, Clock, Users, ArrowRight, CalendarDays } from 'lucide-react';
+import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { eventService } from '../../../services/endpoints/eventService';
 import { Event, EventCategory } from '../../../types/api';
 
@@ -55,14 +55,12 @@ export function UpcomingEventsSection() {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        // Fetch upcoming events (no auth required for public events)
         const data = await eventService.getEvents({
           startDate: new Date().toISOString(),
         });
-        // Get only upcoming events (not cancelled) and limit to 4
         const upcomingEvents = data
           .filter((event) => !event.cancelledAt && new Date(event.startDateTime) > new Date())
-          .slice(0, 4);
+          .slice(0, 3);
         setEvents(upcomingEvents);
       } catch (err) {
         console.error('Error fetching events:', err);
@@ -76,124 +74,88 @@ export function UpcomingEventsSection() {
   }, []);
 
   return (
-    <section className="bg-gray-50 px-4 py-20" id="events">
-      <div className="mx-auto max-w-7xl">
-        {/* Section Header */}
-        <div className="mb-12 flex flex-col items-center justify-between gap-4 md:flex-row">
+    <section className="bg-white py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Header */}
+        <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
-              <CalendarDays className="h-4 w-4" />
-              <span>Upcoming Events</span>
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900 md:text-5xl">Join Us</h2>
-            <p className="mt-2 text-xl text-gray-600">See what's happening at our church</p>
+            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">Upcoming Events</h2>
+            <p className="mt-1 text-lg text-slate-600">See what's happening at our church</p>
           </div>
           <Link to="/events">
-            <Button
-              size="lg"
-              className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
+            <Button className="bg-blue-600 hover:bg-blue-700">
               View All Events
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
 
         {/* Loading State */}
         {loading && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="overflow-hidden border-none shadow-lg">
-                <Skeleton className="h-32 w-full" />
-                <CardContent className="p-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="overflow-hidden">
+                <CardContent className="p-5">
+                  <Skeleton className="mb-3 h-5 w-20" />
                   <Skeleton className="mb-2 h-6 w-3/4" />
-                  <Skeleton className="mb-4 h-4 w-1/2" />
-                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-1/2" />
                 </CardContent>
               </Card>
             ))}
           </div>
         )}
 
-        {/* Error State */}
-        {error && !loading && (
-          <div className="rounded-xl border-2 border-dashed border-gray-300 bg-white p-12 text-center">
-            <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-            <p className="text-lg text-gray-500">{error}</p>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!loading && !error && events.length === 0 && (
-          <div className="rounded-xl border-2 border-dashed border-gray-300 bg-white p-12 text-center">
-            <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-900">No Upcoming Events</h3>
-            <p className="text-gray-500">
-              Check back soon for new events, or contact us for information about our regular
-              services.
-            </p>
+        {/* Error/Empty State */}
+        {!loading && (error || events.length === 0) && (
+          <div className="rounded-xl bg-slate-50 p-8 text-center sm:p-12">
+            <Calendar className="mx-auto mb-3 h-10 w-10 text-slate-400" />
+            <h3 className="mb-1 text-lg font-semibold text-slate-900">No Upcoming Events</h3>
+            <p className="text-slate-600">Check back soon for new events.</p>
           </div>
         )}
 
         {/* Events Grid */}
         {!loading && !error && events.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => {
               const dateInfo = formatDate(event.startDateTime);
               const timeStr = formatTime(event.startDateTime);
               const category = event.category as EventCategory;
-              const spotsLeft = event.maxCapacity
-                ? event.maxCapacity - (event.rsvpCount || 0)
-                : null;
 
               return (
                 <Link to={`/events/${event.id}`} key={event.id}>
-                  <Card className="group h-full overflow-hidden border-none shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-                    {/* Date Badge */}
-                    <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white">
-                      <div className="flex items-start justify-between">
-                        <div className="text-center">
-                          <p className="text-sm font-medium uppercase opacity-80">
-                            {dateInfo.weekday}
-                          </p>
-                          <p className="text-4xl font-bold">{dateInfo.day}</p>
-                          <p className="text-sm font-medium uppercase">{dateInfo.month}</p>
+                  <Card className="group h-full overflow-hidden border border-slate-200 transition-shadow hover:shadow-md">
+                    <CardContent className="p-5">
+                      {/* Date + Category */}
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {dateInfo.month} {dateInfo.day}
+                          </span>
                         </div>
                         <span
-                          className={`rounded-full border px-3 py-1 text-xs font-medium ${categoryColors[category]}`}
+                          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColors[category]}`}
                         >
                           {categoryLabels[category]}
                         </span>
                       </div>
-                    </div>
 
-                    <CardContent className="p-6">
-                      <h3 className="mb-3 line-clamp-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-blue-600">
+                      {/* Title */}
+                      <h3 className="mb-2 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600">
                         {event.title}
                       </h3>
 
-                      <div className="space-y-2 text-sm text-gray-600">
+                      {/* Details */}
+                      <div className="space-y-1 text-sm text-slate-500">
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-blue-500" />
+                          <Clock className="h-3.5 w-3.5" />
                           <span>{timeStr}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-blue-500" />
+                          <MapPin className="h-3.5 w-3.5" />
                           <span className="line-clamp-1">{event.location}</span>
                         </div>
-                        {spotsLeft !== null && (
-                          <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-blue-500" />
-                            <span className={spotsLeft <= 5 ? 'font-medium text-orange-600' : ''}>
-                              {spotsLeft > 0 ? `${spotsLeft} spots left` : 'Fully booked'}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mt-4 flex items-center text-sm font-medium text-blue-600 transition-all group-hover:translate-x-1">
-                        <span>View Details</span>
-                        <ArrowRight className="ml-1 h-4 w-4" />
                       </div>
                     </CardContent>
                   </Card>

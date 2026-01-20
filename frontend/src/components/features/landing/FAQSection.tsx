@@ -6,7 +6,6 @@
  */
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../ui/accordion';
-import { HelpCircle, MessageCircle } from 'lucide-react';
 import { Button } from '../../ui/button';
 
 interface FAQItem {
@@ -77,49 +76,40 @@ const faqItems: FAQItem[] = [
 
 export function FAQSection() {
   return (
-    <section className="bg-white px-4 py-20" id="faq">
-      <div className="mx-auto max-w-4xl">
+    <section className="bg-white py-16 sm:py-24" id="faq">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mb-12 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
-            <HelpCircle className="h-4 w-4" />
-            <span>Frequently Asked Questions</span>
-          </div>
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">Have Questions?</h2>
-          <p className="text-xl text-gray-600">Find answers to common questions about our church</p>
+        <div className="mb-10 text-center">
+          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-lg text-slate-600">Common questions about visiting our church</p>
         </div>
 
         {/* FAQ Accordion */}
-        <Accordion type="single" collapsible className="space-y-4">
+        <Accordion type="single" collapsible className="space-y-3">
           {faqItems.map((item) => (
             <AccordionItem
               key={item.id}
               value={item.id}
-              className="rounded-xl border-2 border-gray-100 bg-gray-50 px-6 transition-all hover:border-blue-200 hover:bg-blue-50/50 data-[state=open]:border-blue-300 data-[state=open]:bg-blue-50"
+              className="rounded-lg border border-slate-200 bg-white px-4 transition-colors data-[state=open]:bg-slate-50 sm:px-5"
             >
-              <AccordionTrigger className="py-6 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-bold text-white">
-                    Q
-                  </span>
-                  <span className="pr-4">{item.question}</span>
-                </div>
+              <AccordionTrigger className="py-4 text-left font-medium text-slate-900 hover:no-underline sm:text-lg">
+                {item.question}
               </AccordionTrigger>
-              <AccordionContent className="pb-6 text-base leading-relaxed text-gray-700">
-                <div className="ml-11 border-l-2 border-blue-200 pl-4">{item.answer}</div>
+              <AccordionContent className="pb-4 leading-relaxed text-slate-600">
+                {item.answer}
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
 
         {/* Contact CTA */}
-        <div className="mt-12 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-center text-white">
-          <MessageCircle className="mx-auto mb-4 h-12 w-12" />
-          <h3 className="mb-2 text-2xl font-bold">Still have questions?</h3>
-          <p className="mb-6 text-blue-100">We'd love to hear from you! Reach out anytime.</p>
+        <div className="mt-10 rounded-xl bg-slate-100 p-6 text-center sm:p-8">
+          <h3 className="mb-2 text-lg font-semibold text-slate-900">Still have questions?</h3>
+          <p className="mb-4 text-slate-600">We'd love to hear from you!</p>
           <Button
-            size="lg"
-            className="bg-white text-blue-700 hover:bg-blue-50"
+            className="bg-blue-600 hover:bg-blue-700"
             onClick={() =>
               document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             }

@@ -5,75 +5,78 @@
  * with improved visual design and UX
  */
 
-import { Clock, Calendar, Users } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Clock, Users } from 'lucide-react';
+
+const services = [
+  {
+    name: 'Sabbath School',
+    time: '9:00 AM',
+    timeValue: '09:00',
+    description: 'Bible study and fellowship for all ages.',
+    color: 'bg-blue-600',
+  },
+  {
+    name: 'Divine Service',
+    time: '11:00 AM',
+    timeValue: '11:00',
+    description: 'Worship with music, prayer, and biblical messages.',
+    color: 'bg-indigo-600',
+  },
+  {
+    name: 'AY Program',
+    time: '2:30 PM',
+    timeValue: '14:30',
+    description: 'Youth activities and spiritual programs.',
+    color: 'bg-purple-600',
+  },
+];
 
 export function WorshipTimesSection() {
   return (
     <section
       id="worship-times"
-      className="bg-white px-4 py-16"
+      className="bg-slate-50 py-16 sm:py-24"
       aria-labelledby="worship-times-heading"
     >
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 id="worship-times-heading" className="mb-4 text-4xl font-bold text-gray-900">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        {/* Header */}
+        <div className="mb-10 text-center sm:mb-12">
+          <h2
+            id="worship-times-heading"
+            className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl"
+          >
             Worship Times
           </h2>
-          <p className="text-lg text-gray-600">Join us every Sabbath for worship and fellowship</p>
+          <p className="text-lg text-slate-600">
+            Join us every Sabbath (Saturday) for worship and fellowship
+          </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Sabbath School */}
-          <Card className="overflow-hidden border-none shadow-lg transition-all hover:shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-              <div className="mb-2 flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <span className="font-semibold">Saturday</span>
+        {/* Service Cards */}
+        <div className="grid gap-4 sm:grid-cols-3">
+          {services.map((service) => (
+            <div
+              key={service.name}
+              className="rounded-xl bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6"
+            >
+              <div
+                className={`mb-4 inline-flex items-center gap-2 rounded-lg ${service.color} px-3 py-1.5 text-sm font-medium text-white`}
+              >
+                <Clock className="h-4 w-4" />
+                <time dateTime={service.timeValue}>{service.time}</time>
               </div>
-              <CardTitle className="text-2xl">Sabbath School</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-                <Clock className="h-8 w-8 text-blue-600" />
-                <time dateTime="09:00">9:00 AM</time>
-              </div>
-              <p className="mt-4 text-gray-600">
-                Bible study and fellowship for all ages. Small group discussions and interactive
-                learning.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Divine Service */}
-          <Card className="overflow-hidden border-none shadow-lg transition-all hover:shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-              <div className="mb-2 flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <span className="font-semibold">Saturday</span>
-              </div>
-              <CardTitle className="text-2xl">Divine Service</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 text-3xl font-bold text-gray-900">
-                <Clock className="h-8 w-8 text-purple-600" />
-                <time dateTime="11:00">11:00 AM</time>
-              </div>
-              <p className="mt-4 text-gray-600">
-                Worship service with inspiring music, prayer, and biblical messages.
-              </p>
-            </CardContent>
-          </Card>
+              <h3 className="mb-2 text-lg font-semibold text-slate-900">{service.name}</h3>
+              <p className="text-sm leading-relaxed text-slate-600">{service.description}</p>
+            </div>
+          ))}
         </div>
 
         {/* Welcome Message */}
-        <div className="mt-8 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 p-8 text-center">
-          <Users className="mx-auto mb-4 h-12 w-12 text-blue-600" />
-          <p className="text-lg font-medium text-gray-900">
-            All are welcome to join us in worship and fellowship!
-          </p>
-          <p className="mt-2 text-gray-600">
-            First-time visitors, please feel free to introduce yourself. We&apos;d love to meet you!
+        <div className="mt-8 flex items-center justify-center gap-3 rounded-lg bg-white p-5 text-center shadow-sm sm:mt-10">
+          <Users className="h-6 w-6 flex-shrink-0 text-blue-600" />
+          <p className="text-slate-700">
+            <span className="font-medium">All are welcome!</span>
+            <span className="hidden sm:inline"> First-time visitors, we'd love to meet you.</span>
           </p>
         </div>
       </div>

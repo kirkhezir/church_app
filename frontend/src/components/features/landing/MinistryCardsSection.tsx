@@ -7,7 +7,7 @@
 
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
-import { Users, Baby, Music, Heart, GraduationCap, HeartHandshake } from 'lucide-react';
+import { Users, Baby, Music, GraduationCap, HeartHandshake } from 'lucide-react';
 
 interface Ministry {
   id: string;
@@ -81,67 +81,52 @@ const ministries: Ministry[] = [
 
 export function MinistryCardsSection() {
   return (
-    <section className="bg-gradient-to-br from-gray-50 to-white px-4 py-20">
-      <div className="mx-auto max-w-7xl">
+    <section className="bg-slate-50 py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mb-12 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
-            <Heart className="h-4 w-4" />
-            <span>Get Involved</span>
-          </div>
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">Our Ministries</h2>
-          <p className="mx-auto max-w-2xl text-xl text-gray-600">
-            Find your place to serve and grow with us
-          </p>
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">Our Ministries</h2>
+          <p className="text-lg text-slate-600">Find your place to serve and grow with us</p>
         </div>
 
-        {/* Ministry Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Ministry Cards Grid - 2 columns on tablet, 3 on desktop */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ministries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border-none shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="group overflow-hidden border border-slate-200 bg-white transition-shadow hover:shadow-lg"
             >
-              <CardContent className="p-0">
-                {/* Header with Icon */}
-                <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 p-6 text-white">
+              <CardContent className="p-5">
+                {/* Icon + Title */}
+                <div className="mb-3 flex items-center gap-3">
                   <div
-                    className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${ministry.bgColor} transition-transform duration-300 group-hover:scale-110`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-lg ${ministry.bgColor}`}
                   >
-                    <ministry.icon className={`h-7 w-7 ${ministry.color}`} />
+                    <ministry.icon className={`h-5 w-5 ${ministry.color}`} />
                   </div>
-                  <h3 className="text-2xl font-bold">{ministry.name}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">{ministry.name}</h3>
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <p className="mb-4 text-gray-600">{ministry.description}</p>
+                {/* Description */}
+                <p className="mb-4 text-sm leading-relaxed text-slate-600">
+                  {ministry.description}
+                </p>
 
-                  {/* Activities List */}
-                  <div className="mb-6">
-                    <p className="mb-2 text-sm font-semibold text-gray-900">What We Do:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {ministry.activities.map((activity, idx) => (
-                        <span
-                          key={idx}
-                          className={`rounded-full ${ministry.bgColor} px-3 py-1 text-xs font-medium ${ministry.color}`}
-                        >
-                          {activity}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <Button
-                    variant="outline"
-                    className="w-full border-2 transition-all hover:bg-gray-900 hover:text-white"
-                    onClick={() =>
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-                    }
-                  >
-                    Learn More
-                  </Button>
+                {/* Activities */}
+                <div className="flex flex-wrap gap-1.5">
+                  {ministry.activities.slice(0, 3).map((activity, idx) => (
+                    <span
+                      key={idx}
+                      className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+                    >
+                      {activity}
+                    </span>
+                  ))}
+                  {ministry.activities.length > 3 && (
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+                      +{ministry.activities.length - 3}
+                    </span>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -149,18 +134,16 @@ export function MinistryCardsSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <p className="mb-4 text-lg text-gray-600">
-            Interested in joining a ministry or have questions?
-          </p>
+        <div className="mt-10 text-center">
+          <p className="mb-4 text-slate-600">Interested in joining a ministry?</p>
           <Button
             size="lg"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            className="bg-blue-600 hover:bg-blue-700"
             onClick={() =>
               document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             }
           >
-            Contact Us Today
+            Contact Us
           </Button>
         </div>
       </div>

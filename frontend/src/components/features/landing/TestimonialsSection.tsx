@@ -56,124 +56,102 @@ const testimonials: Testimonial[] = [
 
 export function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   // Auto-slide every 6 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      handleNext();
+      setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
     }, 6000);
-
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, []);
 
   const handlePrev = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
     setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-    setTimeout(() => setIsAnimating(false), 500);
   };
 
   const handleNext = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
     setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsAnimating(false), 500);
   };
 
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-20">
-      <div className="mx-auto max-w-6xl">
-        {/* Section Header */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
+    <section className="bg-white py-16 sm:py-24">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        {/* Header */}
+        <div className="mb-10 text-center">
+          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
             What Our Members Say
           </h2>
-          <div className="mx-auto mb-4 h-1 w-24 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
-          <p className="text-xl text-gray-600">Real stories from our church family</p>
+          <p className="text-lg text-slate-600">Stories from our church family</p>
         </div>
 
-        {/* Testimonial Card */}
+        {/* Testimonial */}
         <div className="relative">
-          <Card
-            className={`mx-auto max-w-4xl border-none bg-white shadow-2xl transition-all duration-500 ${
-              isAnimating ? 'scale-95 opacity-50' : 'scale-100 opacity-100'
-            }`}
-          >
-            <CardContent className="p-8 md:p-12">
-              {/* Quote Icon */}
-              <div className="mb-6 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-                  <Quote className="h-8 w-8 text-white" />
-                </div>
-              </div>
+          <Card className="bg-slate-50 shadow-none">
+            <CardContent className="p-6 sm:p-10">
+              {/* Quote */}
+              <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" />
 
-              {/* Quote Text */}
-              <blockquote className="mb-8 text-center text-xl leading-relaxed text-gray-700 md:text-2xl">
+              <blockquote className="mb-6 text-center text-lg text-slate-700 sm:text-xl">
                 "{currentTestimonial.quote}"
               </blockquote>
 
-              {/* Rating Stars */}
+              {/* Rating */}
               {currentTestimonial.rating && (
-                <div className="mb-6 flex justify-center gap-1">
+                <div className="mb-4 flex justify-center gap-0.5">
                   {Array.from({ length: currentTestimonial.rating }).map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
               )}
 
-              {/* Author Info */}
+              {/* Author */}
               <div className="text-center">
-                <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 text-2xl font-bold text-blue-600">
-                  {currentTestimonial.name.charAt(0)}
-                </div>
-                <p className="text-lg font-semibold text-gray-900">{currentTestimonial.name}</p>
+                <p className="font-semibold text-slate-900">{currentTestimonial.name}</p>
                 {currentTestimonial.role && (
-                  <p className="text-sm text-gray-500">{currentTestimonial.role}</p>
+                  <p className="text-sm text-slate-500">{currentTestimonial.role}</p>
                 )}
               </div>
             </CardContent>
           </Card>
 
-          {/* Navigation Buttons */}
-          <div className="absolute left-0 right-0 top-1/2 flex -translate-y-1/2 justify-between px-4">
+          {/* Navigation */}
+          <div className="mt-6 flex items-center justify-center gap-4">
             <Button
               variant="outline"
               size="icon"
               onClick={handlePrev}
-              className="h-12 w-12 rounded-full border-2 bg-white shadow-lg hover:bg-blue-50"
+              className="h-10 w-10 rounded-full"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-5 w-5" />
             </Button>
+
+            {/* Dots */}
+            <div className="flex gap-1.5">
+              {testimonials.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`h-2 rounded-full transition-all ${
+                    idx === currentIndex ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
+                  }`}
+                  aria-label={`Go to testimonial ${idx + 1}`}
+                />
+              ))}
+            </div>
+
             <Button
               variant="outline"
               size="icon"
               onClick={handleNext}
-              className="h-12 w-12 rounded-full border-2 bg-white shadow-lg hover:bg-blue-50"
+              className="h-10 w-10 rounded-full"
               aria-label="Next testimonial"
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
-        </div>
-
-        {/* Dots Indicator */}
-        <div className="mt-8 flex justify-center gap-2">
-          {testimonials.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-3 w-3 rounded-full transition-all duration-300 ${
-                idx === currentIndex
-                  ? 'w-8 bg-gradient-to-r from-blue-600 to-purple-600'
-                  : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`Go to testimonial ${idx + 1}`}
-            />
-          ))}
         </div>
       </div>
     </section>
