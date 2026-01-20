@@ -1,0 +1,8 @@
+# Enforce LF line endings for all text files
+* text=auto eol=lf
+
+# Explicitly set LF for code files
+*.{ts,tsx,js,jsx,json,md,css,scss,html,yml,yaml} text eol=lf
+
+# Binary files
+*.{png,jpg,jpeg,gif,ico,svg,woff,woff2,ttf,eot} binary
