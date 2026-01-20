@@ -42,14 +42,14 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium webkit
+        run: npx playwright install --with-deps
 
       - name: Setup database
         working-directory: ./backend
         run: |
           npx prisma generate
           npx prisma migrate deploy
-          npm run prisma:seed || true
+          npm run prisma:seed
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
 
