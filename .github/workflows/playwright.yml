@@ -8,7 +8,7 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -23,27 +23,27 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      
+
       - name: Install root dependencies (Playwright)
         run: npm ci
-      
+
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
-      
+
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm ci
-      
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-      
+
       - name: Setup database
         working-directory: ./backend
         run: |
@@ -52,7 +52,7 @@ jobs:
           npm run prisma:seed || true
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
-      
+
       - name: Start backend
         working-directory: ./backend
         run: npm run dev &
@@ -60,21 +60,21 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
           JWT_SECRET: test-secret-for-ci
           PORT: 3000
-      
+
       - name: Start frontend
         working-directory: ./frontend
         run: npm run dev &
         env:
           VITE_API_URL: http://localhost:3000/api/v1
-      
+
       - name: Wait for services
         run: |
           npx wait-on http://localhost:3000/health
           npx wait-on http://localhost:5173
-      
+
       - name: Run Playwright tests
         run: npx playwright test
-      
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
