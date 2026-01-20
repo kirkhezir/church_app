@@ -2,12 +2,11 @@
  * Ministry Cards Section Component
  *
  * Showcases different church ministries with
- * detailed cards, filter by interest, and call-to-action buttons
+ * detailed cards and filter by interest
  */
 
 import { useState } from 'react';
 import { Card, CardContent } from '../../ui/card';
-import { Button } from '../../ui/button';
 import { Users, Baby, Music, GraduationCap, HeartHandshake, Home, Filter } from 'lucide-react';
 
 type MinistryCategory = 'all' | 'youth' | 'family' | 'worship' | 'service';
@@ -103,22 +102,6 @@ export function MinistryCardsSection() {
   const filteredMinistries =
     activeFilter === 'all' ? ministries : ministries.filter((m) => m.category === activeFilter);
 
-  const handleJoinMinistry = (ministryName: string) => {
-    // Scroll to contact form and pre-fill subject
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-      // Try to find and fill the subject field
-      setTimeout(() => {
-        const subjectInput = document.querySelector('input[name="subject"]') as HTMLInputElement;
-        if (subjectInput) {
-          subjectInput.value = `Interest in ${ministryName}`;
-          subjectInput.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-      }, 500);
-    }
-  };
-
   return (
     <section className="bg-slate-50 py-16 sm:py-24" aria-labelledby="ministries-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -191,33 +174,9 @@ export function MinistryCardsSection() {
                     </span>
                   )}
                 </div>
-
-                {/* Join Button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleJoinMinistry(ministry.name)}
-                  className="w-full border-blue-200 text-blue-600 opacity-0 transition-all hover:bg-blue-50 hover:text-blue-700 group-hover:opacity-100"
-                >
-                  Join Ministry
-                </Button>
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="mt-10 text-center">
-          <p className="mb-4 text-slate-600">Interested in joining a ministry?</p>
-          <Button
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700"
-            onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-            }
-          >
-            Contact Us
-          </Button>
         </div>
       </div>
     </section>

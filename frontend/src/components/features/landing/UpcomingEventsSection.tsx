@@ -2,8 +2,7 @@
  * Upcoming Events Section Component
  *
  * Displays upcoming church events from the backend API
- * Shows next 3 events with RSVP info
- * Hides section entirely if no events (cleaner UX)
+ * Shows next 3 events - hides section entirely if no events (cleaner UX)
  */
 
 import { useEffect, useState } from 'react';
@@ -11,15 +10,15 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Skeleton } from '../../ui/skeleton';
-import { Calendar, MapPin, Clock, ArrowRight, CalendarPlus } from 'lucide-react';
+import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { eventService } from '../../../services/endpoints/eventService';
 import { Event, EventCategory } from '../../../types/api';
 
 const categoryColors: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-700 border-blue-200',
-  [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-700 border-purple-200',
-  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-700 border-green-200',
-  [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-700 border-orange-200',
+  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-700',
+  [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-700',
+  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-700',
+  [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-700',
 };
 
 const categoryLabels: Record<EventCategory, string> = {
@@ -29,12 +28,11 @@ const categoryLabels: Record<EventCategory, string> = {
   [EventCategory.FELLOWSHIP]: 'Fellowship',
 };
 
-function formatDate(dateString: string): { day: string; month: string; weekday: string } {
+function formatDate(dateString: string): { day: string; month: string } {
   const date = new Date(dateString);
   return {
     day: date.getDate().toString(),
     month: date.toLocaleDateString('en-US', { month: 'short' }),
-    weekday: date.toLocaleDateString('en-US', { weekday: 'short' }),
   };
 }
 
@@ -45,26 +43,6 @@ function formatTime(dateString: string): string {
     minute: '2-digit',
     hour12: true,
   });
-}
-
-// Generate Google Calendar URL for adding event
-function generateCalendarUrl(event: Event): string {
-  const startDate = new Date(event.startDateTime);
-  const endDate = event.endDateTime
-    ? new Date(event.endDateTime)
-    : new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-
-  const formatForCalendar = (date: Date) => date.toISOString().replace(/-|:|\.\d\d\d/g, '');
-
-  const params = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: event.title,
-    dates: `${formatForCalendar(startDate)}/${formatForCalendar(endDate)}`,
-    details: event.description || '',
-    location: event.location || 'Sing Buri Adventist Center',
-  });
-
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
 export function UpcomingEventsSection() {
@@ -95,7 +73,6 @@ export function UpcomingEventsSection() {
   }, []);
 
   // Don't render section at all if there are no events and not loading
-  // This provides cleaner UX than showing empty state
   if (!loading && (error || events.length === 0)) {
     return null;
   }
@@ -141,61 +118,45 @@ export function UpcomingEventsSection() {
               const dateInfo = formatDate(event.startDateTime);
               const timeStr = formatTime(event.startDateTime);
               const category = event.category as EventCategory;
-              const calendarUrl = generateCalendarUrl(event);
 
               return (
-                <Card
-                  key={event.id}
-                  className="group h-full overflow-hidden border border-slate-200 transition-shadow hover:shadow-md"
-                >
-                  <CardContent className="p-5">
-                    {/* Date + Category */}
-                    <div className="mb-3 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
-                        <Calendar className="h-4 w-4" />
-                        <span>
-                          {dateInfo.month} {dateInfo.day}
+                <Link to={`/events/${event.id}`} key={event.id}>
+                  <Card className="group h-full overflow-hidden border border-slate-200 transition-shadow hover:shadow-md">
+                    <CardContent className="p-5">
+                      {/* Date + Category */}
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {dateInfo.month} {dateInfo.day}
+                          </span>
+                        </div>
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColors[category]}`}
+                        >
+                          {categoryLabels[category]}
                         </span>
                       </div>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColors[category]}`}
-                      >
-                        {categoryLabels[category]}
-                      </span>
-                    </div>
 
-                    {/* Title */}
-                    <Link to={`/events/${event.id}`}>
+                      {/* Title */}
                       <h3 className="mb-2 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600">
                         {event.title}
                       </h3>
-                    </Link>
 
-                    {/* Details */}
-                    <div className="mb-4 space-y-1 text-sm text-slate-500">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-3.5 w-3.5" />
-                        <span>{timeStr}</span>
+                      {/* Details */}
+                      <div className="space-y-1 text-sm text-slate-500">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3.5 w-3.5" />
+                          <span>{timeStr}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-3.5 w-3.5" />
+                          <span className="line-clamp-1">{event.location}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-3.5 w-3.5" />
-                        <span className="line-clamp-1">{event.location}</span>
-                      </div>
-                    </div>
-
-                    {/* Add to Calendar Button */}
-                    <a
-                      href={calendarUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-blue-100 hover:text-blue-700"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <CalendarPlus className="h-3.5 w-3.5" />
-                      Add to Calendar
-                    </a>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               );
             })}
           </div>

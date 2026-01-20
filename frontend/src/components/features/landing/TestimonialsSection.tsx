@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent } from '../../ui/card';
-import { Quote, ChevronLeft, ChevronRight, Star, Play, Pause } from 'lucide-react';
+import { Quote, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Button } from '../../ui/button';
 
 interface Testimonial {
@@ -20,7 +20,6 @@ interface Testimonial {
   quote: string;
   image?: string;
   rating?: number;
-  videoUrl?: string; // Optional video testimonial
 }
 
 const testimonials: Testimonial[] = [
@@ -39,7 +38,6 @@ const testimonials: Testimonial[] = [
     quote:
       "The youth programs here are amazing! I've grown so much in my faith and made lifelong friends. Every Sabbath feels like coming home.",
     rating: 5,
-    videoUrl: 'https://example.com/video1', // Placeholder for video testimonial
   },
   {
     id: '3',
@@ -62,27 +60,25 @@ const testimonials: Testimonial[] = [
 export function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Check for reduced motion preference
+  // Check for reduced motion preference and auto-pause
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    if (mediaQuery.matches) {
+      setIsPaused(true);
+    }
   }, []);
 
-  // Auto-slide every 6 seconds (pauses on hover/focus or if reduced motion preferred)
+  // Auto-slide every 6 seconds (pauses on hover/focus)
   useEffect(() => {
-    if (isPaused || prefersReducedMotion) return;
+    if (isPaused) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
     }, 6000);
     return () => clearInterval(interval);
-  }, [isPaused, prefersReducedMotion]);
+  }, [isPaused]);
 
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
@@ -108,15 +104,13 @@ export function TestimonialsSection() {
           <p className="text-lg text-slate-600">Stories from our church family</p>
         </div>
 
-        {/* Testimonial */}
+        {/* Testimonial Card */}
         <div
-          className="relative"
           ref={containerRef}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onFocus={() => setIsPaused(true)}
           onBlur={(e) => {
-            // Only unpause if focus leaves the container entirely
             if (!containerRef.current?.contains(e.relatedTarget as Node)) {
               setIsPaused(false);
             }
@@ -124,31 +118,12 @@ export function TestimonialsSection() {
         >
           <Card className="bg-slate-50 shadow-none">
             <CardContent className="p-6 sm:p-10">
-              {/* Quote Icon */}
               <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" aria-hidden="true" />
 
-              {/* Quote Text */}
               <blockquote className="mb-6 text-center text-lg text-slate-700 sm:text-xl">
                 "{currentTestimonial.quote}"
               </blockquote>
 
-              {/* Video Badge (if available) */}
-              {currentTestimonial.videoUrl && (
-                <div className="mb-4 flex justify-center">
-                  <button
-                    className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-200"
-                    onClick={() => {
-                      /* Video modal would go here */
-                    }}
-                    aria-label={`Watch video testimonial from ${currentTestimonial.name}`}
-                  >
-                    <Play className="h-4 w-4" />
-                    Watch Video
-                  </button>
-                </div>
-              )}
-
-              {/* Rating */}
               {currentTestimonial.rating && (
                 <div
                   className="mb-4 flex justify-center gap-0.5"
@@ -164,7 +139,6 @@ export function TestimonialsSection() {
                 </div>
               )}
 
-              {/* Author */}
               <div className="text-center">
                 <p className="font-semibold text-slate-900">{currentTestimonial.name}</p>
                 {currentTestimonial.role && (
@@ -174,7 +148,7 @@ export function TestimonialsSection() {
             </CardContent>
           </Card>
 
-          {/* Navigation */}
+          {/* Simple Navigation - just arrows and dots */}
           <div className="mt-6 flex items-center justify-center gap-4">
             <Button
               variant="outline"
@@ -186,19 +160,8 @@ export function TestimonialsSection() {
               <ChevronLeft className="h-5 w-5" />
             </Button>
 
-            {/* Pause/Play Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsPaused(!isPaused)}
-              className="h-8 w-8 rounded-full"
-              aria-label={isPaused ? 'Resume auto-play' : 'Pause auto-play'}
-            >
-              {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-            </Button>
-
             {/* Dots */}
-            <div className="flex gap-1.5" role="tablist" aria-label="Testimonial navigation">
+            <div className="flex gap-2" role="tablist" aria-label="Testimonial navigation">
               {testimonials.map((_, idx) => (
                 <button
                   key={idx}
@@ -223,13 +186,6 @@ export function TestimonialsSection() {
               <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
-
-          {/* Pause indicator */}
-          {isPaused && !prefersReducedMotion && (
-            <p className="mt-3 text-center text-xs text-slate-500" aria-live="polite">
-              Auto-rotation paused
-            </p>
-          )}
         </div>
       </div>
     </section>

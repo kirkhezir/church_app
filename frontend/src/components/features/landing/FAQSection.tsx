@@ -181,20 +181,6 @@ export function FAQSection() {
             </Button>
           </div>
         )}
-
-        {/* Contact CTA */}
-        <div className="mt-10 rounded-xl bg-slate-100 p-6 text-center sm:p-8">
-          <h3 className="mb-2 text-lg font-semibold text-slate-900">Still have questions?</h3>
-          <p className="mb-4 text-slate-600">We'd love to hear from you!</p>
-          <Button
-            className="bg-blue-600 hover:bg-blue-700"
-            onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-            }
-          >
-            Contact Us
-          </Button>
-        </div>
       </div>
     </section>
   );

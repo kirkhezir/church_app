@@ -36,7 +36,6 @@ import { Button } from '../../components/ui/button';
 // Feature Components
 import WorshipTimesSection from '../../components/features/WorshipTimesSection';
 import LocationMapSection from '../../components/features/LocationMapSection';
-import ContactForm from '../../components/features/ContactForm';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
 
@@ -112,12 +111,9 @@ export function LandingPage() {
 
       <FAQSection />
 
-      {/* First-Time Visitor CTA - strategic placement before contact */}
-      <FirstTimeVisitorSection />
-
-      <section id="contact" className="bg-white">
+      {/* Contact Section - Consolidated, Clean */}
+      <section id="contact" className="bg-slate-50">
         <LocationMapSection />
-        <ContactForm />
       </section>
 
       <FooterSection />
@@ -439,8 +435,8 @@ function AboutSection() {
             Welcome to Our Church Family
           </h2>
           <p className="text-lg text-slate-600">
-            We are a Seventh-day Adventist community dedicated to sharing God's love. Join us every
-            Sabbath (Saturday) to worship, learn, and grow together.
+            We are a Seventh-day Adventist community dedicated to sharing God&apos;s love. Join us
+            every Sabbath (Saturday) to worship, learn, and grow together.
           </p>
         </div>
 
@@ -455,23 +451,22 @@ function AboutSection() {
                 </div>
               </div>
             </div>
-            {/* Welcome Message */}
             <div className="text-center sm:text-left">
               <p className="mb-2 italic text-slate-700">
-                "We believe God has brought you here for a reason. Whether you're exploring faith or
-                seeking a deeper relationship with Christ, our doors and hearts are open to you."
+                &ldquo;We believe God has brought you here for a reason. Whether you&apos;re
+                exploring faith or seeking a deeper relationship with Christ, our doors and hearts
+                are open to you.&rdquo;
               </p>
-              <p className="font-semibold text-slate-900">Pastor's Welcome</p>
+              <p className="font-semibold text-slate-900">Pastor&apos;s Welcome</p>
               <p className="text-sm text-slate-500">Sing Buri Adventist Center</p>
             </div>
           </div>
         </div>
 
-        {/* Mission Quote */}
         <div className="mx-auto mt-10 max-w-3xl rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-center text-white shadow-xl sm:p-8">
           <blockquote className="text-lg italic sm:text-xl">
-            "Our mission is to share God's love through worship, fellowship, and service — building
-            a community where faith grows and hope flourishes."
+            &ldquo;Our mission is to share God&apos;s love through worship, fellowship, and service
+            — building a community where faith grows and hope flourishes.&rdquo;
           </blockquote>
         </div>
 
@@ -493,11 +488,10 @@ function AboutSection() {
           ))}
         </div>
 
-        {/* Closing with Beliefs Link */}
         <div className="mt-12 text-center">
           <p className="text-lg text-slate-600">
-            Whether you're seeking spiritual growth or simply a place to belong —{' '}
-            <span className="font-semibold text-blue-600">you're welcome here.</span>
+            Whether you&apos;re seeking spiritual growth or simply a place to belong —{' '}
+            <span className="font-semibold text-blue-600">you&apos;re welcome here.</span>
           </p>
           <a
             href="https://www.adventist.org/beliefs/"
@@ -509,108 +503,6 @@ function AboutSection() {
             Learn about our 28 Fundamental Beliefs
             <span aria-hidden="true">→</span>
           </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// =============================================================================
-// FIRST-TIME VISITOR SECTION - Targeted, Actionable
-// =============================================================================
-function FirstTimeVisitorSection() {
-  return (
-    <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-16 sm:py-20">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Content */}
-          <div className="text-center lg:text-left">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-blue-100">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              First Time? Welcome!
-            </div>
-            <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
-              Planning Your First Visit?
-            </h2>
-            <p className="mb-6 text-lg text-blue-100">
-              We'd love to welcome you! Here's what to expect when you join us for Sabbath worship.
-            </p>
-            <ul className="mb-8 space-y-3 text-left">
-              {[
-                'Arrive 10-15 minutes early for parking',
-                'Greeters will help you find your way',
-                "Children's programs available during service",
-                'Stay for fellowship lunch after service',
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-blue-50">
-                  <svg
-                    className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-              <Button
-                size="lg"
-                onClick={() =>
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-                }
-                className="bg-white px-6 font-semibold text-blue-700 shadow-lg hover:bg-blue-50"
-              >
-                <Mail className="mr-2 h-5 w-5" />
-                Let Us Know You're Coming
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() =>
-                  window.open(
-                    'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',
-                    '_blank'
-                  )
-                }
-                className="border-2 border-white/30 bg-white/10 font-semibold text-white backdrop-blur-sm hover:bg-white hover:text-blue-700"
-              >
-                <MapPin className="mr-2 h-5 w-5" />
-                Get Directions
-              </Button>
-            </div>
-          </div>
-
-          {/* Visual - Service Schedule Card */}
-          <div className="hidden lg:block">
-            <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-                <Clock className="h-5 w-5 text-amber-300" />
-                This Sabbath's Schedule
-              </h3>
-              <div className="space-y-4">
-                {[
-                  { time: '9:00 AM', event: 'Sabbath School', desc: 'Bible study for all ages' },
-                  { time: '11:00 AM', event: 'Divine Service', desc: 'Main worship service' },
-                  { time: '12:30 PM', event: 'Fellowship Lunch', desc: 'Join us for a meal' },
-                  { time: '2:30 PM', event: 'AY Program', desc: 'Youth activities' },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-4 rounded-lg bg-white/5 p-3">
-                    <div className="text-sm font-bold text-amber-300">{item.time}</div>
-                    <div>
-                      <div className="font-medium text-white">{item.event}</div>
-                      <div className="text-sm text-blue-200">{item.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -678,7 +570,7 @@ function FooterSection() {
               </div>
             </div>
             <p className="mb-3 text-sm text-slate-400">
-              A community of faith sharing God's love in Sing Buri, Thailand.
+              A community of faith sharing God&apos;s love in Sing Buri, Thailand.
             </p>
             {/* SDA Affiliation Badge */}
             <a
