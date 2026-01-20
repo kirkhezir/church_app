@@ -133,31 +133,27 @@ export function ContactForm() {
   };
 
   return (
-    <section
-      id="contact"
-      className="bg-gradient-to-b from-gray-50 to-white px-4 py-16"
-      aria-labelledby="contact-heading"
-    >
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-12 text-center">
-          <h2 id="contact-heading" className="mb-4 text-4xl font-bold text-gray-900">
+    <section id="contact" className="bg-slate-50 py-16 sm:py-24" aria-labelledby="contact-heading">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6">
+        <div className="mb-10 text-center">
+          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
             Get In Touch
           </h2>
-          <p className="text-lg text-gray-600">
-            Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll
-            respond as soon as possible.
+          <p className="text-lg text-slate-600">
+            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon
+            as possible.
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border-none bg-white shadow-2xl">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 text-white">
-            <h3 className="text-2xl font-bold">Send Us A Message</h3>
-            <p className="mt-2 opacity-90">
-              Fill out the form below and we&apos;ll get back to you shortly
+        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+          <div className="border-b border-slate-100 bg-slate-50 px-6 py-4">
+            <h3 className="text-lg font-semibold text-slate-900">Send Us A Message</h3>
+            <p className="text-sm text-slate-600">
+              Fill out the form below and we'll get back to you shortly
             </p>
           </div>
 
-          <div className="p-8">
+          <div className="p-6">
             {submitStatus === 'success' && (
               <div
                 className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 shadow-sm"
@@ -295,8 +291,8 @@ export function ContactForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:shadow-xl ${
-                  isSubmitting ? 'cursor-not-allowed opacity-60' : 'hover:-translate-y-0.5'
+                className={`w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 ${
+                  isSubmitting ? 'cursor-not-allowed opacity-60' : ''
                 }`}
               >
                 {isSubmitting ? (

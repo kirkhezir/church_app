@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { Dialog, DialogContent } from '../../ui/dialog';
 import { Button } from '../../ui/button';
-import { ChevronLeft, ChevronRight, X, Camera, ZoomIn } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 
 interface GalleryImage {
   id: string;
@@ -97,47 +97,41 @@ export function PhotoGallerySection() {
   };
 
   return (
-    <section className="bg-white px-4 py-20">
-      <div className="mx-auto max-w-7xl">
+    <section className="bg-slate-50 py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mb-12 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700">
-            <Camera className="h-4 w-4" />
-            <span>Photo Gallery</span>
-          </div>
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">Our Church Family</h2>
-          <p className="text-xl text-gray-600">Moments of faith, fellowship, and community</p>
+        <div className="mb-10 text-center sm:mb-12">
+          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">Our Church Family</h2>
+          <p className="text-lg text-slate-600">Moments of faith, fellowship, and community</p>
         </div>
 
-        {/* Photo Grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Photo Grid - Masonry-style */}
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {galleryImages.map((image, index) => (
             <button
               key={image.id}
               onClick={() => openLightbox(image, index)}
-              className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+              className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <img
                 src={image.src}
                 alt={image.alt}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
               />
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wider text-blue-300">
-                    {image.category}
-                  </p>
-                  <p className="text-lg font-semibold">{image.caption}</p>
-                </div>
+              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
+                <p className="text-xs font-medium uppercase tracking-wide text-white/80">
+                  {image.category}
+                </p>
+                <p className="text-sm font-semibold text-white">{image.caption}</p>
+              </div>
 
-                {/* Zoom Icon */}
-                <div className="absolute right-4 top-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                    <ZoomIn className="h-5 w-5 text-white" />
-                  </div>
+              {/* Zoom Icon */}
+              <div className="absolute right-3 top-3 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm">
+                  <ZoomIn className="h-4 w-4 text-white" />
                 </div>
               </div>
             </button>
@@ -147,7 +141,7 @@ export function PhotoGallerySection() {
         {/* Lightbox Dialog */}
         <Dialog open={!!selectedImage} onOpenChange={closeLightbox}>
           <DialogContent
-            className="max-w-5xl border-none bg-black/95 p-0"
+            className="max-w-4xl border-none bg-black/95 p-0"
             onKeyDown={handleKeyDown}
           >
             <div className="relative">
@@ -156,9 +150,9 @@ export function PhotoGallerySection() {
                 variant="ghost"
                 size="icon"
                 onClick={closeLightbox}
-                className="absolute right-4 top-4 z-10 h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="absolute right-3 top-3 z-10 h-9 w-9 rounded-full bg-white/10 text-white hover:bg-white/20"
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               </Button>
 
               {/* Navigation Buttons */}
@@ -166,17 +160,17 @@ export function PhotoGallerySection() {
                 variant="ghost"
                 size="icon"
                 onClick={goToPrevious}
-                className="absolute left-4 top-1/2 z-10 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="absolute left-3 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20"
               >
-                <ChevronLeft className="h-8 w-8" />
+                <ChevronLeft className="h-6 w-6" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={goToNext}
-                className="absolute right-4 top-1/2 z-10 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="absolute right-3 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20"
               >
-                <ChevronRight className="h-8 w-8" />
+                <ChevronRight className="h-6 w-6" />
               </Button>
 
               {/* Image */}
@@ -188,11 +182,11 @@ export function PhotoGallerySection() {
                     className="max-h-[70vh] w-auto rounded-lg object-contain"
                   />
                   <div className="mt-4 text-center text-white">
-                    <p className="text-sm uppercase tracking-wider text-blue-400">
+                    <p className="text-xs uppercase tracking-wide text-slate-400">
                       {selectedImage.category}
                     </p>
-                    <p className="mt-1 text-xl font-semibold">{selectedImage.caption}</p>
-                    <p className="mt-2 text-sm text-gray-400">
+                    <p className="mt-1 text-lg font-medium">{selectedImage.caption}</p>
+                    <p className="mt-2 text-sm text-slate-500">
                       {selectedIndex + 1} / {galleryImages.length}
                     </p>
                   </div>

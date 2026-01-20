@@ -2,11 +2,16 @@
  * Location Map Section Component - Enhanced
  *
  * Displays church location with embedded Google Maps and contact details
+ *
+ * UI/UX Best Practices:
+ * - Clear visual hierarchy
+ * - Easy-to-scan contact info
+ * - Accessible map with fallback
+ * - Mobile-responsive layout
  */
 
 import { MapPin, Navigation, Phone, Mail } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
 
 export function LocationMapSection() {
   const googleMapsUrl =
@@ -15,21 +20,20 @@ export function LocationMapSection() {
     'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center';
 
   return (
-    <section id="location" className="bg-white px-4 py-16" aria-labelledby="location-heading">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-12 text-center">
-          <h2 id="location-heading" className="mb-4 text-4xl font-bold text-gray-900">
+    <section id="location" className="bg-white py-16 sm:py-24" aria-labelledby="location-heading">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Header */}
+        <div className="mb-10 text-center sm:mb-12">
+          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
             Find Us
           </h2>
-          <p className="text-lg text-gray-600">
-            We&apos;d love to see you! Here&apos;s how to reach us
-          </p>
+          <p className="text-lg text-slate-600">We'd love to see you! Here's how to reach us</p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-5">
           {/* Map */}
-          <div className="lg:col-span-2">
-            <Card className="overflow-hidden border-none shadow-xl">
+          <div className="lg:col-span-3">
+            <div className="overflow-hidden rounded-xl bg-slate-100">
               <div className="aspect-video w-full">
                 <iframe
                   title="Google Maps - Sing Buri Adventist Center"
@@ -42,77 +46,65 @@ export function LocationMapSection() {
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
-            </Card>
-
-            <div className="mt-4">
-              <Button
-                size="lg"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl"
-                onClick={() => window.open(directionsUrl, '_blank')}
-              >
-                <Navigation className="mr-2 h-5 w-5" />
-                Get Directions
-              </Button>
             </div>
+            <Button
+              className="mt-4 w-full bg-blue-600 font-medium text-white hover:bg-blue-700"
+              onClick={() => window.open(directionsUrl, '_blank')}
+            >
+              <Navigation className="mr-2 h-4 w-4" />
+              Get Directions
+            </Button>
           </div>
 
           {/* Contact Information */}
-          <div className="space-y-4">
-            <Card className="border-none shadow-lg">
-              <CardContent className="p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                    <MapPin className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900">Address</h3>
+          <div className="space-y-4 lg:col-span-2">
+            {/* Address */}
+            <div className="rounded-xl bg-slate-50 p-5">
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                  <MapPin className="h-5 w-5" />
                 </div>
-                <address className="not-italic">
-                  <p className="mb-2 text-lg font-semibold text-gray-900">
-                    Sing Buri Adventist Center
-                  </p>
-                  <p className="text-gray-700">Bang Phutsa, Mueang Sing Buri District,</p>
-                  <p className="text-gray-700"> Sing Buri 16000 Thailand</p>
-                </address>
-              </CardContent>
-            </Card>
+                <h3 className="text-lg font-semibold text-slate-900">Address</h3>
+              </div>
+              <address className="not-italic text-slate-600">
+                <p className="font-medium text-slate-900">Sing Buri Adventist Center</p>
+                <p>Bang Phutsa, Mueang Sing Buri District,</p>
+                <p>Sing Buri 16000 Thailand</p>
+              </address>
+            </div>
 
-            <Card className="border-none shadow-lg">
-              <CardContent className="p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white">
-                    <Phone className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900">Phone</h3>
+            {/* Phone */}
+            <div className="rounded-xl bg-slate-50 p-5">
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                  <Phone className="h-5 w-5" />
                 </div>
-                <a
-                  href="tel:+66876106926"
-                  className="text-lg text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  +66 (0) 876-106-926
-                </a>
-                <p className="mt-2 text-sm text-gray-600">
-                  Call us for any questions or to schedule a visit
-                </p>
-              </CardContent>
-            </Card>
+                <h3 className="text-lg font-semibold text-slate-900">Phone</h3>
+              </div>
+              <a href="tel:+66876106926" className="font-medium text-blue-600 hover:underline">
+                +66 (0) 876-106-926
+              </a>
+              <p className="mt-1 text-sm text-slate-500">
+                Call us for any questions or to schedule a visit
+              </p>
+            </div>
 
-            <Card className="border-none shadow-lg">
-              <CardContent className="p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-600 text-white">
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900">Email</h3>
+            {/* Email */}
+            <div className="rounded-xl bg-slate-50 p-5">
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                  <Mail className="h-5 w-5" />
                 </div>
-                <a
-                  href="mailto:singburiadventistcenter@gmail.com"
-                  className="break-all text-lg text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  singburiadventistcenter@gmail.com
-                </a>
-                <p className="mt-2 text-sm text-gray-600">Send us a message anytime</p>
-              </CardContent>
-            </Card>
+                <h3 className="text-lg font-semibold text-slate-900">Email</h3>
+              </div>
+              <a
+                href="mailto:singburiadventistcenter@gmail.com"
+                className="break-all font-medium text-blue-600 hover:underline"
+              >
+                singburiadventistcenter@gmail.com
+              </a>
+              <p className="mt-1 text-sm text-slate-500">Send us a message anytime</p>
+            </div>
           </div>
         </div>
       </div>

@@ -80,8 +80,11 @@ export function LandingPage() {
   return (
     <main className="min-h-screen bg-white">
       <OfflineIndicator />
-      <AnnouncementBanner />
-      <NavigationHeader />
+      {/* Fixed container for announcement + navigation */}
+      <div className="fixed inset-x-0 top-0 z-50">
+        <AnnouncementBanner />
+        <NavigationHeaderContent />
+      </div>
       <HeroSection />
       <AboutSection />
       <WorshipTimesSection />
@@ -119,7 +122,7 @@ export function LandingPage() {
 // =============================================================================
 // NAVIGATION HEADER - Clean, Professional Design
 // =============================================================================
-function NavigationHeader() {
+function NavigationHeaderContent() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -150,7 +153,7 @@ function NavigationHeader() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`transition-all duration-300 ${
         isScrolled
           ? 'bg-white/95 shadow-md backdrop-blur-lg'
           : 'bg-gradient-to-b from-black/50 to-transparent'
@@ -175,9 +178,6 @@ function NavigationHeader() {
               }`}
             >
               {CHURCH_NAME}
-            </p>
-            <p className={`text-xs ${isScrolled ? 'text-blue-600' : 'text-blue-200'}`}>
-              Seventh-day Adventist
             </p>
           </div>
         </button>
@@ -480,7 +480,6 @@ function FooterSection() {
               <img src={CHURCH_LOGO} alt="" className="h-12 w-12 rounded-full object-contain" />
               <div>
                 <p className="font-bold text-white">{CHURCH_NAME}</p>
-                <p className="text-sm text-slate-400">Seventh-day Adventist</p>
               </div>
             </div>
             <p className="mb-4 text-sm text-slate-400">
