@@ -2,12 +2,15 @@
  * Ministry Cards Section Component
  *
  * Showcases different church ministries with
- * detailed cards and call-to-action buttons
+ * detailed cards, filter by interest, and call-to-action buttons
  */
 
+import { useState } from 'react';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
-import { Users, Baby, Music, GraduationCap, HeartHandshake } from 'lucide-react';
+import { Users, Baby, Music, GraduationCap, HeartHandshake, Home, Filter } from 'lucide-react';
+
+type MinistryCategory = 'all' | 'youth' | 'family' | 'worship' | 'service';
 
 interface Ministry {
   id: string;
@@ -17,6 +20,7 @@ interface Ministry {
   color: string;
   bgColor: string;
   activities: string[];
+  category: MinistryCategory;
 }
 
 const ministries: Ministry[] = [
@@ -29,6 +33,7 @@ const ministries: Ministry[] = [
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
     activities: ['AY Programs', 'Youth Sabbath', 'Outreach Activities', 'Bible Quizzes'],
+    category: 'youth',
   },
   {
     id: 'children',
@@ -39,6 +44,7 @@ const ministries: Ministry[] = [
     color: 'text-pink-600',
     bgColor: 'bg-pink-100',
     activities: ['Sabbath School', 'Vacation Bible School', 'Kids Choir', 'Story Time'],
+    category: 'family',
   },
   {
     id: 'music',
@@ -48,6 +54,7 @@ const ministries: Ministry[] = [
     color: 'text-purple-600',
     bgColor: 'bg-purple-100',
     activities: ['Church Choir', 'Praise Team', 'Special Music', 'Music Training'],
+    category: 'worship',
   },
   {
     id: 'community',
@@ -57,6 +64,7 @@ const ministries: Ministry[] = [
     color: 'text-green-600',
     bgColor: 'bg-green-100',
     activities: ['Food Distribution', 'Health Programs', 'Community Service', 'Disaster Relief'],
+    category: 'service',
   },
   {
     id: 'education',
@@ -67,36 +75,91 @@ const ministries: Ministry[] = [
     color: 'text-orange-600',
     bgColor: 'bg-orange-100',
     activities: ['Bible Classes', 'Leadership Training', 'Seminars', 'Book Clubs'],
+    category: 'service',
   },
   {
     id: 'family',
     name: 'Family Ministry',
     description: 'Strengthening families through counseling, workshops, and fellowship activities.',
-    icon: HeartHandshake,
+    icon: Home,
     color: 'text-red-600',
     bgColor: 'bg-red-100',
     activities: ['Marriage Enrichment', 'Parenting Classes', 'Family Camps', 'Counseling'],
+    category: 'family',
   },
 ];
 
+const filterOptions: { value: MinistryCategory; label: string }[] = [
+  { value: 'all', label: 'All Ministries' },
+  { value: 'youth', label: 'Youth' },
+  { value: 'family', label: 'Family' },
+  { value: 'worship', label: 'Worship' },
+  { value: 'service', label: 'Service' },
+];
+
 export function MinistryCardsSection() {
+  const [activeFilter, setActiveFilter] = useState<MinistryCategory>('all');
+
+  const filteredMinistries =
+    activeFilter === 'all' ? ministries : ministries.filter((m) => m.category === activeFilter);
+
+  const handleJoinMinistry = (ministryName: string) => {
+    // Scroll to contact form and pre-fill subject
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+      // Try to find and fill the subject field
+      setTimeout(() => {
+        const subjectInput = document.querySelector('input[name="subject"]') as HTMLInputElement;
+        if (subjectInput) {
+          subjectInput.value = `Interest in ${ministryName}`;
+          subjectInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }, 500);
+    }
+  };
+
   return (
-    <section className="bg-slate-50 py-16 sm:py-24">
+    <section className="bg-slate-50 py-16 sm:py-24" aria-labelledby="ministries-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">Our Ministries</h2>
+        <div className="mx-auto mb-8 max-w-2xl text-center">
+          <h2
+            id="ministries-heading"
+            className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl"
+          >
+            Our Ministries
+          </h2>
           <p className="text-lg text-slate-600">Find your place to serve and grow with us</p>
         </div>
 
-        {/* Ministry Cards Grid - 2 columns on tablet, 3 on desktop */}
+        {/* Filter Buttons */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
+          <Filter className="mr-1 h-4 w-4 text-slate-500" aria-hidden="true" />
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setActiveFilter(option.value)}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeFilter === option.value
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-slate-600 hover:bg-slate-100'
+              }`}
+              aria-pressed={activeFilter === option.value}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Ministry Cards Grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {ministries.map((ministry) => (
+          {filteredMinistries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border border-slate-200 bg-white transition-shadow hover:shadow-lg"
+              className="group overflow-hidden border border-slate-200 bg-white transition-all hover:shadow-lg"
             >
-              <CardContent className="p-5">
+              <CardContent className="flex h-full flex-col p-5">
                 {/* Icon + Title */}
                 <div className="mb-3 flex items-center gap-3">
                   <div
@@ -108,12 +171,12 @@ export function MinistryCardsSection() {
                 </div>
 
                 {/* Description */}
-                <p className="mb-4 text-sm leading-relaxed text-slate-600">
+                <p className="mb-4 flex-grow text-sm leading-relaxed text-slate-600">
                   {ministry.description}
                 </p>
 
                 {/* Activities */}
-                <div className="flex flex-wrap gap-1.5">
+                <div className="mb-4 flex flex-wrap gap-1.5">
                   {ministry.activities.slice(0, 3).map((activity, idx) => (
                     <span
                       key={idx}
@@ -128,6 +191,16 @@ export function MinistryCardsSection() {
                     </span>
                   )}
                 </div>
+
+                {/* Join Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleJoinMinistry(ministry.name)}
+                  className="w-full border-blue-200 text-blue-600 opacity-0 transition-all hover:bg-blue-50 hover:text-blue-700 group-hover:opacity-100"
+                >
+                  Join Ministry
+                </Button>
               </CardContent>
             </Card>
           ))}
