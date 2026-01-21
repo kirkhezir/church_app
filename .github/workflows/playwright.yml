@@ -62,6 +62,8 @@ jobs:
       - name: Build backend
         working-directory: ./backend
         run: npm run build
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
 
       # Build frontend
       - name: Build frontend
