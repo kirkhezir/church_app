@@ -2,10 +2,33 @@
  * Worship Times Section Component - Enhanced
  *
  * Displays Sabbath worship service times for Sing Buri Adventist Center
- * with improved visual design and UX
+ * Clean, focused design with next date display
  */
 
-import { Clock, Users } from 'lucide-react';
+import { Clock, Users, Calendar } from 'lucide-react';
+
+// Calculate next Saturday date
+function getNextSaturday(): string {
+  const today = new Date();
+  const daysUntilSaturday = (6 - today.getDay() + 7) % 7 || 7;
+  const nextSaturday = new Date(today);
+
+  // If it's Saturday and before 5 PM, use today
+  if (today.getDay() === 6 && today.getHours() < 17) {
+    return today.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+  return nextSaturday.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 
 const services = [
   {
@@ -32,6 +55,8 @@ const services = [
 ];
 
 export function WorshipTimesSection() {
+  const nextSaturday = getNextSaturday();
+
   return (
     <section
       id="worship-times"
@@ -50,6 +75,11 @@ export function WorshipTimesSection() {
           <p className="text-lg text-slate-600">
             Join us every Sabbath (Saturday) for worship and fellowship
           </p>
+          {/* Next Service Date */}
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
+            <Calendar className="h-4 w-4" />
+            Next: {nextSaturday}
+          </div>
         </div>
 
         {/* Service Cards */}

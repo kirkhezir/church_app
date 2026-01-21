@@ -2,7 +2,7 @@
  * Upcoming Events Section Component
  *
  * Displays upcoming church events from the backend API
- * Shows next 4 events with RSVP info
+ * Shows next 3 events - hides section entirely if no events (cleaner UX)
  */
 
 import { useEffect, useState } from 'react';
@@ -15,10 +15,10 @@ import { eventService } from '../../../services/endpoints/eventService';
 import { Event, EventCategory } from '../../../types/api';
 
 const categoryColors: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-700 border-blue-200',
-  [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-700 border-purple-200',
-  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-700 border-green-200',
-  [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-700 border-orange-200',
+  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-700',
+  [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-700',
+  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-700',
+  [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-700',
 };
 
 const categoryLabels: Record<EventCategory, string> = {
@@ -28,12 +28,11 @@ const categoryLabels: Record<EventCategory, string> = {
   [EventCategory.FELLOWSHIP]: 'Fellowship',
 };
 
-function formatDate(dateString: string): { day: string; month: string; weekday: string } {
+function formatDate(dateString: string): { day: string; month: string } {
   const date = new Date(dateString);
   return {
     day: date.getDate().toString(),
     month: date.toLocaleDateString('en-US', { month: 'short' }),
-    weekday: date.toLocaleDateString('en-US', { weekday: 'short' }),
   };
 }
 
@@ -73,13 +72,20 @@ export function UpcomingEventsSection() {
     fetchEvents();
   }, []);
 
+  // Don't render section at all if there are no events and not loading
+  if (!loading && (error || events.length === 0)) {
+    return null;
+  }
+
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section className="bg-white py-16 sm:py-24" aria-labelledby="events-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">Upcoming Events</h2>
+            <h2 id="events-heading" className="text-3xl font-bold text-slate-900 sm:text-4xl">
+              Upcoming Events
+            </h2>
             <p className="mt-1 text-lg text-slate-600">See what's happening at our church</p>
           </div>
           <Link to="/events">
@@ -102,15 +108,6 @@ export function UpcomingEventsSection() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        )}
-
-        {/* Error/Empty State */}
-        {!loading && (error || events.length === 0) && (
-          <div className="rounded-xl bg-slate-50 p-8 text-center sm:p-12">
-            <Calendar className="mx-auto mb-3 h-10 w-10 text-slate-400" />
-            <h3 className="mb-1 text-lg font-semibold text-slate-900">No Upcoming Events</h3>
-            <p className="text-slate-600">Check back soon for new events.</p>
           </div>
         )}
 

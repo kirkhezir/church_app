@@ -3,9 +3,12 @@
  *
  * Displays member testimonials with carousel/slider
  * Builds trust and shows real community impact
+ *
+ * Accessibility: Pauses auto-rotation on hover/focus
+ * Respects prefers-reduced-motion
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent } from '../../ui/card';
 import { Quote, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Button } from '../../ui/button';
@@ -56,57 +59,86 @@ const testimonials: Testimonial[] = [
 
 export function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-slide every 6 seconds
+  // Check for reduced motion preference and auto-pause
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      setIsPaused(true);
+    }
+  }, []);
+
+  // Auto-slide every 6 seconds (pauses on hover/focus)
+  useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
     }, 6000);
     return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   }, []);
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
+  }, []);
 
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section className="bg-white py-16 sm:py-24" aria-labelledby="testimonials-heading">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center">
-          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2
+            id="testimonials-heading"
+            className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl"
+          >
             What Our Members Say
           </h2>
           <p className="text-lg text-slate-600">Stories from our church family</p>
         </div>
 
-        {/* Testimonial */}
-        <div className="relative">
+        {/* Testimonial Card */}
+        <div
+          ref={containerRef}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={(e) => {
+            if (!containerRef.current?.contains(e.relatedTarget as Node)) {
+              setIsPaused(false);
+            }
+          }}
+        >
           <Card className="bg-slate-50 shadow-none">
             <CardContent className="p-6 sm:p-10">
-              {/* Quote */}
-              <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" />
+              <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" aria-hidden="true" />
 
               <blockquote className="mb-6 text-center text-lg text-slate-700 sm:text-xl">
                 "{currentTestimonial.quote}"
               </blockquote>
 
-              {/* Rating */}
               {currentTestimonial.rating && (
-                <div className="mb-4 flex justify-center gap-0.5">
+                <div
+                  className="mb-4 flex justify-center gap-0.5"
+                  aria-label={`${currentTestimonial.rating} out of 5 stars`}
+                >
                   {Array.from({ length: currentTestimonial.rating }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    <Star
+                      key={i}
+                      className="h-4 w-4 fill-amber-400 text-amber-400"
+                      aria-hidden="true"
+                    />
                   ))}
                 </div>
               )}
 
-              {/* Author */}
               <div className="text-center">
                 <p className="font-semibold text-slate-900">{currentTestimonial.name}</p>
                 {currentTestimonial.role && (
@@ -116,7 +148,7 @@ export function TestimonialsSection() {
             </CardContent>
           </Card>
 
-          {/* Navigation */}
+          {/* Simple Navigation - just arrows and dots */}
           <div className="mt-6 flex items-center justify-center gap-4">
             <Button
               variant="outline"
@@ -129,15 +161,17 @@ export function TestimonialsSection() {
             </Button>
 
             {/* Dots */}
-            <div className="flex gap-1.5">
+            <div className="flex gap-2" role="tablist" aria-label="Testimonial navigation">
               {testimonials.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
+                  role="tab"
+                  aria-selected={idx === currentIndex}
+                  aria-label={`Go to testimonial ${idx + 1}`}
                   className={`h-2 rounded-full transition-all ${
                     idx === currentIndex ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
                   }`}
-                  aria-label={`Go to testimonial ${idx + 1}`}
                 />
               ))}
             </div>

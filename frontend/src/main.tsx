@@ -18,10 +18,45 @@ if ('serviceWorker' in navigator) {
       .register('/sw.js')
       .then((registration) => {
         console.log('Service Worker registered:', registration.scope);
+        
+        // Check for updates every 60 seconds
+        setInterval(() => {
+          registration.update();
+        }, 60000);
+        
+        // Listen for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker available, prompt user to refresh
+                if (confirm('New version available! Reload to update?')) {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
+              }
+            });
+          }
+        });
       })
       .catch((error) => {
         console.error('Service Worker registration failed:', error);
       });
+    
+    // Listen for messages from service worker
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SW_UPDATED') {
+        console.log('Service Worker updated to version:', event.data.version);
+        // Could show a toast notification here
+      }
+    });
+    
+    // Handle controller change (new SW activated)
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('New service worker activated, reloading page...');
+      window.location.reload();
+    });
   });
 }
 
