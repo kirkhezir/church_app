@@ -12,9 +12,14 @@ jest.setTimeout(10000);
 // Mock console methods to reduce noise in test output
 global.console = {
   ...console,
-  log: jest.fn(),
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  log: jest.fn() as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  debug: jest.fn() as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  info: jest.fn() as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  warn: jest.fn() as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error: jest.fn() as any,
 };
