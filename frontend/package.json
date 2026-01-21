@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/inject-sw-version.mjs",
+    "prebuild": "node -e \"console.log('Build started at:', new Date().toISOString())\"",
+    "postbuild": "node -e \"console.log('Build completed at:', new Date().toISOString())\"",
     "preview": "vite preview",
     "test": "jest --coverage",
     "test:watch": "jest --watch",

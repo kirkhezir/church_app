@@ -3,6 +3,7 @@
 ## Overview
 
 This project is configured for automatic deployment to:
+
 - **Vercel** - Frontend hosting
 - **Render** - Backend API hosting
 
@@ -38,6 +39,7 @@ VITE_APP_NAME=Sing Buri Adventist Center
 ### Deployment Setup
 
 1. **Connect GitHub Repository**
+
    ```bash
    # Via Vercel Dashboard
    - Import Git Repository
@@ -47,6 +49,7 @@ VITE_APP_NAME=Sing Buri Adventist Center
    ```
 
 2. **Configure Build Settings**
+
    ```bash
    Build Command: npm run build
    Output Directory: dist
@@ -120,6 +123,7 @@ ACCOUNT_LOCKOUT_DURATION_MINUTES=15
 ### Deployment Setup
 
 1. **Connect GitHub Repository**
+
    ```bash
    # Via Render Dashboard
    - New Web Service
@@ -128,6 +132,7 @@ ACCOUNT_LOCKOUT_DURATION_MINUTES=15
    ```
 
 2. **Configure Service**
+
    ```yaml
    Name: church-app-backend
    Region: Singapore
@@ -146,6 +151,7 @@ ACCOUNT_LOCKOUT_DURATION_MINUTES=15
 ### Database Setup
 
 1. **Create PostgreSQL Database**
+
    ```bash
    # Via Render Dashboard
    - New PostgreSQL Database
@@ -179,10 +185,12 @@ Located in `.github/workflows/`:
 ### Automatic Deployment Triggers
 
 ✅ **Enabled for**:
+
 - Push to `001-full-stack-web` branch
 - Pull request merge to main branch
 
 ❌ **Not triggered by**:
+
 - Draft pull requests
 - Feature branch pushes
 - Tag creation
@@ -233,6 +241,7 @@ prepare-deployment.ps1
 ### Vercel Issues
 
 **Build Fails**:
+
 ```bash
 # Check build logs in Vercel Dashboard
 # Common fixes:
@@ -242,6 +251,7 @@ prepare-deployment.ps1
 ```
 
 **Runtime Errors**:
+
 ```bash
 # Check function logs
 # Common issues:
@@ -253,6 +263,7 @@ prepare-deployment.ps1
 ### Render Issues
 
 **Build Fails**:
+
 ```bash
 # Check build logs in Render Dashboard
 # Common fixes:
@@ -262,6 +273,7 @@ prepare-deployment.ps1
 ```
 
 **Service Crashes**:
+
 ```bash
 # Check service logs
 # Common issues:
@@ -273,6 +285,7 @@ prepare-deployment.ps1
 ### Database Issues
 
 **Migration Failures**:
+
 ```bash
 # Manual migration (via Render Shell)
 cd backend
@@ -280,6 +293,7 @@ npx prisma migrate deploy
 ```
 
 **Connection Errors**:
+
 ```bash
 # Verify DATABASE_URL format:
 postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
@@ -292,12 +306,14 @@ postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
 ### Health Checks
 
 **Backend**:
+
 ```bash
 curl https://church-app-backend.onrender.com/health
 # Response: {"status":"ok","timestamp":"..."}
 ```
 
 **Frontend**:
+
 ```bash
 curl https://church-app.vercel.app
 # Response: 200 OK
@@ -306,9 +322,11 @@ curl https://church-app.vercel.app
 ### Logs
 
 **Vercel**:
+
 - Dashboard → Project → Deployments → [Select Deployment] → Logs
 
 **Render**:
+
 - Dashboard → Service → Logs (Real-time)
 
 ---

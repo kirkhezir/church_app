@@ -21,7 +21,7 @@
 
 3. **Documentation Files with Setup Info**
    - **Issue**: Setup guides were tracked but should be gitignored
-   - **Files**: HELIOHOST_SETUP_GUIDE.md, NEON_*.md (4 files)
+   - **Files**: HELIOHOST*SETUP_GUIDE.md, NEON*\*.md (4 files)
    - **Impact**: These were meant to be personal setup docs
    - **Fix**: Removed from tracking (they're in .gitignore)
 
@@ -42,14 +42,17 @@
 ## Files Changed
 
 ### Added Files
+
 - ✅ `vercel.json` - Vercel deployment configuration
 - ✅ `DEPLOYMENT_CONFIG.md` - Complete deployment guide
 - ✅ `ENV_VARS_GUIDE.md` - Environment variables setup guide
 
 ### Modified Files
+
 - ✅ `render.yaml` - Fixed branch from `main` → `001-full-stack-web`
 
 ### Removed from Git Tracking
+
 - ✅ `backend/token.txt` - Sensitive token file (kept locally, gitignored)
 - ✅ `HELIOHOST_SETUP_GUIDE.md` - Personal setup doc (kept locally, gitignored)
 - ✅ `NEON_SETUP_STEPS.md` - Personal setup doc (kept locally, gitignored)
@@ -63,12 +66,14 @@
 ### Vercel (Frontend)
 
 **Auto-Deploy**: ✅ Enabled
+
 - **Trigger**: Push to `001-full-stack-web` branch
 - **Framework**: Vite
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist`
 
 **Required Environment Variables**:
+
 ```bash
 VITE_API_URL=<render-backend-url>/api/v1
 VITE_WS_URL=<render-backend-url>
@@ -78,17 +83,20 @@ VITE_APP_NAME=Sing Buri Adventist Center
 ### Render (Backend)
 
 **Auto-Deploy**: ✅ Enabled
+
 - **Trigger**: Push to `001-full-stack-web` branch
 - **Region**: Singapore
 - **Runtime**: Node.js 20.x
 - **Plan**: Free
 
 **Build Command**:
+
 ```bash
 cd backend && npm install && npm run build
 ```
 
 **Start Command**:
+
 ```bash
 cd backend && npm start
 ```
@@ -150,15 +158,16 @@ HELIOHOST_SETUP_GUIDE.md
 ## Next Steps
 
 1. **Commit Changes**
+
    ```bash
    git commit -m "fix: correct deployment auto-deploy configuration
-   
+
    - Fix render.yaml branch from main to 001-full-stack-web
    - Add vercel.json for frontend deployment config
    - Remove tracked sensitive files (token.txt, setup guides)
    - Add comprehensive deployment documentation
    - Add environment variables setup guide
-   
+
    Security:
    - No credentials exposed
    - All sensitive files properly gitignored
@@ -166,6 +175,7 @@ HELIOHOST_SETUP_GUIDE.md
    ```
 
 2. **Push to GitHub**
+
    ```bash
    git push origin 001-full-stack-web
    ```

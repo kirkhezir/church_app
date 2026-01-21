@@ -4,11 +4,15 @@
  * Handles background push notification events and caching
  */
 
-// Cache version - increment to force cache refresh
-const CACHE_VERSION = 'v2';
+// Cache version - using build timestamp for automatic cache busting
+// This will be replaced during build process
+const BUILD_TIMESTAMP = '__BUILD_TIMESTAMP__';
+const CACHE_VERSION = `v${BUILD_TIMESTAMP}`;
 const STATIC_CACHE = `church-app-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `church-app-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `church-app-api-${CACHE_VERSION}`;
+
+console.log('Service Worker Cache Version:', CACHE_VERSION);
 
 // Assets to cache on install
 const STATIC_ASSETS = ['/', '/index.html', '/manifest.json', '/offline.html'];
@@ -25,39 +29,78 @@ const CACHE_EXPIRATION = {
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing.');
+  console.log('Service Worker installing with version:', CACHE_VERSION);
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
       console.log('Caching static assets');
-      return cache.addAll(STATIC_ASSETS);
+      return cache.addAll(STATIC_ASSETS).catch(err => {
+        console.warn('Failed to cache some assets:', err);
+        // Continue even if some assets fail
+      });
     })
   );
+  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
-// Activate event - clean old caches
+// Activate event - clean old caches and notify clients
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating.');
+  console.log('Service Worker activating with version:', CACHE_VERSION);
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => {
-            return (
-              key.startsWith('church-app-') &&
-              key !== STATIC_CACHE &&
-              key !== DYNAMIC_CACHE &&
-              key !== API_CACHE
-            );
-          })
-          .map((key) => {
-            console.log('Deleting old cache:', key);
-            return caches.delete(key);
-          })
-      );
-    })
+    Promise.all([
+      // Delete old caches
+      caches.keys().then((keys) => {
+        return Promise.all(
+          keys
+            .filter((key) => {
+              return (
+                key.startsWith('church-app-') &&
+                key !== STATIC_CACHE &&
+                key !== DYNAMIC_CACHE &&
+                key !== API_CACHE
+              );
+            })
+            .map((key) => {
+              console.log('Deleting old cache:', key);
+              return caches.delete(key);
+            })
+        );
+      }),
+      // Take control of all clients immediately
+      self.clients.claim().then(() => {
+        // Notify all clients about the update
+        return self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'SW_UPDATED',
+              version: CACHE_VERSION
+            });
+          });
+        });
+      })
+    ])
   );
-  self.clients.claim();
+});
+
+// Message event - handle messages from clients
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    event.waitUntil(
+      caches.keys().then(keys => {
+        return Promise.all(
+          keys.map(key => {
+            if (key.startsWith('church-app-')) {
+              console.log('Manually clearing cache:', key);
+              return caches.delete(key);
+            }
+          })
+        );
+      })
+    );
+  }
 });
 
 // Fetch event - network first with cache fallback
@@ -81,14 +124,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets - cache first, network fallback
+  // HTML pages - always network first to get latest version
+  if (url.pathname.endsWith('.html') || url.pathname === '/' || !url.pathname.includes('.')) {
+    event.respondWith(networkFirstWithCache(request, DYNAMIC_CACHE));
+    return;
+  }
+
+  // Static assets (JS, CSS, images) - cache first for performance
   if (isStaticAsset(url.pathname)) {
     event.respondWith(cacheFirstWithNetwork(request, STATIC_CACHE));
     return;
   }
 
-  // Dynamic content - stale while revalidate
-  event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE));
+  // Other dynamic content - network first
+  event.respondWith(networkFirstWithCache(request, DYNAMIC_CACHE));
 });
 
 // Cache strategies

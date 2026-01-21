@@ -76,6 +76,7 @@ web-push generate-vapid-keys
 ```
 
 This will output:
+
 ```
 Public Key: BFY4dw...
 Private Key: ZX_9zg...
@@ -90,6 +91,7 @@ Private Key: ZX_9zg...
 See `backend/.env.example` for complete list with descriptions.
 
 **Critical Variables**:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `JWT_SECRET` - Token signing secret (min 32 chars)
 - `JWT_REFRESH_SECRET` - Refresh token secret (min 32 chars)
@@ -98,6 +100,7 @@ See `backend/.env.example` for complete list with descriptions.
 - `VAPID_*` - Push notification keys
 
 **Optional Variables**:
+
 - `PORT` - Server port (default: 3000)
 - `CORS_ORIGIN` - Allowed origins (default: localhost)
 - `LOG_LEVEL` - Logging verbosity
@@ -107,6 +110,7 @@ See `backend/.env.example` for complete list with descriptions.
 See `frontend/.env.example` for complete list.
 
 **Required Variables**:
+
 - `VITE_API_URL` - Backend API endpoint
 - `VITE_WS_URL` - WebSocket endpoint
 - `VITE_APP_NAME` - Application name
