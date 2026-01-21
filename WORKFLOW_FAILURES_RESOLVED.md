@@ -20,11 +20,11 @@
 
 Using GitHub MCP server, we identified **10 failed workflow runs**:
 
-| Workflow | Failures | Branch | Root Cause |
-|----------|----------|--------|------------|
-| CI/CD Pipeline | 6 runs | main, 001-full-stack-web | Invalid cache configuration |
-| Playwright Tests | 4 runs | main, 001-full-stack-web | Missing service setup |
-| Performance Tests | 2 runs | 001-full-stack-web | Service dependencies |
+| Workflow          | Failures | Branch                   | Root Cause                  |
+| ----------------- | -------- | ------------------------ | --------------------------- |
+| CI/CD Pipeline    | 6 runs   | main, 001-full-stack-web | Invalid cache configuration |
+| Playwright Tests  | 4 runs   | main, 001-full-stack-web | Missing service setup       |
+| Performance Tests | 2 runs   | 001-full-stack-web       | Service dependencies        |
 
 ### Root Causes Identified
 
@@ -62,17 +62,19 @@ Using GitHub MCP server, we identified **10 failed workflow runs**:
 **File**: `.github/workflows/playwright.yml`
 
 **Before** (Broken):
+
 ```yaml
 - uses: actions/setup-node@v4
   with:
     node-version: lts/*
 - name: Install dependencies
-  run: npm ci  # ← FAILED: No package-lock.json at root
+  run: npm ci # ← FAILED: No package-lock.json at root
 - name: Run Playwright tests
-  run: npx playwright test  # ← FAILED: No services running
+  run: npx playwright test # ← FAILED: No services running
 ```
 
 **After** (Working):
+
 ```yaml
 # Added Postgres service
 services:
@@ -131,12 +133,14 @@ services:
 **File**: `.github/workflows/ci-cd.yml`
 
 **Changes**:
+
 - ❌ Removed: `cache: "npm"` from all jobs
 - ❌ Removed: Duplicate E2E test job
 - ✅ Kept: Backend and frontend unit tests
 - ✅ Kept: Docker build and deploy jobs
 
 **Why Remove Cache**:
+
 - Monorepo has multiple `package-lock.json` files
 - `cache: "npm"` expects single file at root
 - Would need `cache-dependency-path` for each job
@@ -152,11 +156,12 @@ services:
 **File**: `package.json`
 
 **Added**:
+
 ```json
 {
   "devDependencies": {
-    "wait-on": "^7.2.0",  // Wait for services to be ready
-    "serve": "^14.2.0"    // Serve built frontend
+    "wait-on": "^7.2.0", // Wait for services to be ready
+    "serve": "^14.2.0" // Serve built frontend
   },
   "scripts": {
     "test:e2e": "playwright test"
@@ -175,14 +180,14 @@ services:
 ```
 ❌ CI/CD Pipeline: FAILING
    └─ Error: cache key not found
-   
+
 ❌ Playwright Tests: FAILING
    └─ Error: Cannot connect to backend
    └─ Error: Frontend not ready
-   
+
 ❌ Performance Tests: FAILING
    └─ Error: Services not available
-   
+
 ⏱️  Average build time: N/A (always failing)
 🔴 Deployment blocked
 ```
@@ -197,14 +202,14 @@ services:
    ├─ Frontend Tests: ✅
    ├─ Docker Build: ✅
    └─ Deploy: ✅
-   
+
 ✅ Playwright Tests: PASSING
    ├─ Setup Services: ✅
    ├─ Run E2E Tests: ✅
    └─ Upload Reports: ✅
-   
+
 ✅ Performance Tests: READY
-   
+
 ⏱️  CI/CD: ~5-8 minutes
 ⏱️  Playwright: ~8-12 minutes
 🟢 Deployments unblocked
@@ -217,6 +222,7 @@ services:
 ### Monorepo Cache Challenge
 
 **Problem**: GitHub Actions cache expects this structure:
+
 ```
 repo-root/
   package-lock.json  ← Actions looks here
@@ -224,6 +230,7 @@ repo-root/
 ```
 
 **Our Structure**:
+
 ```
 church_app/
   package.json       ← Root (Playwright only)
@@ -238,6 +245,7 @@ church_app/
 **Solution Options**:
 
 Option 1: Use `cache-dependency-path`
+
 ```yaml
 - uses: actions/setup-node@v4
   with:
@@ -246,15 +254,18 @@ Option 1: Use `cache-dependency-path`
       backend/package-lock.json
       frontend/package-lock.json
 ```
+
 **Pros**: Faster subsequent runs  
 **Cons**: Complex, error-prone, needs maintenance
 
 Option 2: Remove cache (chosen)
+
 ```yaml
 - uses: actions/setup-node@v4
   with:
     node-version: "20.x"
 ```
+
 **Pros**: Simple, always works, npm ci is fast  
 **Cons**: No cache speedup (minor)
 
@@ -265,6 +276,7 @@ Option 2: Remove cache (chosen)
 ### Service Startup Sequence
 
 **Critical Order**:
+
 1. ✅ Start Postgres (via service)
 2. ✅ Install backend deps
 3. ✅ Generate Prisma client
@@ -278,6 +290,7 @@ Option 2: Remove cache (chosen)
 11. ✅ Run tests
 
 **Why This Order**:
+
 - Postgres must be ready before migrations
 - Prisma client needed for backend build
 - Backend must be built before starting
@@ -285,6 +298,7 @@ Option 2: Remove cache (chosen)
 - Both must be healthy before tests
 
 **Health Check Verification**:
+
 ```bash
 npx wait-on http://localhost:3000/health -t 60000
 npx wait-on http://localhost:5173 -t 60000
@@ -297,6 +311,7 @@ npx wait-on http://localhost:5173 -t 60000
 ### Unit Tests (CI/CD Workflow)
 
 **Backend**:
+
 ```bash
 cd backend
 export DATABASE_URL="postgresql://test:test@localhost:5432/church_app_test"
@@ -304,6 +319,7 @@ npm test -- --testPathIgnorePatterns="integration" --coverage
 ```
 
 **Frontend**:
+
 ```bash
 cd frontend
 npm test -- --coverage
@@ -317,12 +333,14 @@ npm test -- --coverage
 ### E2E Tests (Playwright Workflow)
 
 **Setup**:
+
 - Full Postgres database
 - Complete backend API
 - Production-built frontend
 - Real browser (Chromium)
 
 **Execution**:
+
 ```bash
 npx playwright test --project=chromium
 ```
@@ -369,6 +387,7 @@ npx playwright test --project=chromium
 **URL**: https://github.com/kirkhezir/church_app/actions
 
 **Expected**:
+
 - ✅ Latest run shows commit `5b2f373`
 - ✅ CI/CD Pipeline: Green checkmark
 - ✅ Playwright Tests: Green checkmark
@@ -377,6 +396,7 @@ npx playwright test --project=chromium
 ### 2. Monitor First Run
 
 **What to Watch**:
+
 - CI/CD job logs (should see "✓ Backend Tests")
 - Playwright job logs (should see "✓ Start backend server")
 - No cache-related errors
@@ -385,11 +405,13 @@ npx playwright test --project=chromium
 ### 3. Verify Deployments
 
 **Vercel**:
+
 - https://vercel.com/dashboard
 - Should show deployment from main branch
 - Status: "Ready"
 
 **Render**:
+
 - https://dashboard.render.com
 - Should show deployment from main branch
 - Status: "Live"
@@ -403,6 +425,7 @@ npx playwright test --project=chromium
 **1. Check Secrets**
 
 Required GitHub secrets:
+
 - `SNYK_TOKEN` (optional, will continue on error)
 - `CODECOV_TOKEN` (optional, will continue on error)
 - `DEPLOY_HOST` (for production deploy)
@@ -416,6 +439,7 @@ Error: P1001: Can't reach database server
 ```
 
 **Fix**: Already handled with health checks, but if persists:
+
 - Increase Postgres health-interval
 - Add sleep after Postgres service start
 
@@ -426,6 +450,7 @@ Error: Timeout waiting for http://localhost:3000
 ```
 
 **Fix**: Already set to 60 seconds, but if needed:
+
 - Increase timeout in wait-on commands
 - Check backend starts without errors
 
@@ -433,16 +458,16 @@ Error: Timeout waiting for http://localhost:3000
 
 ## 📊 Summary Stats
 
-| Metric | Value |
-|--------|-------|
-| **Failed Runs Analyzed** | 10 |
-| **Root Causes Found** | 5 |
-| **Workflows Fixed** | 2 |
-| **Files Modified** | 4 |
-| **Lines Changed** | 231 |
-| **Dependencies Added** | 2 |
-| **Time to Fix** | ~2 hours |
-| **Status** | ✅ COMPLETE |
+| Metric                   | Value       |
+| ------------------------ | ----------- |
+| **Failed Runs Analyzed** | 10          |
+| **Root Causes Found**    | 5           |
+| **Workflows Fixed**      | 2           |
+| **Files Modified**       | 4           |
+| **Lines Changed**        | 231         |
+| **Dependencies Added**   | 2           |
+| **Time to Fix**          | ~2 hours    |
+| **Status**               | ✅ COMPLETE |
 
 ---
 
@@ -472,11 +497,12 @@ Error: Timeout waiting for http://localhost:3000
 **Problems**: ❌ 10 failed workflow runs  
 **Solutions**: ✅ 5 comprehensive fixes  
 **Result**: ✅ All workflows passing  
-**Impact**: 🚀 Deployments unblocked  
+**Impact**: 🚀 Deployments unblocked
 
 **Your CI/CD pipeline is now fully functional and production-ready!**
 
 **Next Actions**:
+
 1. ✅ Monitor GitHub Actions for green checkmarks
 2. ✅ Verify deployments to Vercel and Render
 3. ✅ Test auto-update feature (users see prompt within 60 seconds)
@@ -484,7 +510,8 @@ Error: Timeout waiting for http://localhost:3000
 
 ---
 
-**Questions or Issues?**  
+**Questions or Issues?**
+
 - Check workflow logs: https://github.com/kirkhezir/church_app/actions
 - Review documentation in repository root
 - All fixes are well-documented and maintainable

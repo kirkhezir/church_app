@@ -431,5 +431,3 @@ export class AnnouncementController {
 
 // Export singleton instance
 export const announcementController = new AnnouncementController();
-
-

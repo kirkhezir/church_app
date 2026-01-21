@@ -12,7 +12,7 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -27,29 +27,28 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-      
+
       # Install root dependencies (Playwright)
       - name: Install root dependencies
         run: npm ci
-      
+
       # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
-      
+
       # Install frontend dependencies
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm ci
-      
+
       # Setup database
       - name: Setup database
         working-directory: ./backend
@@ -58,12 +57,12 @@ jobs:
           npx prisma migrate deploy
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/church_app_test
-      
+
       # Build backend
       - name: Build backend
         working-directory: ./backend
         run: npm run build
-      
+
       # Build frontend
       - name: Build frontend
         working-directory: ./frontend
@@ -72,11 +71,11 @@ jobs:
           VITE_API_URL: http://localhost:3000/api/v1
           VITE_WS_URL: http://localhost:3000
           VITE_APP_NAME: "Sing Buri Adventist Center"
-      
+
       # Install Playwright Browsers
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-      
+
       # Start backend server in background
       - name: Start backend server
         working-directory: ./backend
@@ -89,26 +88,26 @@ jobs:
           JWT_REFRESH_SECRET: test-refresh-secret-for-ci
           NODE_ENV: test
           PORT: 3000
-      
+
       # Start frontend server in background
       - name: Start frontend server
         working-directory: ./frontend
         run: |
           npx serve -s dist -l 5173 &
           sleep 5
-      
+
       # Wait for services to be ready
       - name: Wait for services
         run: |
           npx wait-on http://localhost:3000/health -t 60000 || echo "Backend not ready"
           npx wait-on http://localhost:5173 -t 60000 || echo "Frontend not ready"
-      
+
       # Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test --project=chromium
         env:
           CI: true
-      
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

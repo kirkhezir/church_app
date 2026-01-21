@@ -203,9 +203,10 @@ export class ContactService {
    *
    * Removes potentially malicious HTML/JavaScript content including:
    * - Script tags and their contents
-   * - JavaScript protocol handlers (javascript:)
+   * - JavaScript protocol handlers (javascript:, vbscript:, data:)
    * - Event handlers (onclick, onerror, etc.)
    * - iframes
+   * - Various XSS vectors and obfuscation attempts
    *
    * @param {string | null | undefined} input - Raw user input to sanitize
    * @returns {string} Sanitized string safe for display/storage
@@ -216,18 +217,58 @@ export class ContactService {
    * console.log(clean); // "Hello"
    *
    * const safe = contactService.sanitizeInput('<img src=x onerror="alert(1)">');
-   * console.log(safe); // "<img src=x >"
+   * console.log(safe); // ""
    * ```
    */
   sanitizeInput(input: string | null | undefined): string {
     if (!input) return '';
 
-    return input
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
-      .replace(/javascript:/gi, '') // Remove javascript: protocol
-      .replace(/on\w+\s*=\s*["']?[^"'\s>]*["']?/gi, '') // Remove event handlers (with or without quotes)
-      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove iframes
-      .trim();
+    // Limit input length to prevent ReDoS attacks
+    const maxLength = 10000;
+    let sanitized = input.length > maxLength ? input.substring(0, maxLength) : input;
+
+    // Remove null bytes and other control characters (eslint-disable no-control-regex)
+    // eslint-disable-next-line no-control-regex
+    sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+
+    // Remove script tags (use a simpler, non-backtracking pattern)
+    sanitized = sanitized.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+    sanitized = sanitized.replace(/<script[^>]*>/gi, '');
+
+    // Remove all dangerous protocol handlers (comprehensive list)
+    sanitized = sanitized.replace(/javascript\s*:/gi, '');
+    sanitized = sanitized.replace(/vbscript\s*:/gi, '');
+    sanitized = sanitized.replace(/data\s*:/gi, '');
+    sanitized = sanitized.replace(/expression\s*\(/gi, '');
+
+    // Remove event handlers - use a simpler pattern to avoid ReDoS
+    // Match on\w+ followed by = and remove the entire attribute
+    sanitized = sanitized.replace(/\s*on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]*)/gi, '');
+
+    // Remove iframes (use a simpler, non-backtracking pattern)
+    sanitized = sanitized.replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
+    sanitized = sanitized.replace(/<iframe[^>]*>/gi, '');
+
+    // Remove object, embed, and other dangerous tags
+    sanitized = sanitized.replace(/<object[^>]*>[\s\S]*?<\/object>/gi, '');
+    sanitized = sanitized.replace(/<embed[^>]*>/gi, '');
+    sanitized = sanitized.replace(/<applet[^>]*>[\s\S]*?<\/applet>/gi, '');
+    sanitized = sanitized.replace(/<form[^>]*>[\s\S]*?<\/form>/gi, '');
+    sanitized = sanitized.replace(/<meta[^>]*>/gi, '');
+    sanitized = sanitized.replace(/<link[^>]*>/gi, '');
+    sanitized = sanitized.replace(/<base[^>]*>/gi, '');
+
+    // Remove style tags that could contain expressions
+    sanitized = sanitized.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+
+    // Remove SVG tags (can contain scripts)
+    sanitized = sanitized.replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '');
+
+    // Remove any remaining tags with dangerous attributes
+    sanitized = sanitized.replace(/<[^>]*\s+src\s*=\s*["']?javascript:/gi, '<');
+    sanitized = sanitized.replace(/<[^>]*\s+href\s*=\s*["']?javascript:/gi, '<');
+
+    return sanitized.trim();
   }
 
   /**
@@ -296,7 +337,7 @@ export class ContactService {
    * Validate email format
    *
    * Checks if email address matches standard email format requirements.
-   * Uses regex to ensure basic structure: localpart@domain.tld
+   * Uses linear-time algorithm to prevent ReDoS attacks.
    *
    * @param {string} email - Email address to validate
    * @returns {boolean} True if email format is valid, false otherwise
@@ -310,8 +351,31 @@ export class ContactService {
    * ```
    */
   private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    // Length check to prevent long input attacks
+    if (!email || email.length > 254) return false;
+
+    // Simple structural validation without backtracking (ReDoS-safe)
+    const atIndex = email.indexOf('@');
+    if (atIndex < 1 || atIndex === email.length - 1) return false;
+
+    const localPart = email.substring(0, atIndex);
+    const domainPart = email.substring(atIndex + 1);
+
+    // Local part validation
+    if (localPart.length === 0 || localPart.length > 64) return false;
+
+    // Domain must have at least one dot and valid TLD
+    const lastDotIndex = domainPart.lastIndexOf('.');
+    if (lastDotIndex < 1 || lastDotIndex === domainPart.length - 1) return false;
+
+    // No spaces allowed anywhere
+    if (email.includes(' ')) return false;
+
+    // TLD must be at least 2 characters
+    const tld = domainPart.substring(lastDotIndex + 1);
+    if (tld.length < 2) return false;
+
+    return true;
   }
 
   /**

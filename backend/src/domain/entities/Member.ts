@@ -61,11 +61,30 @@ export class Member {
   }
 
   /**
-   * Validate email format
+   * Validate email format using linear-time algorithm (ReDoS-safe)
    */
   private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    // Length check to prevent long input attacks
+    if (!email || email.length > 254) return false;
+
+    // Simple structural validation without backtracking
+    const atIndex = email.indexOf('@');
+    if (atIndex < 1 || atIndex === email.length - 1) return false;
+
+    const localPart = email.substring(0, atIndex);
+    const domainPart = email.substring(atIndex + 1);
+
+    // Local part validation
+    if (localPart.length === 0 || localPart.length > 64) return false;
+
+    // Domain must have at least one dot and valid TLD
+    const lastDotIndex = domainPart.lastIndexOf('.');
+    if (lastDotIndex < 1 || lastDotIndex === domainPart.length - 1) return false;
+
+    // No spaces allowed anywhere
+    if (email.includes(' ')) return false;
+
+    return true;
   }
 
   /**

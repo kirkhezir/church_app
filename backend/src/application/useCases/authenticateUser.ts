@@ -166,10 +166,38 @@ export class AuthenticateUser {
       throw new Error('Password is required');
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(request.email)) {
+    // Use safe linear-time email validation to avoid ReDoS
+    if (!this.isValidEmail(request.email)) {
       throw new Error('Invalid email format');
     }
+  }
+
+  /**
+   * Safe email validation using linear-time algorithm
+   * Avoids ReDoS by checking format without nested quantifiers
+   */
+  private isValidEmail(email: string): boolean {
+    // Length check to prevent long input attacks
+    if (email.length > 254) return false;
+
+    // Simple structural validation without backtracking
+    const atIndex = email.indexOf('@');
+    if (atIndex < 1 || atIndex === email.length - 1) return false;
+
+    const localPart = email.substring(0, atIndex);
+    const domainPart = email.substring(atIndex + 1);
+
+    // Local part cannot be empty
+    if (localPart.length === 0 || localPart.length > 64) return false;
+
+    // Domain must have at least one dot and valid TLD
+    const lastDotIndex = domainPart.lastIndexOf('.');
+    if (lastDotIndex < 1 || lastDotIndex === domainPart.length - 1) return false;
+
+    // No spaces allowed
+    if (email.includes(' ')) return false;
+
+    return true;
   }
 
   /**

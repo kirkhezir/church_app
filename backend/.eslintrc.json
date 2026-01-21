@@ -8,7 +8,7 @@
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -24,9 +24,11 @@
     "node_modules",
     "coverage",
     "*.config.js",
+    "*.config.ts",
     "tests/**/*",
     "check-test-members.ts",
     "test-db-connection.ts",
-    "prisma/**/*"
+    "prisma/**/*",
+    "prisma.config.ts"
   ]
 }

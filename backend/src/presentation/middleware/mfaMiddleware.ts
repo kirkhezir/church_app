@@ -137,5 +137,3 @@ export async function requireAdminWithMFA(
   // Check MFA status
   await requireMFA(req, res, next);
 }
-
-

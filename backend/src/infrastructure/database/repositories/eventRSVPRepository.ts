@@ -187,6 +187,3 @@ export class EventRSVPRepository implements IEventRSVPRepository {
     });
   }
 }
-
-
-

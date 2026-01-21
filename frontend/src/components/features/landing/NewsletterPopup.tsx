@@ -67,11 +67,10 @@ export function NewsletterPopup({
     // Only show to returning visitors (2+ visits)
     if (onlyReturningVisitors && visitCount < 1) return;
 
-    let timeoutId: NodeJS.Timeout;
     let hasTriggered = false;
 
     // Time-based trigger
-    timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!hasTriggered) {
         setIsOpen(true);
         hasTriggered = true;
