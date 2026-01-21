@@ -194,18 +194,34 @@ router.get(
         take: limit,
       });
 
-      const data = worshipEvents.reverse().map((event) => ({
-        date: event.startDateTime.toISOString().split('T')[0],
-        attendance: event._count.event_rsvps,
-        capacity: event.maxCapacity || 200,
-        eventTitle: event.title,
-      }));
+      interface WorshipEventData {
+        date: string;
+        attendance: number;
+        capacity: number;
+        eventTitle: string;
+      }
+
+      const data: WorshipEventData[] = worshipEvents
+        .reverse()
+        .map(
+          (event: {
+            startDateTime: Date;
+            _count: { event_rsvps: number };
+            maxCapacity: number | null;
+            title: string;
+          }) => ({
+            date: event.startDateTime.toISOString().split('T')[0],
+            attendance: event._count.event_rsvps,
+            capacity: event.maxCapacity || 200,
+            eventTitle: event.title,
+          })
+        );
 
       // Calculate summary stats
-      const attendances = data.map((d) => d.attendance);
+      const attendances: number[] = data.map((d: WorshipEventData) => d.attendance);
       const avgAttendance =
         attendances.length > 0
-          ? Math.round(attendances.reduce((a, b) => a + b, 0) / attendances.length)
+          ? Math.round(attendances.reduce((a: number, b: number) => a + b, 0) / attendances.length)
           : 0;
       const maxAttendance = attendances.length > 0 ? Math.max(...attendances) : 0;
       const minAttendance = attendances.length > 0 ? Math.min(...attendances) : 0;
@@ -214,9 +230,13 @@ router.get(
       const firstHalf = attendances.slice(0, Math.floor(attendances.length / 2));
       const secondHalf = attendances.slice(Math.floor(attendances.length / 2));
       const firstAvg =
-        firstHalf.length > 0 ? firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length : 0;
+        firstHalf.length > 0
+          ? firstHalf.reduce((a: number, b: number) => a + b, 0) / firstHalf.length
+          : 0;
       const secondAvg =
-        secondHalf.length > 0 ? secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length : 0;
+        secondHalf.length > 0
+          ? secondHalf.reduce((a: number, b: number) => a + b, 0) / secondHalf.length
+          : 0;
       const growthRate = firstAvg > 0 ? ((secondAvg - firstAvg) / firstAvg) * 100 : 0;
 
       return res.json({
@@ -286,7 +306,13 @@ router.get(
       });
 
       const now = new Date();
-      const ageGroups = {
+      const ageGroups: {
+        '0-17': number;
+        '18-30': number;
+        '31-45': number;
+        '46-60': number;
+        '61+': number;
+      } = {
         '0-17': 0,
         '18-30': 0,
         '31-45': 0,
@@ -294,7 +320,7 @@ router.get(
         '61+': 0,
       };
 
-      membersWithDob.forEach((member) => {
+      membersWithDob.forEach((member: { dateOfBirth: Date | null }) => {
         if (member.dateOfBirth) {
           const age = Math.floor(
             (now.getTime() - member.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
@@ -404,7 +430,7 @@ router.get(
       const heatmapData: { day: string; hour: number; count: number }[] = [];
       const activityMap = new Map<string, number>();
 
-      activityLogs.forEach((log) => {
+      activityLogs.forEach((log: { timestamp: Date }) => {
         const date = new Date(log.timestamp);
         const day = dayNames[date.getDay()];
         const hour = date.getHours();
