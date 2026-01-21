@@ -33,7 +33,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
       console.log('Caching static assets');
-      return cache.addAll(STATIC_ASSETS).catch(err => {
+      return cache.addAll(STATIC_ASSETS).catch((err) => {
         console.warn('Failed to cache some assets:', err);
         // Continue even if some assets fail
       });
@@ -69,15 +69,15 @@ self.addEventListener('activate', (event) => {
       // Take control of all clients immediately
       self.clients.claim().then(() => {
         // Notify all clients about the update
-        return self.clients.matchAll().then(clients => {
-          clients.forEach(client => {
+        return self.clients.matchAll().then((clients) => {
+          clients.forEach((client) => {
             client.postMessage({
               type: 'SW_UPDATED',
-              version: CACHE_VERSION
+              version: CACHE_VERSION,
             });
           });
         });
-      })
+      }),
     ])
   );
 });
@@ -89,9 +89,9 @@ self.addEventListener('message', (event) => {
   }
   if (event.data && event.data.type === 'CLEAR_CACHE') {
     event.waitUntil(
-      caches.keys().then(keys => {
+      caches.keys().then((keys) => {
         return Promise.all(
-          keys.map(key => {
+          keys.map((key) => {
             if (key.startsWith('church-app-')) {
               console.log('Manually clearing cache:', key);
               return caches.delete(key);

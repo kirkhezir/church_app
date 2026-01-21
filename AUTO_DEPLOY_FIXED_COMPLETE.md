@@ -14,12 +14,14 @@
 **Problem**: Users had to press Ctrl+Shift+R to see new changes after deployment.
 
 **Root Causes**:
+
 - Service worker cached content for 7 days
 - Stale-while-revalidate strategy served old content first
 - Static cache version (v2) never changed on deployments
 - Missing proper cache headers on Vercel
 
 **Solutions Implemented**:
+
 - ✅ Dynamic cache versioning using build timestamps
 - ✅ Network-first strategy for HTML (always fetch fresh)
 - ✅ Automatic update detection every 60 seconds
@@ -28,6 +30,7 @@
 - ✅ Build script injects unique version on each deployment
 
 **User Experience Now**:
+
 1. New version deployed
 2. Within 60 seconds, user sees: "New version available! Reload to update?"
 3. Click OK → Instant update
@@ -38,11 +41,13 @@
 **Problem**: Deployments not triggering automatically on push.
 
 **Root Causes**:
+
 - `render.yaml` configured for `main` branch but repository used `001-full-stack-web`
 - Inconsistent branch configuration across workflows
 - Missing proper Vercel configuration
 
 **Solutions Implemented**:
+
 - ✅ Merged `001-full-stack-web` to `main` branch
 - ✅ Updated `render.yaml` to use `main` branch
 - ✅ Updated all GitHub Actions workflows to `main`
@@ -52,10 +57,12 @@
 ### 3. ✅ Security Issues Resolved
 
 **Problems**:
+
 - `backend/token.txt` tracked by Git (was empty but risky)
 - Setup guides with DB info tracked when should be gitignored
 
 **Solutions**:
+
 - ✅ Removed sensitive files from Git tracking
 - ✅ Verified no credentials exposed in codebase
 - ✅ All `.env` files properly gitignored
@@ -66,12 +73,14 @@
 ## 📦 New Files Created
 
 ### Documentation
+
 - ✅ `CACHE_BUSTING_FIX.md` - Complete cache busting documentation
 - ✅ `DEPLOYMENT_CONFIG.md` - Deployment setup guide
 - ✅ `ENV_VARS_GUIDE.md` - Environment variables guide
 - ✅ `DEPLOYMENT_FIX_SUMMARY.md` - Summary of deployment fixes
 
 ### Configuration
+
 - ✅ `vercel.json` - Root Vercel configuration with cache headers
 - ✅ `frontend/vercel.json` - Frontend-specific Vercel config
 - ✅ `frontend/scripts/inject-sw-version.mjs` - Build-time version injection
@@ -81,6 +90,7 @@
 ## 🔄 Modified Files
 
 ### Deployment Configs
+
 - ✅ `render.yaml` - Changed branch from `001-full-stack-web` to `main`
 - ✅ `.github/workflows/ci-cd.yml` - Updated to trigger on `main`
 - ✅ `.github/workflows/playwright.yml` - Updated to `main`
@@ -89,6 +99,7 @@
 - ✅ `.github/workflows/security-scan.yml` - Updated to `main`
 
 ### Cache Busting System
+
 - ✅ `frontend/public/sw.js` - Dynamic versioning, network-first, update notifications
 - ✅ `frontend/src/main.tsx` - Update detection, auto-reload, user prompts
 - ✅ `frontend/package.json` - Updated build command to inject SW version
@@ -121,13 +132,13 @@ Old caches automatically deleted
 
 ### Cache Strategy
 
-| File Type | Strategy | Cache Duration |
-|-----------|----------|----------------|
-| HTML (`index.html`) | Network-first | 0 seconds |
-| Service Worker (`sw.js`) | Network-first | 0 seconds |
-| JavaScript/CSS (hashed) | Cache-first | 1 year (immutable) |
-| Images (hashed) | Cache-first | 1 year (immutable) |
-| API Requests | Network-first | 5 minutes fallback |
+| File Type                | Strategy      | Cache Duration     |
+| ------------------------ | ------------- | ------------------ |
+| HTML (`index.html`)      | Network-first | 0 seconds          |
+| Service Worker (`sw.js`) | Network-first | 0 seconds          |
+| JavaScript/CSS (hashed)  | Cache-first   | 1 year (immutable) |
+| Images (hashed)          | Cache-first   | 1 year (immutable) |
+| API Requests             | Network-first | 5 minutes fallback |
 
 ---
 
@@ -136,6 +147,7 @@ Old caches automatically deleted
 ### Verify Auto-Update Works
 
 1. **Deploy a test change**:
+
    ```bash
    # Make any visible change
    echo "// test" >> frontend/src/App.tsx
@@ -153,7 +165,7 @@ Old caches automatically deleted
 4. **Verify in console**:
    ```javascript
    // Check cache version
-   caches.keys().then(keys => console.log(keys));
+   caches.keys().then((keys) => console.log(keys));
    // Should show: church-app-static-v[timestamp]
    ```
 
@@ -173,16 +185,16 @@ Old caches automatically deleted
 
 ## 📊 Before & After Comparison
 
-| Aspect | Before | After |
-|--------|--------|-------|
-| **Update Method** | Manual hard refresh (Ctrl+Shift+R) | Automatic prompt |
-| **Update Detection** | Manual by user | Every 60 seconds |
-| **Cache Duration** | 7 days static | Build-specific |
-| **Content Freshness** | Stale served first | Fresh fetched first |
-| **User Action Required** | Hard refresh every time | Click one button |
-| **Deploy Trigger** | Manual/broken | Automatic on push |
-| **Branch Used** | Inconsistent | `main` everywhere |
-| **Cache Headers** | Default/missing | Properly configured |
+| Aspect                   | Before                             | After               |
+| ------------------------ | ---------------------------------- | ------------------- |
+| **Update Method**        | Manual hard refresh (Ctrl+Shift+R) | Automatic prompt    |
+| **Update Detection**     | Manual by user                     | Every 60 seconds    |
+| **Cache Duration**       | 7 days static                      | Build-specific      |
+| **Content Freshness**    | Stale served first                 | Fresh fetched first |
+| **User Action Required** | Hard refresh every time            | Click one button    |
+| **Deploy Trigger**       | Manual/broken                      | Automatic on push   |
+| **Branch Used**          | Inconsistent                       | `main` everywhere   |
+| **Cache Headers**        | Default/missing                    | Properly configured |
 
 ---
 
@@ -191,6 +203,7 @@ Old caches automatically deleted
 ### Every Time You Push to Main:
 
 1. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "feat: your feature"
@@ -221,22 +234,24 @@ Old caches automatically deleted
    - Render Dashboard → Service (should show "Live")
 
 2. **Verify cache version updated**:
+
    ```javascript
-   caches.keys().then(keys => console.log(keys));
+   caches.keys().then((keys) => console.log(keys));
    // Should show new timestamp
    ```
 
 3. **Force update check** (in browser console):
+
    ```javascript
-   navigator.serviceWorker.getRegistration().then(reg => {
+   navigator.serviceWorker.getRegistration().then((reg) => {
      reg.update();
    });
    ```
 
 4. **Clear all caches** (last resort):
    ```javascript
-   caches.keys().then(keys => {
-     keys.forEach(key => caches.delete(key));
+   caches.keys().then((keys) => {
+     keys.forEach((key) => caches.delete(key));
    });
    window.location.reload(true);
    ```
@@ -311,6 +326,7 @@ For detailed information, see:
 ### 🚀 Production Ready!
 
 Your church_app is now production-ready with:
+
 - Automatic deployments on every push
 - Automatic user updates within 60 seconds
 - No manual refresh required ever again
@@ -321,6 +337,6 @@ Your church_app is now production-ready with:
 **Problems**: ❌ NONE  
 **Status**: ✅ ALL FIXED  
 **Deployment**: ✅ AUTOMATIC  
-**User Experience**: ✅ SEAMLESS  
+**User Experience**: ✅ SEAMLESS
 
 🎉 **You can now push to main and users will see updates automatically!** 🎉
