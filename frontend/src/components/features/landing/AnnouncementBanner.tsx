@@ -10,10 +10,11 @@
  * - Clear call-to-action
  * - Accessible (proper ARIA labels)
  * - Mobile responsive
+ * - Pause/Play control for auto-rotation (WCAG compliant)
  */
 
 import { useState, useEffect } from 'react';
-import { X, ChevronRight } from 'lucide-react';
+import { X, ChevronRight, Pause, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Announcement {
@@ -50,6 +51,7 @@ export function AnnouncementBanner({
 }: AnnouncementBannerProps) {
   const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('dismissedAnnouncements');
@@ -66,17 +68,21 @@ export function AnnouncementBanner({
   const visibleAnnouncements = announcements.filter((a) => !dismissedIds.includes(a.id));
 
   useEffect(() => {
-    if (visibleAnnouncements.length <= 1) return;
+    if (visibleAnnouncements.length <= 1 || isPaused) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % visibleAnnouncements.length);
-    }, 5000);
+    }, 8000); // Increased to 8 seconds for better readability
     return () => clearInterval(interval);
-  }, [visibleAnnouncements.length]);
+  }, [visibleAnnouncements.length, isPaused]);
 
   const handleDismiss = (id: string) => {
     const newDismissed = [...dismissedIds, id];
     setDismissedIds(newDismissed);
     localStorage.setItem('dismissedAnnouncements', JSON.stringify(newDismissed));
+  };
+
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
   if (visibleAnnouncements.length === 0) return null;
@@ -105,14 +111,27 @@ export function AnnouncementBanner({
           )}
         </div>
 
-        {/* Dismiss Button */}
-        <button
-          onClick={() => handleDismiss(currentAnnouncement.id)}
-          className="ml-3 flex-shrink-0 rounded-full p-1 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
-          aria-label="Dismiss announcement"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        {/* Controls: Pause/Play and Dismiss */}
+        <div className="ml-3 flex flex-shrink-0 items-center gap-1">
+          {/* Pause/Play Button - only show if multiple announcements */}
+          {visibleAnnouncements.length > 1 && (
+            <button
+              onClick={togglePause}
+              className="rounded-full p-1 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+              aria-label={isPaused ? 'Resume auto-rotation' : 'Pause auto-rotation'}
+            >
+              {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </button>
+          )}
+          {/* Dismiss Button */}
+          <button
+            onClick={() => handleDismiss(currentAnnouncement.id)}
+            className="rounded-full p-1 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+            aria-label="Dismiss announcement"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* Progress indicators for multiple announcements */}

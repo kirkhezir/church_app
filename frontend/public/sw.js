@@ -6,7 +6,7 @@
 
 // Cache version - using build timestamp for automatic cache busting
 // This will be replaced during build process
-const BUILD_TIMESTAMP = '__BUILD_TIMESTAMP__';
+const BUILD_TIMESTAMP = '1769585536362';
 const CACHE_VERSION = `v${BUILD_TIMESTAMP}`;
 const STATIC_CACHE = `church-app-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `church-app-dynamic-${CACHE_VERSION}`;

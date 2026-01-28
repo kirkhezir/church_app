@@ -1,0 +1,204 @@
+{
+  "common": {
+    "churchName": "Sing Buri Adventist Center",
+    "churchNameThai": "ศูนย์มิชชั่นเซเว่นธ์เดย์แอ๊ดเวนตีสสิงห์บุรี",
+    "login": "Login",
+    "memberLogin": "Member Login",
+    "give": "Give",
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "contactUs": "Contact Us",
+    "getDirections": "Get Directions",
+    "subscribe": "Subscribe",
+    "subscribed": "Subscribed!",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "backToTop": "Back to top",
+    "backToHome": "Back to Home"
+  },
+  "nav": {
+    "about": "About",
+    "services": "Services",
+    "events": "Events",
+    "gallery": "Gallery",
+    "ministries": "Ministries",
+    "contact": "Contact",
+    "sermons": "Sermons",
+    "planVisit": "Plan Your Visit"
+  },
+  "hero": {
+    "tagline": "A community of <faith>faith</faith>, <hope>hope</hope>, and <love>love</love> — where everyone belongs.",
+    "nextService": "Next service in",
+    "serviceTimes": "Service Times",
+    "visitUs": "Visit Us",
+    "watchLive": "Watch Live",
+    "stats": {
+      "sabbaths": "Sabbaths Celebrated",
+      "families": "Families",
+      "years": "Years of Ministry"
+    }
+  },
+  "about": {
+    "title": "Welcome to Our Church Family",
+    "description": "We are a Seventh-day Adventist community dedicated to sharing God's love. Join us every Sabbath (Saturday) to worship, learn, and grow together.",
+    "pastorWelcome": "We believe God has brought you here for a reason. Whether you're exploring faith or seeking a deeper relationship with Christ, our doors and hearts are open to you.",
+    "pastorTitle": "Pastor's Welcome",
+    "mission": "Our mission is to share God's love through worship, fellowship, and service — building a community where faith grows and hope flourishes.",
+    "values": {
+      "bibleCentered": {
+        "title": "Bible-Centered",
+        "description": "Grounded in Scripture with meaningful teachings."
+      },
+      "welcoming": {
+        "title": "Welcoming",
+        "description": "A warm family where everyone belongs."
+      },
+      "caring": {
+        "title": "Caring",
+        "description": "Serving our community with love."
+      }
+    },
+    "welcomeMessage": "Whether you're seeking spiritual growth or simply a place to belong — you're welcome here.",
+    "learnBeliefs": "Learn about our 28 Fundamental Beliefs"
+  },
+  "worship": {
+    "title": "Sabbath Worship Times",
+    "subtitle": "Join us every Saturday",
+    "sabbathSchool": "Sabbath School",
+    "sabbathSchoolDesc": "Bible Study for All Ages",
+    "divineService": "Divine Service",
+    "divineServiceDesc": "Main Worship Service",
+    "ayProgram": "AY Program",
+    "ayProgramDesc": "Adventist Youth"
+  },
+  "planVisit": {
+    "badge": "First Time? Welcome!",
+    "title": "Plan Your Visit",
+    "subtitle": "We're excited to meet you! Here's everything you need to know for a comfortable first visit.",
+    "expect": {
+      "title": "What to Expect",
+      "description": "A warm welcome awaits you! Our services include worship music, prayer, and a Bible-based message."
+    },
+    "children": {
+      "title": "Children's Programs",
+      "description": "We have dedicated programs for children of all ages during our Sabbath services."
+    },
+    "dress": {
+      "title": "What to Wear",
+      "description": "Come as you are! We have a mix of casual and semi-formal attire."
+    },
+    "parking": {
+      "title": "Parking & Location",
+      "description": "Free parking available on-site. We are located in Bang Phutsa, Sing Buri."
+    },
+    "connect": {
+      "title": "Connect With Us",
+      "description": "We'd love to meet you! Stop by our welcome desk after service."
+    },
+    "cta": "We'll Save You a Seat!"
+  },
+  "sermons": {
+    "title": "Latest Message",
+    "subtitle": "Missed a Sabbath? Catch up on our recent sermons.",
+    "viewAll": "View All Sermons",
+    "recentMessages": "Recent Messages",
+    "listenAudio": "Listen to Audio"
+  },
+  "prayer": {
+    "title": "Share Your Prayer Request",
+    "verse": "Cast all your anxiety on Him because He cares for you.",
+    "verseRef": "— 1 Peter 5:7",
+    "description": "Our prayer team is here to support you. Every request is treated with care and confidentiality.",
+    "wePray": "We Pray for Every Request",
+    "prayerTeamNote": "Your request will be prayed over by our dedicated prayer team",
+    "form": {
+      "name": "Your Name",
+      "namePlaceholder": "How should we address you?",
+      "email": "Email Address",
+      "emailOptional": "(optional)",
+      "emailRequired": "(required)",
+      "request": "Your Prayer Request",
+      "requestPlaceholder": "Share what's on your heart...",
+      "keepPrivate": "Keep Private",
+      "privateNote": "Only the pastoral team will see this request",
+      "requestFollowUp": "Request Follow-up",
+      "followUpNote": "Someone from our team will reach out to you",
+      "submit": "Submit Prayer Request"
+    },
+    "success": {
+      "title": "Thank You for Sharing",
+      "message": "Your prayer request has been received. Our prayer team will be lifting you up in prayer."
+    }
+  },
+  "give": {
+    "title": "Support Our Ministry",
+    "verse": "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.",
+    "verseRef": "— 2 Corinthians 9:7",
+    "waysToGive": "Ways to Give",
+    "chooseMethods": "Choose your preferred giving method",
+    "promptpay": "PromptPay",
+    "promptpayDesc": "Instant transfer via Thai banking apps",
+    "bankTransfer": "Bank Transfer",
+    "bankTransferDesc": "Direct bank deposit",
+    "howUsed": "How Your Gift is Used",
+    "transparency": "Transparent stewardship of your generous contributions",
+    "fundUsage": {
+      "ministry": "Ministry Programs",
+      "outreach": "Community Outreach",
+      "building": "Building & Maintenance",
+      "admin": "Administration"
+    },
+    "specialGiving": "Special Giving Options",
+    "tithe": "Return your faithful tithe through our church",
+    "buildingFund": "Support our facility improvements",
+    "missionOffering": "Support global Adventist missions"
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "subtitle": "Join us for fellowship and spiritual growth",
+    "noEvents": "No upcoming events at this time",
+    "viewDetails": "View Details",
+    "rsvp": "RSVP"
+  },
+  "ministries": {
+    "title": "Our Ministries",
+    "subtitle": "Find your place to serve and grow with us",
+    "filters": {
+      "all": "All Ministries",
+      "youth": "Youth",
+      "family": "Family",
+      "worship": "Worship",
+      "service": "Service"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Members Say",
+    "subtitle": "Stories of faith and community"
+  },
+  "gallery": {
+    "title": "Photo Gallery",
+    "subtitle": "Moments from our church family"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about our church",
+    "searchPlaceholder": "Search questions...",
+    "showMore": "Show More",
+    "showLess": "Show Less"
+  },
+  "contact": {
+    "title": "Visit Us",
+    "address": "Bang Phutsa, Sing Buri 16000, Thailand"
+  },
+  "footer": {
+    "stayConnected": "Stay Connected",
+    "newsletterDesc": "Subscribe for weekly updates, announcements, and spiritual encouragement.",
+    "emailPlaceholder": "Your email address",
+    "sabbathServices": "Sabbath Services",
+    "quickLinks": "Quick Links",
+    "ourBeliefs": "Our Beliefs",
+    "privacyPolicy": "Privacy Policy",
+    "builtWith": "Built with",
+    "forCommunity": "for our community"
+  }
+}

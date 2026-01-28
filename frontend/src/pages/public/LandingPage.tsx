@@ -30,6 +30,8 @@ import {
   ChevronDown,
   Users,
   BookOpen,
+  Gift,
+  MessageCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -38,6 +40,7 @@ import WorshipTimesSection from '../../components/features/WorshipTimesSection';
 import LocationMapSection from '../../components/features/LocationMapSection';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
+import LanguageToggle from '../../components/common/LanguageToggle';
 
 // Landing Page Components
 import {
@@ -48,6 +51,10 @@ import {
   MinistryCardsSection,
   PhotoGallerySection,
   NewsletterPopup,
+  PlanYourVisitSection,
+  PrayerRequestSection,
+  GiveSection,
+  LatestSermonSection,
 } from '../../components/features/landing';
 
 // =============================================================================
@@ -70,6 +77,13 @@ const NAV_LINKS = [
   { label: 'Ministries', href: '#ministries' },
   { label: 'Contact', href: '#contact' },
 ] as const;
+
+// Church social media and contact links
+const SOCIAL_LINKS = {
+  facebook: 'https://www.facebook.com/singburiadventist',
+  youtube: 'https://www.youtube.com/@singburiadventist',
+  line: 'https://line.me/ti/p/@singburiadventist',
+} as const;
 
 // =============================================================================
 // MAIN LANDING PAGE
@@ -94,6 +108,12 @@ export function LandingPage() {
       <AboutSection />
       <WorshipTimesSection />
 
+      {/* Plan Your Visit - for first-time visitors */}
+      <PlanYourVisitSection />
+
+      {/* Latest Sermon - Keep visitors engaged with content */}
+      <LatestSermonSection />
+
       {/* Social proof before asking for action */}
       <TestimonialsSection />
 
@@ -108,6 +128,12 @@ export function LandingPage() {
       <section id="gallery">
         <PhotoGallerySection />
       </section>
+
+      {/* Prayer Request - Connection point */}
+      <PrayerRequestSection />
+
+      {/* Give Section - Support the ministry */}
+      <GiveSection />
 
       <FAQSection />
 
@@ -202,6 +228,20 @@ function NavigationHeaderContent() {
               {link.label}
             </button>
           ))}
+          {/* Give Button */}
+          <button
+            onClick={() => scrollToSection('#give')}
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+              isScrolled
+                ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
+                : 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
+            }`}
+          >
+            <Gift className="mr-1.5 inline-block h-4 w-4" />
+            Give
+          </button>
+          {/* Language Toggle */}
+          <LanguageToggle compact lightMode={!isScrolled} />
           <Link to="/login" className="ml-2">
             <Button
               size="sm"
@@ -230,9 +270,16 @@ function NavigationHeaderContent() {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu with Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <div
-        className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+        className={`relative z-50 md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
         role="dialog"
         aria-modal="true"
       >
@@ -246,6 +293,14 @@ function NavigationHeaderContent() {
               {link.label}
             </button>
           ))}
+          {/* Give Button Mobile */}
+          <button
+            onClick={() => scrollToSection('#give')}
+            className="flex w-full items-center rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
+          >
+            <Gift className="mr-2 h-5 w-5" />
+            Give
+          </button>
           <Link
             to="/login"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -584,18 +639,31 @@ function FooterSection() {
             </a>
             <div className="mt-3 flex gap-3">
               <a
-                href="#"
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-blue-600 hover:text-white"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
               </a>
               <a
-                href="#"
+                href={SOCIAL_LINKS.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-red-600 hover:text-white"
                 aria-label="YouTube"
               >
                 <Youtube className="h-4 w-4" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.line}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-green-500 hover:text-white"
+                aria-label="LINE Official Account"
+              >
+                <MessageCircle className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -666,11 +734,22 @@ function FooterSection() {
               </li>
               <li>
                 <a
+                  href={SOCIAL_LINKS.line}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+                >
+                  <MessageCircle className="h-4 w-4 text-green-400" />
+                  LINE: @singburiadventist
+                </a>
+              </li>
+              <li>
+                <a
                   href="mailto:singburiadventistcenter@gmail.com"
                   className="flex items-start gap-2 text-slate-400 transition-colors hover:text-white"
                 >
                   <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                  <span className="break-all">singburiadventistcenter@gmail.com</span>
+                  <span className="max-w-[180px] truncate">singburiadventistcenter@gmail.com</span>
                 </a>
               </li>
               <li className="flex items-start gap-2 text-slate-400">
@@ -683,9 +762,15 @@ function FooterSection() {
 
         {/* Bottom */}
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-sm sm:flex-row">
-          <p className="text-slate-500">
-            © {currentYear} {CHURCH_NAME}. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-500 sm:justify-start">
+            <p>
+              © {currentYear} {CHURCH_NAME}
+            </p>
+            <span className="hidden sm:inline">•</span>
+            <Link to="/privacy" className="transition-colors hover:text-white">
+              Privacy Policy
+            </Link>
+          </div>
           <p className="flex items-center gap-1.5 text-slate-400">
             Built with <Heart className="h-4 w-4 fill-rose-500 text-rose-500" /> for our community
           </p>

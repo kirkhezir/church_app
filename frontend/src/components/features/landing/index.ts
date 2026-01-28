@@ -15,3 +15,9 @@ export { NewsletterPopup } from './NewsletterPopup';
 export { MemberPortalLink } from './MemberPortalLink';
 export { NavigationHeader } from './NavigationHeader';
 export { AboutSection } from './AboutSection';
+
+// New Enhanced Components
+export { PlanYourVisitSection } from './PlanYourVisitSection';
+export { PrayerRequestSection } from './PrayerRequestSection';
+export { GiveSection } from './GiveSection';
+export { LatestSermonSection } from './LatestSermonSection';

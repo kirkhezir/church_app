@@ -543,4 +543,223 @@ Reply directly to this email to respond to ${data.name}.
       this.cleanupInterval = undefined;
     }
   }
+
+  /**
+   * Send prayer request email to prayer team
+   *
+   * @param {object} data - Prayer request data
+   * @returns {Promise<void>}
+   */
+  async sendPrayerRequestEmail(data: {
+    name: string;
+    email: string;
+    request: string;
+    isPrivate: boolean;
+    wantFollowUp: boolean;
+  }): Promise<void> {
+    try {
+      const sanitizedData = {
+        name: this.sanitizeInput(data.name),
+        email: this.sanitizeInput(data.email),
+        request: this.sanitizeInput(data.request),
+      };
+
+      const recipient = data.isPrivate
+        ? process.env.CHURCH_PASTOR_EMAIL ||
+          process.env.CHURCH_CONTACT_EMAIL ||
+          'pastor@singburi-adventist.org'
+        : process.env.CHURCH_PRAYER_EMAIL ||
+          process.env.CHURCH_CONTACT_EMAIL ||
+          'prayer@singburi-adventist.org';
+
+      const text = `
+Prayer Request from ${sanitizedData.name}
+
+${data.email ? `Email: ${sanitizedData.email}` : 'No email provided'}
+Private: ${data.isPrivate ? 'Yes (pastoral team only)' : 'No'}
+Follow-up requested: ${data.wantFollowUp ? 'Yes' : 'No'}
+
+Prayer Request:
+${sanitizedData.request}
+
+---
+This prayer request was submitted via the church website.
+      `.trim();
+
+      const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #e11d48, #be123c); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; }
+    .field { margin-bottom: 15px; }
+    .label { font-weight: bold; color: #475569; }
+    .request { background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e11d48; margin-top: 10px; white-space: pre-wrap; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+    .private { background: #fef2f2; color: #dc2626; }
+    .public { background: #f0fdf4; color: #16a34a; }
+    .footer { padding: 15px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🙏 Prayer Request</h2>
+      <p style="margin: 5px 0 0; opacity: 0.9;">From the church website</p>
+    </div>
+    <div class="content">
+      <div class="field">
+        <span class="label">From:</span> ${sanitizedData.name}
+        <span class="badge ${data.isPrivate ? 'private' : 'public'}" style="margin-left: 10px;">
+          ${data.isPrivate ? '🔒 Private' : '👥 Share with prayer team'}
+        </span>
+      </div>
+      ${sanitizedData.email ? `<div class="field"><span class="label">Email:</span> <a href="mailto:${sanitizedData.email}">${sanitizedData.email}</a></div>` : ''}
+      ${data.wantFollowUp ? '<div class="field"><span class="label">📞 Follow-up requested</span></div>' : ''}
+      <div class="field">
+        <span class="label">Prayer Request:</span>
+        <div class="request">${sanitizedData.request.replace(/\n/g, '<br>')}</div>
+      </div>
+    </div>
+    <div class="footer">
+      This prayer request was submitted from the Sing Buri Adventist Center website.
+    </div>
+  </div>
+</body>
+</html>
+      `.trim();
+
+      await this.emailService.sendEmail({
+        to: recipient,
+        subject: `Prayer Request from ${sanitizedData.name}${data.isPrivate ? ' (Private)' : ''}`,
+        text,
+        html,
+        replyTo: sanitizedData.email || undefined,
+      });
+
+      logger.info('Prayer request email sent', {
+        name: sanitizedData.name,
+        isPrivate: data.isPrivate,
+        wantFollowUp: data.wantFollowUp,
+      });
+    } catch (error) {
+      logger.error('Failed to send prayer request email', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send volunteer interest email to ministry leader
+   *
+   * @param {object} data - Volunteer interest data
+   * @returns {Promise<void>}
+   */
+  async sendVolunteerEmail(data: {
+    name: string;
+    email: string;
+    phone: string;
+    ministry: string;
+    ministryId: string;
+    message: string;
+  }): Promise<void> {
+    try {
+      const sanitizedData = {
+        name: this.sanitizeInput(data.name),
+        email: this.sanitizeInput(data.email),
+        phone: this.sanitizeInput(data.phone),
+        ministry: this.sanitizeInput(data.ministry),
+        message: this.sanitizeInput(data.message),
+      };
+
+      const text = `
+New Volunteer Interest - ${sanitizedData.ministry}
+
+Name: ${sanitizedData.name}
+Email: ${sanitizedData.email}
+${sanitizedData.phone ? `Phone: ${sanitizedData.phone}` : ''}
+
+Ministry: ${sanitizedData.ministry}
+
+${sanitizedData.message ? `Message:\n${sanitizedData.message}` : ''}
+
+---
+This volunteer interest form was submitted via the church website.
+      `.trim();
+
+      const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; }
+    .field { margin-bottom: 15px; }
+    .label { font-weight: bold; color: #475569; }
+    .ministry-badge { display: inline-block; padding: 8px 16px; background: #dbeafe; color: #1d4ed8; border-radius: 8px; font-weight: bold; }
+    .message { background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #2563eb; margin-top: 10px; white-space: pre-wrap; }
+    .footer { padding: 15px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🙋 New Volunteer Interest</h2>
+      <p style="margin: 5px 0 0; opacity: 0.9;">Someone wants to serve!</p>
+    </div>
+    <div class="content">
+      <div class="field">
+        <span class="ministry-badge">${sanitizedData.ministry}</span>
+      </div>
+      <div class="field">
+        <span class="label">Name:</span> ${sanitizedData.name}
+      </div>
+      <div class="field">
+        <span class="label">Email:</span> <a href="mailto:${sanitizedData.email}">${sanitizedData.email}</a>
+      </div>
+      ${sanitizedData.phone ? `<div class="field"><span class="label">Phone:</span> ${sanitizedData.phone}</div>` : ''}
+      ${
+        sanitizedData.message
+          ? `
+      <div class="field">
+        <span class="label">Message:</span>
+        <div class="message">${sanitizedData.message.replace(/\n/g, '<br>')}</div>
+      </div>
+      `
+          : ''
+      }
+    </div>
+    <div class="footer">
+      This volunteer form was submitted from the Sing Buri Adventist Center website.<br>
+      Please follow up with ${sanitizedData.name} to discuss their interest in ${sanitizedData.ministry}.
+    </div>
+  </div>
+</body>
+</html>
+      `.trim();
+
+      await this.emailService.sendEmail({
+        to:
+          process.env.CHURCH_VOLUNTEER_EMAIL ||
+          process.env.CHURCH_CONTACT_EMAIL ||
+          'volunteer@singburi-adventist.org',
+        subject: `Volunteer Interest: ${sanitizedData.ministry} - ${sanitizedData.name}`,
+        text,
+        html,
+        replyTo: sanitizedData.email,
+      });
+
+      logger.info('Volunteer interest email sent', {
+        name: sanitizedData.name,
+        ministry: sanitizedData.ministry,
+      });
+    } catch (error) {
+      logger.error('Failed to send volunteer interest email', error);
+      throw error;
+    }
+  }
 }

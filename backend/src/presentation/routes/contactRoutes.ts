@@ -18,8 +18,10 @@ import { contactFormRateLimiter } from '../middleware/rateLimitMiddleware';
  * import contactRoutes from './presentation/routes/contactRoutes';
  * app.use('/api/v1/contact', contactRoutes);
  *
- * // Available endpoint:
+ * // Available endpoints:
  * // POST /api/v1/contact - Submit contact form
+ * // POST /api/v1/contact/prayer-request - Submit prayer request
+ * // POST /api/v1/contact/volunteer - Submit volunteer interest
  * ```
  */
 const router = Router();
@@ -75,6 +77,41 @@ const contactController = new ContactController(contactService);
  */
 router.post('/', contactFormRateLimiter, (req, res) =>
   contactController.submitContactForm(req, res)
+);
+
+/**
+ * POST /api/v1/contact/prayer-request - Submit prayer request
+ *
+ * Public endpoint for visitors to submit prayer requests.
+ * Rate limited to 5 requests per hour per IP address.
+ *
+ * Request body:
+ * - name: string (required, 1-100 chars)
+ * - email: string (optional, valid email format)
+ * - request: string (required, 10-2000 chars)
+ * - isPrivate: boolean (optional, default false)
+ * - wantFollowUp: boolean (optional, default false)
+ */
+router.post('/prayer-request', contactFormRateLimiter, (req, res) =>
+  contactController.submitPrayerRequest(req, res)
+);
+
+/**
+ * POST /api/v1/contact/volunteer - Submit volunteer interest
+ *
+ * Public endpoint for visitors to express interest in volunteering.
+ * Rate limited to 5 requests per hour per IP address.
+ *
+ * Request body:
+ * - name: string (required, 1-100 chars)
+ * - email: string (required, valid email format)
+ * - phone: string (optional)
+ * - ministry: string (required)
+ * - ministryId: string (required)
+ * - message: string (optional)
+ */
+router.post('/volunteer', contactFormRateLimiter, (req, res) =>
+  contactController.submitVolunteerInterest(req, res)
 );
 
 export default router;

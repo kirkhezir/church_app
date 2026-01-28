@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 // Eagerly loaded - critical path
 import LandingPage from './pages/public/LandingPage';
+import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
 import LoginPage from './pages/auth/LoginPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
@@ -133,6 +134,9 @@ const App: React.FC = () => {
       <Routes>
         {/* Public Landing Page (no authentication required) */}
         <Route path="/" element={<LandingPage />} />
+
+        {/* Privacy Policy Page */}
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
         {/* Public Routes */}
         <Route
