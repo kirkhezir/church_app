@@ -36,7 +36,6 @@ import {
 import { Button } from '../../components/ui/button';
 
 // Feature Components
-import WorshipTimesSection from '../../components/features/WorshipTimesSection';
 import LocationMapSection from '../../components/features/LocationMapSection';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
@@ -51,10 +50,10 @@ import {
   MinistryCardsSection,
   PhotoGallerySection,
   NewsletterPopup,
-  PlanYourVisitSection,
   PrayerRequestSection,
   GiveSection,
   LatestSermonSection,
+  VisitUsSection,
 } from '../../components/features/landing';
 
 // =============================================================================
@@ -71,7 +70,7 @@ const CHURCH_STATS = {
 
 const NAV_LINKS = [
   { label: 'About', href: '#about' },
-  { label: 'Services', href: '#worship-times' },
+  { label: 'Visit', href: '#visit' },
   { label: 'Events', href: '#events' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Ministries', href: '#ministries' },
@@ -106,20 +105,19 @@ export function LandingPage() {
       </div>
       <HeroSection />
       <AboutSection />
-      <WorshipTimesSection />
 
-      {/* Plan Your Visit - for first-time visitors */}
-      <PlanYourVisitSection />
+      {/* Visit Us - Consolidated worship times + location (replaces separate sections) */}
+      <VisitUsSection />
 
-      {/* Latest Sermon - Keep visitors engaged with content */}
-      <LatestSermonSection />
-
-      {/* Social proof before asking for action */}
+      {/* Social proof */}
       <TestimonialsSection />
 
       <section id="events" className="relative">
         <UpcomingEventsSection />
       </section>
+
+      {/* Latest Sermon - Keep visitors engaged */}
+      <LatestSermonSection />
 
       <section id="ministries">
         <MinistryCardsSection />
@@ -137,7 +135,7 @@ export function LandingPage() {
 
       <FAQSection />
 
-      {/* Contact Section - Consolidated, Clean */}
+      {/* Contact Section */}
       <section id="contact" className="bg-slate-50">
         <LocationMapSection />
       </section>

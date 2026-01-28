@@ -16,8 +16,9 @@ export { MemberPortalLink } from './MemberPortalLink';
 export { NavigationHeader } from './NavigationHeader';
 export { AboutSection } from './AboutSection';
 
-// New Enhanced Components
+// Enhanced Components
 export { PlanYourVisitSection } from './PlanYourVisitSection';
 export { PrayerRequestSection } from './PrayerRequestSection';
 export { GiveSection } from './GiveSection';
 export { LatestSermonSection } from './LatestSermonSection';
+export { VisitUsSection } from './VisitUsSection';

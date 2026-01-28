@@ -12,13 +12,13 @@
  */
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Play,
   Calendar,
   User,
   Clock,
   BookOpen,
-  ExternalLink,
   Youtube,
   ChevronRight,
   Headphones,
@@ -42,6 +42,7 @@ interface Sermon {
 }
 
 // Sample sermons data (will be replaced by CMS/API)
+// Using actual Christian worship/sermon content from public YouTube videos
 const sampleSermons: Sermon[] = [
   {
     id: '1',
@@ -52,9 +53,10 @@ const sampleSermons: Sermon[] = [
     description:
       "Exploring how faith sustains us through life's challenges and uncertainties, drawing from the story of Daniel.",
     scripture: 'Daniel 3:17-18',
-    youtubeId: 'dQw4w9WgXcQ', // Placeholder - replace with actual sermon
+    // Hillsong Worship - What A Beautiful Name (Christian worship content)
+    youtubeId: 'nQWFzMvCfLE',
     thumbnailUrl:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=640&h=360&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=640&h=360&fit=crop&q=80',
     series: 'Faith Foundations',
   },
   {
@@ -67,6 +69,8 @@ const sampleSermons: Sermon[] = [
       "Understanding what it means to walk in God's light and be a light to others in our community.",
     scripture: '1 John 1:5-7',
     youtubeId: undefined,
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=640&h=360&fit=crop&q=80',
     series: 'The Epistle of John',
   },
   {
@@ -79,6 +83,8 @@ const sampleSermons: Sermon[] = [
       'Discovering the blessing and meaning of the Sabbath rest in our busy modern lives.',
     scripture: 'Hebrews 4:9-11',
     youtubeId: undefined,
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=640&h=360&fit=crop&q=80',
     series: 'Foundations of Faith',
   },
 ];
@@ -150,14 +156,16 @@ export function LatestSermonSection() {
             </h2>
             <p className="text-slate-400">Missed a Sabbath? Catch up on our recent sermons.</p>
           </div>
-          <Button
-            variant="outline"
-            className="border-slate-600 bg-transparent text-white hover:bg-slate-700"
-          >
-            <Youtube className="mr-2 h-4 w-4 text-red-500" />
-            View All Sermons
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Button>
+          <Link to="/sermons">
+            <Button
+              variant="outline"
+              className="border-slate-600 bg-transparent text-white hover:bg-slate-700"
+            >
+              <Youtube className="mr-2 h-4 w-4 text-red-500" />
+              View All Sermons
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">

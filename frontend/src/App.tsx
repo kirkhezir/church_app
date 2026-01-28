@@ -4,6 +4,8 @@ import { Routes, Route } from 'react-router-dom';
 // Eagerly loaded - critical path
 import LandingPage from './pages/public/LandingPage';
 import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
+import VisitPage from './pages/public/VisitPage';
+import SermonsPage from './pages/public/SermonsPage';
 import LoginPage from './pages/auth/LoginPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
@@ -137,6 +139,12 @@ const App: React.FC = () => {
 
         {/* Privacy Policy Page */}
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
+
+        {/* Visit Page - First time visitors */}
+        <Route path="/visit" element={<VisitPage />} />
+
+        {/* Sermons Archive */}
+        <Route path="/sermons" element={<SermonsPage />} />
 
         {/* Public Routes */}
         <Route

@@ -82,7 +82,7 @@ export function LanguageToggle({
       {/* Dropdown */}
       {isOpen && (
         <div
-          className={`absolute right-0 top-full z-50 mt-1 min-w-[120px] overflow-hidden rounded-lg border shadow-lg ${dropdownClasses}`}
+          className={`absolute right-0 top-full z-[100] mt-1 min-w-[120px] overflow-hidden rounded-lg border shadow-lg ${dropdownClasses}`}
           role="listbox"
           aria-label="Select language"
         >
