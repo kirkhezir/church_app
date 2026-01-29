@@ -8,6 +8,17 @@ import VisitPage from './pages/public/VisitPage';
 import SermonsPage from './pages/public/SermonsPage';
 import AboutPage from './pages/public/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
+
+// Lazy-loaded public pages
+const GalleryPage = lazy(() => import('./pages/public/GalleryPage'));
+const MinistriesPage = lazy(() => import('./pages/public/MinistriesPage'));
+const MinistryDetailPage = lazy(() => import('./pages/public/MinistryDetailPage'));
+const EventsPage = lazy(() => import('./pages/public/EventsPage'));
+const EventDetailPublicPage = lazy(() => import('./pages/public/EventDetailPage'));
+const PrayerPage = lazy(() => import('./pages/public/PrayerPage'));
+const GivePage = lazy(() => import('./pages/public/GivePage'));
+const BlogPage = lazy(() => import('./pages/public/BlogPage'));
+const ResourcesPage = lazy(() => import('./pages/public/ResourcesPage'));
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
@@ -149,6 +160,30 @@ const App: React.FC = () => {
 
         {/* Sermons Archive */}
         <Route path="/sermons" element={<SermonsPage />} />
+
+        {/* Gallery - Photo albums */}
+        <Route path="/gallery" element={<GalleryPage />} />
+
+        {/* Ministries */}
+        <Route path="/ministries" element={<MinistriesPage />} />
+        <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
+
+        {/* Public Events Calendar */}
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events/:id" element={<EventDetailPublicPage />} />
+
+        {/* Prayer Requests */}
+        <Route path="/prayer" element={<PrayerPage />} />
+
+        {/* Give/Donate */}
+        <Route path="/give" element={<GivePage />} />
+
+        {/* Blog/News */}
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/news" element={<BlogPage />} />
+
+        {/* Resources */}
+        <Route path="/resources" element={<ResourcesPage />} />
 
         {/* Public Routes */}
         <Route

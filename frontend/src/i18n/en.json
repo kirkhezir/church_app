@@ -27,7 +27,11 @@
     "contact": "Contact",
     "sermons": "Sermons",
     "give": "Give",
-    "planVisit": "Plan Your Visit"
+    "planVisit": "Plan Your Visit",
+    "explore": "Explore",
+    "blog": "Blog",
+    "resources": "Resources",
+    "prayer": "Prayer"
   },
   "hero": {
     "tagline": "A community of <faith>faith</faith>, <hope>hope</hope>, and <love>love</love> — where everyone belongs.",

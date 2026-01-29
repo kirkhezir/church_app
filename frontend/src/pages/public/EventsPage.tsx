@@ -1,0 +1,569 @@
+/**
+ * Events Page
+ *
+ * Calendar view of church events with filtering, past events archive, and registration
+ */
+
+import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  Users,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Grid,
+  List,
+  CalendarDays,
+  Tag,
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { PublicLayout } from '@/layouts';
+import { useI18n } from '@/i18n';
+
+interface Event {
+  id: string;
+  title: string;
+  titleThai: string;
+  description: string;
+  descriptionThai: string;
+  date: string;
+  endDate?: string;
+  time: string;
+  location: string;
+  locationThai: string;
+  category: string;
+  categoryThai: string;
+  image: string;
+  featured?: boolean;
+  rsvpRequired?: boolean;
+  rsvpCount?: number;
+}
+
+// Sample events data
+const eventsData: Event[] = [
+  {
+    id: '1',
+    title: 'Sabbath Worship Service',
+    titleThai: 'นมัสการวันสะบาโต',
+    description:
+      'Join us for our weekly worship service featuring praise, prayer, and a message from the Word.',
+    descriptionThai: 'ร่วมนมัสการประจำสัปดาห์พร้อมการสรรเสริญ อธิษฐาน และข่าวสารจากพระวจนะ',
+    date: '2026-02-07',
+    time: '11:00 AM - 12:30 PM',
+    location: 'Main Sanctuary',
+    locationThai: 'ห้องนมัสการหลัก',
+    category: 'Worship',
+    categoryThai: 'นมัสการ',
+    image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=600&q=80',
+    featured: true,
+  },
+  {
+    id: '2',
+    title: 'Youth Vespers',
+    titleThai: 'นมัสการเย็นเยาวชน',
+    description:
+      'A special evening worship program led by our youth with music, testimonies, and fellowship.',
+    descriptionThai: 'โปรแกรมนมัสการเย็นพิเศษนำโดยเยาวชน พร้อมดนตรี คำพยาน และสามัคคีธรรม',
+    date: '2026-02-07',
+    time: '5:00 PM - 6:30 PM',
+    location: 'Youth Hall',
+    locationThai: 'ห้องเยาวชน',
+    category: 'Youth',
+    categoryThai: 'เยาวชน',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
+    rsvpRequired: true,
+    rsvpCount: 25,
+  },
+  {
+    id: '3',
+    title: 'Community Health Fair',
+    titleThai: 'งานสุขภาพชุมชน',
+    description:
+      'Free health screenings, wellness education, and healthy cooking demonstrations for the community.',
+    descriptionThai: 'การตรวจสุขภาพฟรี การศึกษาเพื่อสุขภาพ และการสาธิตการทำอาหารเพื่อสุขภาพ',
+    date: '2026-02-14',
+    time: '9:00 AM - 2:00 PM',
+    location: 'Church Grounds',
+    locationThai: 'บริเวณโบสถ์',
+    category: 'Community',
+    categoryThai: 'ชุมชน',
+    image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80',
+    featured: true,
+    rsvpRequired: true,
+    rsvpCount: 45,
+  },
+  {
+    id: '4',
+    title: 'Prayer Meeting',
+    titleThai: 'การประชุมอธิษฐาน',
+    description: 'Mid-week prayer gathering for spiritual renewal and intercession.',
+    descriptionThai: 'การรวมตัวอธิษฐานกลางสัปดาห์เพื่อการฟื้นฟูจิตวิญญาณและการวิงวอน',
+    date: '2026-02-11',
+    time: '7:00 PM - 8:00 PM',
+    location: 'Prayer Room',
+    locationThai: 'ห้องอธิษฐาน',
+    category: 'Prayer',
+    categoryThai: 'อธิษฐาน',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
+  },
+  {
+    id: '5',
+    title: 'Youth Camp 2026',
+    titleThai: 'ค่ายเยาวชน 2026',
+    description:
+      'Annual youth retreat with spiritual activities, team building, and outdoor adventures.',
+    descriptionThai: 'ค่ายเยาวชนประจำปีพร้อมกิจกรรมฝ่ายจิตวิญญาณ การสร้างทีม และการผจญภัยกลางแจ้ง',
+    date: '2026-03-20',
+    endDate: '2026-03-22',
+    time: 'All Day',
+    location: 'Camp Taksin',
+    locationThai: 'ค่ายตากสิน',
+    category: 'Youth',
+    categoryThai: 'เยาวชน',
+    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&q=80',
+    featured: true,
+    rsvpRequired: true,
+    rsvpCount: 35,
+  },
+  {
+    id: '6',
+    title: "Women's Fellowship Breakfast",
+    titleThai: 'อาหารเช้าสามัคคีธรรมสตรี',
+    description: 'Monthly gathering for women to connect, share, and encourage one another.',
+    descriptionThai: 'การรวมตัวประจำเดือนสำหรับสตรีเพื่อเชื่อมต่อ แบ่งปัน และให้กำลังใจกัน',
+    date: '2026-02-21',
+    time: '8:00 AM - 10:00 AM',
+    location: 'Fellowship Hall',
+    locationThai: 'ห้องสามัคคีธรรม',
+    category: 'Women',
+    categoryThai: 'สตรี',
+    image: 'https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?w=600&q=80',
+    rsvpRequired: true,
+    rsvpCount: 20,
+  },
+  {
+    id: '7',
+    title: 'Baptism Sabbath',
+    titleThai: 'สะบาโตบัพติศมา',
+    description: 'Celebrating new members joining our church family through baptism.',
+    descriptionThai: 'ฉลองสมาชิกใหม่เข้าร่วมครอบครัวโบสถ์ผ่านบัพติศมา',
+    date: '2026-02-28',
+    time: '11:00 AM',
+    location: 'Main Sanctuary',
+    locationThai: 'ห้องนมัสการหลัก',
+    category: 'Worship',
+    categoryThai: 'นมัสการ',
+    image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80',
+    featured: true,
+  },
+  {
+    id: '8',
+    title: 'Pathfinder Investiture',
+    titleThai: 'พิธีสถาปนาพาธไฟน์เดอร์',
+    description:
+      'Annual ceremony honoring Pathfinders who have completed their class requirements.',
+    descriptionThai: 'พิธีประจำปีเพื่อเชิดชูพาธไฟน์เดอร์ที่สำเร็จความต้องการของชั้นเรียน',
+    date: '2026-03-07',
+    time: '3:00 PM',
+    location: 'Main Sanctuary',
+    locationThai: 'ห้องนมัสการหลัก',
+    category: 'Youth',
+    categoryThai: 'เยาวชน',
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80',
+  },
+];
+
+const categories = [
+  { id: 'all', name: 'All Events', nameThai: 'กิจกรรมทั้งหมด' },
+  { id: 'Worship', name: 'Worship', nameThai: 'นมัสการ' },
+  { id: 'Youth', name: 'Youth', nameThai: 'เยาวชน' },
+  { id: 'Community', name: 'Community', nameThai: 'ชุมชน' },
+  { id: 'Prayer', name: 'Prayer', nameThai: 'อธิษฐาน' },
+  { id: 'Women', name: 'Women', nameThai: 'สตรี' },
+];
+
+type ViewMode = 'grid' | 'list' | 'calendar';
+
+export function EventsPage() {
+  const { language } = useI18n();
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 1)); // February 2026
+
+  const filteredEvents = useMemo(() => {
+    return eventsData
+      .filter((event) => selectedCategory === 'all' || event.category === selectedCategory)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [selectedCategory]);
+
+  const featuredEvents = useMemo(() => {
+    return eventsData.filter((e) => e.featured);
+  }, []);
+
+  // Calendar helpers
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return { firstDay, daysInMonth };
+  };
+
+  const getEventsForDate = (date: string) => {
+    return eventsData.filter((e) => e.date === date);
+  };
+
+  const { firstDay, daysInMonth } = getDaysInMonth(currentMonth);
+
+  return (
+    <PublicLayout>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 pb-12 pt-24">
+        <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
+          <Calendar className="mx-auto mb-4 h-12 w-12 text-emerald-300" />
+          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+            {language === 'th' ? 'กิจกรรมและปฏิทิน' : 'Events & Calendar'}
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-emerald-100">
+            {language === 'th'
+              ? 'ดูกิจกรรมและโปรแกรมที่กำลังจะมาถึงของเรา'
+              : 'View our upcoming events and programs'}
+          </p>
+        </div>
+      </section>
+
+      {/* Featured Events Carousel */}
+      {featuredEvents.length > 0 && (
+        <div className="bg-slate-50 py-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <h2 className="mb-4 text-lg font-semibold text-slate-900">
+              {language === 'th' ? 'กิจกรรมเด่น' : 'Featured Events'}
+            </h2>
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {featuredEvents.map((event) => (
+                <Link
+                  key={event.id}
+                  to={`/events/${event.id}`}
+                  className="group min-w-[300px] overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl"
+                >
+                  <div className="relative h-40">
+                    <img
+                      src={event.image}
+                      alt={language === 'th' ? event.titleThai : event.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute left-3 top-3 rounded-full bg-amber-500 px-3 py-1 text-xs font-medium text-white">
+                      {language === 'th' ? 'เด่น' : 'Featured'}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-slate-900 group-hover:text-emerald-600">
+                      {language === 'th' ? event.titleThai : event.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      <Calendar className="mr-1 inline h-3 w-3" />
+                      {new Date(event.date).toLocaleDateString(
+                        language === 'th' ? 'th-TH' : 'en-US',
+                        { weekday: 'short', month: 'short', day: 'numeric' }
+                      )}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Controls */}
+      <div className="sticky top-16 z-40 border-b bg-white/95 backdrop-blur-sm">
+        <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Category Filter */}
+            <div className="flex flex-wrap items-center gap-2">
+              <Filter className="h-4 w-4 text-slate-400" />
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`rounded-full px-3 py-1 text-sm transition-colors ${
+                    selectedCategory === cat.id
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {language === 'th' ? cat.nameThai : cat.name}
+                </button>
+              ))}
+            </div>
+
+            {/* View Toggle */}
+            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`rounded p-1.5 ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
+                title={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
+              >
+                <Grid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`rounded p-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
+                title={language === 'th' ? 'มุมมองรายการ' : 'List View'}
+              >
+                <List className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`rounded p-1.5 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
+                title={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
+              >
+                <CalendarDays className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        {viewMode === 'grid' && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredEvents.map((event) => (
+              <Link key={event.id} to={`/events/${event.id}`}>
+                <Card className="group h-full overflow-hidden transition-shadow hover:shadow-xl">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={language === 'th' ? event.titleThai : event.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute left-3 top-3">
+                      <span className="rounded-full bg-slate-900/70 px-2 py-1 text-xs text-white">
+                        <Tag className="mr-1 inline h-3 w-3" />
+                        {language === 'th' ? event.categoryThai : event.category}
+                      </span>
+                    </div>
+                  </div>
+                  <CardContent className="p-5">
+                    <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
+                      <Calendar className="h-4 w-4" />
+                      <span>
+                        {new Date(event.date).toLocaleDateString(
+                          language === 'th' ? 'th-TH' : 'en-US',
+                          { weekday: 'short', month: 'short', day: 'numeric' }
+                        )}
+                      </span>
+                      <span>•</span>
+                      <Clock className="h-4 w-4" />
+                      <span>{event.time}</span>
+                    </div>
+                    <h3 className="mb-2 font-bold text-slate-900 group-hover:text-emerald-600">
+                      {language === 'th' ? event.titleThai : event.title}
+                    </h3>
+                    <p className="mb-3 line-clamp-2 text-sm text-slate-600">
+                      {language === 'th' ? event.descriptionThai : event.description}
+                    </p>
+                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <MapPin className="h-4 w-4" />
+                      <span>{language === 'th' ? event.locationThai : event.location}</span>
+                    </div>
+                    {event.rsvpRequired && (
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="flex items-center gap-1 text-sm text-emerald-600">
+                          <Users className="h-4 w-4" />
+                          {event.rsvpCount} {language === 'th' ? 'ลงทะเบียน' : 'registered'}
+                        </span>
+                        <Button size="sm" variant="outline">
+                          {language === 'th' ? 'ลงทะเบียน' : 'RSVP'}
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {viewMode === 'list' && (
+          <div className="space-y-4">
+            {filteredEvents.map((event) => (
+              <Link key={event.id} to={`/events/${event.id}`}>
+                <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="relative h-48 sm:h-auto sm:w-48">
+                      <img
+                        src={event.image}
+                        alt={language === 'th' ? event.titleThai : event.title}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <CardContent className="flex-1 p-5">
+                      <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+                          {language === 'th' ? event.categoryThai : event.category}
+                        </span>
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                          {new Date(event.date).toLocaleDateString(
+                            language === 'th' ? 'th-TH' : 'en-US',
+                            { weekday: 'long', month: 'long', day: 'numeric' }
+                          )}
+                        </span>
+                      </div>
+                      <h3 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-emerald-600">
+                        {language === 'th' ? event.titleThai : event.title}
+                      </h3>
+                      <p className="mb-3 text-sm text-slate-600">
+                        {language === 'th' ? event.descriptionThai : event.description}
+                      </p>
+                      <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          {event.time}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-4 w-4" />
+                          {language === 'th' ? event.locationThai : event.location}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {viewMode === 'calendar' && (
+          <Card>
+            <CardContent className="p-6">
+              {/* Calendar Header */}
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-900">
+                  {currentMonth.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', {
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </h2>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentMonth(
+                        new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+                      )
+                    }
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentMonth(
+                        new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+                      )
+                    }
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-1">
+                {/* Day Headers */}
+                {(language === 'th'
+                  ? ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
+                  : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                ).map((day) => (
+                  <div key={day} className="py-2 text-center text-sm font-medium text-slate-500">
+                    {day}
+                  </div>
+                ))}
+
+                {/* Empty cells for days before month starts */}
+                {Array.from({ length: firstDay }).map((_, i) => (
+                  <div key={`empty-${i}`} className="h-24 rounded bg-slate-50 p-1" />
+                ))}
+
+                {/* Calendar Days */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const day = i + 1;
+                  const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                  const dayEvents = getEventsForDate(dateStr);
+                  const isToday = dateStr === new Date().toISOString().split('T')[0];
+
+                  return (
+                    <div
+                      key={day}
+                      className={`h-24 overflow-hidden rounded border p-1 ${
+                        isToday ? 'border-emerald-500 bg-emerald-50' : 'border-slate-100 bg-white'
+                      }`}
+                    >
+                      <div
+                        className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}
+                      >
+                        {day}
+                      </div>
+                      <div className="space-y-1">
+                        {dayEvents.slice(0, 2).map((event) => (
+                          <Link
+                            key={event.id}
+                            to={`/events/${event.id}`}
+                            className="block truncate rounded bg-emerald-100 px-1 text-xs text-emerald-700 hover:bg-emerald-200"
+                          >
+                            {language === 'th' ? event.titleThai : event.title}
+                          </Link>
+                        ))}
+                        {dayEvents.length > 2 && (
+                          <div className="text-xs text-slate-500">
+                            +{dayEvents.length - 2} {language === 'th' ? 'เพิ่มเติม' : 'more'}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Add to Calendar CTA */}
+        <div className="mt-12 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 p-8 text-center text-white">
+          <h2 className="mb-2 text-2xl font-bold">
+            {language === 'th' ? 'ไม่พลาดกิจกรรมใดๆ!' : "Don't Miss Any Events!"}
+          </h2>
+          <p className="mb-6 text-emerald-100">
+            {language === 'th'
+              ? 'สมัครรับปฏิทินของเราเพื่อรับการอัปเดตกิจกรรมโดยอัตโนมัติ'
+              : 'Subscribe to our calendar to get automatic event updates'}
+          </p>
+          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50">
+            <Calendar className="mr-2 h-5 w-5" />
+            {language === 'th' ? 'เพิ่มลงปฏิทิน' : 'Add to Calendar'}
+          </Button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t bg-slate-50 py-8">
+        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
+          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+        </div>
+      </footer>
+    </PublicLayout>
+  );
+}
+
+export default EventsPage;

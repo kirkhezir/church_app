@@ -56,6 +56,7 @@ import {
   VisitUsSection,
 } from '../../components/features/landing';
 import { useI18n } from '../../i18n';
+import { SEO, DEFAULT_SEO } from '../../components/common/SEO';
 
 // =============================================================================
 // CONSTANTS
@@ -76,11 +77,12 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
+  { labelKey: 'nav.home', href: '/', isPage: true },
   { labelKey: 'nav.about', href: '/about', isPage: true },
-  { labelKey: 'nav.visit', href: '#visit' },
-  { labelKey: 'nav.events', href: '#events' },
+  { labelKey: 'nav.visit', href: '/visit', isPage: true },
   { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
-  { labelKey: 'nav.ministries', href: '#ministries' },
+  { labelKey: 'nav.events', href: '/events', isPage: true },
+  { labelKey: 'nav.give', href: '/give', isPage: true },
   { labelKey: 'nav.contact', href: '#contact' },
 ];
 
@@ -97,6 +99,9 @@ const SOCIAL_LINKS = {
 export function LandingPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-slate-900">
+      {/* SEO Meta Tags */}
+      <SEO {...DEFAULT_SEO.home} />
+
       {/* Skip to Content - Accessibility */}
       <a
         href="#main-content"
