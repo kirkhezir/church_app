@@ -48,7 +48,6 @@ When implementing features, leverage available MCP servers for enhanced developm
   - Finding component usage examples and patterns
   - Checking component API and customization options
 - **Example use cases**:
-
   - "Add shadcn button component"
   - "Show shadcn form component examples"
   - "Get shadcn dialog implementation pattern"
@@ -92,7 +91,6 @@ When implementing features, leverage available MCP servers for enhanced developm
 ### Golden Rules
 
 1. **NEVER commit credentials to Git**
-
    - ❌ No passwords, API keys, secrets, or tokens in code
    - ❌ No credentials in markdown documentation
    - ❌ No credentials in config files (except `.env.example` with placeholders)
@@ -101,7 +99,6 @@ When implementing features, leverage available MCP servers for enhanced developm
    - ✅ Always use environment variables via `.env` files
 
 2. **Always use `.env` files (gitignored)**
-
    - ✅ Store ALL secrets in `backend/.env` (already in `.gitignore`)
    - ✅ Use `.env.example` files with placeholder values only
    - ✅ Never commit actual `.env` files

@@ -55,12 +55,12 @@ import {
   LatestSermonSection,
   VisitUsSection,
 } from '../../components/features/landing';
+import { useI18n } from '../../i18n';
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 const CHURCH_LOGO = '/church-logo.png';
-const CHURCH_NAME = 'Sing Buri Adventist Center';
 
 const CHURCH_STATS = {
   sabbaths: '500+',
@@ -68,14 +68,21 @@ const CHURCH_STATS = {
   years: '10+',
 } as const;
 
-const NAV_LINKS = [
-  { label: 'About', href: '#about' },
-  { label: 'Visit', href: '#visit' },
-  { label: 'Events', href: '#events' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Ministries', href: '#ministries' },
-  { label: 'Contact', href: '#contact' },
-] as const;
+// Navigation links with translation keys
+interface NavLink {
+  labelKey: string;
+  href: string;
+  isPage?: boolean;
+}
+
+const NAV_LINKS: NavLink[] = [
+  { labelKey: 'nav.about', href: '/about', isPage: true },
+  { labelKey: 'nav.visit', href: '#visit' },
+  { labelKey: 'nav.events', href: '#events' },
+  { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
+  { labelKey: 'nav.ministries', href: '#ministries' },
+  { labelKey: 'nav.contact', href: '#contact' },
+];
 
 // Church social media and contact links
 const SOCIAL_LINKS = {
@@ -154,6 +161,7 @@ export function LandingPage() {
 function NavigationHeaderContent() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -206,26 +214,40 @@ function NavigationHeaderContent() {
                 isScrolled ? 'text-slate-900' : 'text-white'
               }`}
             >
-              {CHURCH_NAME}
+              {t('common.churchName')}
             </p>
           </div>
         </button>
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => scrollToSection(link.href)}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
-                isScrolled
-                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  : 'text-white/90 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.isPage ? (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+                  isScrolled
+                    ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {t(link.labelKey)}
+              </Link>
+            ) : (
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
+                className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+                  isScrolled
+                    ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {t(link.labelKey)}
+              </button>
+            )
+          )}
           {/* Give Button */}
           <button
             onClick={() => scrollToSection('#give')}
@@ -236,7 +258,7 @@ function NavigationHeaderContent() {
             }`}
           >
             <Gift className="mr-1.5 inline-block h-4 w-4" />
-            Give
+            {t('nav.give')}
           </button>
           {/* Language Toggle */}
           <LanguageToggle compact lightMode={!isScrolled} />
@@ -250,7 +272,7 @@ function NavigationHeaderContent() {
               }`}
             >
               <LogIn className="mr-1.5 h-4 w-4" />
-              Login
+              {t('common.login')}
             </Button>
           </Link>
         </div>
@@ -282,29 +304,40 @@ function NavigationHeaderContent() {
         aria-modal="true"
       >
         <div className="bg-white px-4 pb-4 pt-2 shadow-lg">
-          {NAV_LINKS.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => scrollToSection(link.href)}
-              className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
-            >
-              {link.label}
-            </button>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.isPage ? (
+              <Link
+                key={link.href}
+                to={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+              >
+                {t(link.labelKey)}
+              </Link>
+            ) : (
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
+                className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+              >
+                {t(link.labelKey)}
+              </button>
+            )
+          )}
           {/* Give Button Mobile */}
           <button
             onClick={() => scrollToSection('#give')}
             className="flex w-full items-center rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
           >
             <Gift className="mr-2 h-5 w-5" />
-            Give
+            {t('nav.give')}
           </button>
           <Link
             to="/login"
             onClick={() => setIsMobileMenuOpen(false)}
             className="mt-3 block w-full rounded-lg bg-blue-600 py-3 text-center font-medium text-white"
           >
-            Member Login
+            {t('common.memberLogin')}
           </Link>
         </div>
       </div>
@@ -317,6 +350,7 @@ function NavigationHeaderContent() {
 // =============================================================================
 function HeroSection() {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0 });
+  const { t } = useI18n();
 
   // Calculate next Sabbath (Saturday)
   useEffect(() => {
@@ -376,14 +410,14 @@ function HeroSection() {
         <div className="mb-6 sm:mb-8">
           <img
             src={CHURCH_LOGO}
-            alt={CHURCH_NAME}
+            alt={t('common.churchName')}
             className="mx-auto h-24 w-24 rounded-full border-4 border-white/20 object-contain shadow-2xl sm:h-32 sm:w-32"
           />
         </div>
 
         {/* Heading */}
         <h1 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
-          {CHURCH_NAME}
+          {t('common.churchName')}
         </h1>
 
         {/* Tagline */}
@@ -566,6 +600,7 @@ function AboutSection() {
 // FOOTER - Clean, Organized with Newsletter and SDA Badge
 // =============================================================================
 function FooterSection() {
+  const { t } = useI18n();
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -619,7 +654,7 @@ function FooterSection() {
             <div className="mb-4 flex items-center gap-3">
               <img src={CHURCH_LOGO} alt="" className="h-12 w-12 rounded-full object-contain" />
               <div>
-                <p className="font-bold text-white">{CHURCH_NAME}</p>
+                <p className="font-bold text-white">{t('common.churchName')}</p>
               </div>
             </div>
             <p className="mb-3 text-sm text-slate-400">
@@ -694,14 +729,23 @@ function FooterSection() {
             <ul className="space-y-2 text-sm">
               {NAV_LINKS.slice(0, 4).map((link) => (
                 <li key={link.href}>
-                  <button
-                    onClick={() =>
-                      document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' })
-                    }
-                    className="text-slate-400 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </button>
+                  {link.isPage ? (
+                    <Link
+                      to={link.href}
+                      className="text-slate-400 transition-colors hover:text-white"
+                    >
+                      {t(link.labelKey)}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' })
+                      }
+                      className="text-slate-400 transition-colors hover:text-white"
+                    >
+                      {t(link.labelKey)}
+                    </button>
+                  )}
                 </li>
               ))}
               <li>
@@ -762,7 +806,7 @@ function FooterSection() {
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-sm sm:flex-row">
           <div className="flex flex-wrap items-center justify-center gap-4 text-slate-500 sm:justify-start">
             <p>
-              © {currentYear} {CHURCH_NAME}
+              © {currentYear} {t('common.churchName')}
             </p>
             <span className="hidden sm:inline">•</span>
             <Link to="/privacy" className="transition-colors hover:text-white">

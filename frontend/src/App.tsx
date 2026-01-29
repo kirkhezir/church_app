@@ -6,6 +6,7 @@ import LandingPage from './pages/public/LandingPage';
 import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
 import VisitPage from './pages/public/VisitPage';
 import SermonsPage from './pages/public/SermonsPage';
+import AboutPage from './pages/public/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
@@ -136,6 +137,9 @@ const App: React.FC = () => {
       <Routes>
         {/* Public Landing Page (no authentication required) */}
         <Route path="/" element={<LandingPage />} />
+
+        {/* About Page - Church info and leadership */}
+        <Route path="/about" element={<AboutPage />} />
 
         {/* Privacy Policy Page */}
         <Route path="/privacy" element={<PrivacyPolicyPage />} />

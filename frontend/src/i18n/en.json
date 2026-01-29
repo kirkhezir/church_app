@@ -17,13 +17,16 @@
     "backToHome": "Back to Home"
   },
   "nav": {
+    "home": "Home",
     "about": "About",
+    "visit": "Visit",
     "services": "Services",
     "events": "Events",
     "gallery": "Gallery",
     "ministries": "Ministries",
     "contact": "Contact",
     "sermons": "Sermons",
+    "give": "Give",
     "planVisit": "Plan Your Visit"
   },
   "hero": {

@@ -7,7 +7,6 @@
 
 import { Link } from 'react-router-dom';
 import {
-  ArrowLeft,
   Clock,
   MapPin,
   Users,
@@ -24,15 +23,17 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { PublicLayout } from '../../layouts';
+import { useI18n } from '../../i18n';
 
 // Calculate next Saturday date
-function getNextSaturday(): string {
+function getNextSaturday(lang: string): string {
   const today = new Date();
   const daysUntilSaturday = (6 - today.getDay() + 7) % 7 || 7;
   const nextSaturday = new Date(today);
 
   if (today.getDay() === 6 && today.getHours() < 17) {
-    return today.toLocaleDateString('en-US', {
+    return today.toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -40,7 +41,7 @@ function getNextSaturday(): string {
   }
 
   nextSaturday.setDate(today.getDate() + daysUntilSaturday);
-  return nextSaturday.toLocaleDateString('en-US', {
+  return nextSaturday.toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -124,44 +125,44 @@ const visitInfoSections = [
 ];
 
 export function VisitPage() {
-  const nextSaturday = getNextSaturday();
+  const { language } = useI18n();
+  const nextSaturday = getNextSaturday(language);
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <PublicLayout>
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-          <Link
-            to="/"
-            className="mb-4 inline-flex items-center gap-2 text-blue-100 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
+      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 pb-12 pt-20 text-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-bold sm:text-4xl">Plan Your Visit</h1>
+              <h1 className="text-3xl font-bold sm:text-4xl">
+                {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
+              </h1>
               <p className="mt-2 text-lg text-blue-100">
-                Everything you need to know for a comfortable first visit
+                {language === 'th'
+                  ? 'ทุกสิ่งที่คุณต้องรู้สำหรับการมาเยี่ยมครั้งแรก'
+                  : 'Everything you need to know for a comfortable first visit'}
               </p>
             </div>
             <div className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3">
               <Calendar className="h-6 w-6" />
               <div>
-                <p className="text-sm text-blue-100">Next Sabbath</p>
+                <p className="text-sm text-blue-100">
+                  {language === 'th' ? 'วันสะบาโตถัดไป' : 'Next Sabbath'}
+                </p>
                 <p className="font-semibold">{nextSaturday}</p>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         {/* Service Times */}
         <section className="mb-12">
           <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-slate-900">
             <Clock className="h-6 w-6 text-blue-600" />
-            Service Times
+            {language === 'th' ? 'เวลานมัสการ' : 'Service Times'}
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {services.map((service, index) => (
@@ -299,9 +300,13 @@ export function VisitPage() {
         <section className="text-center">
           <Card className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
             <CardContent className="p-8">
-              <h2 className="mb-2 text-2xl font-bold">Ready to Visit?</h2>
+              <h2 className="mb-2 text-2xl font-bold">
+                {language === 'th' ? 'พร้อมมาเยี่ยมชม?' : 'Ready to Visit?'}
+              </h2>
               <p className="mb-6 text-blue-100">
-                We can&apos;t wait to meet you! See you this Sabbath.
+                {language === 'th'
+                  ? 'เรารอพบคุณ! แล้วเจอกันวันสะบาโต'
+                  : "We can't wait to meet you! See you this Sabbath."}
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link to="/">
@@ -310,7 +315,7 @@ export function VisitPage() {
                     variant="secondary"
                     className="bg-white text-blue-600 hover:bg-blue-50"
                   >
-                    Back to Home
+                    {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
                   </Button>
                 </Link>
                 <Button
@@ -322,14 +327,21 @@ export function VisitPage() {
                   }
                 >
                   <MapPin className="mr-2 h-4 w-4" />
-                  Get Directions
+                  {language === 'th' ? 'เส้นทาง' : 'Get Directions'}
                 </Button>
               </div>
             </CardContent>
           </Card>
         </section>
       </div>
-    </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-slate-50 py-8">
+        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
+          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+        </div>
+      </footer>
+    </PublicLayout>
   );
 }
 

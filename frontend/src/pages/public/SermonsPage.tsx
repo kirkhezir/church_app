@@ -6,9 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  ArrowLeft,
   Play,
   Search,
   Calendar,
@@ -23,6 +21,8 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { PublicLayout } from '../../layouts';
+import { useI18n } from '../../i18n';
 
 interface Sermon {
   id: string;
@@ -127,6 +127,7 @@ const seriesList = [
 const speakerList = ['All Speakers', 'Pastor Somchai', 'Elder Prasert'];
 
 export function SermonsPage() {
+  const { language } = useI18n();
   const [sermons, setSermons] = useState<Sermon[]>(allSermons);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('All Series');
@@ -167,7 +168,7 @@ export function SermonsPage() {
   const displayedSermons = sermons.slice(startIndex, startIndex + sermonsPerPage);
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('en-US', {
+    return new Date(dateStr).toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -175,23 +176,20 @@ export function SermonsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <PublicLayout>
       {/* Header */}
-      <header className="bg-gradient-to-r from-slate-800 to-slate-900 text-white">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-          <Link
-            to="/"
-            className="mb-4 inline-flex items-center gap-2 text-slate-300 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-          <h1 className="text-3xl font-bold sm:text-4xl">Sermons</h1>
+      <section className="bg-gradient-to-r from-slate-800 to-slate-900 pb-12 pt-20 text-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h1 className="text-3xl font-bold sm:text-4xl">
+            {language === 'th' ? 'คำเทศนา' : 'Sermons'}
+          </h1>
           <p className="mt-2 text-lg text-slate-300">
-            Watch or listen to messages from our church family
+            {language === 'th'
+              ? 'รับชมหรือรับฟังข้อความจากครอบครัวโบสถ์ของเรา'
+              : 'Watch or listen to messages from our church family'}
           </p>
         </div>
-      </header>
+      </section>
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {/* Featured/Selected Sermon */}
@@ -374,7 +372,8 @@ export function SermonsPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="px-4 text-sm text-slate-600">
-              Page {currentPage} of {totalPages}
+              {language === 'th' ? 'หน้า' : 'Page'} {currentPage} {language === 'th' ? 'จาก' : 'of'}{' '}
+              {totalPages}
             </span>
             <Button
               variant="outline"
@@ -387,7 +386,14 @@ export function SermonsPage() {
           </div>
         )}
       </div>
-    </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-slate-50 py-8">
+        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
+          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+        </div>
+      </footer>
+    </PublicLayout>
   );
 }
 
