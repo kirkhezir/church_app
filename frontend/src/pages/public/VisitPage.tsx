@@ -5,11 +5,10 @@
  * about what to expect when visiting the church.
  */
 
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
   Clock,
   MapPin,
-  Users,
   Baby,
   Shirt,
   Car,
@@ -19,10 +18,14 @@ import {
   Phone,
   Mail,
   CheckCircle2,
-  ChevronRight,
+  Send,
+  MessageCircle,
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { Label } from '../../components/ui/label';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 
@@ -127,6 +130,23 @@ const visitInfoSections = [
 export function VisitPage() {
   const { language } = useI18n();
   const nextSaturday = getNextSaturday(language);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate form submission
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setSubmitted(true);
+    setIsSubmitting(false);
+  };
 
   return (
     <PublicLayout>
@@ -244,52 +264,154 @@ export function VisitPage() {
             {/* Contact Card */}
             <Card>
               <CardContent className="p-6">
-                <h3 className="mb-4 text-xl font-semibold text-slate-900">Questions?</h3>
-                <p className="mb-6 text-slate-600">
-                  We&apos;d love to hear from you! Feel free to reach out with any questions about
-                  your visit.
-                </p>
+                <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
+                </h3>
 
-                <div className="space-y-4">
+                {/* Contact Information - Same as Home page */}
+                <div className="mb-6 space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-900">
+                        {language === 'th' ? 'ที่อยู่' : 'Address'}
+                      </p>
+                      <p className="text-sm text-slate-600">Sing Buri Adventist Center</p>
+                      <p className="text-sm text-slate-600">
+                        Bang Phutsa, Mueang Sing Buri District,
+                      </p>
+                      <p className="text-sm text-slate-600">Sing Buri 16000 Thailand</p>
+                    </div>
+                  </div>
+
                   <a
-                    href="tel:+6636123456"
+                    href="tel:+66876106926"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                       <Phone className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Call Us</p>
-                      <p className="text-sm text-slate-600">+66 36 123 456</p>
+                      <p className="font-medium text-slate-900">
+                        {language === 'th' ? 'โทรศัพท์' : 'Phone'}
+                      </p>
+                      <p className="text-sm text-slate-600">+66 (0) 876-106-926</p>
                     </div>
                   </a>
 
                   <a
-                    href="mailto:info@singburi-adventist.org"
+                    href="mailto:singburiadventistcenter@gmail.com"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                       <Mail className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Email Us</p>
-                      <p className="text-sm text-slate-600">info@singburi-adventist.org</p>
+                      <p className="font-medium text-slate-900">
+                        {language === 'th' ? 'อีเมล' : 'Email'}
+                      </p>
+                      <p className="text-sm text-slate-600">singburiadventistcenter@gmail.com</p>
                     </div>
                   </a>
 
-                  <Link
-                    to="/#contact"
+                  <a
+                    href="https://line.me/ti/p/@singburiadventist"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                      <Users className="h-5 w-5 text-blue-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
+                      <MessageCircle className="h-5 w-5 text-emerald-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Contact Form</p>
-                      <p className="text-sm text-slate-600">Send us a message online</p>
+                      <p className="font-medium text-slate-900">LINE</p>
+                      <p className="text-sm text-slate-600">@singburiadventist</p>
                     </div>
-                    <ChevronRight className="ml-auto h-5 w-5 text-slate-400" />
-                  </Link>
+                  </a>
+                </div>
+
+                {/* Contact Form */}
+                <div className="border-t border-slate-200 pt-6">
+                  <h4 className="mb-4 flex items-center gap-2 font-semibold text-slate-900">
+                    <Send className="h-4 w-4" />
+                    {language === 'th' ? 'ส่งข้อความ' : 'Send a Message'}
+                  </h4>
+
+                  {submitted ? (
+                    <div className="rounded-lg bg-emerald-50 p-4 text-center">
+                      <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-emerald-500" />
+                      <p className="font-medium text-emerald-700">
+                        {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}
+                      </p>
+                      <p className="text-sm text-emerald-600">
+                        {language === 'th'
+                          ? 'เราจะติดต่อกลับโดยเร็วที่สุด'
+                          : "We'll get back to you soon."}
+                      </p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">{language === 'th' ? 'ชื่อ' : 'Name'}</Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder={language === 'th' ? 'ชื่อของคุณ' : 'Your name'}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">{language === 'th' ? 'อีเมล' : 'Email'}</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder={language === 'th' ? 'อีเมลของคุณ' : 'your@email.com'}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">
+                          {language === 'th' ? 'เบอร์โทร (ไม่บังคับ)' : 'Phone (optional)'}
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder={language === 'th' ? 'เบอร์โทรศัพท์' : 'Your phone number'}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="message">{language === 'th' ? 'ข้อความ' : 'Message'}</Label>
+                        <Textarea
+                          id="message"
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          placeholder={language === 'th' ? 'ข้อความของคุณ...' : 'Your message...'}
+                          rows={4}
+                          required
+                        />
+                      </div>
+                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <>
+                            <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            {language === 'th' ? 'กำลังส่ง...' : 'Sending...'}
+                          </>
+                        ) : (
+                          <>
+                            <Send className="mr-2 h-4 w-4" />
+                            {language === 'th' ? 'ส่งข้อความ' : 'Send Message'}
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -309,19 +431,10 @@ export function VisitPage() {
                   : "We can't wait to meet you! See you this Sabbath."}
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Link to="/">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="bg-white text-blue-600 hover:bg-blue-50"
-                  >
-                    {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
-                  </Button>
-                </Link>
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="border-white/30 bg-transparent text-white hover:bg-white/10"
+                  variant="secondary"
+                  className="bg-white text-blue-600 hover:bg-blue-50"
                   onClick={() =>
                     window.open('https://maps.google.com/?q=Sing+Buri+Adventist+Center', '_blank')
                   }
@@ -329,6 +442,16 @@ export function VisitPage() {
                   <MapPin className="mr-2 h-4 w-4" />
                   {language === 'th' ? 'เส้นทาง' : 'Get Directions'}
                 </Button>
+                <a href="tel:+66876106926">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full border-white/30 bg-transparent text-white hover:bg-white/10"
+                  >
+                    <Phone className="mr-2 h-4 w-4" />
+                    {language === 'th' ? 'โทรหาเรา' : 'Call Us'}
+                  </Button>
+                </a>
               </div>
             </CardContent>
           </Card>

@@ -32,6 +32,7 @@ import {
   BookOpen,
   Gift,
   MessageCircle,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -74,15 +75,27 @@ interface NavLink {
   labelKey: string;
   href: string;
   isPage?: boolean;
+  isExternal?: boolean;
+  children?: NavLink[];
 }
 
 const NAV_LINKS: NavLink[] = [
   { labelKey: 'nav.home', href: '/', isPage: true },
   { labelKey: 'nav.about', href: '/about', isPage: true },
   { labelKey: 'nav.visit', href: '/visit', isPage: true },
-  { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
-  { labelKey: 'nav.events', href: '/events', isPage: true },
-  { labelKey: 'nav.give', href: '/give', isPage: true },
+  {
+    labelKey: 'nav.explore',
+    href: '#',
+    children: [
+      { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
+      { labelKey: 'nav.events', href: '/events', isPage: true },
+      { labelKey: 'nav.ministries', href: '/ministries', isPage: true },
+      { labelKey: 'nav.gallery', href: '/gallery', isPage: true },
+      { labelKey: 'nav.blog', href: '/blog', isPage: true },
+      { labelKey: 'nav.resources', href: '/resources', isPage: true },
+    ],
+  },
+  { labelKey: 'nav.prayer', href: '/prayer', isPage: true },
   { labelKey: 'nav.contact', href: '#contact' },
 ];
 
@@ -227,7 +240,34 @@ function NavigationHeaderContent() {
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) =>
-            link.isPage ? (
+            link.children ? (
+              // Dropdown menu for Explore
+              <div key={link.labelKey} className="group relative">
+                <button
+                  className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+                    isScrolled
+                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  {t(link.labelKey)}
+                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute left-0 top-full z-50 min-w-[160px] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                  <div className="rounded-lg border bg-white py-2 shadow-lg">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        to={child.href}
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      >
+                        {t(child.labelKey)}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : link.isPage ? (
               <Link
                 key={link.href}
                 to={link.href}
@@ -237,6 +277,9 @@ function NavigationHeaderContent() {
                     : 'text-white/90 hover:bg-white/10 hover:text-white'
                 }`}
               >
+                {link.labelKey === 'nav.prayer' && (
+                  <Sparkles className="mr-1.5 inline-block h-4 w-4" />
+                )}
                 {t(link.labelKey)}
               </Link>
             ) : (
@@ -253,16 +296,16 @@ function NavigationHeaderContent() {
               </button>
             )
           )}
-          {/* Give Button */}
+          {/* Give Button with Icon */}
           <button
             onClick={() => scrollToSection('#give')}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+            className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
               isScrolled
                 ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
                 : 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
             }`}
           >
-            <Gift className="mr-1.5 inline-block h-4 w-4" />
+            <Gift className="mr-1.5 h-4 w-4" />
             {t('nav.give')}
           </button>
           {/* Language Toggle */}
@@ -308,15 +351,35 @@ function NavigationHeaderContent() {
         role="dialog"
         aria-modal="true"
       >
-        <div className="bg-white px-4 pb-4 pt-2 shadow-lg">
+        <div className="max-h-[80vh] overflow-y-auto bg-white px-4 pb-4 pt-2 shadow-lg">
           {NAV_LINKS.map((link) =>
-            link.isPage ? (
+            link.children ? (
+              // Mobile Explore dropdown - show as expandable section
+              <div key={link.labelKey} className="border-b border-slate-100 py-2">
+                <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  {t(link.labelKey)}
+                </p>
+                {link.children.map((child) => (
+                  <Link
+                    key={child.href}
+                    to={child.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block w-full rounded-lg px-6 py-2.5 text-left text-sm font-medium text-slate-600 hover:bg-slate-50"
+                  >
+                    {t(child.labelKey)}
+                  </Link>
+                ))}
+              </div>
+            ) : link.isPage ? (
               <Link
                 key={link.href}
                 to={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                className="flex w-full items-center rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
               >
+                {link.labelKey === 'nav.prayer' && (
+                  <Sparkles className="mr-2 h-5 w-5 text-purple-500" />
+                )}
                 {t(link.labelKey)}
               </Link>
             ) : (
@@ -390,7 +453,7 @@ function HeroSection() {
   }, []);
 
   const scrollToServices = () => {
-    document.getElementById('worship-times')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('visit')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

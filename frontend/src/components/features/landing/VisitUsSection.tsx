@@ -3,7 +3,7 @@
  *
  * Merged section combining:
  * - Worship Times
- * - Plan Your Visit essentials (expandable cards)
+ * - Plan Your Visit essentials (tabbed cards)
  * - Location info
  *
  * With full i18n support for Thai/English
@@ -23,8 +23,6 @@ import {
   Car,
   HeartHandshake,
   CheckCircle2,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
@@ -154,12 +152,11 @@ const visitInfoItems: VisitInfo[] = [
 
 export function VisitUsSection() {
   const { language } = useI18n();
-  const [expandedId, setExpandedId] = useState<string | null>('expect');
+  const [activeTab, setActiveTab] = useState('expect');
   const nextSaturday = getNextSaturday(language);
 
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+  // Get active item
+  const activeItem = visitInfoItems.find((item) => item.id === activeTab);
 
   return (
     <section
@@ -215,52 +212,64 @@ export function VisitUsSection() {
           </span>
         </div>
 
-        {/* Visit Info Cards */}
-        <div className="mb-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {visitInfoItems.map((item) => (
-            <Card
-              key={item.id}
-              className={`overflow-hidden transition-all ${
-                expandedId === item.id ? 'ring-2 ring-blue-500' : ''
-              }`}
-            >
+        {/* Visit Info - Tabbed Design (Better UX) */}
+        <Card className="mb-10 overflow-hidden">
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap border-b border-slate-200 bg-slate-50">
+            {visitInfoItems.map((item) => (
               <button
-                onClick={() => toggleExpand(item.id)}
-                className="flex w-full items-center justify-between p-4 text-left hover:bg-slate-50"
-                aria-expanded={expandedId === item.id}
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex min-w-[120px] flex-1 items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === item.id
+                    ? 'border-b-2 border-blue-600 bg-white text-blue-600'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                    <item.icon className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <span className="font-semibold text-slate-900">
-                    {language === 'th' ? item.titleThai : item.title}
-                  </span>
-                </div>
-                {expandedId === item.id ? (
-                  <ChevronUp className="h-5 w-5 text-slate-400" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-slate-400" />
-                )}
+                <item.icon className="h-4 w-4" />
+                <span className="hidden sm:inline">
+                  {language === 'th' ? item.titleThai : item.title}
+                </span>
               </button>
-              {expandedId === item.id && (
-                <div className="border-t border-slate-100 bg-slate-50 p-4">
-                  <p className="mb-3 text-sm text-slate-600">
-                    {language === 'th' ? item.descriptionThai : item.description}
-                  </p>
-                  <ul className="space-y-1">
-                    {(language === 'th' ? item.detailsThai : item.details).map((detail, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
-                        <span className="text-slate-700">{detail}</span>
-                      </li>
-                    ))}
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          {activeItem && (
+            <CardContent className="p-6 sm:p-8">
+              <div className="flex flex-col gap-6 md:flex-row md:items-start">
+                {/* Icon and Title */}
+                <div className="flex items-center gap-4 md:w-1/3">
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100">
+                    <activeItem.icon className="h-7 w-7 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900">
+                      {language === 'th' ? activeItem.titleThai : activeItem.title}
+                    </h3>
+                    <p className="text-sm text-slate-500">
+                      {language === 'th' ? activeItem.descriptionThai : activeItem.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Details List */}
+                <div className="flex-1 md:border-l md:border-slate-200 md:pl-6">
+                  <ul className="grid gap-3 sm:grid-cols-2">
+                    {(language === 'th' ? activeItem.detailsThai : activeItem.details).map(
+                      (detail, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" />
+                          <span className="text-slate-700">{detail}</span>
+                        </li>
+                      )
+                    )}
                   </ul>
                 </div>
-              )}
-            </Card>
-          ))}
-        </div>
+              </div>
+            </CardContent>
+          )}
+        </Card>
 
         {/* Location CTA */}
         <Card className="overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700">
