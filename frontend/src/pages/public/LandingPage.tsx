@@ -352,18 +352,22 @@ function NavigationHeaderContent() {
             >
               <Search className="h-5 w-5" />
             </button>
-            {/* Login Button - Enhanced Design */}
+            {/* Login Button - Premium Design */}
             <Link to="/login" className="ml-2">
               <Button
                 size="sm"
-                className={`group relative overflow-hidden font-semibold shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
+                className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
                   isScrolled
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700'
-                    : 'bg-white text-blue-600 hover:bg-blue-50'
+                    ? 'border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
+                    : 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-blue-600 hover:shadow-white/20'
                 }`}
               >
-                <LogIn className="mr-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                {t('common.login')}
+                <span className="relative z-10 flex items-center gap-2">
+                  <LogIn className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
+                  {t('common.login')}
+                </span>
+                {/* Animated background shine effect */}
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               </Button>
             </Link>
           </div>
@@ -465,14 +469,16 @@ function NavigationHeaderContent() {
               <MessageSquare className="h-5 w-5 text-emerald-500" />
               {t('nav.contact')}
             </button>
-            {/* Mobile Login Button - Enhanced */}
+            {/* Mobile Login Button - Premium Design */}
             <Link
               to="/login"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 text-center font-semibold text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
+              className="group relative mt-3 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-3.5 text-center font-semibold tracking-wide text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40"
             >
-              <LogIn className="h-5 w-5" />
+              <LogIn className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
               {t('common.memberLogin')}
+              {/* Animated shine effect */}
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
             </Link>
           </div>
         </div>
