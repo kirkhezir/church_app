@@ -7,7 +7,16 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LogIn, ChevronDown, Search, HeartHandshake, Gift } from 'lucide-react';
+import {
+  Menu,
+  X,
+  LogIn,
+  ChevronDown,
+  Search,
+  HeartHandshake,
+  Gift,
+  MessageSquare,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageToggle from '@/components/common/LanguageToggle';
 import GlobalSearch from '@/components/common/GlobalSearch';
@@ -46,7 +55,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { label: 'Prayer', labelKey: 'nav.prayer', href: '/prayer', isPage: true },
-  { label: 'Give', labelKey: 'nav.give', href: '/give', isPage: true },
+  { label: 'Give', labelKey: 'nav.give', href: '/#give' },
   { label: 'Contact', labelKey: 'nav.contact', href: '/#contact' },
 ];
 
@@ -188,26 +197,31 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                     )}
                   </div>
                 ) : (
-                  // Regular link - with icons for Prayer and Give
+                  // Regular link - with icons for Prayer, Give, and Contact
                   <Link
                     to={link.href}
                     onClick={() => handleNavClick(link.href)}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                       link.labelKey === 'nav.give'
                         ? showTransparent
-                          ? 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
+                          ? 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200'
                           : 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
-                        : isActive(link.href)
+                        : link.labelKey === 'nav.contact'
                           ? showTransparent
-                            ? 'bg-white/20 text-white'
-                            : 'bg-blue-50 text-blue-600'
-                          : showTransparent
-                            ? 'text-white/90 hover:bg-white/10 hover:text-white'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                            ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
+                            : 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
+                          : isActive(link.href)
+                            ? showTransparent
+                              ? 'bg-white/20 text-white'
+                              : 'bg-blue-50 text-blue-600'
+                            : showTransparent
+                              ? 'text-white/90 hover:bg-white/10 hover:text-white'
+                              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
                     {link.labelKey === 'nav.give' && <Gift className="h-4 w-4" />}
+                    {link.labelKey === 'nav.contact' && <MessageSquare className="h-4 w-4" />}
                     {t(link.labelKey)}
                   </Link>
                 )}
@@ -233,17 +247,17 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
             {/* Live Indicator */}
             <LiveServiceIndicator compact className="hidden lg:flex" />
 
-            {/* Login Button */}
+            {/* Login Button - Enhanced Design */}
             <Link to="/login" className="ml-2">
               <Button
                 size="sm"
-                className={`font-medium ${
+                className={`group relative overflow-hidden font-semibold shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
                   showTransparent
-                    ? 'bg-white text-blue-600 hover:bg-white/90'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-white text-blue-600 hover:bg-blue-50'
+                    : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700'
                 }`}
               >
-                <LogIn className="mr-1.5 h-4 w-4" />
+                <LogIn className="mr-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 {t('common.login')}
               </Button>
             </Link>
@@ -313,7 +327,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       )}
                     </div>
                   ) : (
-                    // Regular mobile link - with icons for Prayer and Give
+                    // Regular mobile link - with icons for Prayer, Give, and Contact
                     <Link
                       key={link.href + link.label}
                       to={link.href}
@@ -321,23 +335,29 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       className={`flex items-center gap-2 rounded-lg px-4 py-3 text-base font-medium transition-colors ${
                         link.labelKey === 'nav.give'
                           ? 'text-amber-600 hover:bg-amber-50'
-                          : isActive(link.href)
-                            ? 'bg-blue-50 text-blue-600'
-                            : 'text-slate-700 hover:bg-slate-100'
+                          : link.labelKey === 'nav.contact'
+                            ? 'text-emerald-600 hover:bg-emerald-50'
+                            : isActive(link.href)
+                              ? 'bg-blue-50 text-blue-600'
+                              : 'text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       {link.labelKey === 'nav.prayer' && (
                         <HeartHandshake className="h-5 w-5 text-purple-500" />
                       )}
-                      {link.labelKey === 'nav.give' && <Gift className="h-5 w-5" />}
+                      {link.labelKey === 'nav.give' && <Gift className="h-5 w-5 text-amber-500" />}
+                      {link.labelKey === 'nav.contact' && (
+                        <MessageSquare className="h-5 w-5 text-emerald-500" />
+                      )}
                       {t(link.labelKey)}
                     </Link>
                   )
                 )}
                 <hr className="my-2" />
+                {/* Mobile Login Button - Enhanced */}
                 <Link
                   to="/login"
-                  className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-base font-medium text-white"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3.5 text-base font-semibold text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
                 >
                   <LogIn className="h-5 w-5" />
                   {t('common.login')}

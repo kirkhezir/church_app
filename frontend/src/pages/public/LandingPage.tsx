@@ -34,6 +34,7 @@ import {
   MessageCircle,
   HeartHandshake,
   Search,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -318,24 +319,25 @@ function NavigationHeaderContent() {
             {/* Give Button with Icon */}
             <button
               onClick={() => scrollToSection('#give')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 isScrolled
                   ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
-                  : 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
+                  : 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200'
               }`}
             >
               <Gift className="h-4 w-4" />
               {t('nav.give')}
             </button>
-            {/* Contact Button */}
+            {/* Contact Button with Icon */}
             <button
               onClick={() => scrollToSection('#contact')}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 isScrolled
-                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  : 'text-white/90 hover:bg-white/10 hover:text-white'
+                  ? 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
+                  : 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
               }`}
             >
+              <MessageSquare className="h-4 w-4" />
               {t('nav.contact')}
             </button>
             {/* Language Toggle */}
@@ -350,17 +352,17 @@ function NavigationHeaderContent() {
             >
               <Search className="h-5 w-5" />
             </button>
-            {/* Login Button */}
+            {/* Login Button - Enhanced Design */}
             <Link to="/login" className="ml-2">
               <Button
                 size="sm"
-                className={`font-medium ${
+                className={`group relative overflow-hidden font-semibold shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${
                   isScrolled
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white text-blue-600 hover:bg-white/90'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700'
+                    : 'bg-white text-blue-600 hover:bg-blue-50'
                 }`}
               >
-                <LogIn className="mr-1.5 h-4 w-4" />
+                <LogIn className="mr-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 {t('common.login')}
               </Button>
             </Link>
@@ -452,21 +454,24 @@ function NavigationHeaderContent() {
               onClick={() => scrollToSection('#give')}
               className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
             >
-              <Gift className="h-5 w-5" />
+              <Gift className="h-5 w-5 text-amber-500" />
               {t('nav.give')}
             </button>
             {/* Contact Button Mobile */}
             <button
               onClick={() => scrollToSection('#contact')}
-              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-emerald-600 hover:bg-emerald-50"
             >
+              <MessageSquare className="h-5 w-5 text-emerald-500" />
               {t('nav.contact')}
             </button>
+            {/* Mobile Login Button - Enhanced */}
             <Link
               to="/login"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="mt-3 block w-full rounded-lg bg-blue-600 py-3 text-center font-medium text-white"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 text-center font-semibold text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
             >
+              <LogIn className="h-5 w-5" />
               {t('common.memberLogin')}
             </Link>
           </div>
