@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LogIn, ChevronDown, Search } from 'lucide-react';
+import { Menu, X, LogIn, ChevronDown, Search, HandHeart, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageToggle from '@/components/common/LanguageToggle';
 import GlobalSearch from '@/components/common/GlobalSearch';
@@ -188,20 +188,26 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                     )}
                   </div>
                 ) : (
-                  // Regular link
+                  // Regular link - with icons for Prayer and Give
                   <Link
                     to={link.href}
                     onClick={() => handleNavClick(link.href)}
-                    className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive(link.href)
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      link.labelKey === 'nav.give'
                         ? showTransparent
-                          ? 'bg-white/20 text-white'
-                          : 'bg-blue-50 text-blue-600'
-                        : showTransparent
-                          ? 'text-white/90 hover:bg-white/10 hover:text-white'
-                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                          ? 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
+                          : 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
+                        : isActive(link.href)
+                          ? showTransparent
+                            ? 'bg-white/20 text-white'
+                            : 'bg-blue-50 text-blue-600'
+                          : showTransparent
+                            ? 'text-white/90 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
+                    {link.labelKey === 'nav.prayer' && <HandHeart className="h-4 w-4" />}
+                    {link.labelKey === 'nav.give' && <Gift className="h-4 w-4" />}
                     {t(link.labelKey)}
                   </Link>
                 )}
@@ -307,17 +313,23 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       )}
                     </div>
                   ) : (
-                    // Regular mobile link
+                    // Regular mobile link - with icons for Prayer and Give
                     <Link
                       key={link.href + link.label}
                       to={link.href}
                       onClick={() => handleNavClick(link.href)}
-                      className={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
-                        isActive(link.href)
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'text-slate-700 hover:bg-slate-100'
+                      className={`flex items-center gap-2 rounded-lg px-4 py-3 text-base font-medium transition-colors ${
+                        link.labelKey === 'nav.give'
+                          ? 'text-amber-600 hover:bg-amber-50'
+                          : isActive(link.href)
+                            ? 'bg-blue-50 text-blue-600'
+                            : 'text-slate-700 hover:bg-slate-100'
                       }`}
                     >
+                      {link.labelKey === 'nav.prayer' && (
+                        <HandHeart className="h-5 w-5 text-purple-500" />
+                      )}
+                      {link.labelKey === 'nav.give' && <Gift className="h-5 w-5" />}
                       {t(link.labelKey)}
                     </Link>
                   )

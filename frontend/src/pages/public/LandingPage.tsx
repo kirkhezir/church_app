@@ -32,7 +32,8 @@ import {
   BookOpen,
   Gift,
   MessageCircle,
-  Sparkles,
+  HandHeart,
+  Search,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -41,6 +42,7 @@ import LocationMapSection from '../../components/features/LocationMapSection';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
 import LanguageToggle from '../../components/common/LanguageToggle';
+import GlobalSearch from '../../components/common/GlobalSearch';
 
 // Landing Page Components
 import {
@@ -179,6 +181,7 @@ export function LandingPage() {
 function NavigationHeaderContent() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { t } = useI18n();
 
   useEffect(() => {
@@ -197,219 +200,233 @@ function NavigationHeaderContent() {
     setIsMobileMenuOpen(false);
   }, []);
 
-  // Close mobile menu on escape key
+  // Close mobile menu on escape key and keyboard shortcut for search
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsMobileMenuOpen(false);
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
-    <header
-      className={`transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 shadow-md backdrop-blur-lg'
-          : 'bg-gradient-to-b from-black/50 to-transparent'
-      }`}
-    >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
-          aria-label="Go to top"
-        >
-          <img
-            src={CHURCH_LOGO}
-            alt="Church Logo"
-            className="h-9 w-9 rounded-full object-contain shadow-sm sm:h-10 sm:w-10"
-          />
-          <div className="hidden min-[420px]:block">
-            <p
-              className={`text-sm font-bold leading-tight sm:text-base ${
-                isScrolled ? 'text-slate-900' : 'text-white'
-              }`}
-            >
-              {t('common.churchName')}
-            </p>
-          </div>
-        </button>
+    <>
+      {/* Global Search Modal */}
+      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-        {/* Desktop Navigation */}
-        <div className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map((link) =>
-            link.children ? (
-              // Dropdown menu for Explore
-              <div key={link.labelKey} className="group relative">
+      <header
+        className={`transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/95 shadow-md backdrop-blur-lg'
+            : 'bg-gradient-to-b from-black/50 to-transparent'
+        }`}
+      >
+        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Logo - Matching PublicLayout styling */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            aria-label="Go to top"
+          >
+            <img
+              src={CHURCH_LOGO}
+              alt="Church Logo"
+              className="h-10 w-10 rounded-lg object-contain"
+            />
+            <div className="hidden sm:block">
+              <span className={`text-lg font-bold ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
+                {t('common.churchName')}
+              </span>
+            </div>
+          </button>
+
+          {/* Desktop Navigation */}
+          <div className="hidden items-center gap-1 md:flex">
+            {NAV_LINKS.map((link) =>
+              link.children ? (
+                // Dropdown menu for Explore
+                <div key={link.labelKey} className="group relative">
+                  <button
+                    className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isScrolled
+                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {t(link.labelKey)}
+                    <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                  </button>
+                  <div className="invisible absolute left-0 top-full z-50 min-w-[160px] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                    <div className="rounded-lg border bg-white py-2 shadow-lg">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          to={child.href}
+                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                        >
+                          {t(child.labelKey)}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : link.isPage ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    isScrolled
+                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  {link.labelKey === 'nav.prayer' && <HandHeart className="h-4 w-4" />}
+                  {t(link.labelKey)}
+                </Link>
+              ) : (
                 <button
-                  className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
+                  key={link.href}
+                  onClick={() => scrollToSection(link.href)}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isScrolled
                       ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       : 'text-white/90 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   {t(link.labelKey)}
-                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
                 </button>
-                <div className="invisible absolute left-0 top-full z-50 min-w-[160px] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-                  <div className="rounded-lg border bg-white py-2 shadow-lg">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        to={child.href}
-                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                      >
-                        {t(child.labelKey)}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : link.isPage ? (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
-                  isScrolled
-                    ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                {link.labelKey === 'nav.prayer' && (
-                  <Sparkles className="mr-1.5 inline-block h-4 w-4" />
-                )}
-                {t(link.labelKey)}
-              </Link>
-            ) : (
-              <button
-                key={link.href}
-                onClick={() => scrollToSection(link.href)}
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
-                  isScrolled
-                    ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                {t(link.labelKey)}
-              </button>
-            )
-          )}
-          {/* Give Button with Icon */}
-          <button
-            onClick={() => scrollToSection('#give')}
-            className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors lg:px-4 ${
-              isScrolled
-                ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
-                : 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
-            }`}
-          >
-            <Gift className="mr-1.5 h-4 w-4" />
-            {t('nav.give')}
-          </button>
-          {/* Language Toggle */}
-          <LanguageToggle compact lightMode={!isScrolled} />
-          <Link to="/login" className="ml-2">
-            <Button
-              size="sm"
-              className={`font-medium ${
+              )
+            )}
+            {/* Give Button with Icon */}
+            <button
+              onClick={() => scrollToSection('#give')}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isScrolled
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-white text-blue-600 hover:bg-white/90'
+                  ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
+                  : 'text-amber-300 hover:bg-white/10 hover:text-amber-200'
               }`}
             >
-              <LogIn className="mr-1.5 h-4 w-4" />
-              {t('common.login')}
-            </Button>
-          </Link>
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={`rounded-lg p-2 md:hidden ${
-            isScrolled ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
-          }`}
-          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={isMobileMenuOpen}
-        >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </nav>
-
-      {/* Mobile Menu with Backdrop */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-      <div
-        className={`relative z-50 md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className="max-h-[80vh] overflow-y-auto bg-white px-4 pb-4 pt-2 shadow-lg">
-          {NAV_LINKS.map((link) =>
-            link.children ? (
-              // Mobile Explore dropdown - show as expandable section
-              <div key={link.labelKey} className="border-b border-slate-100 py-2">
-                <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  {t(link.labelKey)}
-                </p>
-                {link.children.map((child) => (
-                  <Link
-                    key={child.href}
-                    to={child.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full rounded-lg px-6 py-2.5 text-left text-sm font-medium text-slate-600 hover:bg-slate-50"
-                  >
-                    {t(child.labelKey)}
-                  </Link>
-                ))}
-              </div>
-            ) : link.isPage ? (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex w-full items-center rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+              <Gift className="h-4 w-4" />
+              {t('nav.give')}
+            </button>
+            {/* Language Toggle */}
+            <LanguageToggle compact lightMode={!isScrolled} />
+            {/* Search Button */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className={`rounded-lg p-2 transition-colors ${
+                isScrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white/90 hover:bg-white/10'
+              }`}
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+            {/* Login Button */}
+            <Link to="/login" className="ml-2">
+              <Button
+                size="sm"
+                className={`font-medium ${
+                  isScrolled
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-white text-blue-600 hover:bg-white/90'
+                }`}
               >
-                {link.labelKey === 'nav.prayer' && (
-                  <Sparkles className="mr-2 h-5 w-5 text-purple-500" />
-                )}
-                {t(link.labelKey)}
-              </Link>
-            ) : (
-              <button
-                key={link.href}
-                onClick={() => scrollToSection(link.href)}
-                className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
-              >
-                {t(link.labelKey)}
-              </button>
-            )
-          )}
-          {/* Give Button Mobile */}
+                <LogIn className="mr-1.5 h-4 w-4" />
+                {t('common.login')}
+              </Button>
+            </Link>
+          </div>
+
+          {/* Mobile Menu Toggle */}
           <button
-            onClick={() => scrollToSection('#give')}
-            className="flex w-full items-center rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`rounded-lg p-2 md:hidden ${
+              isScrolled ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
+            }`}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
           >
-            <Gift className="mr-2 h-5 w-5" />
-            {t('nav.give')}
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
-          <Link
-            to="/login"
+        </nav>
+
+        {/* Mobile Menu with Backdrop */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="mt-3 block w-full rounded-lg bg-blue-600 py-3 text-center font-medium text-white"
-          >
-            {t('common.memberLogin')}
-          </Link>
+            aria-hidden="true"
+          />
+        )}
+        <div
+          className={`relative z-50 md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="max-h-[80vh] overflow-y-auto bg-white px-4 pb-4 pt-2 shadow-lg">
+            {NAV_LINKS.map((link) =>
+              link.children ? (
+                // Mobile Explore dropdown - show as expandable section
+                <div key={link.labelKey} className="border-b border-slate-100 py-2">
+                  <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    {t(link.labelKey)}
+                  </p>
+                  {link.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      to={child.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block w-full rounded-lg px-6 py-2.5 text-left text-sm font-medium text-slate-600 hover:bg-slate-50"
+                    >
+                      {t(child.labelKey)}
+                    </Link>
+                  ))}
+                </div>
+              ) : link.isPage ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  {link.labelKey === 'nav.prayer' && (
+                    <HandHeart className="h-5 w-5 text-purple-500" />
+                  )}
+                  {t(link.labelKey)}
+                </Link>
+              ) : (
+                <button
+                  key={link.href}
+                  onClick={() => scrollToSection(link.href)}
+                  className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  {t(link.labelKey)}
+                </button>
+              )
+            )}
+            {/* Give Button Mobile */}
+            <button
+              onClick={() => scrollToSection('#give')}
+              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
+            >
+              <Gift className="h-5 w-5" />
+              {t('nav.give')}
+            </button>
+            <Link
+              to="/login"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="mt-3 block w-full rounded-lg bg-blue-600 py-3 text-center font-medium text-white"
+            >
+              {t('common.memberLogin')}
+            </Link>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 

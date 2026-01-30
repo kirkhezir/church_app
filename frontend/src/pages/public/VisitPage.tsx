@@ -224,24 +224,24 @@ export function VisitPage() {
           </div>
         </section>
 
-        {/* Location & Contact */}
+        {/* Location & Contact - Improved Layout */}
         <section className="mb-12">
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Map Card */}
-            <Card className="overflow-hidden">
-              <div className="aspect-video bg-slate-200">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3869.1!2d100.4!3d15.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTXCsDA2JzAwLjAiTiAxMDDCsDI0JzAwLjAiRQ!5e0!3m2!1sen!2sth!4v1640000000000!5m2!1sen!2sth"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Church Location Map"
-                />
-              </div>
-              <CardContent className="p-4">
+          {/* Map - Full width at top */}
+          <Card className="mb-6 overflow-hidden">
+            <div className="aspect-[21/9] bg-slate-200">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.800285887927!2d100.40142999999999!3d14.8924418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e1f18a81a744c7%3A0x867c5a12e90f0d17!2sSingburi%20Seventh%20Day%20Adventist%20(SDA)%20Center!5e0!3m2!1sen!2sth!4v1762180423839!5m2!1sen!2sth"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Church Location Map"
+              />
+            </div>
+            <CardContent className="p-4">
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-blue-600" />
                   <div>
@@ -250,27 +250,31 @@ export function VisitPage() {
                   </div>
                 </div>
                 <Button
-                  className="mt-4 w-full"
                   onClick={() =>
-                    window.open('https://maps.google.com/?q=Sing+Buri+Adventist+Center', '_blank')
+                    window.open(
+                      'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',
+                      '_blank'
+                    )
                   }
                 >
                   <MapPin className="mr-2 h-4 w-4" />
-                  Open in Google Maps
+                  {language === 'th' ? 'เส้นทาง' : 'Open in Google Maps'}
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Contact Card */}
+          {/* Contact Info and Form - Side by side */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Contact Information */}
             <Card>
               <CardContent className="p-6">
                 <h3 className="mb-4 text-xl font-semibold text-slate-900">
-                  {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
+                  {language === 'th' ? 'ข้อมูลติดต่อ' : 'Contact Information'}
                 </h3>
 
-                {/* Contact Information - Same as Home page */}
-                <div className="mb-6 space-y-4">
-                  <div className="flex items-start gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-4 rounded-lg bg-slate-50 p-4">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
                       <MapPin className="h-5 w-5 text-blue-600" />
                     </div>
@@ -290,8 +294,8 @@ export function VisitPage() {
                     href="tel:+66876106926"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                      <Phone className="h-5 w-5 text-blue-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
+                      <Phone className="h-5 w-5 text-emerald-600" />
                     </div>
                     <div>
                       <p className="font-medium text-slate-900">
@@ -305,8 +309,8 @@ export function VisitPage() {
                     href="mailto:singburiadventistcenter@gmail.com"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                      <Mail className="h-5 w-5 text-blue-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
+                      <Mail className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
                       <p className="font-medium text-slate-900">
@@ -322,8 +326,8 @@ export function VisitPage() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
-                      <MessageCircle className="h-5 w-5 text-emerald-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                      <MessageCircle className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
                       <p className="font-medium text-slate-900">LINE</p>
@@ -331,88 +335,90 @@ export function VisitPage() {
                     </div>
                   </a>
                 </div>
+              </CardContent>
+            </Card>
 
-                {/* Contact Form */}
-                <div className="border-t border-slate-200 pt-6">
-                  <h4 className="mb-4 flex items-center gap-2 font-semibold text-slate-900">
-                    <Send className="h-4 w-4" />
-                    {language === 'th' ? 'ส่งข้อความ' : 'Send a Message'}
-                  </h4>
+            {/* Contact Form */}
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-slate-900">
+                  <Send className="h-5 w-5" />
+                  {language === 'th' ? 'ส่งข้อความถึงเรา' : 'Send Us a Message'}
+                </h3>
 
-                  {submitted ? (
-                    <div className="rounded-lg bg-emerald-50 p-4 text-center">
-                      <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-emerald-500" />
-                      <p className="font-medium text-emerald-700">
-                        {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}
-                      </p>
-                      <p className="text-sm text-emerald-600">
-                        {language === 'th'
-                          ? 'เราจะติดต่อกลับโดยเร็วที่สุด'
-                          : "We'll get back to you soon."}
-                      </p>
+                {submitted ? (
+                  <div className="flex h-full flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center">
+                    <CheckCircle2 className="mx-auto mb-3 h-12 w-12 text-emerald-500" />
+                    <p className="text-lg font-medium text-emerald-700">
+                      {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}
+                    </p>
+                    <p className="mt-2 text-sm text-emerald-600">
+                      {language === 'th'
+                        ? 'เราจะติดต่อกลับโดยเร็วที่สุด'
+                        : "We'll get back to you soon."}
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="name">{language === 'th' ? 'ชื่อ' : 'Name'}</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder={language === 'th' ? 'ชื่อของคุณ' : 'Your name'}
+                        required
+                      />
                     </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div>
-                        <Label htmlFor="name">{language === 'th' ? 'ชื่อ' : 'Name'}</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder={language === 'th' ? 'ชื่อของคุณ' : 'Your name'}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email">{language === 'th' ? 'อีเมล' : 'Email'}</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder={language === 'th' ? 'อีเมลของคุณ' : 'your@email.com'}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="phone">
-                          {language === 'th' ? 'เบอร์โทร (ไม่บังคับ)' : 'Phone (optional)'}
-                        </Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder={language === 'th' ? 'เบอร์โทรศัพท์' : 'Your phone number'}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="message">{language === 'th' ? 'ข้อความ' : 'Message'}</Label>
-                        <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          placeholder={language === 'th' ? 'ข้อความของคุณ...' : 'Your message...'}
-                          rows={4}
-                          required
-                        />
-                      </div>
-                      <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? (
-                          <>
-                            <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            {language === 'th' ? 'กำลังส่ง...' : 'Sending...'}
-                          </>
-                        ) : (
-                          <>
-                            <Send className="mr-2 h-4 w-4" />
-                            {language === 'th' ? 'ส่งข้อความ' : 'Send Message'}
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  )}
-                </div>
+                    <div>
+                      <Label htmlFor="email">{language === 'th' ? 'อีเมล' : 'Email'}</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder={language === 'th' ? 'อีเมลของคุณ' : 'your@email.com'}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">
+                        {language === 'th' ? 'เบอร์โทร (ไม่บังคับ)' : 'Phone (optional)'}
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder={language === 'th' ? 'เบอร์โทรศัพท์' : 'Your phone number'}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="message">{language === 'th' ? 'ข้อความ' : 'Message'}</Label>
+                      <Textarea
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder={language === 'th' ? 'ข้อความของคุณ...' : 'Your message...'}
+                        rows={4}
+                        required
+                      />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <>
+                          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          {language === 'th' ? 'กำลังส่ง...' : 'Sending...'}
+                        </>
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          {language === 'th' ? 'ส่งข้อความ' : 'Send Message'}
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -436,7 +442,10 @@ export function VisitPage() {
                   variant="secondary"
                   className="bg-white text-blue-600 hover:bg-blue-50"
                   onClick={() =>
-                    window.open('https://maps.google.com/?q=Sing+Buri+Adventist+Center', '_blank')
+                    window.open(
+                      'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',
+                      '_blank'
+                    )
                   }
                 >
                   <MapPin className="mr-2 h-4 w-4" />
