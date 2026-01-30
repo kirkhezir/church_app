@@ -32,7 +32,7 @@ import {
   BookOpen,
   Gift,
   MessageCircle,
-  HandHeart,
+  HeartHandshake,
   Search,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
@@ -284,7 +284,7 @@ function NavigationHeaderContent() {
                       : 'text-white/90 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  {link.labelKey === 'nav.prayer' && <HandHeart className="h-4 w-4" />}
+                  {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
                   {t(link.labelKey)}
                 </Link>
               ) : (
@@ -394,7 +394,7 @@ function NavigationHeaderContent() {
                   className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
                 >
                   {link.labelKey === 'nav.prayer' && (
-                    <HandHeart className="h-5 w-5 text-purple-500" />
+                    <HeartHandshake className="h-5 w-5 text-purple-500" />
                   )}
                   {t(link.labelKey)}
                 </Link>

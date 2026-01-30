@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LogIn, ChevronDown, Search, HandHeart, Gift } from 'lucide-react';
+import { Menu, X, LogIn, ChevronDown, Search, HeartHandshake, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageToggle from '@/components/common/LanguageToggle';
 import GlobalSearch from '@/components/common/GlobalSearch';
@@ -206,7 +206,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
-                    {link.labelKey === 'nav.prayer' && <HandHeart className="h-4 w-4" />}
+                    {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
                     {link.labelKey === 'nav.give' && <Gift className="h-4 w-4" />}
                     {t(link.labelKey)}
                   </Link>
@@ -327,7 +327,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       }`}
                     >
                       {link.labelKey === 'nav.prayer' && (
-                        <HandHeart className="h-5 w-5 text-purple-500" />
+                        <HeartHandshake className="h-5 w-5 text-purple-500" />
                       )}
                       {link.labelKey === 'nav.give' && <Gift className="h-5 w-5" />}
                       {t(link.labelKey)}
