@@ -134,7 +134,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
             <img
               src={CHURCH_LOGO}
               alt="Church Logo"
-              className="h-10 w-10 rounded-lg object-contain"
+              className="h-10 w-10 rounded-full object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}

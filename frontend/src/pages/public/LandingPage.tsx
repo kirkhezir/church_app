@@ -98,7 +98,6 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { labelKey: 'nav.prayer', href: '/prayer', isPage: true },
-  { labelKey: 'nav.contact', href: '#contact' },
 ];
 
 // Church social media and contact links
@@ -235,7 +234,7 @@ function NavigationHeaderContent() {
             <img
               src={CHURCH_LOGO}
               alt="Church Logo"
-              className="h-10 w-10 rounded-lg object-contain"
+              className="h-10 w-10 rounded-full object-contain"
             />
             <div className="hidden sm:block">
               <span className={`text-lg font-bold ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
@@ -275,18 +274,33 @@ function NavigationHeaderContent() {
                   </div>
                 </div>
               ) : link.isPage ? (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
-                  {t(link.labelKey)}
-                </Link>
+                link.labelKey === 'nav.home' ? (
+                  // Home link scrolls to top on home page
+                  <button
+                    key={link.href}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isScrolled
+                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {t(link.labelKey)}
+                  </button>
+                ) : (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isScrolled
+                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
+                    {t(link.labelKey)}
+                  </Link>
+                )
               ) : (
                 <button
                   key={link.href}
@@ -312,6 +326,17 @@ function NavigationHeaderContent() {
             >
               <Gift className="h-4 w-4" />
               {t('nav.give')}
+            </button>
+            {/* Contact Button */}
+            <button
+              onClick={() => scrollToSection('#contact')}
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                isScrolled
+                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  : 'text-white/90 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              {t('nav.contact')}
             </button>
             {/* Language Toggle */}
             <LanguageToggle compact lightMode={!isScrolled} />
@@ -387,17 +412,31 @@ function NavigationHeaderContent() {
                   ))}
                 </div>
               ) : link.isPage ? (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
-                >
-                  {link.labelKey === 'nav.prayer' && (
-                    <HeartHandshake className="h-5 w-5 text-purple-500" />
-                  )}
-                  {t(link.labelKey)}
-                </Link>
+                link.labelKey === 'nav.home' ? (
+                  // Home link scrolls to top on home page
+                  <button
+                    key={link.href}
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {t(link.labelKey)}
+                  </button>
+                ) : (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {link.labelKey === 'nav.prayer' && (
+                      <HeartHandshake className="h-5 w-5 text-purple-500" />
+                    )}
+                    {t(link.labelKey)}
+                  </Link>
+                )
               ) : (
                 <button
                   key={link.href}
@@ -415,6 +454,13 @@ function NavigationHeaderContent() {
             >
               <Gift className="h-5 w-5" />
               {t('nav.give')}
+            </button>
+            {/* Contact Button Mobile */}
+            <button
+              onClick={() => scrollToSection('#contact')}
+              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {t('nav.contact')}
             </button>
             <Link
               to="/login"
