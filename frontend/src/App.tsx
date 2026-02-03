@@ -22,6 +22,7 @@ const ResourcesPage = lazy(() => import('./pages/public/ResourcesPage'));
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
+import { ScrollToTop } from './components/common/ScrollToTop';
 
 // Lazy loaded pages - code splitting for better performance
 const PasswordResetRequestPage = lazy(() => import('./pages/auth/PasswordResetRequestPage'));
@@ -144,341 +145,346 @@ const NotFoundPage = () => (
  */
 const App: React.FC = () => {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        {/* Public Landing Page (no authentication required) */}
-        <Route path="/" element={<LandingPage />} />
+    <>
+      {/* Scroll to top on route changes */}
+      <ScrollToTop />
 
-        {/* About Page - Church info and leadership */}
-        <Route path="/about" element={<AboutPage />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Landing Page (no authentication required) */}
+          <Route path="/" element={<LandingPage />} />
 
-        {/* Privacy Policy Page */}
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          {/* About Page - Church info and leadership */}
+          <Route path="/about" element={<AboutPage />} />
 
-        {/* Visit Page - First time visitors */}
-        <Route path="/visit" element={<VisitPage />} />
+          {/* Privacy Policy Page */}
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
-        {/* Sermons Archive */}
-        <Route path="/sermons" element={<SermonsPage />} />
+          {/* Visit Page - First time visitors */}
+          <Route path="/visit" element={<VisitPage />} />
 
-        {/* Gallery - Photo albums */}
-        <Route path="/gallery" element={<GalleryPage />} />
+          {/* Sermons Archive */}
+          <Route path="/sermons" element={<SermonsPage />} />
 
-        {/* Ministries */}
-        <Route path="/ministries" element={<MinistriesPage />} />
-        <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
+          {/* Gallery - Photo albums */}
+          <Route path="/gallery" element={<GalleryPage />} />
 
-        {/* Public Events Calendar */}
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/events/:id" element={<EventDetailPublicPage />} />
+          {/* Ministries */}
+          <Route path="/ministries" element={<MinistriesPage />} />
+          <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
 
-        {/* Prayer Requests */}
-        <Route path="/prayer" element={<PrayerPage />} />
+          {/* Public Events Calendar */}
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/events/:id" element={<EventDetailPublicPage />} />
 
-        {/* Give/Donate */}
-        <Route path="/give" element={<GivePage />} />
+          {/* Prayer Requests */}
+          <Route path="/prayer" element={<PrayerPage />} />
 
-        {/* Blog/News */}
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/news" element={<BlogPage />} />
+          {/* Give/Donate */}
+          <Route path="/give" element={<GivePage />} />
 
-        {/* Resources */}
-        <Route path="/resources" element={<ResourcesPage />} />
+          {/* Blog/News */}
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/news" element={<BlogPage />} />
 
-        {/* Public Routes */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <RegisterPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/password-reset-request"
-          element={
-            <PublicRoute>
-              <PasswordResetRequestPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <PublicRoute>
-              <PasswordResetPage />
-            </PublicRoute>
-          }
-        />
+          {/* Resources */}
+          <Route path="/resources" element={<ResourcesPage />} />
 
-        {/* MFA Routes */}
-        <Route
-          path="/mfa-verify"
-          element={
-            <PublicRoute>
-              <MFAVerificationPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/mfa-enroll"
-          element={
-            <PrivateRoute>
-              <MFAEnrollmentPage />
-            </PrivateRoute>
-          }
-        />
+          {/* Public Routes */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/password-reset-request"
+            element={
+              <PublicRoute>
+                <PasswordResetRequestPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <PasswordResetPage />
+              </PublicRoute>
+            }
+          />
 
-        {/* Public Events Page (no authentication required, but RSVP requires login) */}
-        <Route path="/events" element={<EventsListPage />} />
-        <Route path="/events/:id" element={<EventDetailPage />} />
+          {/* MFA Routes */}
+          <Route
+            path="/mfa-verify"
+            element={
+              <PublicRoute>
+                <MFAVerificationPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/mfa-enroll"
+            element={
+              <PrivateRoute>
+                <MFAEnrollmentPage />
+              </PrivateRoute>
+            }
+          />
 
-        {/* Event Management Routes (ADMIN/STAFF only - protected in components) */}
-        <Route
-          path="/events/create"
-          element={
-            <PrivateRoute>
-              <EventCreatePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/events/create"
-          element={
-            <AdminRoute>
-              <EventCreatePage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/events/:id/edit"
-          element={
-            <AdminRoute>
-              <EventEditPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/events/:id/rsvps"
-          element={
-            <AdminRoute>
-              <RSVPListPage />
-            </AdminRoute>
-          }
-        />
+          {/* Public Events Page (no authentication required, but RSVP requires login) */}
+          <Route path="/events" element={<EventsListPage />} />
+          <Route path="/events/:id" element={<EventDetailPage />} />
 
-        {/* Private Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <MemberDashboard />
-            </PrivateRoute>
-          }
-        />
+          {/* Event Management Routes (ADMIN/STAFF only - protected in components) */}
+          <Route
+            path="/events/create"
+            element={
+              <PrivateRoute>
+                <EventCreatePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/events/create"
+            element={
+              <AdminRoute>
+                <EventCreatePage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/events/:id/edit"
+            element={
+              <AdminRoute>
+                <EventEditPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/events/:id/rsvps"
+            element={
+              <AdminRoute>
+                <RSVPListPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Announcements Routes */}
-        <Route
-          path="/announcements"
-          element={
-            <PrivateRoute>
-              <AnnouncementsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/announcements/:id"
-          element={
-            <PrivateRoute>
-              <AnnouncementDetailPage />
-            </PrivateRoute>
-          }
-        />
+          {/* Private Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <MemberDashboard />
+              </PrivateRoute>
+            }
+          />
 
-        {/* Admin Announcement Routes */}
-        <Route
-          path="/admin/announcements"
-          element={
-            <AdminRoute>
-              <AdminAnnouncementsPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/announcements/create"
-          element={
-            <AdminRoute>
-              <AnnouncementCreatePage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/announcements/:id/edit"
-          element={
-            <AdminRoute>
-              <AnnouncementEditPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/announcements/:id/analytics"
-          element={
-            <AdminRoute>
-              <AnnouncementAnalyticsPage />
-            </AdminRoute>
-          }
-        />
+          {/* Announcements Routes */}
+          <Route
+            path="/announcements"
+            element={
+              <PrivateRoute>
+                <AnnouncementsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/announcements/:id"
+            element={
+              <PrivateRoute>
+                <AnnouncementDetailPage />
+              </PrivateRoute>
+            }
+          />
 
-        {/* Admin Member Management Routes */}
-        <Route
-          path="/admin/members"
-          element={
-            <AdminRoute>
-              <AdminMemberListPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/members/create"
-          element={
-            <AdminRoute>
-              <AdminCreateMemberPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Announcement Routes */}
+          <Route
+            path="/admin/announcements"
+            element={
+              <AdminRoute>
+                <AdminAnnouncementsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/announcements/create"
+            element={
+              <AdminRoute>
+                <AnnouncementCreatePage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/announcements/:id/edit"
+            element={
+              <AdminRoute>
+                <AnnouncementEditPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/announcements/:id/analytics"
+            element={
+              <AdminRoute>
+                <AnnouncementAnalyticsPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Admin Audit Logs */}
-        <Route
-          path="/admin/audit-logs"
-          element={
-            <AdminRoute>
-              <AdminAuditLogsPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Member Management Routes */}
+          <Route
+            path="/admin/members"
+            element={
+              <AdminRoute>
+                <AdminMemberListPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/members/create"
+            element={
+              <AdminRoute>
+                <AdminCreateMemberPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Admin Data Export */}
-        <Route
-          path="/admin/export"
-          element={
-            <AdminRoute>
-              <AdminDataExportPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Audit Logs */}
+          <Route
+            path="/admin/audit-logs"
+            element={
+              <AdminRoute>
+                <AdminAuditLogsPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Admin System Health */}
-        <Route
-          path="/admin/health"
-          element={
-            <AdminRoute>
-              <AdminHealthPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Data Export */}
+          <Route
+            path="/admin/export"
+            element={
+              <AdminRoute>
+                <AdminDataExportPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Admin Reports */}
-        <Route
-          path="/admin/reports"
-          element={
-            <AdminRoute>
-              <AdminReportsPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin System Health */}
+          <Route
+            path="/admin/health"
+            element={
+              <AdminRoute>
+                <AdminHealthPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Admin Analytics */}
-        <Route
-          path="/admin/analytics"
-          element={
-            <AdminRoute>
-              <AdminAnalyticsPage />
-            </AdminRoute>
-          }
-        />
+          {/* Admin Reports */}
+          <Route
+            path="/admin/reports"
+            element={
+              <AdminRoute>
+                <AdminReportsPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Member Directory Routes */}
-        <Route
-          path="/members"
-          element={
-            <PrivateRoute>
-              <MemberDirectoryPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/members/:id"
-          element={
-            <PrivateRoute>
-              <MemberProfilePage />
-            </PrivateRoute>
-          }
-        />
+          {/* Admin Analytics */}
+          <Route
+            path="/admin/analytics"
+            element={
+              <AdminRoute>
+                <AdminAnalyticsPage />
+              </AdminRoute>
+            }
+          />
 
-        {/* Messaging Routes */}
-        <Route
-          path="/messages"
-          element={
-            <PrivateRoute>
-              <MessagesListPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/messages/compose"
-          element={
-            <PrivateRoute>
-              <ComposeMessagePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/messages/:id"
-          element={
-            <PrivateRoute>
-              <MessageDetailPage />
-            </PrivateRoute>
-          }
-        />
+          {/* Member Directory Routes */}
+          <Route
+            path="/members"
+            element={
+              <PrivateRoute>
+                <MemberDirectoryPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/members/:id"
+            element={
+              <PrivateRoute>
+                <MemberProfilePage />
+              </PrivateRoute>
+            }
+          />
 
-        {/* Profile Settings */}
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <EditProfilePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/notifications"
-          element={
-            <PrivateRoute>
-              <NotificationSettingsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <PrivateRoute>
-              <SettingsPage />
-            </PrivateRoute>
-          }
-        />
+          {/* Messaging Routes */}
+          <Route
+            path="/messages"
+            element={
+              <PrivateRoute>
+                <MessagesListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/messages/compose"
+            element={
+              <PrivateRoute>
+                <ComposeMessagePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/messages/:id"
+            element={
+              <PrivateRoute>
+                <MessageDetailPage />
+              </PrivateRoute>
+            }
+          />
 
-        {/* 404 Not Found */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Suspense>
+          {/* Profile Settings */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <EditProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <PrivateRoute>
+                <NotificationSettingsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <SettingsPage />
+              </PrivateRoute>
+            }
+          />
+
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </>
   );
 };
 
