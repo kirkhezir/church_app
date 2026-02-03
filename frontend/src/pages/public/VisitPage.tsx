@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Clock,
   MapPin,
@@ -16,10 +17,10 @@ import {
   HeartHandshake,
   Calendar,
   Phone,
-  Mail,
   CheckCircle2,
   Send,
-  MessageCircle,
+  MessageSquare,
+  ArrowRight,
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -266,73 +267,47 @@ export function VisitPage() {
 
           {/* Contact Info and Form - Side by side */}
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Contact Information */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="mb-4 text-xl font-semibold text-slate-900">
-                  {language === 'th' ? 'ข้อมูลติดต่อ' : 'Contact Information'}
-                </h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-start gap-4 rounded-lg bg-slate-50 p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                      <MapPin className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">
-                        {language === 'th' ? 'ที่อยู่' : 'Address'}
-                      </p>
-                      <p className="text-sm text-slate-600">Sing Buri Adventist Center</p>
-                      <p className="text-sm text-slate-600">
-                        Bang Phutsa, Mueang Sing Buri District,
-                      </p>
-                      <p className="text-sm text-slate-600">Sing Buri 16000 Thailand</p>
-                    </div>
+            {/* Have Questions? - Link to Contact */}
+            <Card className="flex flex-col">
+              <CardContent className="flex flex-1 flex-col justify-between p-6">
+                <div>
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
+                    <MessageSquare className="h-6 w-6 text-emerald-600" />
                   </div>
+                  <h3 className="mb-2 text-xl font-semibold text-slate-900">
+                    {language === 'th' ? 'มีคำถาม?' : 'Have Questions?'}
+                  </h3>
+                  <p className="mb-6 text-slate-600">
+                    {language === 'th'
+                      ? 'เราพร้อมช่วยเหลือคุณ! ดูข้อมูลติดต่อทั้งหมดรวมถึงโทรศัพท์ อีเมล LINE และที่อยู่ของเรา'
+                      : "We're here to help! Find all our contact details including phone, email, LINE, and address."}
+                  </p>
+                </div>
+                <Link to="/#contact">
+                  <Button className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700">
+                    {language === 'th' ? 'ดูข้อมูลติดต่อ' : 'View Contact Info'}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
 
-                  <a
-                    href="tel:+66876106926"
-                    className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
-                      <Phone className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">
-                        {language === 'th' ? 'โทรศัพท์' : 'Phone'}
-                      </p>
-                      <p className="text-sm text-slate-600">+66 (0) 876-106-926</p>
-                    </div>
+                {/* Quick contact options */}
+                <div className="mt-4 flex gap-2">
+                  <a href="tel:+66876106926" className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Phone className="h-4 w-4" />
+                      {language === 'th' ? 'โทร' : 'Call'}
+                    </Button>
                   </a>
-
-                  <a
-                    href="mailto:singburiadventistcenter@gmail.com"
-                    className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-                      <Mail className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">
-                        {language === 'th' ? 'อีเมล' : 'Email'}
-                      </p>
-                      <p className="text-sm text-slate-600">singburiadventistcenter@gmail.com</p>
-                    </div>
-                  </a>
-
                   <a
                     href="https://line.me/ti/p/@singburiadventist"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50"
+                    className="flex-1"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                      <MessageCircle className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">LINE</p>
-                      <p className="text-sm text-slate-600">@singburiadventist</p>
-                    </div>
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      LINE
+                    </Button>
                   </a>
                 </div>
               </CardContent>
