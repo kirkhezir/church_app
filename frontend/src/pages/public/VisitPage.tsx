@@ -265,50 +265,75 @@ export function VisitPage() {
             </CardContent>
           </Card>
 
-          {/* Contact Info and Form - Side by side */}
+          {/* Contact Info and Form - Side by side with equal height */}
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Have Questions? - Link to Contact */}
-            <Card className="flex flex-col">
-              <CardContent className="flex flex-1 flex-col justify-between p-6">
-                <div>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
-                    <MessageSquare className="h-6 w-6 text-emerald-600" />
+            <Card className="flex flex-col border-emerald-100 bg-gradient-to-br from-emerald-50 to-white">
+              <CardContent className="flex flex-1 flex-col p-6">
+                {/* Header with icon */}
+                <div className="mb-auto">
+                  <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm">
+                    <MessageSquare className="h-7 w-7 text-emerald-600" />
                   </div>
-                  <h3 className="mb-2 text-xl font-semibold text-slate-900">
+                  <h3 className="mb-2 text-2xl font-bold text-slate-900">
                     {language === 'th' ? 'มีคำถาม?' : 'Have Questions?'}
                   </h3>
-                  <p className="mb-6 text-slate-600">
+                  <p className="text-slate-600">
                     {language === 'th'
                       ? 'เราพร้อมช่วยเหลือคุณ! ดูข้อมูลติดต่อทั้งหมดรวมถึงโทรศัพท์ อีเมล LINE และที่อยู่ของเรา'
                       : "We're here to help! Find all our contact details including phone, email, LINE, and address."}
                   </p>
                 </div>
-                <Link to="/#contact">
-                  <Button className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700">
-                    {language === 'th' ? 'ดูข้อมูลติดต่อ' : 'View Contact Info'}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
 
-                {/* Quick contact options */}
-                <div className="mt-4 flex gap-2">
-                  <a href="tel:+66876106926" className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <Phone className="h-4 w-4" />
-                      {language === 'th' ? 'โทร' : 'Call'}
+                {/* Quick Contact Features */}
+                <div className="my-6 space-y-3">
+                  <div className="flex items-center gap-3 text-sm text-slate-600">
+                    <Phone className="h-4 w-4 text-emerald-600" />
+                    <span>
+                      {language === 'th' ? 'โทรศัพท์พร้อมรับสาย' : 'Phone support available'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-slate-600">
+                    <MessageSquare className="h-4 w-4 text-emerald-600" />
+                    <span>{language === 'th' ? 'ติดต่อทาง LINE' : 'Contact via LINE'}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-auto space-y-3">
+                  <Link to="/#contact" className="block">
+                    <Button className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700" size="lg">
+                      {language === 'th' ? 'ดูข้อมูลติดต่อ' : 'View Contact Info'}
+                      <ArrowRight className="h-4 w-4" />
                     </Button>
-                  </a>
-                  <a
-                    href="https://line.me/ti/p/@singburiadventist"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1"
-                  >
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      LINE
-                    </Button>
-                  </a>
+                  </Link>
+
+                  {/* Quick contact options */}
+                  <div className="flex gap-2">
+                    <a href="tel:+66876106926" className="flex-1">
+                      <Button
+                        variant="outline"
+                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {language === 'th' ? 'โทร' : 'Call'}
+                      </Button>
+                    </a>
+                    <a
+                      href="https://line.me/ti/p/@singburiadventist"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
+                    >
+                      <Button
+                        variant="outline"
+                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50"
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                        LINE
+                      </Button>
+                    </a>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -322,7 +347,7 @@ export function VisitPage() {
                 </h3>
 
                 {submitted ? (
-                  <div className="flex h-full flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center">
+                  <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center">
                     <CheckCircle2 className="mx-auto mb-3 h-12 w-12 text-emerald-500" />
                     <p className="text-lg font-medium text-emerald-700">
                       {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}

@@ -214,20 +214,20 @@ export function VisitUsSection() {
 
         {/* Visit Info - Tabbed Design (Better UX) */}
         <Card className="mb-10 overflow-hidden">
-          {/* Tab Navigation */}
-          <div className="flex flex-wrap border-b border-slate-200 bg-slate-50">
+          {/* Tab Navigation - Horizontal scroll on mobile with visible labels */}
+          <div className="scrollbar-hide flex overflow-x-auto border-b border-slate-200 bg-slate-50">
             {visitInfoItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex min-w-[120px] flex-1 items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex min-w-max flex-1 items-center justify-center gap-2 whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
                   activeTab === item.id
                     ? 'border-b-2 border-blue-600 bg-white text-blue-600'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <item.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">
+                <item.icon className="h-4 w-4 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">
                   {language === 'th' ? item.titleThai : item.title}
                 </span>
               </button>
@@ -236,18 +236,18 @@ export function VisitUsSection() {
 
           {/* Tab Content */}
           {activeItem && (
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <CardContent className="p-4 sm:p-6 md:p-8">
+              <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-start">
                 {/* Icon and Title */}
-                <div className="flex items-center gap-4 md:w-1/3">
-                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100">
-                    <activeItem.icon className="h-7 w-7 text-blue-600" />
+                <div className="flex items-center gap-3 sm:gap-4 md:w-1/3">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100 sm:h-14 sm:w-14">
+                    <activeItem.icon className="h-6 w-6 text-blue-600 sm:h-7 sm:w-7" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
                       {language === 'th' ? activeItem.titleThai : activeItem.title}
                     </h3>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs text-slate-500 sm:text-sm">
                       {language === 'th' ? activeItem.descriptionThai : activeItem.description}
                     </p>
                   </div>
@@ -273,39 +273,41 @@ export function VisitUsSection() {
 
         {/* Location CTA */}
         <Card className="overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700">
-          <CardContent className="p-6 sm:p-8">
-            <div className="flex flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20">
-                  <MapPin className="h-7 w-7 text-white" />
+          <CardContent className="p-5 sm:p-6 md:p-8">
+            <div className="flex flex-col items-center gap-4 text-center sm:gap-6 md:flex-row md:justify-between md:text-left">
+              {/* Location Info */}
+              <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4 md:items-start">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 sm:h-14 sm:w-14">
+                  <MapPin className="h-6 w-6 text-white sm:h-7 sm:w-7" />
                 </div>
                 <div className="text-white">
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-base font-semibold sm:text-lg">
                     {language === 'th' ? 'ศูนย์แอ๊ดเวนตีสสิงห์บุรี' : 'Sing Buri Adventist Center'}
                   </h3>
-                  <p className="text-blue-100">
+                  <p className="text-sm text-blue-100">
                     {language === 'th'
                       ? 'ต.บางพุทรา อ.เมือง จ.สิงห์บุรี 16000'
                       : 'Bang Phutsa, Sing Buri 16000, Thailand'}
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
+              {/* Action Buttons */}
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
                 <Button
                   onClick={() =>
                     window.open('https://maps.google.com/?q=Sing+Buri+Adventist+Center', '_blank')
                   }
                   variant="secondary"
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-blue-50"
+                  size="default"
+                  className="w-full bg-white text-blue-600 hover:bg-blue-50 sm:w-auto sm:px-6"
                 >
                   <MapPin className="mr-2 h-4 w-4" />
                   {language === 'th' ? 'เส้นทาง' : 'Get Directions'}
                 </Button>
-                <Link to="/visit">
+                <Link to="/visit" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
-                    size="lg"
+                    size="default"
                     className="w-full border-white/30 bg-transparent text-white hover:bg-white/10"
                   >
                     {language === 'th' ? 'รายละเอียดเพิ่มเติม' : 'More Details'}
