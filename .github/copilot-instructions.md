@@ -1,26 +1,338 @@
 # church_app Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-10-15
+**Church Management Application for Sing Buri Adventist Center**  
+Last updated: 2026-02-04
 
-## Active Technologies
+## 🎯 Project Overview
 
-- TypeScript 5.x (Node.js 20.x LTS for backend, React 18.x for frontend) (001-full-stack-web)
+Full-stack TypeScript web application using **Clean Architecture** with distinct domain/application/infrastructure layers. Features include member authentication with MFA, event management with RSVP, announcements, member directory, internal messaging, and real-time notifications.
 
-## Project Structure
+## 🏗️ Architecture
+
+### Backend: Clean Architecture Pattern
 
 ```
-backend/
-frontend/
-tests/
+backend/src/
+├── domain/           # Business entities & interfaces (Member, Event, Announcement)
+│   ├── entities/     # Pure business objects with no dependencies
+│   ├── interfaces/   # Repository contracts (IEventRepository, IMemberRepository)
+│   └── valueObjects/ # Role, EventCategory, Priority enums
+├── application/      # Use cases (createEvent, authenticateUser, rsvpToEvent)
+│   └── useCases/     # Business logic implementation - single responsibility
+├── infrastructure/   # External concerns (database, email, websocket, auth)
+│   ├── database/     # Prisma repositories implementing domain interfaces
+│   ├── auth/         # PasswordService, JWTService
+│   ├── email/        # EmailService (nodemailer)
+│   ├── websocket/    # WebSocketServer (Socket.io) for real-time features
+│   └── storage/      # CloudinaryService for image uploads
+└── presentation/     # Express controllers, routes, middleware
+    ├── controllers/  # Thin controllers that call use cases
+    ├── routes/       # RESTful API routes at /api/v1
+    └── middleware/   # Auth, validation, rate limiting, error handling
 ```
 
-## Commands
+**Key Pattern**: Controllers instantiate use cases with their dependencies, call `execute()`, and return responses. Use cases contain ALL business logic.
 
-npm test; npm run lint
+```typescript
+// Example: authController.ts
+const authenticateUser = new AuthenticateUser(
+  memberRepository,
+  passwordService,
+  jwtService,
+);
+const result = await authenticateUser.execute({ email, password });
+```
 
-## Code Style
+### Frontend: Component-Based Architecture
 
-TypeScript 5.x (Node.js 20.x LTS for backend, React 18.x for frontend): Follow standard conventions
+```
+frontend/src/
+├── components/
+│   ├── ui/           # shadcn/ui components (button, dialog, card, form)
+│   ├── features/     # Feature-specific components (EventCard, AnnouncementList)
+│   └── layout/       # Layout components (Header, Footer, MobileNav)
+├── pages/            # Route-level pages (lazy-loaded for code splitting)
+├── services/
+│   ├── api/          # apiClient.ts with axios interceptors
+│   └── endpoints/    # API service modules (authService, eventService)
+├── contexts/         # React Context (AuthContext for global auth state)
+└── hooks/            # Custom hooks (useAuth, useToast, useWebSocket)
+```
+
+## 🛠 Tech Stack
+
+**Backend**: Node.js 20.x LTS, TypeScript 5.x, Express 4.x, Prisma 7.x ORM, PostgreSQL 15+, Socket.io 4.x  
+**Frontend**: React 18.x, TypeScript 5.x, Vite 5.x, shadcn/ui, Tailwind CSS 3.x, React Router 6.x  
+**Testing**: Jest 29.x (backend), Playwright (E2E in `/tests/e2e`)  
+**External Services**: Cloudinary (image storage), Sentry (error monitoring)
+
+## 🚀 Development Workflow
+
+### Initial Setup
+
+```bash
+# Backend setup
+cd backend
+npm install
+npx prisma generate           # Generate Prisma Client
+npx prisma migrate dev        # Run migrations
+npm run prisma:seed          # Seed database with test data
+
+# Frontend setup
+cd frontend
+npm install
+```
+
+### Running the Application
+
+**Backend** (port 3000):
+
+```bash
+cd backend
+npm run dev                   # tsx watch with hot reload
+```
+
+**Frontend** (port 5173):
+
+```bash
+cd frontend
+npm run dev                   # Vite dev server
+```
+
+**Key URLs**:
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000/api/v1
+- API Docs (Swagger): http://localhost:3000/api-docs
+- Health Check: http://localhost:3000/health
+
+### Testing Strategy
+
+**Backend Tests** (138+ passing):
+
+```bash
+cd backend
+npm test                      # All tests with coverage
+npm run test:watch           # Watch mode
+npm run test:integration     # Integration tests only
+npm run test:contract        # Contract tests only
+```
+
+**Test Organization**:
+
+- `backend/tests/unit/useCases/` - Use case tests (authenticateUser, createEvent, rsvpToEvent)
+- `backend/tests/integration/` - API integration tests (database + routes)
+- `backend/tests/contract/` - OpenAPI contract validation (auth, events, announcements)
+
+**E2E Tests** (Playwright):
+
+```bash
+npm run test:e2e             # From project root
+```
+
+Files: `/tests/e2e/*.spec.ts` (authentication.spec.ts, events.spec.ts, member-directory.spec.ts)
+
+**TDD Approach**: Tests are written BEFORE implementation (Red-Green-Refactor). See `specs/001-full-stack-web/tasks.md` for task organization by phase.
+
+### Database Management
+
+```bash
+cd backend
+npx prisma studio            # Visual database browser
+npx prisma migrate dev       # Create new migration
+npx prisma generate          # Regenerate Prisma Client after schema changes
+```
+
+**Schema**: `backend/prisma/schema.prisma` - PostgreSQL models for members, events, announcements, messages, audit_logs, etc.
+
+## 📝 Code Conventions
+
+### Backend Patterns
+
+**Use Cases** - Single-responsibility business logic:
+
+```typescript
+// application/useCases/createEvent.ts
+export class CreateEvent {
+  constructor(private eventRepository: IEventRepository) {}
+
+  async execute(input: CreateEventInput): Promise<CreateEventOutput> {
+    // Validation
+    if (input.startDateTime < new Date()) {
+      throw new Error("Event start date cannot be in the past");
+    }
+    // Business logic
+    const event = new Event(/* ... */);
+    return await this.eventRepository.create(event);
+  }
+}
+```
+
+**Controllers** - Thin wrappers calling use cases:
+
+```typescript
+// presentation/controllers/eventController.ts
+export async function createEvent(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const result = await createEventUseCase.execute(req.body);
+    res.status(201).json(result);
+  } catch (error: any) {
+    logger.error("Create event error", { error: error.message });
+    next(error); // Pass to error handler middleware
+  }
+}
+```
+
+**Repository Pattern** - All database access via interfaces:
+
+```typescript
+// domain/interfaces/IEventRepository.ts
+export interface IEventRepository {
+  create(event: Event): Promise<Event>;
+  findById(id: string): Promise<Event | null>;
+  // ...
+}
+```
+
+**Logging** - Use Winston logger from `infrastructure/logging/logger`:
+
+```typescript
+import { logger } from "../infrastructure/logging/logger";
+logger.info("Event created", { eventId, userId });
+logger.error("Failed to send email", { error: error.message });
+```
+
+### Frontend Patterns
+
+**API Services** - Centralized in `services/endpoints/`:
+
+```typescript
+// services/endpoints/eventService.ts
+import apiClient from "../api/apiClient";
+export const eventService = {
+  async getEvents(): Promise<Event[]> {
+    return await apiClient.get("/events");
+  },
+  // ...
+};
+```
+
+**Authentication** - Use AuthContext:
+
+```typescript
+import { useAuth } from "../contexts/AuthContext";
+const { member, login, logout, isAuthenticated } = useAuth();
+```
+
+**shadcn/ui Components** - All UI components in `components/ui/`:
+
+- Use `npx shadcn-ui@latest add <component>` to add new components
+- Customize via Tailwind classes, NOT direct CSS
+- See **shadcn-ui-guide.md** for detailed component usage
+
+**Route Protection**:
+
+```tsx
+import { PrivateRoute } from './components/routing/PrivateRoute';
+import { AdminRoute } from './components/routing/AdminRoute';
+
+<Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+<Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+```
+
+**Lazy Loading** - All non-critical routes lazy-loaded:
+
+```tsx
+const EventsPage = lazy(() => import("./pages/events/EventsListPage"));
+```
+
+## 🔌 Real-Time Features
+
+**WebSocket Server** (`backend/src/infrastructure/websocket/websocketServer.ts`):
+
+- JWT authentication on connect
+- Events: `new-message`, `new-announcement`, `event-update`, `rsvp-update`
+- Emit to specific users: `websocketServer.emitToUser(userId, event, data)`
+
+**Frontend WebSocket** (`services/websocket/websocketService.ts`):
+
+```typescript
+import { websocketService } from "../services/websocket/websocketService";
+websocketService.on("new-message", (data) => {
+  /* handle */
+});
+```
+
+## 🔐 Security Practices
+
+**Critical**: NEVER commit credentials. Always use `.env` files (gitignored).
+
+**Rate Limiting** - Applied to sensitive endpoints:
+
+- Auth endpoints: 5 requests/15 min
+- MFA: 3 requests/15 min
+- Contact form: 10 requests/hour
+- Password reset: 3 requests/hour
+
+**Input Sanitization** - XSS protection via middleware:
+
+```typescript
+import { sanitizeInputMiddleware } from "./middleware/sanitizeInput";
+app.use("/api/v1", sanitizeInputMiddleware);
+```
+
+**JWT Auth** - Access tokens (15min) + refresh tokens (7 days):
+
+- Access token in Authorization header: `Bearer <token>`
+- Refresh token in cookie (httpOnly, secure)
+
+**MFA** - TOTP-based for Admin/Staff roles (`backend/src/application/useCases/enrollMFA.ts`)
+
+## 📦 Build & Deployment
+
+**Backend**:
+
+```bash
+cd backend
+npm run build                # esbuild → dist/index.js
+npm start                    # Production server
+```
+
+**Frontend**:
+
+```bash
+cd frontend
+npm run build                # Vite → dist/ (optimized with code splitting)
+```
+
+**Deployment Platforms**:
+
+- **Frontend**: Vercel (see `vercel.json`)
+- **Backend**: Render.com (see `render.yaml`)
+- **Database**: Neon PostgreSQL (managed via Vercel)
+- **Files**: Cloudinary (env: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
+
+See `DEPLOYMENT_GUIDE.md` for complete deployment instructions.
+
+**Docker**:
+
+```bash
+docker-compose up            # Dev environment
+docker-compose -f docker-compose.prod.yml up  # Production
+```
+
+## 📚 Documentation References
+
+- **API Contracts**: `specs/001-full-stack-web/contracts/openapi.yaml`
+- **Task Tracking**: `specs/001-full-stack-web/tasks.md` (phase-by-phase implementation)
+- **Deployment**: `DEPLOYMENT_GUIDE.md`
+- **Database Setup**: `POSTGRESQL_SETUP.md`, `TEST_DATABASE_SETUP.md`
+- **Manual Testing**: `MANUAL_TEST_GUIDE.md`
+- **Security**: `SECURITY_GUIDE.md`, `SECURITY_INCIDENT_REPORT.md`
 
 ## MCP Server Usage Guidelines
 
