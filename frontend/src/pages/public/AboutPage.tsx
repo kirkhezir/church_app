@@ -243,7 +243,7 @@ export function AboutPage() {
               </h2>
               <div className="space-y-4 text-slate-600">
                 <p>
-                  Sing Buri Adventist Center was established in 2016 with a small group of believers
+                  Sing Buri Adventist Center was established in 2015 with a small group of believers
                   committed to sharing the everlasting gospel in central Thailand.
                 </p>
                 <p>
