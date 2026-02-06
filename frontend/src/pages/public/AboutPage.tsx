@@ -26,27 +26,27 @@ import { useI18n } from '../../i18n';
 
 // Church leadership data
 const PASTOR = {
-  name: 'Pastor Somchai Prasert',
+  name: 'Pastor Reben Huilar',
   nameThai: 'ศจ. สมชาย ประเสริฐ',
-  title: 'Senior Pastor',
+  title: 'District Pastor',
   titleThai: 'ศิษยาภิบาล',
   photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&q=80',
-  bio: 'Pastor Somchai has served our congregation faithfully for over 15 years. He is passionate about sharing the gospel and helping families grow in their faith journey.',
+  bio: 'Pastor Reben has served our congregation faithfully for over 5 years. He is passionate about sharing the gospel and helping families grow in their faith journey.',
   email: 'pastor@singburi-adventist.org',
   phone: '+66 81 234 5678',
 };
 
 const ELDERS = [
   {
-    name: 'Elder Prasert Sriphan',
+    name: 'Elder Nealbeart Jumawid',
     nameThai: 'ผอ. ประเสริฐ ศรีพันธ์',
-    title: 'First Elder',
+    title: 'Elder',
     photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&q=80',
   },
   {
-    name: 'Elder Wichai Thongdee',
+    name: 'Elder Carl Max Siano',
     nameThai: 'ผอ. วิชัย ทองดี',
-    title: 'Second Elder',
+    title: 'Elder',
     photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80',
   },
 ];
@@ -57,23 +57,23 @@ const CHURCH_OFFICERS = [
     categoryThai: 'ฝ่ายบริหารโบสถ์',
     members: [
       {
-        name: 'Somying Kaewsai',
+        name: 'Gladys Jane Santos',
         nameThai: 'สมหญิง แก้วใส',
         role: 'Church Clerk',
         roleThai: 'เสมียน',
       },
       {
-        name: 'Prasit Wongsawat',
+        name: 'Lavonne Jumawid',
         nameThai: 'ประสิทธิ์ วงศ์สวัสดิ์',
         role: 'Treasurer',
         roleThai: 'เหรัญญิก',
       },
-      {
+      /*{
         name: 'Malee Suksawat',
         nameThai: 'มาลี สุขสวัสดิ์',
         role: 'Assistant Treasurer',
         roleThai: 'ผู้ช่วยเหรัญญิก',
-      },
+      },*/
     ],
   },
   {
@@ -81,23 +81,24 @@ const CHURCH_OFFICERS = [
     categoryThai: 'แผนกโรงเรียนวันสะบาโต',
     members: [
       {
-        name: 'Somsak Petcharat',
+        name: 'Mary June Cabunoc',
         nameThai: 'สมศักดิ์ เพชรรัตน์',
         role: 'Superintendent',
         roleThai: 'ผู้ดูแล',
       },
       {
-        name: 'Nittaya Srisuk',
+        name: 'Kenneth Joy Santos',
         nameThai: 'นิตยา ศรีสุข',
         role: 'Assistant Superintendent',
         roleThai: 'ผู้ช่วยผู้ดูแล',
       },
+      /*
       {
         name: 'Pornchai Limwong',
         nameThai: 'พรชัย ลิ้มวงศ์',
         role: 'Secretary',
         roleThai: 'เลขานุการ',
-      },
+      },*/
     ],
   },
   {
@@ -105,8 +106,8 @@ const CHURCH_OFFICERS = [
     categoryThai: 'แผนกเยาวชน',
     members: [
       {
-        name: 'Thanawat Jaidee',
-        nameThai: 'ธนวัฒน์ ใจดี',
+        name: 'Ronela Mifranum',
+        nameThai: 'โรเนลา มิฟรานุม',
         role: 'AY Leader',
         roleThai: 'ผู้นำเยาวชน',
       },
@@ -123,13 +124,13 @@ const CHURCH_OFFICERS = [
     categoryThai: 'มัคนายก',
     members: [
       {
-        name: 'Somchai Wongprasert',
+        name: 'Kirk Hezir Cabunoc',
         nameThai: 'สมชาย วงศ์ประเสริฐ',
-        role: 'Head Deacon',
+        role: 'Deacon',
         roleThai: 'หัวหน้ามัคนายก',
       },
-      { name: 'Pisit Somboon', nameThai: 'พิสิษฐ์ สมบูรณ์', role: 'Deacon', roleThai: 'มัคนายก' },
-      { name: 'Anuchit Saelim', nameThai: 'อนุชิต แซ่ลิ้ม', role: 'Deacon', roleThai: 'มัคนายก' },
+      /*{ name: 'Pisit Somboon', nameThai: 'พิสิษฐ์ สมบูรณ์', role: 'Deacon', roleThai: 'มัคนายก' },
+      { name: 'Anuchit Saelim', nameThai: 'อนุชิต แซ่ลิ้ม', role: 'Deacon', roleThai: 'มัคนายก' },*/
     ],
   },
   {
@@ -137,12 +138,12 @@ const CHURCH_OFFICERS = [
     categoryThai: 'มัคนายิกา',
     members: [
       {
-        name: 'Somporn Kaewmanee',
+        name: 'Nilda Sojor',
         nameThai: 'สมพร แก้วมณี',
         role: 'Head Deaconess',
         roleThai: 'หัวหน้ามัคนายิกา',
       },
-      {
+      /*{
         name: 'Wilai Prasertsin',
         nameThai: 'วิไล ประเสริฐศิลป์',
         role: 'Deaconess',
@@ -153,7 +154,7 @@ const CHURCH_OFFICERS = [
         nameThai: 'ปราณี ทองชัย',
         role: 'Deaconess',
         roleThai: 'มัคนายิกา',
-      },
+      },*/
     ],
   },
   {
