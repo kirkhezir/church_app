@@ -120,7 +120,7 @@ const CHURCH_OFFICERS = [
     ],
   },
   {
-    category: 'Deacons',
+    category: 'Deacon',
     categoryThai: 'มัคนายก',
     members: [
       {
@@ -134,13 +134,13 @@ const CHURCH_OFFICERS = [
     ],
   },
   {
-    category: 'Deaconesses',
+    category: 'Deaconess',
     categoryThai: 'มัคนายิกา',
     members: [
       {
         name: 'Nilda Sojor',
         nameThai: 'สมพร แก้วมณี',
-        role: 'Head Deaconess',
+        role: 'Deaconess',
         roleThai: 'หัวหน้ามัคนายิกา',
       },
       /*{
