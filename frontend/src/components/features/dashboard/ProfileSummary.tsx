@@ -4,7 +4,7 @@
  * Displays member profile information in dashboard
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 

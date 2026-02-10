@@ -4,7 +4,7 @@
  * Displays a single message with full content and reply options
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Reply, Trash2, Clock, Mail } from 'lucide-react';
 import { useMessageDetail, useDeleteMessage } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 
 // Eagerly loaded - critical path (public landing pages)
 import LandingPage from './pages/public/LandingPage';

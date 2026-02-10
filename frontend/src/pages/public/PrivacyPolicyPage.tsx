@@ -5,7 +5,7 @@
  * Outlines data collection, usage, and protection practices
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ArrowLeft, Shield, Lock, Eye, Trash2, Mail, FileText } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 

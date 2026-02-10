@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   X,
   ChevronLeft,

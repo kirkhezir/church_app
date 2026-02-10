@@ -5,7 +5,7 @@
  */
 
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { AnnouncementCard } from '../../../src/components/features/announcements/AnnouncementCard';
 import { describe, it, expect, jest } from '@jest/globals';
 

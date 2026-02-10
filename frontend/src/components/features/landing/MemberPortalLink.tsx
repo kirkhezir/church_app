@@ -5,7 +5,7 @@
  * Provides quick access for existing members to log in
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Button } from '../../ui/button';
 import { LogIn, User, ArrowRight } from 'lucide-react';
 

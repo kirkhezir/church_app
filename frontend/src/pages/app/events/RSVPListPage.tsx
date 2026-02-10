@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { format } from 'date-fns';
 import { ArrowLeft, Users, Mail, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
 import { useEventDetail } from '@/hooks/useEvents';

@@ -8,7 +8,7 @@
  * - Add to calendar button
  */
 
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router';
 import {
   ArrowLeft,
   Calendar,

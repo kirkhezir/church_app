@@ -4,7 +4,7 @@
  * Bottom navigation bar for mobile devices
  */
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { Home, Calendar, Bell, MessageSquare, User } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import { Badge } from '../../../components/ui/badge';

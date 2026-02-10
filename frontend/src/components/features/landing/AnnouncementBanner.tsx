@@ -15,7 +15,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, ChevronRight, Pause, Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 interface Announcement {
   id: string;

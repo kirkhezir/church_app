@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Users, Search, Mail, Phone, Calendar, Download } from 'lucide-react';
 import { useMembers } from '@/hooks/useMembers';
 import { useDebounce } from '@/hooks/useDebounce';

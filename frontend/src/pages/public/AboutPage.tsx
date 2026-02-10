@@ -5,7 +5,7 @@
  * Includes Pastor, Elders, Deacons, Deaconesses, and all church officers
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   Church,
   Heart,
@@ -51,10 +51,20 @@ const ELDERS = [
   },
 ];
 
-const CHURCH_OFFICERS = [
+/**
+ * Generate a DiceBear avatar URL from a person's name.
+ * Uses the "initials" style for a clean, professional look with consistent colors.
+ */
+function getAvatarUrl(name: string, size = 80): string {
+  const seed = encodeURIComponent(name);
+  return `https://api.dicebear.com/9.x/initials/svg?seed=${seed}&size=${size}&backgroundColor=1e40af,1d4ed8,2563eb,3b82f6,60a5fa&backgroundType=gradientLinear&fontFamily=Arial&fontWeight=600&textColor=ffffff`;
+}
+
+/** Church officers organized by department. */
+const CHURCH_OFFICERS_BY_DEPT = [
   {
-    category: 'Church Administration',
-    categoryThai: 'ฝ่ายบริหารโบสถ์',
+    department: 'Church Administration',
+    departmentThai: 'ฝ่ายบริหารโบสถ์',
     members: [
       {
         name: 'Gladys Jane Santos',
@@ -68,17 +78,11 @@ const CHURCH_OFFICERS = [
         role: 'Treasurer',
         roleThai: 'เหรัญญิก',
       },
-      /*{
-        name: 'Malee Suksawat',
-        nameThai: 'มาลี สุขสวัสดิ์',
-        role: 'Assistant Treasurer',
-        roleThai: 'ผู้ช่วยเหรัญญิก',
-      },*/
     ],
   },
   {
-    category: 'Sabbath School Department',
-    categoryThai: 'แผนกโรงเรียนวันสะบาโต',
+    department: 'Sabbath School',
+    departmentThai: 'แผนกโรงเรียนวันสะบาโต',
     members: [
       {
         name: 'Mary June Cabunoc',
@@ -89,21 +93,14 @@ const CHURCH_OFFICERS = [
       {
         name: 'Kenneth Joy Santos',
         nameThai: 'นิตยา ศรีสุข',
-        role: 'Assistant Superintendent',
+        role: 'Asst. Superintendent',
         roleThai: 'ผู้ช่วยผู้ดูแล',
       },
-      /*
-      {
-        name: 'Pornchai Limwong',
-        nameThai: 'พรชัย ลิ้มวงศ์',
-        role: 'Secretary',
-        roleThai: 'เลขานุการ',
-      },*/
     ],
   },
   {
-    category: 'Youth Department (AY)',
-    categoryThai: 'แผนกเยาวชน',
+    department: 'Youth Department (AY)',
+    departmentThai: 'แผนกเยาวชน',
     members: [
       {
         name: 'Ronela Mifranum',
@@ -120,8 +117,8 @@ const CHURCH_OFFICERS = [
     ],
   },
   {
-    category: 'Deacon',
-    categoryThai: 'มัคนายก',
+    department: 'Deacon',
+    departmentThai: 'มัคนายก',
     members: [
       {
         name: 'Kirk Hezir Cabunoc',
@@ -129,13 +126,11 @@ const CHURCH_OFFICERS = [
         role: 'Deacon',
         roleThai: 'หัวหน้ามัคนายก',
       },
-      /*{ name: 'Pisit Somboon', nameThai: 'พิสิษฐ์ สมบูรณ์', role: 'Deacon', roleThai: 'มัคนายก' },
-      { name: 'Anuchit Saelim', nameThai: 'อนุชิต แซ่ลิ้ม', role: 'Deacon', roleThai: 'มัคนายก' },*/
     ],
   },
   {
-    category: 'Deaconess',
-    categoryThai: 'มัคนายิกา',
+    department: 'Deaconess',
+    departmentThai: 'มัคนายิกา',
     members: [
       {
         name: 'Nilda Sojor',
@@ -143,23 +138,17 @@ const CHURCH_OFFICERS = [
         role: 'Deaconess',
         roleThai: 'หัวหน้ามัคนายิกา',
       },
-      /*{
-        name: 'Wilai Prasertsin',
-        nameThai: 'วิไล ประเสริฐศิลป์',
+      {
+        name: 'Lorrie Hope Yosorez',
+        nameThai: 'ลอรี โฮป โยซอเรซ',
         role: 'Deaconess',
         roleThai: 'มัคนายิกา',
       },
-      {
-        name: 'Pranee Thongchai',
-        nameThai: 'ปราณี ทองชัย',
-        role: 'Deaconess',
-        roleThai: 'มัคนายิกา',
-      },*/
     ],
   },
   {
-    category: 'Music & Worship',
-    categoryThai: 'แผนกดนตรีและนมัสการ',
+    department: 'Music & Worship',
+    departmentThai: 'แผนกดนตรีและนมัสการ',
     members: [
       {
         name: 'Supachai Musikphan',
@@ -375,13 +364,18 @@ export function AboutPage() {
           </div>
           <div className="mx-auto grid max-w-2xl gap-6 sm:grid-cols-2">
             {ELDERS.map((elder, index) => (
-              <Card key={index} className="text-center">
+              <Card key={index} className="group text-center transition-shadow hover:shadow-lg">
                 <CardContent className="p-6">
-                  <img
-                    src={elder.photo}
-                    alt={elder.name}
-                    className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
-                  />
+                  <div className="relative mx-auto mb-4 h-24 w-24">
+                    <img
+                      src={elder.photo}
+                      alt={elder.name}
+                      className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-all group-hover:ring-4 group-hover:ring-blue-200"
+                    />
+                    <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
+                      <Award className="h-3.5 w-3.5" />
+                    </div>
+                  </div>
                   <h3 className="font-semibold text-slate-900">{elder.name}</h3>
                   <p className="text-sm text-slate-500">{elder.nameThai}</p>
                   <p className="mt-1 text-sm font-medium text-blue-600">{elder.title}</p>
@@ -403,30 +397,43 @@ export function AboutPage() {
               Our dedicated officers serve the church in various capacities.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {CHURCH_OFFICERS.map((dept, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                      <Users className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-900">{dept.category}</h3>
-                      <p className="text-xs text-slate-500">{dept.categoryThai}</p>
-                    </div>
+          <div className="space-y-12">
+            {CHURCH_OFFICERS_BY_DEPT.map((dept, deptIndex) => (
+              <div key={deptIndex}>
+                {/* Department Header */}
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+                    <Users className="h-5 w-5 text-blue-600" />
                   </div>
-                  <ul className="space-y-3">
-                    {dept.members.map((member, idx) => (
-                      <li key={idx} className="border-l-2 border-blue-100 pl-3">
-                        <p className="font-medium text-slate-800">{member.name}</p>
-                        <p className="text-xs text-slate-500">{member.nameThai}</p>
-                        <p className="text-sm text-blue-600">{member.role}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-xl font-semibold text-slate-900">
+                      {language === 'th' ? dept.departmentThai : dept.department}
+                    </h3>
+                  </div>
+                </div>
+                {/* Officer Cards */}
+                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  {dept.members.map((officer, idx) => (
+                    <Card key={idx} className="group text-center transition-shadow hover:shadow-lg">
+                      <CardContent className="p-6">
+                        <div className="relative mx-auto mb-4 h-20 w-20">
+                          <img
+                            src={getAvatarUrl(officer.name)}
+                            alt={officer.name}
+                            className="h-20 w-20 rounded-full object-cover ring-2 ring-blue-100 transition-all group-hover:ring-4 group-hover:ring-blue-200"
+                          />
+                          <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
+                            <Users className="h-3 w-3" />
+                          </div>
+                        </div>
+                        <h3 className="font-semibold text-slate-900">{officer.name}</h3>
+                        <p className="text-xs text-slate-500">{officer.nameThai}</p>
+                        <p className="mt-1 text-sm font-medium text-blue-600">{officer.role}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>

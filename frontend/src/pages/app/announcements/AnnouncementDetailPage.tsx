@@ -10,7 +10,7 @@
  * - Back navigation
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { useAnnouncement } from '@/hooks/useAnnouncements';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';

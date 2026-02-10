@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 import { ArrowLeft, Send, Search, X } from 'lucide-react';
 import { useSendMessage } from '@/hooks/useMessages';
 import { useMemberSearch, useMemberProfile } from '@/hooks/useMembers';

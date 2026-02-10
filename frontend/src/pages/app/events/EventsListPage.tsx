@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { CalendarIcon, PlusIcon, List, LayoutGrid } from 'lucide-react';
 import { useEvents, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/hooks/useAuth';

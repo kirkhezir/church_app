@@ -4,7 +4,7 @@
  * Overview of all church ministries with links to individual ministry pages
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   Users,
   Baby,

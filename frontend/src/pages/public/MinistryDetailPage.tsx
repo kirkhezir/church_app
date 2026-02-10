@@ -9,7 +9,7 @@
  * - How to get involved
  */
 
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router';
 import {
   ArrowLeft,
   Users,

@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { announcementService } from '@/services/endpoints/announcementService';
 import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';

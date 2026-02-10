@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 import { Inbox, Send, Mail, Trash2 } from 'lucide-react';
 import { useMessages, useDeleteMessage } from '@/hooks/useMessages';
 import { SidebarLayout } from '@/components/layout';

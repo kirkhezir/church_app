@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAnnouncements, AnnouncementFilters as FilterState } from '@/hooks/useAnnouncements';
 import { announcementService, Author } from '@/services/endpoints/announcementService';
 import { Button } from '@/components/ui/button';

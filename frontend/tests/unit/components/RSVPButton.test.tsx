@@ -9,15 +9,15 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 jest.mock('@/services/api/apiClient');
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { RSVPButton } from '@/components/features/events/RSVPButton';
 import { AuthContext } from '@/contexts/AuthContext';
 import { Event, EventCategory } from '@/types/api';
 
 // Mock useNavigate
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockNavigate,
 }));
 

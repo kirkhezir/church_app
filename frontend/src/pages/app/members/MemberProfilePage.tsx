@@ -4,7 +4,7 @@
  * Displays a member's profile with privacy-controlled information
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Mail, Phone, MapPin, Calendar, User } from 'lucide-react';
 import { useMemberProfile } from '@/hooks/useMembers';
 import { SidebarLayout } from '@/components/layout';

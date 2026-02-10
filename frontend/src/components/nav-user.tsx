@@ -1,5 +1,5 @@
 import { User, Settings, Bell, LogOut, ChevronsUpDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

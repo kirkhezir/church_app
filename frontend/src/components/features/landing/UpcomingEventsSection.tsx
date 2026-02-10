@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Skeleton } from '../../ui/skeleton';
