@@ -7,15 +7,15 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Inbox, Send, Mail, Trash2 } from 'lucide-react';
-import { useMessages, useDeleteMessage } from '../../hooks/useMessages';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { useMessages, useDeleteMessage } from '@/hooks/useMessages';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function MessagesListPage() {
   const navigate = useNavigate();

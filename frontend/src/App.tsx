@@ -38,84 +38,88 @@ const MFAVerificationPage = lazy(() => import('./pages/auth/MFAVerificationPage'
 // ============================================================
 
 // Dashboard pages
-const MemberDashboard = lazy(() => import('./pages/dashboard/MemberDashboard'));
-const EditProfilePage = lazy(() => import('./pages/dashboard/EditProfilePage'));
-const NotificationSettingsPage = lazy(() => import('./pages/dashboard/NotificationSettingsPage'));
+const MemberDashboard = lazy(() => import('./pages/app/dashboard/MemberDashboard'));
+const EditProfilePage = lazy(() => import('./pages/app/dashboard/EditProfilePage'));
+const NotificationSettingsPage = lazy(
+  () => import('./pages/app/dashboard/NotificationSettingsPage')
+);
 
 // Event management pages (private)
 const EventsListPage = lazy(() =>
-  import('./pages/events/EventsListPage').then((m) => ({ default: m.EventsListPage }))
+  import('./pages/app/events/EventsListPage').then((m) => ({ default: m.EventsListPage }))
 );
 const EventDetailPage = lazy(() =>
-  import('./pages/events/EventDetailPage').then((m) => ({ default: m.EventDetailPage }))
+  import('./pages/app/events/EventDetailPage').then((m) => ({ default: m.EventDetailPage }))
 );
 const EventCreatePage = lazy(() =>
-  import('./pages/events/EventCreatePage').then((m) => ({ default: m.EventCreatePage }))
+  import('./pages/app/events/EventCreatePage').then((m) => ({ default: m.EventCreatePage }))
 );
 const EventEditPage = lazy(() =>
-  import('./pages/events/EventEditPage').then((m) => ({ default: m.EventEditPage }))
+  import('./pages/app/events/EventEditPage').then((m) => ({ default: m.EventEditPage }))
 );
 const RSVPListPage = lazy(() =>
-  import('./pages/events/RSVPListPage').then((m) => ({ default: m.RSVPListPage }))
+  import('./pages/app/events/RSVPListPage').then((m) => ({ default: m.RSVPListPage }))
 );
 
 // Announcement management pages (private)
 const AnnouncementsPage = lazy(() =>
-  import('./pages/announcements/AnnouncementsPage').then((m) => ({ default: m.AnnouncementsPage }))
+  import('./pages/app/announcements/AnnouncementsPage').then((m) => ({
+    default: m.AnnouncementsPage,
+  }))
 );
 const AnnouncementDetailPage = lazy(() =>
-  import('./pages/announcements/AnnouncementDetailPage').then((m) => ({
+  import('./pages/app/announcements/AnnouncementDetailPage').then((m) => ({
     default: m.AnnouncementDetailPage,
   }))
 );
 const AnnouncementCreatePage = lazy(() =>
-  import('./pages/announcements/AnnouncementCreatePage').then((m) => ({
+  import('./pages/app/announcements/AnnouncementCreatePage').then((m) => ({
     default: m.AnnouncementCreatePage,
   }))
 );
 const AnnouncementEditPage = lazy(() =>
-  import('./pages/announcements/AnnouncementEditPage').then((m) => ({
+  import('./pages/app/announcements/AnnouncementEditPage').then((m) => ({
     default: m.AnnouncementEditPage,
   }))
 );
 const AnnouncementAnalyticsPage = lazy(() =>
-  import('./pages/announcements/AnnouncementAnalyticsPage').then((m) => ({
+  import('./pages/app/announcements/AnnouncementAnalyticsPage').then((m) => ({
     default: m.AnnouncementAnalyticsPage,
   }))
 );
 
 // Admin pages (private - admin only)
 const AdminAnnouncementsPage = lazy(() =>
-  import('./pages/admin/AdminAnnouncementsPage').then((m) => ({
+  import('./pages/app/admin/AdminAnnouncementsPage').then((m) => ({
     default: m.AdminAnnouncementsPage,
   }))
 );
-const AdminMemberListPage = lazy(() => import('./pages/admin/AdminMemberListPage'));
-const AdminCreateMemberPage = lazy(() => import('./pages/admin/AdminCreateMemberPage'));
-const AdminAuditLogsPage = lazy(() => import('./pages/admin/AdminAuditLogsPage'));
-const AdminDataExportPage = lazy(() => import('./pages/admin/AdminDataExportPage'));
-const AdminHealthPage = lazy(() => import('./pages/admin/AdminHealthPage'));
-const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage'));
-const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
+const AdminMemberListPage = lazy(() => import('./pages/app/admin/AdminMemberListPage'));
+const AdminCreateMemberPage = lazy(() => import('./pages/app/admin/AdminCreateMemberPage'));
+const AdminAuditLogsPage = lazy(() => import('./pages/app/admin/AdminAuditLogsPage'));
+const AdminDataExportPage = lazy(() => import('./pages/app/admin/AdminDataExportPage'));
+const AdminHealthPage = lazy(() => import('./pages/app/admin/AdminHealthPage'));
+const AdminReportsPage = lazy(() => import('./pages/app/admin/AdminReportsPage'));
+const AdminAnalyticsPage = lazy(() => import('./pages/app/admin/AdminAnalyticsPage'));
 
 // Settings page (private)
-const SettingsPage = lazy(() => import('./pages/settings/SettingsPage'));
+const SettingsPage = lazy(() => import('./pages/app/settings/SettingsPage'));
 
 // Member and Message pages (private)
 const MemberDirectoryPage = lazy(() =>
-  import('./pages/members').then((m) => ({ default: m.MemberDirectoryPage }))
+  import('./pages/app/members').then((m) => ({ default: m.MemberDirectoryPage }))
 );
 const MemberProfilePage = lazy(() =>
-  import('./pages/members').then((m) => ({ default: m.MemberProfilePage }))
+  import('./pages/app/members').then((m) => ({ default: m.MemberProfilePage }))
 );
 const MessagesListPage = lazy(() =>
-  import('./pages/messages').then((m) => ({ default: m.MessagesListPage }))
+  import('./pages/app/messages').then((m) => ({ default: m.MessagesListPage }))
 );
 const MessageDetailPage = lazy(() =>
-  import('./pages/messages').then((m) => ({ default: m.MessageDetailPage }))
+  import('./pages/app/messages').then((m) => ({ default: m.MessageDetailPage }))
 );
 const ComposeMessagePage = lazy(() =>
-  import('./pages/messages').then((m) => ({ default: m.ComposeMessagePage }))
+  import('./pages/app/messages').then((m) => ({ default: m.ComposeMessagePage }))
 );
 
 // Loading component for Suspense fallback

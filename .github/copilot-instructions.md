@@ -51,13 +51,34 @@ frontend/src/
 │   ├── ui/           # shadcn/ui components (button, dialog, card, form)
 │   ├── features/     # Feature-specific components (EventCard, AnnouncementList)
 │   └── layout/       # Layout components (Header, Footer, MobileNav)
-├── pages/            # Route-level pages (lazy-loaded for code splitting)
+├── pages/
+│   ├── public/       # Landing pages (home, about, visit, events calendar, etc.)
+│   ├── auth/         # Auth pages (login, register, MFA, password reset) - not nested
+│   └── app/          # Church management app pages (authenticated routes)
+│       ├── admin/    # Admin-only pages (member management, analytics, reports)
+│       ├── announcements/  # Announcement pages
+│       ├── dashboard/      # Dashboard pages (home, profile, settings)
+│       ├── events/         # Event management pages
+│       ├── members/        # Member directory and profiles
+│       ├── messages/       # Messaging pages
+│       └── settings/       # User settings pages
 ├── services/
 │   ├── api/          # apiClient.ts with axios interceptors
 │   └── endpoints/    # API service modules (authService, eventService)
 ├── contexts/         # React Context (AuthContext for global auth state)
 └── hooks/            # Custom hooks (useAuth, useToast, useWebSocket)
 ```
+
+**Key Separation Pattern:**
+- **Public pages** (`pages/public/*`) → Root paths: `/`, `/about`, `/events`, `/visit`, etc.
+- **Auth pages** (`pages/auth/*`) → Public paths: `/login`, `/register`, `/mfa-verify`, etc.
+- **App pages** (`pages/app/*`) → Protected paths: `/app/dashboard`, `/app/events`, `/app/admin/*`, etc. (behind `PrivateRoute`)
+
+**API Endpoints vs UI Routes (CRITICAL):**
+- Backend API endpoints use `/api/v1/{resource}` pattern (e.g., `/api/v1/members/dashboard`)
+- Frontend uses `/app/*` Only for React Router paths, NOT for API calls
+- When calling `apiClient.get()`, use `/members/dashboard`, NOT `/app/members/dashboard`
+- The `apiClient` base URL is configured as `http://localhost:3000/api/v1`
 
 ## 🛠 Tech Stack
 
@@ -218,6 +239,31 @@ logger.error("Failed to send email", { error: error.message });
 
 ### Frontend Patterns
 
+**Routing & URL Namespacing** - Strict separation between landing pages and app pages:
+
+```tsx
+// Frontend Routes (React Router)
+/                    → Landing page (public)
+/about, /visit       → Landing pages (public)
+/events              → Public events calendar (public)
+/login               → Login page (public)
+/app/dashboard       → Member dashboard (authenticated)
+/app/events          → Member events calendar (authenticated)
+/app/admin/*         → Admin pages (admin role required)
+
+// Backend API Endpoints (always /api/v1/*)
+/api/v1/members/dashboard      ← Called by /app/dashboard page
+/api/v1/members/me             ← Called by /app/profile page
+/api/v1/events                 ← Called by both /events and /app/events pages
+/api/v1/announcements          ← Called by /app/announcements page
+/api/v1/admin/*                ← Called by /app/admin/* pages
+```
+
+**CRITICAL**: Never confuse frontend routes (`/app/*`) with backend API paths (`/api/v1/*`)
+- When calling `apiClient.get('/members/dashboard')`, the full URL becomes `http://localhost:3000/api/v1/members/dashboard`
+- The `/app` prefix is ONLY for frontend React Router paths
+- API calls should reference `/members/`, `/events/`, `/announcements/`, NOT `/app/members/`
+
 **API Services** - Centralized in `services/endpoints/`:
 
 ```typescript
@@ -225,7 +271,7 @@ logger.error("Failed to send email", { error: error.message });
 import apiClient from "../api/apiClient";
 export const eventService = {
   async getEvents(): Promise<Event[]> {
-    return await apiClient.get("/events");
+    return await apiClient.get("/events");  // Correct: /api/v1/events
   },
   // ...
 };
@@ -250,14 +296,14 @@ const { member, login, logout, isAuthenticated } = useAuth();
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
 
-<Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-<Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+<Route path="/app/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+<Route path="/app/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
 ```
 
 **Lazy Loading** - All non-critical routes lazy-loaded:
 
 ```tsx
-const EventsPage = lazy(() => import("./pages/events/EventsListPage"));
+const EventsPage = lazy(() => import("./pages/app/events/EventsListPage"));
 ```
 
 ## 🔌 Real-Time Features

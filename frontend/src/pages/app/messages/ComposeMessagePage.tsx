@@ -7,18 +7,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Send, Search, X } from 'lucide-react';
-import { useSendMessage } from '../../hooks/useMessages';
-import { useMemberSearch, useMemberProfile } from '../../hooks/useMembers';
-import { useDebounce } from '../../hooks/useDebounce';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Label } from '../../components/ui/label';
-import { MemberPublic } from '../../services/endpoints/memberService';
+import { useSendMessage } from '@/hooks/useMessages';
+import { useMemberSearch, useMemberProfile } from '@/hooks/useMembers';
+import { useDebounce } from '@/hooks/useDebounce';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Label } from '@/components/ui/label';
+import { MemberPublic } from '@/services/endpoints/memberService';
 
 export function ComposeMessagePage() {
   const navigate = useNavigate();

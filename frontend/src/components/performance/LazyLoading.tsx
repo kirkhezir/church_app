@@ -78,23 +78,23 @@ export function preloadComponent<T extends ComponentType<any>>(
  */
 export const LazyPages = {
   // Dashboard
-  Dashboard: lazyLoad(() => import('../../pages/dashboard/MemberDashboard')),
+  Dashboard: lazyLoad(() => import('@/pages/app/dashboard/MemberDashboard')),
 
   // Events
   EventDetailPage: lazyLoad(() =>
-    import('../../pages/events/EventDetailPage').then((m) => ({ default: m.EventDetailPage }))
+    import('@/pages/app/events/EventDetailPage').then((m) => ({ default: m.EventDetailPage }))
   ),
   EventCreatePage: lazyLoad(() =>
-    import('../../pages/events/EventCreatePage').then((m) => ({ default: m.EventCreatePage }))
+    import('@/pages/app/events/EventCreatePage').then((m) => ({ default: m.EventCreatePage }))
   ),
 
   // Admin
-  AdminReportsPage: lazyLoad(() => import('../../pages/admin/AdminReportsPage')),
-  AdminHealthPage: lazyLoad(() => import('../../pages/admin/AdminHealthPage')),
-  AdminAnalyticsPage: lazyLoad(() => import('../../pages/admin/AdminAnalyticsPage')),
+  AdminReportsPage: lazyLoad(() => import('@/pages/app/admin/AdminReportsPage')),
+  AdminHealthPage: lazyLoad(() => import('@/pages/app/admin/AdminHealthPage')),
+  AdminAnalyticsPage: lazyLoad(() => import('@/pages/app/admin/AdminAnalyticsPage')),
 
   // Settings
-  SettingsPage: lazyLoad(() => import('../../pages/settings/SettingsPage')),
+  SettingsPage: lazyLoad(() => import('@/pages/app/settings/SettingsPage')),
 };
 
 /**
@@ -104,7 +104,7 @@ export function preloadCommonPages(): void {
   // Preload after initial page load
   if (typeof window !== 'undefined') {
     window.setTimeout(() => {
-      preloadComponent(() => import('../../pages/dashboard/MemberDashboard'));
+      preloadComponent(() => import('@/pages/app/dashboard/MemberDashboard'));
     }, 2000);
   }
 }

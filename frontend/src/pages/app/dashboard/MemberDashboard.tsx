@@ -9,12 +9,12 @@
  */
 
 import { useState, useEffect } from 'react';
-import { SidebarLayout } from '../../components/layout';
-import { ProfileSummary } from '../../components/features/dashboard/ProfileSummary';
-import { UpcomingEventsWidget } from '../../components/features/dashboard/UpcomingEventsWidget';
-import { RecentAnnouncementsWidget } from '../../components/features/dashboard/RecentAnnouncementsWidget';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import apiClient from '../../services/api/apiClient';
+import { SidebarLayout } from '@/components/layout';
+import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
+import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
+import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import apiClient from '@/services/api/apiClient';
 
 interface DashboardData {
   profile: {
@@ -62,7 +62,7 @@ export default function MemberDashboard() {
         setLoading(true);
         setError(null);
 
-        const response = await apiClient.get('/app/members/dashboard');
+        const response = await apiClient.get('/members/dashboard');
         setDashboard(response as unknown as DashboardData);
       } catch (err) {
         console.error('Failed to fetch dashboard:', err);

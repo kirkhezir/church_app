@@ -8,17 +8,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CalendarIcon, PlusIcon, List, LayoutGrid } from 'lucide-react';
-import { useEvents, useEventRSVP } from '../../hooks/useEvents';
-import { useAuth } from '../../hooks/useAuth';
-import { SidebarLayout } from '../../components/layout';
-import { EventCard } from '../../components/features/events/EventCard';
-import { EventFilters } from '../../components/features/events/EventFilters';
-import { EventCalendarView } from '../../components/features/events/EventCalendarView';
-import { Button } from '../../components/ui/button';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { EventCategory } from '../../types/api';
+import { useEvents, useEventRSVP } from '@/hooks/useEvents';
+import { useAuth } from '@/hooks/useAuth';
+import { SidebarLayout } from '@/components/layout';
+import { EventCard } from '@/components/features/events/EventCard';
+import { EventFilters } from '@/components/features/events/EventFilters';
+import { EventCalendarView } from '@/components/features/events/EventCalendarView';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { EventCategory } from '@/types/api';
 
 export function EventsListPage() {
   const navigate = useNavigate();

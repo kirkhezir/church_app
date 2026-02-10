@@ -8,24 +8,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Search, Mail, Phone, Calendar, Download } from 'lucide-react';
-import { useMembers } from '../../hooks/useMembers';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useAuth } from '../../hooks/useAuth';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Card, CardContent } from '../../components/ui/card';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Checkbox } from '../../components/ui/checkbox';
+import { useMembers } from '@/hooks/useMembers';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useAuth } from '@/hooks/useAuth';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   AdvancedMemberFilters,
   MemberFilters,
-} from '../../components/features/members/AdvancedMemberFilters';
-import { MemberBulkActions } from '../../components/features/members/MemberBulkActions';
-import { DataExportDialog } from '../../components/features/export/DataExportDialog';
-import { useToast } from '../../hooks/use-toast';
+} from '@/components/features/members/AdvancedMemberFilters';
+import { MemberBulkActions } from '@/components/features/members/MemberBulkActions';
+import { DataExportDialog } from '@/components/features/export/DataExportDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export function MemberDirectoryPage() {
   const navigate = useNavigate();

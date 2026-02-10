@@ -7,38 +7,38 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { BarChart3, Users, Calendar, TrendingUp, RefreshCw, Download } from 'lucide-react';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
+} from '@/components/ui/select';
 import {
   AttendanceChart,
   AttendanceSummary,
-} from '../../components/features/analytics/AttendanceChart';
+} from '@/components/features/analytics/AttendanceChart';
 import {
   MemberGrowthChart,
   MemberDemographics,
-} from '../../components/features/analytics/MemberGrowthChart';
+} from '@/components/features/analytics/MemberGrowthChart';
 import {
   EngagementMetrics,
   ActivityHeatMap,
-} from '../../components/features/analytics/EngagementMetrics';
+} from '@/components/features/analytics/EngagementMetrics';
 import {
   analyticsService,
   DashboardOverview,
   MemberGrowthData,
   AttendanceData,
   EngagementData,
-} from '../../services/endpoints/analyticsService';
+} from '@/services/endpoints/analyticsService';
 
 // Mock data for heatmap (not yet in backend)
 const mockHeatMapData = [

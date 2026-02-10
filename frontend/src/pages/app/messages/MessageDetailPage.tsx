@@ -6,16 +6,16 @@
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Reply, Trash2, Clock, Mail } from 'lucide-react';
-import { useMessageDetail, useDeleteMessage } from '../../hooks/useMessages';
-import { useAuth } from '../../hooks/useAuth';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader } from '../../components/ui/card';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
-import { Badge } from '../../components/ui/badge';
-import { Separator } from '../../components/ui/separator';
+import { useMessageDetail, useDeleteMessage } from '@/hooks/useMessages';
+import { useAuth } from '@/hooks/useAuth';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 export function MessageDetailPage() {
   const { id } = useParams<{ id: string }>();

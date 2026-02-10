@@ -6,13 +6,13 @@
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, MapPin, Calendar, User } from 'lucide-react';
-import { useMemberProfile } from '../../hooks/useMembers';
-import { SidebarLayout } from '../../components/layout';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
-import { Skeleton } from '../../components/ui/skeleton';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { useMemberProfile } from '@/hooks/useMembers';
+import { SidebarLayout } from '@/components/layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export function MemberProfilePage() {
   const { id } = useParams<{ id: string }>();

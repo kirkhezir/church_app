@@ -11,9 +11,9 @@
 
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardHeader,
@@ -21,8 +21,8 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

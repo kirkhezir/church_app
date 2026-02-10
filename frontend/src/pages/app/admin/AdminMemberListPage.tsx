@@ -12,19 +12,19 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
-import { adminService, Member } from '../../services/endpoints/adminService';
-import { SidebarLayout } from '../../components/layout';
+} from '@/components/ui/select';
+import { adminService, Member } from '@/services/endpoints/adminService';
+import { SidebarLayout } from '@/components/layout';
 
 export default function AdminMemberListPage() {
   const [members, setMembers] = useState<Member[]>([]);

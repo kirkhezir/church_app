@@ -10,25 +10,25 @@
  */
 
 import { useState } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
-import { Input } from '../../components/ui/input';
-import { adminService } from '../../services/endpoints/adminService';
-import { SidebarLayout } from '../../components/layout';
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { adminService } from '@/services/endpoints/adminService';
+import { SidebarLayout } from '@/components/layout';
 
 export default function AdminDataExportPage() {
   const [exportType, setExportType] = useState<'members' | 'events'>('members');

@@ -29,7 +29,7 @@ export default function NotificationSettingsPage() {
 
   const fetchPreferences = async () => {
     try {
-      const response = (await apiClient.get('/app/members/me')) as {
+      const response = (await apiClient.get('/members/me')) as {
         emailNotifications: boolean;
       };
       setEmailNotifications(response.emailNotifications);
@@ -47,7 +47,7 @@ export default function NotificationSettingsPage() {
     setLoading(true);
 
     try {
-      const response = (await apiClient.patch('/app/members/me/notifications', {
+      const response = (await apiClient.patch('/members/me/notifications', {
         emailNotifications,
       })) as { success: boolean; message: string };
 

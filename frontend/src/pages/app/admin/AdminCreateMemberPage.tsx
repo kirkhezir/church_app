@@ -12,8 +12,8 @@
 
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardHeader,
@@ -21,17 +21,17 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
-import { adminService, CreateMemberResponse } from '../../services/endpoints/adminService';
-import { SidebarLayout } from '../../components/layout';
+} from '@/components/ui/select';
+import { adminService, CreateMemberResponse } from '@/services/endpoints/adminService';
+import { SidebarLayout } from '@/components/layout';
 
 export default function AdminCreateMemberPage() {
   const [formData, setFormData] = useState({

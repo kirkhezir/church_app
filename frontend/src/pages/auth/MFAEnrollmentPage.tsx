@@ -11,8 +11,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardHeader,
@@ -20,10 +20,10 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
-import { mfaService } from '../../services/endpoints/mfaService';
-import BackupCodesDisplay from '../../components/mfa/BackupCodesDisplay';
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { mfaService } from '@/services/endpoints/mfaService';
+import BackupCodesDisplay from '@/components/mfa/BackupCodesDisplay';
 
 export default function MFAEnrollmentPage() {
   const [step, setStep] = useState<'loading' | 'scan' | 'verify' | 'backup'>('loading');
