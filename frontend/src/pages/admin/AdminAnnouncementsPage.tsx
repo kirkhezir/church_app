@@ -105,11 +105,11 @@ export function AdminAnnouncementsPage() {
   }, [showArchived, currentPage]);
 
   const handleCreate = () => {
-    navigate('/admin/announcements/create');
+    navigate('/app/admin/announcements/create');
   };
 
   const handleEdit = (id: string) => {
-    navigate(`/admin/announcements/${id}/edit`);
+    navigate(`/app/admin/announcements/${id}/edit`);
   };
 
   const handleArchive = async (id: string) => {
@@ -444,7 +444,7 @@ export function AdminAnnouncementsPage() {
                                       className="h-8 w-8"
                                       onClick={() =>
                                         navigate(
-                                          `/admin/announcements/${announcement.id}/analytics`
+                                          `/app/admin/announcements/${announcement.id}/analytics`
                                         )
                                       }
                                     >
@@ -641,7 +641,7 @@ export function AdminAnnouncementsPage() {
 
   return (
     <SidebarLayout
-      breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Manage' }]}
+      breadcrumbs={[{ label: 'Announcements', href: '/app/announcements' }, { label: 'Manage' }]}
     >
       {adminContent}
 

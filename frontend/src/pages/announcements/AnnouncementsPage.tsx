@@ -37,7 +37,7 @@ export function AnnouncementsPage() {
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF';
 
   const handleViewDetails = (announcementId: string) => {
-    navigate(`/announcements/${announcementId}`);
+    navigate(`/app/announcements/${announcementId}`);
   };
 
   const handleFilterChange = (archived: boolean) => {
@@ -69,7 +69,7 @@ export function AnnouncementsPage() {
         </div>
         {isAdmin && (
           <Button
-            onClick={() => navigate('/admin/announcements')}
+            onClick={() => navigate('/app/admin/announcements')}
             variant="default"
             className="w-full sm:w-auto"
           >

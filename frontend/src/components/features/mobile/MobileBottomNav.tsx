@@ -29,21 +29,21 @@ export function MobileBottomNav({
   const navigate = useNavigate();
 
   const navItems: NavItem[] = [
-    { icon: <Home className="h-5 w-5" />, label: 'Home', path: '/dashboard' },
-    { icon: <Calendar className="h-5 w-5" />, label: 'Events', path: '/events' },
+    { icon: <Home className="h-5 w-5" />, label: 'Home', path: '/app/dashboard' },
+    { icon: <Calendar className="h-5 w-5" />, label: 'Events', path: '/app/events' },
     {
       icon: <Bell className="h-5 w-5" />,
       label: 'Alerts',
-      path: '/announcements',
+      path: '/app/announcements',
       badge: unreadNotifications,
     },
     {
       icon: <MessageSquare className="h-5 w-5" />,
       label: 'Messages',
-      path: '/messages',
+      path: '/app/messages',
       badge: unreadMessages,
     },
-    { icon: <User className="h-5 w-5" />, label: 'Profile', path: '/profile' },
+    { icon: <User className="h-5 w-5" />, label: 'Profile', path: '/app/profile' },
   ];
 
   const isActive = (path: string) => {

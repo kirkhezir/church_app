@@ -58,7 +58,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
           </div>
         </div>
 
-        <Link to="/profile">
+        <Link to="/app/profile">
           <Button variant="outline" className="w-full">
             Edit Profile
           </Button>

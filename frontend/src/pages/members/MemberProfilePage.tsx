@@ -23,7 +23,7 @@ export function MemberProfilePage() {
   });
 
   const handleSendMessage = () => {
-    navigate(`/messages/compose?to=${id}`);
+    navigate(`/app/messages/compose?to=${id}`);
   };
 
   const formatDate = (dateStr: string) => {
@@ -41,7 +41,7 @@ export function MemberProfilePage() {
   const content = (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Back Button */}
-      <Button variant="ghost" onClick={() => navigate('/members')} className="mb-6">
+      <Button variant="ghost" onClick={() => navigate('/app/members')} className="mb-6">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Directory
       </Button>
@@ -170,7 +170,7 @@ export function MemberProfilePage() {
             <p className="mt-2 text-muted-foreground">
               The member you&apos;re looking for doesn&apos;t exist or has been removed.
             </p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate('/members')}>
+            <Button variant="outline" className="mt-4" onClick={() => navigate('/app/members')}>
               Back to Directory
             </Button>
           </CardContent>

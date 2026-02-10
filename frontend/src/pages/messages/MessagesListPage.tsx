@@ -38,11 +38,11 @@ export function MessagesListPage() {
   };
 
   const handleViewMessage = (messageId: string) => {
-    navigate(`/messages/${messageId}`);
+    navigate(`/app/messages/${messageId}`);
   };
 
   const handleCompose = () => {
-    navigate('/messages/compose');
+    navigate('/app/messages/compose');
   };
 
   const handleDelete = async (messageId: string, e: React.MouseEvent) => {

@@ -33,7 +33,7 @@ export function AdminRoute({ children, allowStaff = true }: AdminRouteProps) {
 
   if (!isAuthorized) {
     // User is logged in but doesn't have required role
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app/dashboard" replace />;
   }
 
   return <>{children}</>;

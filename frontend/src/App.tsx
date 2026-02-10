@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Eagerly loaded - critical path
+// Eagerly loaded - critical path (public landing pages)
 import LandingPage from './pages/public/LandingPage';
 import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
 import VisitPage from './pages/public/VisitPage';
@@ -9,31 +9,40 @@ import SermonsPage from './pages/public/SermonsPage';
 import AboutPage from './pages/public/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 
-// Lazy-loaded public pages
+// Lazy-loaded public landing pages
 const GalleryPage = lazy(() => import('./pages/public/GalleryPage'));
 const MinistriesPage = lazy(() => import('./pages/public/MinistriesPage'));
 const MinistryDetailPage = lazy(() => import('./pages/public/MinistryDetailPage'));
-const EventsPage = lazy(() => import('./pages/public/EventsPage'));
-const EventDetailPublicPage = lazy(() => import('./pages/public/EventDetailPage'));
+const PublicEventsPage = lazy(() => import('./pages/public/EventsPage'));
+const PublicEventDetailPage = lazy(() => import('./pages/public/EventDetailPage'));
 const PrayerPage = lazy(() => import('./pages/public/PrayerPage'));
 const GivePage = lazy(() => import('./pages/public/GivePage'));
 const BlogPage = lazy(() => import('./pages/public/BlogPage'));
 const ResourcesPage = lazy(() => import('./pages/public/ResourcesPage'));
+
+// Route guards
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { AdminRoute } from './components/routing/AdminRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
 import { ScrollToTop } from './components/common/ScrollToTop';
 
-// Lazy loaded pages - code splitting for better performance
+// Lazy loaded auth pages
 const PasswordResetRequestPage = lazy(() => import('./pages/auth/PasswordResetRequestPage'));
 const PasswordResetPage = lazy(() => import('./pages/auth/PasswordResetPage'));
 const MFAEnrollmentPage = lazy(() => import('./pages/auth/MFAEnrollmentPage'));
 const MFAVerificationPage = lazy(() => import('./pages/auth/MFAVerificationPage'));
+
+// ============================================================
+// Private App Pages (authenticated church management app)
+// All routes under /app/* require authentication
+// ============================================================
+
+// Dashboard pages
 const MemberDashboard = lazy(() => import('./pages/dashboard/MemberDashboard'));
 const EditProfilePage = lazy(() => import('./pages/dashboard/EditProfilePage'));
 const NotificationSettingsPage = lazy(() => import('./pages/dashboard/NotificationSettingsPage'));
 
-// Event pages
+// Event management pages (private)
 const EventsListPage = lazy(() =>
   import('./pages/events/EventsListPage').then((m) => ({ default: m.EventsListPage }))
 );
@@ -50,7 +59,7 @@ const RSVPListPage = lazy(() =>
   import('./pages/events/RSVPListPage').then((m) => ({ default: m.RSVPListPage }))
 );
 
-// Announcement pages
+// Announcement management pages (private)
 const AnnouncementsPage = lazy(() =>
   import('./pages/announcements/AnnouncementsPage').then((m) => ({ default: m.AnnouncementsPage }))
 );
@@ -75,7 +84,7 @@ const AnnouncementAnalyticsPage = lazy(() =>
   }))
 );
 
-// Admin pages
+// Admin pages (private - admin only)
 const AdminAnnouncementsPage = lazy(() =>
   import('./pages/admin/AdminAnnouncementsPage').then((m) => ({
     default: m.AdminAnnouncementsPage,
@@ -89,10 +98,10 @@ const AdminHealthPage = lazy(() => import('./pages/admin/AdminHealthPage'));
 const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 
-// Settings page
+// Settings page (private)
 const SettingsPage = lazy(() => import('./pages/settings/SettingsPage'));
 
-// Member and Message pages
+// Member and Message pages (private)
 const MemberDirectoryPage = lazy(() =>
   import('./pages/members').then((m) => ({ default: m.MemberDirectoryPage }))
 );
@@ -141,7 +150,12 @@ const NotFoundPage = () => (
 
 /**
  * Main App Component with Routing
- * Uses React.lazy for code splitting and better performance
+ *
+ * Route architecture:
+ * - Public landing pages: / (root paths) — no authentication required
+ * - Auth pages: /login, /register, etc. — redirect to /app/dashboard if already logged in
+ * - Private app pages: /app/* — all require authentication, use SidebarLayout
+ * - Admin pages: /app/admin/* — require ADMIN role
  */
 const App: React.FC = () => {
   return (
@@ -151,46 +165,31 @@ const App: React.FC = () => {
 
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Public Landing Page (no authentication required) */}
+          {/* ============================================================ */}
+          {/* PUBLIC LANDING PAGES (no authentication required)            */}
+          {/* These use PublicLayout with church branding                   */}
+          {/* ============================================================ */}
+
           <Route path="/" element={<LandingPage />} />
-
-          {/* About Page - Church info and leadership */}
           <Route path="/about" element={<AboutPage />} />
-
-          {/* Privacy Policy Page */}
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
-
-          {/* Visit Page - First time visitors */}
           <Route path="/visit" element={<VisitPage />} />
-
-          {/* Sermons Archive */}
           <Route path="/sermons" element={<SermonsPage />} />
-
-          {/* Gallery - Photo albums */}
           <Route path="/gallery" element={<GalleryPage />} />
-
-          {/* Ministries */}
           <Route path="/ministries" element={<MinistriesPage />} />
           <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
-
-          {/* Public Events Calendar */}
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/events/:id" element={<EventDetailPublicPage />} />
-
-          {/* Prayer Requests */}
+          <Route path="/events" element={<PublicEventsPage />} />
+          <Route path="/events/:id" element={<PublicEventDetailPage />} />
           <Route path="/prayer" element={<PrayerPage />} />
-
-          {/* Give/Donate */}
           <Route path="/give" element={<GivePage />} />
-
-          {/* Blog/News */}
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/news" element={<BlogPage />} />
-
-          {/* Resources */}
           <Route path="/resources" element={<ResourcesPage />} />
 
-          {/* Public Routes */}
+          {/* ============================================================ */}
+          {/* AUTH PAGES (redirect to app if already authenticated)         */}
+          {/* ============================================================ */}
+
           <Route
             path="/login"
             element={
@@ -223,8 +222,6 @@ const App: React.FC = () => {
               </PublicRoute>
             }
           />
-
-          {/* MFA Routes */}
           <Route
             path="/mfa-verify"
             element={
@@ -242,47 +239,14 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Public Events Page (no authentication required, but RSVP requires login) */}
-          <Route path="/events" element={<EventsListPage />} />
-          <Route path="/events/:id" element={<EventDetailPage />} />
+          {/* ============================================================ */}
+          {/* PRIVATE APP PAGES (all under /app/*, require authentication) */}
+          {/* These use SidebarLayout with app navigation                   */}
+          {/* ============================================================ */}
 
-          {/* Event Management Routes (ADMIN/STAFF only - protected in components) */}
+          {/* Dashboard */}
           <Route
-            path="/events/create"
-            element={
-              <PrivateRoute>
-                <EventCreatePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/events/create"
-            element={
-              <AdminRoute>
-                <EventCreatePage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/events/:id/edit"
-            element={
-              <AdminRoute>
-                <EventEditPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/events/:id/rsvps"
-            element={
-              <AdminRoute>
-                <RSVPListPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Private Routes */}
-          <Route
-            path="/dashboard"
+            path="/app/dashboard"
             element={
               <PrivateRoute>
                 <MemberDashboard />
@@ -290,9 +254,51 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Announcements Routes */}
+          {/* Event Management */}
           <Route
-            path="/announcements"
+            path="/app/events"
+            element={
+              <PrivateRoute>
+                <EventsListPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/app/events/create"
+            element={
+              <AdminRoute>
+                <EventCreatePage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/events/:id"
+            element={
+              <PrivateRoute>
+                <EventDetailPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/app/events/:id/edit"
+            element={
+              <AdminRoute>
+                <EventEditPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/events/:id/rsvps"
+            element={
+              <AdminRoute>
+                <RSVPListPage />
+              </AdminRoute>
+            }
+          />
+
+          {/* Announcements */}
+          <Route
+            path="/app/announcements"
             element={
               <PrivateRoute>
                 <AnnouncementsPage />
@@ -300,7 +306,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/announcements/:id"
+            path="/app/announcements/:id"
             element={
               <PrivateRoute>
                 <AnnouncementDetailPage />
@@ -308,111 +314,9 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Admin Announcement Routes */}
+          {/* Member Directory */}
           <Route
-            path="/admin/announcements"
-            element={
-              <AdminRoute>
-                <AdminAnnouncementsPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/announcements/create"
-            element={
-              <AdminRoute>
-                <AnnouncementCreatePage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/announcements/:id/edit"
-            element={
-              <AdminRoute>
-                <AnnouncementEditPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/announcements/:id/analytics"
-            element={
-              <AdminRoute>
-                <AnnouncementAnalyticsPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin Member Management Routes */}
-          <Route
-            path="/admin/members"
-            element={
-              <AdminRoute>
-                <AdminMemberListPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/members/create"
-            element={
-              <AdminRoute>
-                <AdminCreateMemberPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin Audit Logs */}
-          <Route
-            path="/admin/audit-logs"
-            element={
-              <AdminRoute>
-                <AdminAuditLogsPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin Data Export */}
-          <Route
-            path="/admin/export"
-            element={
-              <AdminRoute>
-                <AdminDataExportPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin System Health */}
-          <Route
-            path="/admin/health"
-            element={
-              <AdminRoute>
-                <AdminHealthPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin Reports */}
-          <Route
-            path="/admin/reports"
-            element={
-              <AdminRoute>
-                <AdminReportsPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Admin Analytics */}
-          <Route
-            path="/admin/analytics"
-            element={
-              <AdminRoute>
-                <AdminAnalyticsPage />
-              </AdminRoute>
-            }
-          />
-
-          {/* Member Directory Routes */}
-          <Route
-            path="/members"
+            path="/app/members"
             element={
               <PrivateRoute>
                 <MemberDirectoryPage />
@@ -420,7 +324,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/members/:id"
+            path="/app/members/:id"
             element={
               <PrivateRoute>
                 <MemberProfilePage />
@@ -428,9 +332,9 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Messaging Routes */}
+          {/* Messaging */}
           <Route
-            path="/messages"
+            path="/app/messages"
             element={
               <PrivateRoute>
                 <MessagesListPage />
@@ -438,7 +342,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/messages/compose"
+            path="/app/messages/compose"
             element={
               <PrivateRoute>
                 <ComposeMessagePage />
@@ -446,7 +350,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/messages/:id"
+            path="/app/messages/:id"
             element={
               <PrivateRoute>
                 <MessageDetailPage />
@@ -454,9 +358,9 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Profile Settings */}
+          {/* Profile & Settings */}
           <Route
-            path="/profile"
+            path="/app/profile"
             element={
               <PrivateRoute>
                 <EditProfilePage />
@@ -464,7 +368,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/notifications"
+            path="/app/notifications"
             element={
               <PrivateRoute>
                 <NotificationSettingsPage />
@@ -472,11 +376,104 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/settings"
+            path="/app/settings"
             element={
               <PrivateRoute>
                 <SettingsPage />
               </PrivateRoute>
+            }
+          />
+
+          {/* ============================================================ */}
+          {/* ADMIN PAGES (under /app/admin/*, require ADMIN role)          */}
+          {/* ============================================================ */}
+
+          <Route
+            path="/app/admin/announcements"
+            element={
+              <AdminRoute>
+                <AdminAnnouncementsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/announcements/create"
+            element={
+              <AdminRoute>
+                <AnnouncementCreatePage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/announcements/:id/edit"
+            element={
+              <AdminRoute>
+                <AnnouncementEditPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/announcements/:id/analytics"
+            element={
+              <AdminRoute>
+                <AnnouncementAnalyticsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/members"
+            element={
+              <AdminRoute>
+                <AdminMemberListPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/members/create"
+            element={
+              <AdminRoute>
+                <AdminCreateMemberPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/audit-logs"
+            element={
+              <AdminRoute>
+                <AdminAuditLogsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/export"
+            element={
+              <AdminRoute>
+                <AdminDataExportPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/health"
+            element={
+              <AdminRoute>
+                <AdminHealthPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/reports"
+            element={
+              <AdminRoute>
+                <AdminReportsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/app/admin/analytics"
+            element={
+              <AdminRoute>
+                <AdminAnalyticsPage />
+              </AdminRoute>
             }
           />
 

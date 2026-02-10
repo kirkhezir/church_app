@@ -25,7 +25,7 @@ export function AnnouncementDetailPage() {
   const { announcement, loading, error } = useAnnouncement(id);
 
   const handleBack = () => {
-    navigate('/announcements');
+    navigate('/app/announcements');
   };
 
   if (loading) {
@@ -38,7 +38,7 @@ export function AnnouncementDetailPage() {
     );
     return (
       <SidebarLayout
-        breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Details' }]}
+        breadcrumbs={[{ label: 'Announcements', href: '/app/announcements' }, { label: 'Details' }]}
       >
         {loadingContent}
       </SidebarLayout>
@@ -59,7 +59,7 @@ export function AnnouncementDetailPage() {
     );
     return (
       <SidebarLayout
-        breadcrumbs={[{ label: 'Announcements', href: '/announcements' }, { label: 'Details' }]}
+        breadcrumbs={[{ label: 'Announcements', href: '/app/announcements' }, { label: 'Details' }]}
       >
         {errorContent}
       </SidebarLayout>
@@ -124,7 +124,7 @@ export function AnnouncementDetailPage() {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Announcements', href: '/announcements' },
+        { label: 'Announcements', href: '/app/announcements' },
         { label: announcement.title },
       ]}
     >

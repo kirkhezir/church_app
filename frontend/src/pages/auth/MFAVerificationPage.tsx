@@ -73,7 +73,7 @@ export default function MFAVerificationPage() {
 
       // Complete the login process
       completeMFALogin(response);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch (err: any) {
       setError(err.message || 'Invalid code. Please try again.');
     } finally {

@@ -58,7 +58,7 @@ export default function EditProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = (await apiClient.get('/members/me')) as ProfileData;
+      const response = (await apiClient.get('/app/members/me')) as ProfileData;
       setFormData(response);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load profile');
@@ -74,7 +74,7 @@ export default function EditProfilePage() {
     setLoading(true);
 
     try {
-      const response = (await apiClient.patch('/members/me', {
+      const response = (await apiClient.patch('/app/members/me', {
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
@@ -277,7 +277,7 @@ export default function EditProfilePage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/app/dashboard')}
                   disabled={loading}
                 >
                   Cancel

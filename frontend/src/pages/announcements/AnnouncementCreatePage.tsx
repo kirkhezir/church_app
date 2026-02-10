@@ -38,7 +38,7 @@ export function AnnouncementCreatePage() {
 
       // Redirect to admin announcements page after short delay
       setTimeout(() => {
-        navigate('/admin/announcements');
+        navigate('/app/admin/announcements');
       }, 1500);
     } catch (error) {
       setIsLoading(false);
@@ -47,7 +47,7 @@ export function AnnouncementCreatePage() {
   };
 
   const handleCancel = () => {
-    navigate('/admin/announcements');
+    navigate('/app/admin/announcements');
   };
 
   const createContent = (
@@ -89,8 +89,8 @@ export function AnnouncementCreatePage() {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Announcements', href: '/announcements' },
-        { label: 'Manage', href: '/admin/announcements' },
+        { label: 'Announcements', href: '/app/announcements' },
+        { label: 'Manage', href: '/app/admin/announcements' },
         { label: 'Create' },
       ]}
     >

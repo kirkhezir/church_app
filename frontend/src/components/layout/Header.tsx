@@ -40,32 +40,32 @@ export const Header: React.FC = () => {
             {isAuthenticated && (
               <>
                 <Link
-                  to="/dashboard"
+                  to="/app/dashboard"
                   className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Dashboard
                 </Link>
                 <Link
-                  to="/events"
+                  to="/app/events"
                   className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Events
                 </Link>
                 <Link
-                  to="/announcements"
+                  to="/app/announcements"
                   className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Announcements
                 </Link>
                 <Link
-                  to="/messages"
+                  to="/app/messages"
                   className="font-medium text-gray-600 transition hover:text-blue-600"
                 >
                   Messages
                 </Link>
                 {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
                   <Link
-                    to="/members"
+                    to="/app/members"
                     className="font-medium text-gray-600 transition hover:text-blue-600"
                   >
                     Members
@@ -88,7 +88,7 @@ export const Header: React.FC = () => {
                     <p className="text-xs capitalize text-gray-500">{user.role.toLowerCase()}</p>
                   </div>
                   <Link
-                    to="/profile"
+                    to="/app/profile"
                     className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition hover:bg-gray-300"
                   >
                     <span className="font-semibold text-gray-700">

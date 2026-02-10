@@ -51,20 +51,20 @@ export function EventsListPage() {
   };
 
   const handleViewDetails = (eventId: string) => {
-    navigate(`/events/${eventId}`);
+    navigate(`/app/events/${eventId}`);
   };
 
   const handleRSVP = async (eventId: string) => {
     if (!user) {
       // Redirect to login if not authenticated
-      navigate('/login', { state: { from: `/events/${eventId}` } });
+      navigate('/login', { state: { from: `/app/events/${eventId}` } });
       return;
     }
 
     try {
       await rsvpToEvent(eventId);
       // Show success message or navigate to event details
-      navigate(`/events/${eventId}`);
+      navigate(`/app/events/${eventId}`);
     } catch (err) {
       // Error is already handled by the hook
       console.error('RSVP failed:', err);
@@ -72,13 +72,12 @@ export function EventsListPage() {
   };
 
   const handleCreateEvent = () => {
-    navigate('/events/create');
+    navigate('/app/events/create');
   };
 
   const canCreateEvents = user && (user.role === 'ADMIN' || user.role === 'STAFF');
-  const isAuthenticated = !!user;
 
-  // Event list content (used in both authenticated and public views)
+  // Event list content — always rendered inside SidebarLayout (behind PrivateRoute)
   const eventListContent = (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Header */}
@@ -135,7 +134,7 @@ export function EventsListPage() {
             category: e.category,
             location: e.location,
           }))}
-          onEventClick={(eventId) => navigate(`/events/${eventId}`)}
+          onEventClick={(eventId) => navigate(`/app/events/${eventId}`)}
           onDateClick={(date) => {
             setStartDate(date.toISOString().split('T')[0]);
             setViewMode('list');
@@ -197,7 +196,7 @@ export function EventsListPage() {
                       event={event}
                       onViewDetails={handleViewDetails}
                       onRSVP={handleRSVP}
-                      showRSVPButton={isAuthenticated}
+                      showRSVPButton={true}
                     />
                   ))}
                 </div>
@@ -209,11 +208,6 @@ export function EventsListPage() {
     </div>
   );
 
-  // Wrap with SidebarLayout if user is authenticated
-  if (isAuthenticated) {
-    return <SidebarLayout breadcrumbs={[{ label: 'Events' }]}>{eventListContent}</SidebarLayout>;
-  }
-
-  // Return plain content for public/unauthenticated users
-  return eventListContent;
+  // Always wrap with SidebarLayout — this page is always behind PrivateRoute at /app/events
+  return <SidebarLayout breadcrumbs={[{ label: 'Events' }]}>{eventListContent}</SidebarLayout>;
 }

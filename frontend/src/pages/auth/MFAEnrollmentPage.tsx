@@ -81,7 +81,7 @@ export default function MFAEnrollmentPage() {
   };
 
   const handleComplete = () => {
-    navigate('/dashboard');
+    navigate('/app/dashboard');
   };
 
   if (step === 'loading') {
@@ -180,7 +180,7 @@ export default function MFAEnrollmentPage() {
             {loading ? 'Verifying...' : 'Verify and Enable MFA'}
           </Button>
 
-          <Button variant="ghost" onClick={() => navigate('/dashboard')} className="w-full">
+          <Button variant="ghost" onClick={() => navigate('/app/dashboard')} className="w-full">
             Skip for Now
           </Button>
         </CardFooter>

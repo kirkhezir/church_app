@@ -56,8 +56,8 @@ export function AnnouncementAnalyticsPage() {
     return (
       <SidebarLayout
         breadcrumbs={[
-          { label: 'Announcements', href: '/announcements' },
-          { label: 'Manage', href: '/admin/announcements' },
+          { label: 'Announcements', href: '/app/announcements' },
+          { label: 'Manage', href: '/app/admin/announcements' },
           { label: 'Analytics' },
         ]}
       >
@@ -78,8 +78,8 @@ export function AnnouncementAnalyticsPage() {
     return (
       <SidebarLayout
         breadcrumbs={[
-          { label: 'Announcements', href: '/announcements' },
-          { label: 'Manage', href: '/admin/announcements' },
+          { label: 'Announcements', href: '/app/announcements' },
+          { label: 'Manage', href: '/app/admin/announcements' },
           { label: 'Analytics' },
         ]}
       >
@@ -87,7 +87,7 @@ export function AnnouncementAnalyticsPage() {
           <Alert variant="destructive">
             <AlertDescription>{error || 'Analytics data not available'}</AlertDescription>
           </Alert>
-          <Button className="mt-4" onClick={() => navigate('/admin/announcements')}>
+          <Button className="mt-4" onClick={() => navigate('/app/admin/announcements')}>
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
             Back to Announcements
           </Button>
@@ -99,8 +99,8 @@ export function AnnouncementAnalyticsPage() {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Announcements', href: '/announcements' },
-        { label: 'Manage', href: '/admin/announcements' },
+        { label: 'Announcements', href: '/app/announcements' },
+        { label: 'Manage', href: '/app/admin/announcements' },
         { label: 'Analytics' },
       ]}
     >
@@ -110,7 +110,7 @@ export function AnnouncementAnalyticsPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/admin/announcements')}
+            onClick={() => navigate('/app/admin/announcements')}
             className="mb-4"
           >
             <ArrowLeftIcon className="mr-2 h-4 w-4" />

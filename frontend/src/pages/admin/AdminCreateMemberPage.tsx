@@ -79,7 +79,7 @@ export default function AdminCreateMemberPage() {
       <SidebarLayout
         breadcrumbs={[
           { label: 'Admin' },
-          { label: 'Members', href: '/admin/members' },
+          { label: 'Members', href: '/app/admin/members' },
           { label: 'Create' },
         ]}
       >
@@ -139,7 +139,7 @@ export default function AdminCreateMemberPage() {
               >
                 Add Another
               </Button>
-              <Link to="/admin/members" className="flex-1">
+              <Link to="/app/admin/members" className="flex-1">
                 <Button className="w-full">View All Members</Button>
               </Link>
             </CardFooter>
@@ -153,7 +153,7 @@ export default function AdminCreateMemberPage() {
     <SidebarLayout
       breadcrumbs={[
         { label: 'Admin' },
-        { label: 'Members', href: '/admin/members' },
+        { label: 'Members', href: '/app/admin/members' },
         { label: 'Create' },
       ]}
     >
@@ -246,7 +246,7 @@ export default function AdminCreateMemberPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate('/admin/members')}
+                onClick={() => navigate('/app/admin/members')}
                 className="flex-1"
               >
                 Cancel

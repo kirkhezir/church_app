@@ -82,7 +82,7 @@ export const RSVPListPage: React.FC = () => {
 
   if (eventLoading) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'RSVPs' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'RSVPs' }]}>
         <div className="container mx-auto px-4 py-8">
           <Skeleton className="mb-6 h-8 w-32" />
           <Card>
@@ -100,9 +100,9 @@ export const RSVPListPage: React.FC = () => {
 
   if (eventError || !event) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'RSVPs' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'RSVPs' }]}>
         <div className="container mx-auto px-4 py-8">
-          <Button variant="ghost" onClick={() => navigate('/events')}>
+          <Button variant="ghost" onClick={() => navigate('/app/events')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Events
           </Button>
@@ -123,19 +123,19 @@ export const RSVPListPage: React.FC = () => {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Events', href: '/events' },
-        { label: event.title, href: `/events/${id}` },
+        { label: 'Events', href: '/app/events' },
+        { label: event.title, href: `/app/events/${id}` },
         { label: 'RSVPs' },
       ]}
     >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate(`/events/${id}`)}>
+          <Button variant="ghost" onClick={() => navigate(`/app/events/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Event
           </Button>
-          <Button onClick={() => navigate(`/events/${id}/edit`)}>Edit Event</Button>
+          <Button onClick={() => navigate(`/app/events/${id}/edit`)}>Edit Event</Button>
         </div>
 
         {/* Event Info Card */}

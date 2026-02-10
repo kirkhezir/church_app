@@ -28,7 +28,7 @@ export const EventCreatePage: React.FC = () => {
     try {
       const newEvent = await eventService.createEvent(data);
       // Navigate to the new event detail page
-      navigate(`/events/${newEvent.id}`);
+      navigate(`/app/events/${newEvent.id}`);
     } catch (error) {
       console.error('Failed to create event:', error);
       setIsSubmitting(false);
@@ -37,15 +37,15 @@ export const EventCreatePage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    navigate('/events');
+    navigate('/app/events');
   };
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'Create Event' }]}>
+    <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Create Event' }]}>
       <div className="container mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <Button variant="ghost" onClick={() => navigate('/events')}>
+          <Button variant="ghost" onClick={() => navigate('/app/events')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Events
           </Button>

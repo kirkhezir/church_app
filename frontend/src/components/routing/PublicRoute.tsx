@@ -36,7 +36,7 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
   // Redirect to dashboard if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app/dashboard" replace />;
   }
 
   // Render public content

@@ -53,7 +53,7 @@ export default function LoginPage() {
       }
 
       // Redirect to dashboard after successful login
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {

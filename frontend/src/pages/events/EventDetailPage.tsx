@@ -50,18 +50,12 @@ export const EventDetailPage: React.FC = () => {
     refetch();
   });
 
-  const isAuthenticated = !!user;
-
-  // Helper to wrap content with SidebarLayout if authenticated
+  // Always wrap with SidebarLayout — this page is behind PrivateRoute at /app/events/:id
   const wrapWithLayout = (content: React.ReactNode) => {
-    if (isAuthenticated && event) {
-      return (
-        <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: event.title }]}>
-          {content}
-        </SidebarLayout>
-      );
-    }
-    return content;
+    const breadcrumbs = event
+      ? [{ label: 'Events', href: '/app/events' }, { label: event.title }]
+      : [{ label: 'Events', href: '/app/events' }];
+    return <SidebarLayout breadcrumbs={breadcrumbs}>{content}</SidebarLayout>;
   };
 
   if (loading) {
@@ -83,7 +77,7 @@ export const EventDetailPage: React.FC = () => {
   if (error || !event) {
     return wrapWithLayout(
       <div className="container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate('/events')} className="mb-6">
+        <Button variant="ghost" onClick={() => navigate('/app/events')} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Events
         </Button>
@@ -97,7 +91,7 @@ export const EventDetailPage: React.FC = () => {
 
   const handleRSVP = async () => {
     if (!user) {
-      navigate('/login', { state: { from: `/events/${id}` } });
+      navigate('/login', { state: { from: `/app/events/${id}` } });
       return;
     }
 
@@ -119,12 +113,12 @@ export const EventDetailPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate('/events')}>
+        <Button variant="ghost" onClick={() => navigate('/app/events')}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Events
         </Button>
         {canEdit && !isCancelled && (
-          <Button onClick={() => navigate(`/events/${event.id}/edit`)}>
+          <Button onClick={() => navigate(`/app/events/${event.id}/edit`)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit Event
           </Button>
@@ -281,7 +275,7 @@ export const EventDetailPage: React.FC = () => {
                     Please log in to RSVP for this event
                   </p>
                   <Button
-                    onClick={() => navigate('/login', { state: { from: `/events/${id}` } })}
+                    onClick={() => navigate('/login', { state: { from: `/app/events/${id}` } })}
                     className="w-full"
                   >
                     Log In to RSVP
@@ -292,7 +286,7 @@ export const EventDetailPage: React.FC = () => {
               {canEdit && !isCancelled && (
                 <Button
                   variant="outline"
-                  onClick={() => navigate(`/events/${event.id}/rsvps`)}
+                  onClick={() => navigate(`/app/events/${event.id}/rsvps`)}
                   className="w-full"
                 >
                   <Users className="mr-2 h-4 w-4" />

@@ -8,7 +8,7 @@ import { ReportDownloadPanel } from '@/components/features/reports/ReportDownloa
 import { SidebarLayout } from '@/components/layout';
 
 export default function AdminReportsPage() {
-  const breadcrumbs = [{ label: 'Admin', href: '/admin/members' }, { label: 'Reports' }];
+  const breadcrumbs = [{ label: 'Admin', href: '/app/admin/members' }, { label: 'Reports' }];
 
   return (
     <SidebarLayout breadcrumbs={breadcrumbs}>

@@ -40,23 +40,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navMain = [
     {
       title: 'Dashboard',
-      url: '/dashboard',
+      url: '/app/dashboard',
       icon: Home,
       isActive: true,
     },
     {
       title: 'Events',
-      url: '/events',
+      url: '/app/events',
       icon: Calendar,
     },
     {
       title: 'Announcements',
-      url: '/announcements',
+      url: '/app/announcements',
       icon: Megaphone,
     },
     {
       title: 'Messages',
-      url: '/messages',
+      url: '/app/messages',
       icon: Mail,
     },
   ];
@@ -65,7 +65,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   if (user.role === 'ADMIN' || user.role === 'STAFF') {
     navMain.push({
       title: 'Members',
-      url: '/members',
+      url: '/app/members',
       icon: Users,
     });
   }
@@ -76,32 +76,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ? [
           {
             title: 'Admin Panel',
-            url: '/admin/members',
+            url: '/app/admin/members',
             icon: Shield,
           },
           {
             title: 'Analytics',
-            url: '/admin/analytics',
+            url: '/app/admin/analytics',
             icon: BarChart3,
           },
           {
             title: 'Reports',
-            url: '/admin/reports',
+            url: '/app/admin/reports',
             icon: FileText,
           },
           {
             title: 'System Health',
-            url: '/admin/health',
+            url: '/app/admin/health',
             icon: Activity,
           },
           {
             title: 'Audit Logs',
-            url: '/admin/audit-logs',
+            url: '/app/admin/audit-logs',
             icon: FileText,
           },
           {
             title: 'Data Export',
-            url: '/admin/export',
+            url: '/app/admin/export',
             icon: Download,
           },
         ]
@@ -111,17 +111,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const settingsItems = [
     {
       title: 'Profile',
-      url: '/profile',
+      url: '/app/profile',
       icon: User,
     },
     {
       title: 'Notifications',
-      url: '/notifications',
+      url: '/app/notifications',
       icon: Bell,
     },
     {
       title: 'Settings',
-      url: '/settings',
+      url: '/app/settings',
       icon: Settings,
     },
   ];
@@ -139,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/dashboard">
+              <a href="/app/dashboard">
                 <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-white">
                   <img
                     src="/church-logo.png"

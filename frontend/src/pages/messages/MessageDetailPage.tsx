@@ -30,7 +30,7 @@ export function MessageDetailPage() {
 
   const handleReply = () => {
     if (message && message.sender) {
-      navigate(`/messages/compose?to=${message.sender.id}&subject=Re: ${message.subject}`);
+      navigate(`/app/messages/compose?to=${message.sender.id}&subject=Re: ${message.subject}`);
     }
   };
 
@@ -38,7 +38,7 @@ export function MessageDetailPage() {
     if (confirm('Are you sure you want to delete this message?')) {
       try {
         await deleteMessage(id || '');
-        navigate('/messages');
+        navigate('/app/messages');
       } catch (err) {
         console.error('Failed to delete message:', err);
       }
@@ -65,7 +65,7 @@ export function MessageDetailPage() {
   const content = (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Back Button */}
-      <Button variant="ghost" onClick={() => navigate('/messages')} className="mb-6">
+      <Button variant="ghost" onClick={() => navigate('/app/messages')} className="mb-6">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Messages
       </Button>
@@ -185,7 +185,7 @@ export function MessageDetailPage() {
             <p className="mt-2 text-muted-foreground">
               This message doesn&apos;t exist or has been deleted.
             </p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate('/messages')}>
+            <Button variant="outline" className="mt-4" onClick={() => navigate('/app/messages')}>
               Back to Messages
             </Button>
           </CardContent>

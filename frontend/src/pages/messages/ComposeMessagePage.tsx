@@ -88,7 +88,7 @@ export function ComposeMessagePage() {
         subject: subject.trim(),
         body: body.trim(),
       });
-      navigate('/messages?folder=sent');
+      navigate('/app/messages?folder=sent');
     } catch (err) {
       console.error('Failed to send message:', err);
     }
@@ -101,7 +101,7 @@ export function ComposeMessagePage() {
   const content = (
     <div className="container mx-auto max-w-2xl px-4 py-8">
       {/* Back Button */}
-      <Button variant="ghost" onClick={() => navigate('/messages')} className="mb-6">
+      <Button variant="ghost" onClick={() => navigate('/app/messages')} className="mb-6">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Messages
       </Button>
@@ -218,7 +218,7 @@ export function ComposeMessagePage() {
 
             {/* Submit Button */}
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => navigate('/messages')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/app/messages')}>
                 Cancel
               </Button>
               <Button

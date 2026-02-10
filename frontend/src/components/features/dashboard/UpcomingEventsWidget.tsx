@@ -41,7 +41,7 @@ export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Upcoming Events</CardTitle>
-        <Link to="/events">
+        <Link to="/app/events">
           <Button variant="ghost" size="sm">
             View All
           </Button>

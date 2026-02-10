@@ -62,7 +62,7 @@ export default function MemberDashboard() {
         setLoading(true);
         setError(null);
 
-        const response = await apiClient.get('/members/dashboard');
+        const response = await apiClient.get('/app/members/dashboard');
         setDashboard(response as unknown as DashboardData);
       } catch (err) {
         console.error('Failed to fetch dashboard:', err);

@@ -108,12 +108,12 @@ export function MemberDirectoryPage() {
   };
 
   const handleViewProfile = (memberId: string) => {
-    navigate(`/members/${memberId}`);
+    navigate(`/app/members/${memberId}`);
   };
 
   const handleSendMessage = (memberId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/messages/compose?to=${memberId}`);
+    navigate(`/app/messages/compose?to=${memberId}`);
   };
 
   const formatDate = (dateStr: string) => {

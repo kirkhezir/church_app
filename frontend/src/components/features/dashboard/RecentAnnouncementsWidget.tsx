@@ -54,7 +54,7 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle>Recent Announcements</CardTitle>
-        <Link to="/announcements">
+        <Link to="/app/announcements">
           <Button variant="ghost" size="sm">
             View All
           </Button>

@@ -35,7 +35,7 @@ export const EventEditPage: React.FC = () => {
   // Check if event is cancelled (cannot edit cancelled events)
   useEffect(() => {
     if (event && event.cancelledAt) {
-      navigate(`/events/${id}`);
+      navigate(`/app/events/${id}`);
     }
   }, [event, id, navigate]);
 
@@ -46,7 +46,7 @@ export const EventEditPage: React.FC = () => {
     try {
       await eventService.updateEvent(id, data);
       // Navigate back to event detail page
-      navigate(`/events/${id}`);
+      navigate(`/app/events/${id}`);
     } catch (error) {
       console.error('Failed to update event:', error);
       setIsSubmitting(false);
@@ -55,12 +55,12 @@ export const EventEditPage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/events/${id}`);
+    navigate(`/app/events/${id}`);
   };
 
   if (loading) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'Edit Event' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}>
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <Skeleton className="mb-6 h-8 w-32" />
           <Card>
@@ -83,9 +83,9 @@ export const EventEditPage: React.FC = () => {
 
   if (error || !event) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/events' }, { label: 'Edit Event' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}>
         <div className="container mx-auto max-w-4xl px-4 py-8">
-          <Button variant="ghost" onClick={() => navigate('/events')}>
+          <Button variant="ghost" onClick={() => navigate('/app/events')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Events
           </Button>
@@ -101,15 +101,15 @@ export const EventEditPage: React.FC = () => {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Events', href: '/events' },
-        { label: event.title, href: `/events/${id}` },
+        { label: 'Events', href: '/app/events' },
+        { label: event.title, href: `/app/events/${id}` },
         { label: 'Edit' },
       ]}
     >
       <div className="container mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <Button variant="ghost" onClick={() => navigate(`/events/${id}`)}>
+          <Button variant="ghost" onClick={() => navigate(`/app/events/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Event
           </Button>
