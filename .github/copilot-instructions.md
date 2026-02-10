@@ -147,6 +147,16 @@ npx prisma generate          # Regenerate Prisma Client after schema changes
 
 ## 📝 Code Conventions
 
+## ✅ Coding Principles
+
+- DRY: Extract shared logic into use cases or services (e.g., API calls belong in `frontend/src/services/endpoints`, not duplicated in pages).
+- KISS: Keep controllers thin and linear (see `backend/src/presentation/controllers/*` calling a single use case and returning JSON).
+- YAGNI: Do not introduce new layers or abstractions unless a feature actually requires them (prefer a new use case over a new service layer).
+- SoC: Respect boundaries between `domain` → `application` → `infrastructure` → `presentation`; avoid importing Prisma or Express types into `domain`.
+- SRP: One use case per file (e.g., `backend/src/application/useCases/createEvent.ts`); avoid mixing read/write concerns.
+- Dependency inversion: Use interfaces from `backend/src/domain/interfaces` in use cases; concrete repositories live in `backend/src/infrastructure/database/repositories`.
+- Favor explicitness: Prefer named flows like `AuthenticateUser`, `EnrollMFA`, `RSVPToEvent` over clever one-liners in auth/MFA paths.
+
 ### Backend Patterns
 
 **Use Cases** - Single-responsibility business logic:
