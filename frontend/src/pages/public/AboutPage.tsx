@@ -10,7 +10,6 @@ import {
   Church,
   Heart,
   BookOpen,
-  Users,
   Award,
   Calendar,
   Mail,
@@ -18,6 +17,12 @@ import {
   ChevronRight,
   Quote,
   Star,
+  ShieldCheck,
+  GraduationCap,
+  Sparkles,
+  HeartHandshake,
+  Music,
+  type LucideIcon,
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -60,11 +65,21 @@ function getAvatarUrl(name: string, size = 80): string {
   return `https://api.dicebear.com/9.x/initials/svg?seed=${seed}&size=${size}&backgroundColor=1e40af,1d4ed8,2563eb,3b82f6,60a5fa&backgroundType=gradientLinear&fontFamily=Arial&fontWeight=600&textColor=ffffff`;
 }
 
-/** Church officers organized by department. */
-const CHURCH_OFFICERS_BY_DEPT = [
+/** Church officers organized by department with unique icons and accent colors. */
+const CHURCH_OFFICERS_BY_DEPT: {
+  department: string;
+  departmentThai: string;
+  icon: LucideIcon;
+  accent: string;
+  iconBg: string;
+  members: { name: string; nameThai: string; role: string; roleThai: string }[];
+}[] = [
   {
     department: 'Church Administration',
     departmentThai: 'ฝ่ายบริหารโบสถ์',
+    icon: ShieldCheck,
+    accent: 'text-blue-600',
+    iconBg: 'bg-blue-100',
     members: [
       {
         name: 'Gladys Jane Santos',
@@ -83,6 +98,9 @@ const CHURCH_OFFICERS_BY_DEPT = [
   {
     department: 'Sabbath School',
     departmentThai: 'แผนกโรงเรียนวันสะบาโต',
+    icon: GraduationCap,
+    accent: 'text-emerald-600',
+    iconBg: 'bg-emerald-100',
     members: [
       {
         name: 'Mary June Cabunoc',
@@ -98,9 +116,40 @@ const CHURCH_OFFICERS_BY_DEPT = [
       },
     ],
   },
+
+  {
+    department: 'Deacon / Deaconess',
+    departmentThai: 'มัคนายก / มัคนายิกา',
+    icon: HeartHandshake,
+    accent: 'text-violet-600',
+    iconBg: 'bg-violet-100',
+    members: [
+      {
+        name: 'Kirk Hezir Cabunoc',
+        nameThai: 'สมชาย วงศ์ประเสริฐ',
+        role: 'Deacon',
+        roleThai: 'มัคนายก',
+      },
+      {
+        name: 'Nilda Sojor',
+        nameThai: 'สมพร แก้วมณี',
+        role: 'Deaconess',
+        roleThai: 'มัคนายิกา',
+      },
+      {
+        name: 'Lorrie Hope Yosorez',
+        nameThai: 'ลอรี โฮป โยซอเรซ',
+        role: 'Deaconess',
+        roleThai: 'มัคนายิกา',
+      },
+    ],
+  },
   {
     department: 'Youth Department (AY)',
     departmentThai: 'แผนกเยาวชน',
+    icon: Sparkles,
+    accent: 'text-amber-600',
+    iconBg: 'bg-amber-100',
     members: [
       {
         name: 'Ronela Mifranum',
@@ -117,38 +166,11 @@ const CHURCH_OFFICERS_BY_DEPT = [
     ],
   },
   {
-    department: 'Deacon',
-    departmentThai: 'มัคนายก',
-    members: [
-      {
-        name: 'Kirk Hezir Cabunoc',
-        nameThai: 'สมชาย วงศ์ประเสริฐ',
-        role: 'Deacon',
-        roleThai: 'หัวหน้ามัคนายก',
-      },
-    ],
-  },
-  {
-    department: 'Deaconess',
-    departmentThai: 'มัคนายิกา',
-    members: [
-      {
-        name: 'Nilda Sojor',
-        nameThai: 'สมพร แก้วมณี',
-        role: 'Deaconess',
-        roleThai: 'หัวหน้ามัคนายิกา',
-      },
-      {
-        name: 'Lorrie Hope Yosorez',
-        nameThai: 'ลอรี โฮป โยซอเรซ',
-        role: 'Deaconess',
-        roleThai: 'มัคนายิกา',
-      },
-    ],
-  },
-  {
     department: 'Music & Worship',
     departmentThai: 'แผนกดนตรีและนมัสการ',
+    icon: Music,
+    accent: 'text-rose-600',
+    iconBg: 'bg-rose-100',
     members: [
       {
         name: 'Supachai Musikphan',
@@ -397,44 +419,50 @@ export function AboutPage() {
               Our dedicated officers serve the church in various capacities.
             </p>
           </div>
-          <div className="space-y-12">
-            {CHURCH_OFFICERS_BY_DEPT.map((dept, deptIndex) => (
-              <div key={deptIndex}>
-                {/* Department Header */}
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                    <Users className="h-5 w-5 text-blue-600" />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {CHURCH_OFFICERS_BY_DEPT.map((dept, deptIndex) => {
+              const DeptIcon = dept.icon;
+              return (
+                <Card
+                  key={deptIndex}
+                  className="group overflow-hidden transition-shadow hover:shadow-lg"
+                >
+                  {/* Department header bar */}
+                  <div className={`${dept.iconBg} px-6 py-4`}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                        <DeptIcon className={`h-4.5 w-4.5 ${dept.accent}`} />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900">
+                          {language === 'th' ? dept.departmentThai : dept.department}
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                          {dept.members.length} {dept.members.length === 1 ? 'member' : 'members'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900">
-                      {language === 'th' ? dept.departmentThai : dept.department}
-                    </h3>
-                  </div>
-                </div>
-                {/* Officer Cards */}
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                  {dept.members.map((officer, idx) => (
-                    <Card key={idx} className="group text-center transition-shadow hover:shadow-lg">
-                      <CardContent className="p-6">
-                        <div className="relative mx-auto mb-4 h-20 w-20">
-                          <img
-                            src={getAvatarUrl(officer.name)}
-                            alt={officer.name}
-                            className="h-20 w-20 rounded-full object-cover ring-2 ring-blue-100 transition-all group-hover:ring-4 group-hover:ring-blue-200"
-                          />
-                          <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
-                            <Users className="h-3 w-3" />
-                          </div>
+                  {/* Members list */}
+                  <CardContent className="divide-y divide-slate-100 p-0">
+                    {dept.members.map((officer, idx) => (
+                      <div key={idx} className="flex items-center gap-4 px-6 py-4">
+                        <img
+                          src={getAvatarUrl(officer.name)}
+                          alt={officer.name}
+                          className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium text-slate-900">{officer.name}</p>
+                          <p className="truncate text-xs text-slate-400">{officer.nameThai}</p>
+                          <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
                         </div>
-                        <h3 className="font-semibold text-slate-900">{officer.name}</h3>
-                        <p className="text-xs text-slate-500">{officer.nameThai}</p>
-                        <p className="mt-1 text-sm font-medium text-blue-600">{officer.role}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            ))}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
