@@ -54,8 +54,7 @@ import {
   MinistryCardsSection,
   PhotoGallerySection,
   NewsletterPopup,
-  PrayerRequestSection,
-  GiveSection,
+  PrayerGiveCTASection,
   LatestSermonSection,
   VisitUsSection,
 } from '../../components/features/landing';
@@ -154,11 +153,8 @@ export function LandingPage() {
         <PhotoGallerySection />
       </section>
 
-      {/* Prayer Request - Connection point */}
-      <PrayerRequestSection />
-
-      {/* Give Section - Support the ministry */}
-      <GiveSection />
+      {/* Prayer & Give - Lightweight CTAs linking to dedicated pages */}
+      <PrayerGiveCTASection />
 
       <FAQSection />
 
@@ -317,8 +313,8 @@ function NavigationHeaderContent() {
               )
             )}
             {/* Give Button with Icon */}
-            <button
-              onClick={() => scrollToSection('#give')}
+            <Link
+              to="/give"
               className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 isScrolled
                   ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
@@ -327,7 +323,7 @@ function NavigationHeaderContent() {
             >
               <Gift className="h-4 w-4" />
               {t('nav.give')}
-            </button>
+            </Link>
             {/* Contact Button with Icon */}
             <button
               onClick={() => scrollToSection('#contact')}
@@ -454,13 +450,13 @@ function NavigationHeaderContent() {
               )
             )}
             {/* Give Button Mobile */}
-            <button
-              onClick={() => scrollToSection('#give')}
+            <Link
+              to="/give"
               className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
             >
               <Gift className="h-5 w-5 text-amber-500" />
               {t('nav.give')}
-            </button>
+            </Link>
             {/* Contact Button Mobile */}
             <button
               onClick={() => scrollToSection('#contact')}

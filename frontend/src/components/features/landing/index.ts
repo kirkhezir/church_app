@@ -20,5 +20,6 @@ export { AboutSection } from './AboutSection';
 export { PlanYourVisitSection } from './PlanYourVisitSection';
 export { PrayerRequestSection } from './PrayerRequestSection';
 export { GiveSection } from './GiveSection';
+export { PrayerGiveCTASection } from './PrayerGiveCTASection';
 export { LatestSermonSection } from './LatestSermonSection';
 export { VisitUsSection } from './VisitUsSection';
