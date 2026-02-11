@@ -302,25 +302,35 @@ export function EventsPage() {
             </div>
 
             {/* View Toggle */}
-            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+            <div
+              className="flex items-center gap-1 rounded-lg bg-slate-100 p-1"
+              role="tablist"
+              aria-label={language === 'th' ? 'เปลี่ยนมุมมอง' : 'Change view'}
+            >
               <button
                 onClick={() => setViewMode('grid')}
-                className={`rounded p-1.5 ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
-                title={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
+                className={`rounded p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                aria-label={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
+                role="tab"
+                aria-selected={viewMode === 'grid'}
               >
                 <Grid className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`rounded p-1.5 ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
-                title={language === 'th' ? 'มุมมองรายการ' : 'List View'}
+                className={`rounded p-1.5 transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                aria-label={language === 'th' ? 'มุมมองรายการ' : 'List View'}
+                role="tab"
+                aria-selected={viewMode === 'list'}
               >
                 <List className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`rounded p-1.5 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
-                title={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
+                className={`rounded p-1.5 transition-colors ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                aria-label={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
+                role="tab"
+                aria-selected={viewMode === 'calendar'}
               >
                 <CalendarDays className="h-4 w-4" />
               </button>
@@ -493,7 +503,7 @@ export function EventsPage() {
 
                 {/* Empty cells for days before month starts */}
                 {Array.from({ length: firstDay }).map((_, i) => (
-                  <div key={`empty-${i}`} className="h-24 rounded bg-slate-50 p-1" />
+                  <div key={`empty-${i}`} className="h-16 rounded bg-slate-50 p-1 sm:h-24" />
                 ))}
 
                 {/* Calendar Days */}
@@ -506,9 +516,16 @@ export function EventsPage() {
                   return (
                     <div
                       key={day}
-                      className={`h-24 overflow-hidden rounded border p-1 ${
+                      className={`h-16 overflow-hidden rounded border p-1 sm:h-24 ${
                         isToday ? 'border-emerald-500 bg-emerald-50' : 'border-slate-100 bg-white'
-                      }`}
+                      } ${dayEvents.length > 0 ? 'cursor-pointer hover:border-emerald-300' : ''}`}
+                      title={
+                        dayEvents.length > 0
+                          ? dayEvents
+                              .map((e) => (language === 'th' ? e.titleThai : e.title))
+                              .join(', ')
+                          : undefined
+                      }
                     >
                       <div
                         className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}
@@ -522,7 +539,10 @@ export function EventsPage() {
                             to={`/events/${event.id}`}
                             className="block truncate rounded bg-emerald-100 px-1 text-xs text-emerald-700 hover:bg-emerald-200"
                           >
-                            {language === 'th' ? event.titleThai : event.title}
+                            <span className="hidden sm:inline">
+                              {language === 'th' ? event.titleThai : event.title}
+                            </span>
+                            <span className="inline sm:hidden">•</span>
                           </Link>
                         ))}
                         {dayEvents.length > 2 && (
@@ -535,6 +555,13 @@ export function EventsPage() {
                   );
                 })}
               </div>
+
+              {/* Mobile hint */}
+              <p className="mt-4 text-center text-xs text-slate-400 sm:hidden">
+                {language === 'th'
+                  ? 'เปลี่ยนเป็นมุมมองรายการเพื่อดูรายละเอียดเพิ่มเติม'
+                  : 'Switch to list view for more details on mobile'}
+              </p>
             </CardContent>
           </Card>
         )}
@@ -560,6 +587,14 @@ export function EventsPage() {
       <footer className="border-t bg-slate-50 py-8">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
           <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+          <div className="mt-2 flex justify-center gap-4">
+            <Link to="/" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'หน้าแรก' : 'Home'}
+            </Link>
+            <Link to="/privacy" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
+            </Link>
+          </div>
         </div>
       </footer>
     </PublicLayout>

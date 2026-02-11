@@ -288,10 +288,14 @@ function NavigationHeaderContent() {
                   <Link
                     key={link.href}
                     to={link.href}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                      isScrolled
-                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                      link.labelKey === 'nav.prayer'
+                        ? isScrolled
+                          ? 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'
+                          : 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200'
+                        : isScrolled
+                          ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                          : 'text-white/90 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
@@ -431,7 +435,11 @@ function NavigationHeaderContent() {
                     key={link.href}
                     to={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
+                    className={`flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium ${
+                      link.labelKey === 'nav.prayer'
+                        ? 'text-purple-600 hover:bg-purple-50'
+                        : 'text-slate-700 hover:bg-slate-50'
+                    }`}
                   >
                     {link.labelKey === 'nav.prayer' && (
                       <HeartHandshake className="h-5 w-5 text-purple-500" />
@@ -560,16 +568,39 @@ function HeroSection() {
 
         {/* Tagline */}
         <p className="mx-auto mb-6 max-w-2xl text-lg text-slate-200 sm:text-xl md:text-2xl">
-          A community of <span className="text-amber-300">faith</span>,{' '}
-          <span className="text-emerald-300">hope</span>, and{' '}
-          <span className="text-rose-300">love</span> — where everyone belongs.
+          {t('hero.tagline')
+            .replace(/<faith>(.*?)<\/faith>/, '|||faith:$1|||')
+            .replace(/<hope>(.*?)<\/hope>/, '|||hope:$1|||')
+            .replace(/<love>(.*?)<\/love>/, '|||love:$1|||')
+            .split('|||')
+            .map((segment, i) => {
+              if (segment.startsWith('faith:'))
+                return (
+                  <span key={i} className="text-amber-300">
+                    {segment.slice(6)}
+                  </span>
+                );
+              if (segment.startsWith('hope:'))
+                return (
+                  <span key={i} className="text-emerald-300">
+                    {segment.slice(5)}
+                  </span>
+                );
+              if (segment.startsWith('love:'))
+                return (
+                  <span key={i} className="text-rose-300">
+                    {segment.slice(5)}
+                  </span>
+                );
+              return <span key={i}>{segment}</span>;
+            })}
         </p>
 
         {/* Live Countdown */}
         <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
           <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
           <span className="text-white/90">
-            Next service in{' '}
+            {t('hero.nextService')}{' '}
             <span className="font-semibold text-amber-300">
               {countdown.days}d {countdown.hours}h {countdown.minutes}m
             </span>
@@ -584,7 +615,7 @@ function HeroSection() {
             className="bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 hover:bg-amber-400 sm:px-8"
           >
             <Clock className="mr-2 h-5 w-5" />
-            Service Times
+            {t('hero.serviceTimes')}
           </Button>
           <Button
             size="lg"
@@ -595,16 +626,16 @@ function HeroSection() {
             className="border-2 border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm hover:bg-white hover:text-slate-900 sm:px-8"
           >
             <MapPin className="mr-2 h-5 w-5" />
-            Visit Us
+            {t('hero.visitUs')}
           </Button>
         </div>
 
         {/* Improved Stats */}
         <div className="mt-12 flex justify-center gap-6 sm:mt-16 sm:gap-12">
           {[
-            { value: CHURCH_STATS.sabbaths, label: 'Sabbaths Celebrated' },
-            { value: CHURCH_STATS.families, label: 'Families' },
-            { value: CHURCH_STATS.years, label: 'Years of Ministry' },
+            { value: CHURCH_STATS.sabbaths, label: t('hero.stats.sabbaths') },
+            { value: CHURCH_STATS.families, label: t('hero.stats.families') },
+            { value: CHURCH_STATS.years, label: t('hero.stats.years') },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-2xl font-bold text-white sm:text-3xl">{stat.value}</p>
@@ -630,23 +661,24 @@ function HeroSection() {
 // ABOUT SECTION - Clean, Focused Design with Pastor Welcome
 // =============================================================================
 function AboutSection() {
+  const { t } = useI18n();
   const values = [
     {
       icon: BookOpen,
-      title: 'Bible-Centered',
-      description: 'Grounded in Scripture with meaningful teachings.',
+      title: t('about.values.bibleCentered.title'),
+      description: t('about.values.bibleCentered.description'),
       color: 'bg-blue-500',
     },
     {
       icon: Users,
-      title: 'Welcoming',
-      description: 'A warm family where everyone belongs.',
+      title: t('about.values.welcoming.title'),
+      description: t('about.values.welcoming.description'),
       color: 'bg-emerald-500',
     },
     {
       icon: Heart,
-      title: 'Caring',
-      description: 'Serving our community with love.',
+      title: t('about.values.caring.title'),
+      description: t('about.values.caring.description'),
       color: 'bg-rose-500',
     },
   ];
@@ -657,12 +689,9 @@ function AboutSection() {
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <h2 id="about-heading" className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl">
-            Welcome to Our Church Family
+            {t('about.title')}
           </h2>
-          <p className="text-lg text-slate-600">
-            We are a Seventh-day Adventist community dedicated to sharing God&apos;s love. Join us
-            every Sabbath (Saturday) to worship, learn, and grow together.
-          </p>
+          <p className="text-lg text-slate-600">{t('about.description')}</p>
         </div>
 
         {/* Pastor Welcome Card */}
@@ -677,12 +706,8 @@ function AboutSection() {
               </div>
             </div>
             <div className="text-center sm:text-left">
-              <p className="mb-2 italic text-slate-700">
-                &ldquo;We believe God has brought you here for a reason. Whether you&apos;re
-                exploring faith or seeking a deeper relationship with Christ, our doors and hearts
-                are open to you.&rdquo;
-              </p>
-              <p className="font-semibold text-slate-900">Pastor&apos;s Welcome</p>
+              <p className="mb-2 italic text-slate-700">&ldquo;{t('about.pastorWelcome')}&rdquo;</p>
+              <p className="font-semibold text-slate-900">{t('about.pastorTitle')}</p>
               <p className="text-sm text-slate-500">Sing Buri Adventist Center</p>
             </div>
           </div>
@@ -690,8 +715,7 @@ function AboutSection() {
 
         <div className="mx-auto mt-10 max-w-3xl rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-center text-white shadow-xl sm:p-8">
           <blockquote className="text-lg italic sm:text-xl">
-            &ldquo;Our mission is to share God&apos;s love through worship, fellowship, and service
-            — building a community where faith grows and hope flourishes.&rdquo;
+            &ldquo;{t('about.mission')}&rdquo;
           </blockquote>
         </div>
 
@@ -714,10 +738,7 @@ function AboutSection() {
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-lg text-slate-600">
-            Whether you&apos;re seeking spiritual growth or simply a place to belong —{' '}
-            <span className="font-semibold text-blue-600">you&apos;re welcome here.</span>
-          </p>
+          <p className="text-lg text-slate-600">{t('about.welcomeMessage')}</p>
           <a
             href="https://www.adventist.org/beliefs/"
             target="_blank"
@@ -725,7 +746,7 @@ function AboutSection() {
             className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
           >
             <BookOpen className="h-4 w-4" />
-            Learn about our 28 Fundamental Beliefs
+            {t('about.learnBeliefs')}
             <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -760,27 +781,25 @@ function FooterSection() {
         <div className="mb-10 rounded-xl bg-slate-800/50 p-6 sm:p-8">
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
             <div className="flex-1">
-              <h3 className="mb-1 text-lg font-semibold text-white">Stay Connected</h3>
-              <p className="text-sm text-slate-400">
-                Subscribe for weekly updates, announcements, and spiritual encouragement.
-              </p>
+              <h3 className="mb-1 text-lg font-semibold text-white">{t('footer.stayConnected')}</h3>
+              <p className="text-sm text-slate-400">{t('footer.newsletterDesc')}</p>
             </div>
             <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-sm gap-2">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email address"
+                placeholder={t('footer.emailPlaceholder')}
                 required
                 className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                aria-label="Email address for newsletter"
+                aria-label={t('footer.emailPlaceholder')}
               />
               <button
                 type="submit"
                 disabled={subscribed}
                 className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:bg-emerald-600"
               >
-                {subscribed ? '✓ Subscribed!' : 'Subscribe'}
+                {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
               </button>
             </form>
           </div>
@@ -843,7 +862,7 @@ function FooterSection() {
           <div>
             <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
               <Clock className="h-4 w-4 text-amber-400" />
-              Sabbath Services
+              {t('footer.sabbathServices')}
             </h3>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
@@ -863,7 +882,7 @@ function FooterSection() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-4 font-semibold text-white">Quick Links</h3>
+            <h3 className="mb-4 font-semibold text-white">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
               {NAV_LINKS.slice(0, 4).map((link) => (
                 <li key={link.href}>
@@ -893,7 +912,7 @@ function FooterSection() {
                   rel="noopener noreferrer"
                   className="text-slate-400 transition-colors hover:text-white"
                 >
-                  Our Beliefs
+                  {t('footer.ourBeliefs')}
                 </a>
               </li>
             </ul>
@@ -948,11 +967,12 @@ function FooterSection() {
             </p>
             <span className="hidden sm:inline">•</span>
             <Link to="/privacy" className="transition-colors hover:text-white">
-              Privacy Policy
+              {t('footer.privacyPolicy')}
             </Link>
           </div>
           <p className="flex items-center gap-1.5 text-slate-400">
-            Built with <Heart className="h-4 w-4 fill-rose-500 text-rose-500" /> for our community
+            {t('footer.builtWith')} <Heart className="h-4 w-4 fill-rose-500 text-rose-500" />{' '}
+            {t('footer.forCommunity')}
           </p>
         </div>
       </div>

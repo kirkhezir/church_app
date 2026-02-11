@@ -513,12 +513,12 @@ export function AboutPage() {
       <footer className="border-t border-slate-200 bg-slate-50 py-8">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
           <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <Link to="/privacy" className="hover:text-blue-600">
-              Privacy Policy
+          <div className="mt-2 flex justify-center gap-4">
+            <Link to="/" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'หน้าแรก' : 'Home'}
             </Link>
-            <Link to="/" className="hover:text-blue-600">
-              Home
+            <Link to="/privacy" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
             </Link>
           </div>
         </div>

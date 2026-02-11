@@ -8,26 +8,24 @@
 import { Link } from 'react-router';
 import { ArrowLeft, Shield, Lock, Eye, Trash2, Mail, FileText } from 'lucide-react';
 import { Button } from '../../components/ui/button';
+import { PublicLayout } from '../../layouts';
 
 export function PrivacyPolicyPage() {
   const lastUpdated = 'January 28, 2026';
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <PublicLayout>
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900"
-          >
+      <section className="bg-gradient-to-r from-slate-800 to-slate-900 pb-12 pt-24 text-white">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <Link to="/" className="inline-flex items-center gap-2 text-slate-300 hover:text-white">
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
-          <h1 className="mt-4 text-3xl font-bold text-slate-900">Privacy Policy</h1>
-          <p className="mt-2 text-slate-600">Last updated: {lastUpdated}</p>
+          <h1 className="mt-4 text-3xl font-bold">Privacy Policy</h1>
+          <p className="mt-2 text-slate-300">Last updated: {lastUpdated}</p>
         </div>
-      </header>
+      </section>
 
       {/* Content */}
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
@@ -250,7 +248,7 @@ export function PrivacyPolicyPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </PublicLayout>
   );
 }
 

@@ -223,7 +223,7 @@ export function PrayerPage() {
                             onChange={(e) =>
                               setFormData({ ...formData, isPublic: e.target.checked })
                             }
-                            className="mt-1"
+                            className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
                           />
                           <label htmlFor="isPublic" className="text-sm text-slate-600">
                             <span className="flex items-center gap-1 font-medium">
@@ -251,7 +251,7 @@ export function PrayerPage() {
                             onChange={(e) =>
                               setFormData({ ...formData, wantsPastorContact: e.target.checked })
                             }
-                            className="mt-1"
+                            className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
                           />
                           <label htmlFor="pastorContact" className="text-sm text-slate-600">
                             <span className="font-medium">
@@ -401,6 +401,14 @@ export function PrayerPage() {
       <footer className="border-t bg-slate-50 py-8">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
           <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+          <div className="mt-2 flex justify-center gap-4">
+            <Link to="/" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'หน้าแรก' : 'Home'}
+            </Link>
+            <Link to="/privacy" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
+            </Link>
+          </div>
         </div>
       </footer>
     </PublicLayout>

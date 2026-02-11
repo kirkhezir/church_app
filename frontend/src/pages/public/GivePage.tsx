@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { Link } from 'react-router';
 import {
   Heart,
   CreditCard,
@@ -359,8 +360,15 @@ export function GivePage() {
 
                   {paymentMethod === 'promptpay' && (
                     <div className="mt-6 text-center">
-                      <div className="mx-auto h-48 w-48 rounded-lg bg-slate-100 p-4">
-                        <QrCode className="h-full w-full text-slate-300" />
+                      <div className="mx-auto flex h-48 w-48 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-4">
+                        <div className="text-center">
+                          <QrCode className="mx-auto h-16 w-16 text-slate-400" />
+                          <p className="mt-2 text-xs text-slate-500">
+                            {language === 'th'
+                              ? 'QR Code จะแสดงที่นี่'
+                              : 'QR Code will appear here'}
+                          </p>
+                        </div>
                       </div>
                       <p className="mt-4 text-sm text-slate-600">
                         {language === 'th'
@@ -603,6 +611,14 @@ export function GivePage() {
       <footer className="border-t bg-slate-50 py-8">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
           <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
+          <div className="mt-2 flex justify-center gap-4">
+            <Link to="/" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'หน้าแรก' : 'Home'}
+            </Link>
+            <Link to="/privacy" className="transition-colors hover:text-blue-600">
+              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
+            </Link>
+          </div>
         </div>
       </footer>
     </PublicLayout>

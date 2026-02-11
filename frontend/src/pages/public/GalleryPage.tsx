@@ -5,7 +5,7 @@
  * Features lightbox view, filtering by category, and lazy loading
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router';
 import {
   X,
@@ -233,11 +233,11 @@ export function GalleryPage() {
     [lightboxPhoto, closeLightbox, navigateLightbox]
   );
 
-  // Add keyboard listener
-  useState(() => {
+  // Add keyboard listener for lightbox navigation
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
+  }, [handleKeyDown]);
 
   return (
     <PublicLayout>
@@ -372,11 +372,15 @@ export function GalleryPage() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
           onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={language === 'th' ? 'ดูรูปภาพขนาดใหญ่' : 'Photo lightbox viewer'}
         >
           {/* Close Button */}
           <button
             onClick={closeLightbox}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            aria-label={language === 'th' ? 'ปิด' : 'Close lightbox'}
           >
             <X className="h-6 w-6" />
           </button>
@@ -387,7 +391,8 @@ export function GalleryPage() {
               e.stopPropagation();
               navigateLightbox('prev');
             }}
-            className="absolute left-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+            className="absolute left-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            aria-label={language === 'th' ? 'รูปก่อนหน้า' : 'Previous photo'}
           >
             <ChevronLeft className="h-8 w-8" />
           </button>
@@ -396,7 +401,8 @@ export function GalleryPage() {
               e.stopPropagation();
               navigateLightbox('next');
             }}
-            className="absolute right-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+            className="absolute right-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            aria-label={language === 'th' ? 'รูปถัดไป' : 'Next photo'}
           >
             <ChevronRight className="h-8 w-8" />
           </button>

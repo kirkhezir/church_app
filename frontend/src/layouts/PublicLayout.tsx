@@ -202,21 +202,25 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                     to={link.href}
                     onClick={() => handleNavClick(link.href)}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                      link.labelKey === 'nav.give'
+                      link.labelKey === 'nav.prayer'
                         ? showTransparent
-                          ? 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200'
-                          : 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
-                        : link.labelKey === 'nav.contact'
+                          ? 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200'
+                          : 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'
+                        : link.labelKey === 'nav.give'
                           ? showTransparent
-                            ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
-                            : 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
-                          : isActive(link.href)
+                            ? 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200'
+                            : 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
+                          : link.labelKey === 'nav.contact'
                             ? showTransparent
-                              ? 'bg-white/20 text-white'
-                              : 'bg-blue-50 text-blue-600'
-                            : showTransparent
-                              ? 'text-white/90 hover:bg-white/10 hover:text-white'
-                              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                              ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
+                              : 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
+                            : isActive(link.href)
+                              ? showTransparent
+                                ? 'bg-white/20 text-white'
+                                : 'bg-blue-50 text-blue-600'
+                              : showTransparent
+                                ? 'text-white/90 hover:bg-white/10 hover:text-white'
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
@@ -337,13 +341,15 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       to={link.href}
                       onClick={() => handleNavClick(link.href)}
                       className={`flex items-center gap-2 rounded-lg px-4 py-3 text-base font-medium transition-colors ${
-                        link.labelKey === 'nav.give'
-                          ? 'text-amber-600 hover:bg-amber-50'
-                          : link.labelKey === 'nav.contact'
-                            ? 'text-emerald-600 hover:bg-emerald-50'
-                            : isActive(link.href)
-                              ? 'bg-blue-50 text-blue-600'
-                              : 'text-slate-700 hover:bg-slate-100'
+                        link.labelKey === 'nav.prayer'
+                          ? 'text-purple-600 hover:bg-purple-50'
+                          : link.labelKey === 'nav.give'
+                            ? 'text-amber-600 hover:bg-amber-50'
+                            : link.labelKey === 'nav.contact'
+                              ? 'text-emerald-600 hover:bg-emerald-50'
+                              : isActive(link.href)
+                                ? 'bg-blue-50 text-blue-600'
+                                : 'text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       {link.labelKey === 'nav.prayer' && (
