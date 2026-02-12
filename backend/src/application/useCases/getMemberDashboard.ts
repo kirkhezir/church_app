@@ -12,6 +12,7 @@
 import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
 import { IEventRepository } from '../../domain/interfaces/IEventRepository';
 import { IAnnouncementRepository } from '../../domain/interfaces/IAnnouncementRepository';
+import { IEventRSVPRepository } from '../../domain/interfaces/IEventRSVPRepository';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -66,7 +67,8 @@ export class GetMemberDashboard {
   constructor(
     private memberRepository: IMemberRepository,
     private eventRepository: IEventRepository,
-    private announcementRepository: IAnnouncementRepository
+    private announcementRepository: IAnnouncementRepository,
+    private eventRSVPRepository: IEventRSVPRepository
   ) {}
 
   async execute(request: GetMemberDashboardRequest): Promise<GetMemberDashboardResponse> {
@@ -82,7 +84,11 @@ export class GetMemberDashboard {
     // 2. Get upcoming events (next 5)
     const allUpcomingEvents = await this.eventRepository.findUpcoming(5);
 
-    // 3. Map events to response format
+    // 3. Look up member's RSVPs for these events
+    const memberRsvps = await this.eventRSVPRepository.findByMemberId(memberId);
+    const rsvpByEventId = new Map(memberRsvps.map((rsvp: any) => [rsvp.eventId, rsvp.status]));
+
+    // 4. Map events to response format with real RSVP status
     const upcomingEvents = allUpcomingEvents.map((event: any) => ({
       id: event.id,
       title: event.title,
@@ -91,24 +97,31 @@ export class GetMemberDashboard {
       startDate: event.startDateTime,
       endDate: event.endDateTime,
       location: event.location,
-      rsvpStatus: undefined, // TODO: Add RSVP lookup in future iteration
+      rsvpStatus: rsvpByEventId.get(event.id) || undefined,
     }));
 
-    // 4. Get recent announcements (last 5)
+    // 5. Get recent announcements (last 5)
     const allRecentAnnouncements = await this.announcementRepository.findRecent(5);
 
-    // 5. Map announcements to response format
-    const recentAnnouncements = allRecentAnnouncements.map((announcement: any) => ({
-      id: announcement.id,
-      title: announcement.title,
-      content: announcement.content,
-      priority: announcement.priority,
-      publishedAt: announcement.publishedAt,
-      isRead: false, // TODO: Add view tracking in future iteration
-    }));
+    // 6. Check view status for each announcement
+    const recentAnnouncements = await Promise.all(
+      allRecentAnnouncements.map(async (announcement: any) => ({
+        id: announcement.id,
+        title: announcement.title,
+        content: announcement.content,
+        priority: announcement.priority,
+        publishedAt: announcement.publishedAt,
+        isRead: await this.announcementRepository.hasViewed(announcement.id, memberId),
+      }))
+    );
 
-    // 6. Calculate stats
+    // 7. Calculate stats
     const unreadAnnouncements = recentAnnouncements.filter((a: any) => !a.isRead);
+
+    // Count confirmed RSVPs for the member
+    const confirmedRsvpCount = memberRsvps.filter(
+      (rsvp: any) => rsvp.status === 'CONFIRMED'
+    ).length;
 
     const response: GetMemberDashboardResponse = {
       profile: {
@@ -125,7 +138,7 @@ export class GetMemberDashboard {
       stats: {
         upcomingEventsCount: upcomingEvents.length,
         unreadAnnouncementsCount: unreadAnnouncements.length,
-        myRsvpCount: 0, // TODO: Add RSVP count in future iteration
+        myRsvpCount: confirmedRsvpCount,
       },
     };
 

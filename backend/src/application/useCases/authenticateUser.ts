@@ -11,6 +11,7 @@
  */
 
 import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
+import { ISessionRepository } from '../../domain/interfaces/ISessionRepository';
 import { PasswordService } from '../../infrastructure/auth/passwordService';
 import { JWTService } from '../../infrastructure/auth/jwtService';
 import { logger } from '../../infrastructure/logging/logger';
@@ -18,6 +19,8 @@ import { logger } from '../../infrastructure/logging/logger';
 interface AuthenticateUserRequest {
   email: string;
   password: string;
+  userAgent?: string;
+  ipAddress?: string;
 }
 
 interface AuthenticateUserResponse {
@@ -39,7 +42,8 @@ export class AuthenticateUser {
   constructor(
     private memberRepository: IMemberRepository,
     private passwordService: PasswordService,
-    private jwtService: JWTService
+    private jwtService: JWTService,
+    private sessionRepository?: ISessionRepository
   ) {}
 
   async execute(request: AuthenticateUserRequest): Promise<AuthenticateUserResponse> {
@@ -140,7 +144,25 @@ export class AuthenticateUser {
       role: member.role,
     });
 
-    // 8. Return tokens and member info (excluding sensitive data)
+    // 9. Create session record
+    if (this.sessionRepository) {
+      try {
+        await this.sessionRepository.create({
+          id: crypto.randomUUID(),
+          memberId: member.id,
+          userAgent: request.userAgent,
+          ipAddress: request.ipAddress,
+        });
+      } catch (err) {
+        // Session tracking is non-critical — log and continue
+        logger.warn('Failed to create session record', {
+          memberId: member.id,
+          error: err instanceof Error ? err.message : 'Unknown error',
+        });
+      }
+    }
+
+    // 10. Return tokens and member info (excluding sensitive data)
     return {
       accessToken,
       refreshToken,

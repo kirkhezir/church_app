@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 
 // Eagerly loaded - critical path (public landing pages)
 import LandingPage from './pages/public/LandingPage';
@@ -132,17 +132,6 @@ const PageLoader = () => (
   </div>
 );
 
-// Placeholder components
-
-const RegisterPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">Register</h1>
-      <p className="text-gray-600">Register page will be implemented in Phase 4</p>
-    </div>
-  </div>
-);
-
 const NotFoundPage = () => (
   <div className="flex min-h-screen items-center justify-center bg-gray-100">
     <div className="rounded-lg bg-white p-8 shadow-md">
@@ -202,14 +191,8 @@ const App: React.FC = () => {
               </PublicRoute>
             }
           />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <RegisterPage />
-              </PublicRoute>
-            }
-          />
+          {/* Registration is admin-only — redirect visitors to login */}
+          <Route path="/register" element={<Navigate to="/login" replace />} />
           <Route
             path="/password-reset-request"
             element={

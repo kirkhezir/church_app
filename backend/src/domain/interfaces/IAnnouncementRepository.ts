@@ -41,4 +41,9 @@ export interface IAnnouncementRepository {
    * Find recent published announcements
    */
   findRecent(limit: number): Promise<any[]>;
+
+  /**
+   * Check if a member has viewed an announcement
+   */
+  hasViewed(announcementId: string, memberId: string): Promise<boolean>;
 }

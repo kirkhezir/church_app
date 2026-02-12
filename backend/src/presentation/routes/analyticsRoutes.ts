@@ -9,8 +9,10 @@ import { authMiddleware, AuthenticatedRequest } from '../middleware/authMiddlewa
 import { requireRole } from '../middleware/roleMiddleware';
 import { logger } from '../../infrastructure/logging/logger';
 import prisma from '../../infrastructure/database/prismaClient';
+import { SessionRepository } from '../../infrastructure/database/repositories/sessionRepository';
 
 const router = Router();
+const sessionRepository = new SessionRepository();
 
 /**
  * GET /analytics/dashboard
@@ -479,6 +481,9 @@ router.get(
         }
       });
 
+      // Calculate average session duration from user_sessions table
+      const avgSessionDuration = await sessionRepository.getAverageSessionDuration(30);
+
       return res.json({
         success: true,
         data: {
@@ -488,7 +493,7 @@ router.get(
           eventRsvps,
           messagesSent,
           announcementsViewed: announcementViews,
-          averageSessionDuration: 12, // Would need session tracking table
+          averageSessionDuration: avgSessionDuration,
           peakUsageHour: peakHour,
           mostActiveDay,
           heatmapData,

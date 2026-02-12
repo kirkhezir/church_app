@@ -56,6 +56,12 @@ export interface DemographicsData {
   totalMembers: number;
 }
 
+export interface HeatMapEntry {
+  day: string;
+  hour: number;
+  count: number;
+}
+
 export interface EngagementData {
   activeUsersLast7Days: number;
   activeUsersLast30Days: number;
@@ -66,6 +72,7 @@ export interface EngagementData {
   averageSessionDuration: number;
   peakUsageHour: number;
   mostActiveDay: string;
+  heatmapData?: HeatMapEntry[];
 }
 
 export const analyticsService = {

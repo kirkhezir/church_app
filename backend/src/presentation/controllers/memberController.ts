@@ -21,6 +21,7 @@ import { GetMemberProfile } from '../../application/useCases/getMemberProfile';
 import { UpdatePrivacySettings } from '../../application/useCases/updatePrivacySettings';
 import { MemberRepository } from '../../infrastructure/database/repositories/memberRepository';
 import { EventRepository } from '../../infrastructure/database/repositories/eventRepository';
+import { EventRSVPRepository } from '../../infrastructure/database/repositories/eventRSVPRepository';
 import { AnnouncementRepository } from '../../infrastructure/database/repositories/announcementRepository';
 import logger from '../../infrastructure/logging/logger';
 
@@ -40,12 +41,14 @@ export class MemberController {
   constructor() {
     this.memberRepository = new MemberRepository();
     const eventRepository = new EventRepository();
+    const eventRSVPRepository = new EventRSVPRepository();
     const announcementRepository = new AnnouncementRepository();
 
     this.getMemberDashboardUseCase = new GetMemberDashboard(
       this.memberRepository,
       eventRepository,
-      announcementRepository
+      announcementRepository,
+      eventRSVPRepository
     );
     this.updateProfileUseCase = new UpdateProfile(this.memberRepository);
     this.updateNotificationPreferencesUseCase = new UpdateNotificationPreferences(

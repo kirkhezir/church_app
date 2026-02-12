@@ -25,6 +25,7 @@ import {
 } from '@/components/features/members/AdvancedMemberFilters';
 import { MemberBulkActions } from '@/components/features/members/MemberBulkActions';
 import { DataExportDialog } from '@/components/features/export/DataExportDialog';
+import { adminService } from '@/services/endpoints/adminService';
 import { useToast } from '@/hooks/use-toast';
 
 export function MemberDirectoryPage() {
@@ -79,27 +80,44 @@ export function MemberDirectoryPage() {
 
   // Bulk action handlers
   const handleBulkEmail = async (memberIds: string[], _subject: string, _message: string) => {
-    // TODO: Implement bulk email API call
-    toast({ title: 'Emails sent', description: `Sent email to ${memberIds.length} members` });
-  };
-
-  const handleBulkStatusChange = async (memberIds: string[], status: 'ACTIVE' | 'INACTIVE') => {
-    // TODO: Implement bulk status change API call
+    // Bulk email requires a dedicated backend endpoint — notify with selected count for now
     toast({
-      title: 'Status updated',
-      description: `Updated ${memberIds.length} members to ${status}`,
+      title: 'Email feature coming soon',
+      description: `${memberIds.length} members selected. Bulk email is not yet supported.`,
+      variant: 'default',
     });
   };
 
-  const handleBulkExport = async (memberIds: string[]) => {
-    // TODO: Implement export
-    toast({ title: 'Exporting', description: `Exporting ${memberIds.length} members` });
+  const handleBulkStatusChange = async (memberIds: string[], _status: 'ACTIVE' | 'INACTIVE') => {
+    // Bulk status change requires a dedicated backend endpoint
+    toast({
+      title: 'Status change coming soon',
+      description: `${memberIds.length} members selected. Bulk status change is not yet supported.`,
+      variant: 'default',
+    });
   };
 
-  const handleExport = async (_format: 'csv' | 'xlsx' | 'pdf', _fields: string[]) => {
-    // TODO: Implement export API call
-    const mockData = new Blob(['mock data'], { type: 'text/csv' });
-    return mockData;
+  const handleBulkExport = async (_memberIds: string[]) => {
+    try {
+      const blob = await adminService.exportMembers({ format: 'csv' });
+      adminService.downloadFile(
+        blob,
+        `members-export-${new Date().toISOString().split('T')[0]}.csv`
+      );
+      toast({ title: 'Export complete', description: 'Member data downloaded successfully' });
+    } catch {
+      toast({
+        title: 'Export failed',
+        description: 'Could not export member data',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleExport = async (format: 'csv' | 'xlsx' | 'pdf', _fields: string[]) => {
+    const exportFormat = format === 'csv' ? 'csv' : 'json';
+    const blob = await adminService.exportMembers({ format: exportFormat });
+    return blob;
   };
 
   const handleResetFilters = () => {

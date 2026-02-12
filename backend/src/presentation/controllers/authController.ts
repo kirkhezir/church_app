@@ -14,6 +14,7 @@ import { LogoutUser } from '../../application/useCases/logoutUser';
 import { RequestPasswordReset } from '../../application/useCases/requestPasswordReset';
 import { ResetPassword } from '../../application/useCases/resetPassword';
 import { MemberRepository } from '../../infrastructure/database/repositories/memberRepository';
+import { SessionRepository } from '../../infrastructure/database/repositories/sessionRepository';
 import { PasswordService } from '../../infrastructure/auth/passwordService';
 import { JWTService } from '../../infrastructure/auth/jwtService';
 import { EmailService } from '../../infrastructure/email/emailService';
@@ -21,14 +22,20 @@ import { logger } from '../../infrastructure/logging/logger';
 
 // Initialize dependencies
 const memberRepository = new MemberRepository();
+const sessionRepository = new SessionRepository();
 const passwordService = new PasswordService();
 const jwtService = new JWTService();
 const emailService = new EmailService();
 
 // Initialize use cases
-const authenticateUser = new AuthenticateUser(memberRepository, passwordService, jwtService);
+const authenticateUser = new AuthenticateUser(
+  memberRepository,
+  passwordService,
+  jwtService,
+  sessionRepository
+);
 const refreshToken = new RefreshToken(jwtService, memberRepository);
-const logoutUser = new LogoutUser();
+const logoutUser = new LogoutUser(sessionRepository);
 const requestPasswordReset = new RequestPasswordReset(memberRepository, emailService);
 const resetPassword = new ResetPassword(memberRepository);
 
@@ -49,7 +56,12 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     }
 
     // Execute authentication
-    const result = await authenticateUser.execute({ email, password });
+    const result = await authenticateUser.execute({
+      email,
+      password,
+      userAgent: req.headers['user-agent'],
+      ipAddress: req.ip || req.socket.remoteAddress,
+    });
 
     res.status(200).json(result);
   } catch (error: any) {

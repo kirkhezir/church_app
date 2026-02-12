@@ -10,6 +10,7 @@ describe('GetMemberDashboard Use Case', () => {
   let mockMemberRepository: any;
   let mockEventRepository: any;
   let mockAnnouncementRepository: any;
+  let mockEventRSVPRepository: any;
 
   const mockMember = {
     id: 'member-123',
@@ -72,12 +73,18 @@ describe('GetMemberDashboard Use Case', () => {
 
     mockAnnouncementRepository = {
       findRecent: jest.fn(),
+      hasViewed: jest.fn().mockResolvedValue(false),
+    };
+
+    mockEventRSVPRepository = {
+      findByMemberId: jest.fn().mockResolvedValue([]),
     };
 
     getMemberDashboard = new GetMemberDashboard(
       mockMemberRepository,
       mockEventRepository,
-      mockAnnouncementRepository
+      mockAnnouncementRepository,
+      mockEventRSVPRepository
     );
   });
 

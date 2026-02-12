@@ -38,19 +38,11 @@ import {
   MemberGrowthData,
   AttendanceData,
   EngagementData,
+  HeatMapEntry,
 } from '@/services/endpoints/analyticsService';
 
-// Mock data for heatmap (not yet in backend)
-const mockHeatMapData = [
-  { day: 'Sun', hour: 9, count: 45 },
-  { day: 'Sun', hour: 10, count: 89 },
-  { day: 'Sun', hour: 11, count: 156 },
-  { day: 'Sun', hour: 12, count: 78 },
-  { day: 'Mon', hour: 19, count: 34 },
-  { day: 'Wed', hour: 19, count: 67 },
-  { day: 'Fri', hour: 18, count: 45 },
-  { day: 'Sat', hour: 10, count: 23 },
-];
+// Fallback heatmap data used only when the backend returns no activity data
+const fallbackHeatMapData: HeatMapEntry[] = [{ day: 'Sun', hour: 10, count: 0 }];
 
 // Mock demographics since backend doesn't have age data
 const mockDemographics = [
@@ -356,7 +348,13 @@ export default function AdminAnalyticsPage() {
           ) : (
             <>
               <EngagementMetrics data={chartEngagementData} />
-              <ActivityHeatMap data={mockHeatMapData} />
+              <ActivityHeatMap
+                data={
+                  engagementData?.heatmapData?.length
+                    ? engagementData.heatmapData
+                    : fallbackHeatMapData
+                }
+              />
             </>
           )}
         </TabsContent>

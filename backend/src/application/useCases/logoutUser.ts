@@ -10,6 +10,7 @@
  */
 
 import { logger } from '../../infrastructure/logging/logger';
+import { ISessionRepository } from '../../domain/interfaces/ISessionRepository';
 
 interface LogoutUserRequest {
   userId: string;
@@ -21,9 +22,7 @@ interface LogoutUserResponse {
 }
 
 export class LogoutUser {
-  // In a production system, you'd store refresh tokens in a database or Redis
-  // and mark them as revoked. For MVP, we'll just log the logout.
-  // The client is responsible for discarding tokens.
+  constructor(private sessionRepository?: ISessionRepository) {}
 
   async execute(request: LogoutUserRequest): Promise<LogoutUserResponse> {
     // 1. Validate input
@@ -35,15 +34,24 @@ export class LogoutUser {
       throw new Error('Refresh token is required');
     }
 
-    // 2. Log the logout
+    // 2. End active session
+    if (this.sessionRepository) {
+      try {
+        await this.sessionRepository.endSession(request.userId);
+      } catch (err) {
+        logger.warn('Failed to end session on logout', {
+          userId: request.userId,
+          error: err instanceof Error ? err.message : 'Unknown error',
+        });
+      }
+    }
+
+    // 3. Log the logout
     logger.info('User logged out', {
       userId: request.userId,
     });
 
-    // TODO Phase 8: When implementing refresh token storage (Redis/DB),
-    // add the token to a revocation list here
-
-    // 3. Return success
+    // 4. Return success
     return {
       message: 'Logged out successfully',
     };
