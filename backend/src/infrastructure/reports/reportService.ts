@@ -27,7 +27,7 @@ const FONTS = {
   italic: 'Helvetica-Oblique',
 };
 
-class ReportService {
+export class ReportService {
   /**
    * Generate a member directory PDF
    */

@@ -69,12 +69,12 @@ describe('PushNotificationService', () => {
     });
   });
 
-  describe('subscribe', () => {
+  describe('saveSubscription', () => {
     it('should throw error when disabled', async () => {
       service = new PushNotificationService();
 
       await expect(
-        service.subscribe('user-1', {
+        service.saveSubscription('user-1', {
           endpoint: 'https://fcm.googleapis.com/fcm/send/abc',
           keys: { p256dh: 'key1', auth: 'key2' },
         })
@@ -82,26 +82,26 @@ describe('PushNotificationService', () => {
     });
   });
 
-  describe('unsubscribe', () => {
+  describe('removeAllSubscriptions', () => {
     it('should throw error when disabled', async () => {
       service = new PushNotificationService();
 
-      await expect(service.unsubscribe('user-1')).rejects.toThrow(
+      await expect(service.removeAllSubscriptions('user-1')).rejects.toThrow(
         'Push notifications are not enabled'
       );
     });
   });
 
-  describe('sendNotification', () => {
-    it('should return immediately when disabled', async () => {
+  describe('sendToMember', () => {
+    it('should return 0 when disabled', async () => {
       service = new PushNotificationService();
 
-      await expect(
-        service.sendNotification('user-1', {
-          title: 'Test',
-          body: 'Test body',
-        })
-      ).resolves.toBeUndefined();
+      const result = await service.sendToMember('user-1', {
+        title: 'Test',
+        body: 'Test body',
+      });
+
+      expect(result).toBe(0);
     });
   });
 });

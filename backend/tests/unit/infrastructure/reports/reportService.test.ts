@@ -61,11 +61,11 @@ describe('ReportService', () => {
     service = new ReportService();
   });
 
-  describe('generateMemberReport', () => {
-    it('should generate a member report PDF', async () => {
+  describe('generateMemberDirectory', () => {
+    it('should generate a member directory PDF', async () => {
       // Note: Full PDF generation would require more complex mocking
       // This test verifies the method exists and can be called
-      expect(service.generateMemberReport).toBeDefined();
+      expect(service.generateMemberDirectory).toBeDefined();
     });
   });
 
@@ -87,10 +87,10 @@ describe('ReportService', () => {
     });
   });
 
-  describe('generateAttendanceReport', () => {
+  describe('generateEventAttendanceReport', () => {
     it('should accept event ID parameter', async () => {
-      expect(service.generateAttendanceReport).toBeDefined();
-      expect(typeof service.generateAttendanceReport).toBe('function');
+      expect(service.generateEventAttendanceReport).toBeDefined();
+      expect(typeof service.generateEventAttendanceReport).toBe('function');
     });
   });
 });

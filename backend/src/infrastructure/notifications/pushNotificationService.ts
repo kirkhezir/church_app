@@ -10,8 +10,6 @@ import prisma from '../database/prismaClient';
  */
 
 // VAPID configuration from environment variables
-const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:admin@singburi-adventist.org';
 
 // Notification payload types
@@ -42,7 +40,7 @@ interface ClientSubscription {
   };
 }
 
-class PushNotificationService {
+export class PushNotificationService {
   private isConfigured = false;
 
   constructor() {
@@ -53,14 +51,18 @@ class PushNotificationService {
    * Configure VAPID details
    */
   private configure(): void {
-    if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
+    const publicKey = process.env.VAPID_PUBLIC_KEY;
+    const privateKey = process.env.VAPID_PRIVATE_KEY;
+    const subject = process.env.VAPID_SUBJECT || VAPID_SUBJECT;
+
+    if (!publicKey || !privateKey) {
       logger.warn('VAPID keys not configured. Push notifications disabled.');
       logger.info('Generate VAPID keys with: npx web-push generate-vapid-keys');
       return;
     }
 
     try {
-      webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+      webpush.setVapidDetails(subject, publicKey, privateKey);
       this.isConfigured = true;
       logger.info('Push notification service configured');
     } catch (error) {
@@ -79,13 +81,17 @@ class PushNotificationService {
    * Get the public VAPID key for client subscription
    */
   getPublicKey(): string | null {
-    return VAPID_PUBLIC_KEY || null;
+    return process.env.VAPID_PUBLIC_KEY || null;
   }
 
   /**
    * Save a push subscription for a member
    */
   async saveSubscription(memberId: string, subscription: ClientSubscription): Promise<boolean> {
+    if (!this.isConfigured) {
+      throw new Error('Push notifications are not enabled');
+    }
+
     try {
       // Store subscription in database
       await prisma.push_subscriptions.upsert({
@@ -144,6 +150,10 @@ class PushNotificationService {
    * Remove all subscriptions for a member
    */
   async removeAllSubscriptions(memberId: string): Promise<number> {
+    if (!this.isConfigured) {
+      throw new Error('Push notifications are not enabled');
+    }
+
     try {
       const result = await prisma.push_subscriptions.deleteMany({
         where: { memberId },

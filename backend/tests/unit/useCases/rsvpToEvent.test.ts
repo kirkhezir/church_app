@@ -244,7 +244,7 @@ describe('RSVPToEvent Use Case', () => {
       // Arrange
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 1); // Yesterday
-      const startedEvent = { ...mockEvent, startDate: pastDate };
+      const startedEvent = { ...mockEvent, startDateTime: pastDate };
       const input = {
         eventId: 'event-123',
         memberId: 'member-123',
