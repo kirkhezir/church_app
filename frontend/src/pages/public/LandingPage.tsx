@@ -89,9 +89,9 @@ const NAV_LINKS: NavLink[] = [
     labelKey: 'nav.explore',
     href: '#',
     children: [
-      { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
-      { labelKey: 'nav.events', href: '/events', isPage: true },
       { labelKey: 'nav.ministries', href: '/ministries', isPage: true },
+      { labelKey: 'nav.events', href: '/events', isPage: true },
+      { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
       { labelKey: 'nav.gallery', href: '/gallery', isPage: true },
       { labelKey: 'nav.blog', href: '/blog', isPage: true },
       { labelKey: 'nav.resources', href: '/resources', isPage: true },

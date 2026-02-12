@@ -273,7 +273,7 @@ export function MinistriesPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10"
+                className="border-white/60 bg-transparent text-white hover:bg-white/10 hover:text-white"
               >
                 {language === 'th' ? 'มาเยี่ยมชม' : 'Plan Your Visit'}
               </Button>
