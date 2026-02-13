@@ -1,116 +1,146 @@
 /**
  * Prayer & Give CTA Section
  *
- * Lightweight call-to-action cards that link to dedicated pages.
- * Replaces the full PrayerRequestSection and GiveSection on the homepage
- * to reduce scroll depth and avoid duplicating functionality.
+ * Warm, inviting call-to-action section linking to /prayer and /give pages.
+ * Uses a split layout with glassmorphism cards over a warm gradient background.
  *
  * UI/UX Rationale:
  * - Homepage should inspire action, not host complex forms
- * - Dedicated pages (/prayer, /give) provide the full experience
- * - Two side-by-side CTAs create visual balance with no wasted space
- * - Emotional imagery + short copy + single CTA per card = higher conversion
+ * - Warm gradient background contrasts the light sections above/below
+ * - Two clean cards with focused copy + single CTA = higher conversion
+ * - Bilingual (EN/TH) with emotional, community-focused messaging
  */
 
 import { Link } from 'react-router';
-import { Heart, Gift, ArrowRight, Shield, Smartphone } from 'lucide-react';
+import { Heart, Gift, ArrowRight, HandHeart, Sparkles, Users } from 'lucide-react';
 import { Button } from '../../ui/button';
+import { useI18n } from '@/i18n';
 
 export function PrayerGiveCTASection() {
+  const { language } = useI18n();
+  const isEn = language !== 'th';
+
   return (
     <section
       id="prayer-give"
-      className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 py-20 sm:py-28"
-      aria-label="Prayer and giving"
+      className="relative overflow-hidden bg-gradient-to-br from-violet-950 via-purple-900 to-rose-900 py-20 sm:py-28"
+      aria-label={isEn ? 'Prayer and giving' : 'อธิษฐานและถวาย'}
     >
-      {/* Subtle background pattern */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMzAgMEwzMCA2MCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iMCAzMEw2MCAzMCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] bg-repeat" />
+      {/* Warm decorative background glows */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-rose-500/20 blur-3xl" />
+        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-amber-500/15 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-400/10 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section header */}
-        <div className="mb-14 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-400">
-            Get Involved
-          </p>
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">Connect With Us</h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-blue-200/80">
-            Whether through prayer or generosity, every act of faith strengthens our community.
+        <div className="mb-12 text-center sm:mb-16">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-rose-200 backdrop-blur-sm">
+            <Sparkles className="h-4 w-4" />
+            {isEn ? 'Be Part of Something Greater' : 'มาร่วมเป็นส่วนหนึ่ง'}
+          </div>
+          <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            {isEn ? 'How You Can Make a Difference' : 'คุณสามารถสร้างความแตกต่างได้'}
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-200/80">
+            {isEn
+              ? 'Every prayer lifted and every gift given strengthens our church family and reaches those in need.'
+              : 'ทุกคำอธิษฐานและทุกการถวายเสริมสร้างครอบครัวคริสตจักรของเราและเข้าถึงผู้ที่ต้องการ'}
           </p>
         </div>
 
-        {/* Two CTA Cards — side by side */}
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Two CTA Cards */}
+        <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
           {/* Prayer Request Card */}
-          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-600/90 to-rose-700/90 p-8 shadow-2xl shadow-rose-900/30 backdrop-blur-sm transition-transform hover:scale-[1.02] sm:p-10">
-            {/* Decorative glow */}
-            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl transition-all group-hover:scale-150" />
+          <Link
+            to="/prayer"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-rose-500/10 sm:p-10"
+          >
+            {/* Decorative accent */}
+            <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-rose-500/20 blur-2xl transition-transform duration-500 group-hover:scale-150" />
 
             <div className="relative">
-              <div className="mb-5 inline-flex items-center justify-center rounded-xl bg-white/15 p-3 backdrop-blur-sm">
-                <Heart className="h-7 w-7 text-white" />
+              {/* Icon */}
+              <div className="mb-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-4 shadow-lg shadow-rose-500/30">
+                <HandHeart className="h-7 w-7 text-white" />
               </div>
 
-              <h3 className="mb-3 text-2xl font-bold text-white">Share Your Prayer Request</h3>
-
-              <p className="mb-4 text-rose-100/90">
-                &ldquo;Cast all your anxiety on Him because He cares for you.&rdquo;
+              {/* Content */}
+              <h3 className="mb-3 text-2xl font-bold text-white">
+                {isEn ? 'Share a Prayer Request' : 'แบ่งปันคำขออธิษฐาน'}
+              </h3>
+              <p className="mb-2 text-base text-purple-200/90">
+                {isEn
+                  ? "You don't have to carry your burdens alone. Our prayer team is here for you."
+                  : 'คุณไม่ต้องแบกรับภาระคนเดียว ทีมอธิษฐานของเราอยู่ที่นี่เพื่อคุณ'}
               </p>
-              <p className="mb-8 text-sm text-rose-200/80">— 1 Peter 5:7</p>
+              <p className="mb-8 text-sm italic text-purple-300/60">
+                {isEn
+                  ? '"Cast all your anxiety on Him because He cares for you." — 1 Peter 5:7'
+                  : '"จงละความกังวลทั้งสิ้นของท่านไว้กับพระองค์ เพราะพระองค์ทรงห่วงใยท่าน" — 1 เปโตร 5:7'}
+              </p>
 
-              <div className="mb-8 flex items-start gap-3">
-                <Shield className="mt-0.5 h-4 w-4 shrink-0 text-rose-200" />
-                <p className="text-sm text-rose-100/80">
-                  Our prayer team treats every request with care and confidentiality.
-                </p>
+              {/* CTA */}
+              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-rose-700 shadow-lg transition-all duration-300 group-hover:gap-3 group-hover:shadow-xl">
+                {isEn ? 'Submit Prayer Request' : 'ส่งคำขออธิษฐาน'}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
+
+              {/* Social proof */}
+              <div className="mt-6 flex items-center gap-2 text-sm text-purple-300/60">
+                <Heart className="h-3.5 w-3.5 fill-rose-400/50 text-rose-400/50" />
+                {isEn
+                  ? 'Confidential & cared for by our prayer team'
+                  : 'เป็นความลับและดูแลโดยทีมอธิษฐานของเรา'}
               </div>
-
-              <Link to="/prayer">
-                <Button
-                  size="lg"
-                  className="group/btn w-full gap-2 bg-white text-rose-700 shadow-lg hover:bg-rose-50 sm:w-auto"
-                >
-                  Submit a Prayer Request
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                </Button>
-              </Link>
             </div>
-          </div>
+          </Link>
 
           {/* Give / Support Card */}
-          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/90 to-amber-600/90 p-8 shadow-2xl shadow-amber-900/30 backdrop-blur-sm transition-transform hover:scale-[1.02] sm:p-10">
-            {/* Decorative glow */}
-            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl transition-all group-hover:scale-150" />
+          <Link
+            to="/give"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-amber-500/10 sm:p-10"
+          >
+            {/* Decorative accent */}
+            <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-amber-500/20 blur-2xl transition-transform duration-500 group-hover:scale-150" />
 
             <div className="relative">
-              <div className="mb-5 inline-flex items-center justify-center rounded-xl bg-white/15 p-3 backdrop-blur-sm">
+              {/* Icon */}
+              <div className="mb-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-4 shadow-lg shadow-amber-500/30">
                 <Gift className="h-7 w-7 text-white" />
               </div>
 
-              <h3 className="mb-3 text-2xl font-bold text-white">Support Our Ministry</h3>
+              {/* Content */}
+              <h3 className="mb-3 text-2xl font-bold text-white">
+                {isEn ? 'Support Our Church Family' : 'สนับสนุนครอบครัวคริสตจักร'}
+              </h3>
+              <p className="mb-2 text-base text-purple-200/90">
+                {isEn
+                  ? 'Your generosity helps us serve our community and share hope with those around us.'
+                  : 'ความเอื้อเฟื้อของคุณช่วยให้เรารับใช้ชุมชนและแบ่งปันความหวัง'}
+              </p>
+              <p className="mb-8 text-sm italic text-purple-300/60">
+                {isEn
+                  ? '"God loves a cheerful giver." — 2 Corinthians 9:7'
+                  : '"พระเจ้าทรงรักคนที่ให้ด้วยใจยินดี" — 2 โครินธ์ 9:7'}
+              </p>
 
-              <p className="mb-4 text-amber-50/90">&ldquo;God loves a cheerful giver.&rdquo;</p>
-              <p className="mb-8 text-sm text-amber-100/80">— 2 Corinthians 9:7</p>
+              {/* CTA */}
+              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-amber-700 shadow-lg transition-all duration-300 group-hover:gap-3 group-hover:shadow-xl">
+                {isEn ? 'Give Now' : 'ถวายตอนนี้'}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
 
-              <div className="mb-8 flex items-start gap-3">
-                <Smartphone className="mt-0.5 h-4 w-4 shrink-0 text-amber-100" />
-                <p className="text-sm text-amber-50/80">
-                  Give via PromptPay, bank transfer, or in person — every gift makes a difference.
-                </p>
+              {/* Social proof */}
+              <div className="mt-6 flex items-center gap-2 text-sm text-purple-300/60">
+                <Users className="h-3.5 w-3.5 text-amber-400/50" />
+                {isEn
+                  ? 'PromptPay, bank transfer, or in person'
+                  : 'พร้อมเพย์ โอนเงิน หรือถวายด้วยตนเอง'}
               </div>
-
-              <Link to="/give">
-                <Button
-                  size="lg"
-                  className="group/btn w-full gap-2 bg-white text-amber-700 shadow-lg hover:bg-amber-50 sm:w-auto"
-                >
-                  Give Now
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                </Button>
-              </Link>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </section>

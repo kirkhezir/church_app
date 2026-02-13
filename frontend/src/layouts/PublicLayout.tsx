@@ -147,7 +147,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
       {/* Skip to content link for keyboard users */}
       <a
         href="#main-content"
-        className="fixed left-2 top-2 z-[100] -translate-y-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         Skip to main content
       </a>
