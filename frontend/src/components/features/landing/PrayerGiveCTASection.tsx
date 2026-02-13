@@ -12,8 +12,7 @@
  */
 
 import { Link } from 'react-router';
-import { Heart, Gift, ArrowRight, HandHeart, Sparkles, Users } from 'lucide-react';
-import { Button } from '../../ui/button';
+import { Heart, Gift, ArrowRight, HeartHandshake, Sparkles, Users } from 'lucide-react';
 import { useI18n } from '@/i18n';
 
 export function PrayerGiveCTASection() {
@@ -63,7 +62,7 @@ export function PrayerGiveCTASection() {
             <div className="relative">
               {/* Icon */}
               <div className="mb-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-4 shadow-lg shadow-rose-500/30">
-                <HandHeart className="h-7 w-7 text-white" />
+                <HeartHandshake className="h-7 w-7 text-white" />
               </div>
 
               {/* Content */}
