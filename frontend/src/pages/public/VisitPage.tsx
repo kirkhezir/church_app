@@ -29,6 +29,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Calculate next Saturday date
 function getNextSaturday(lang: string): string {
@@ -130,6 +131,7 @@ const visitInfoSections = [
 
 export function VisitPage() {
   const { language } = useI18n();
+  useDocumentTitle('Plan Your Visit', 'วางแผนการมาเยี่ยม', language);
   const nextSaturday = getNextSaturday(language);
   const [formData, setFormData] = useState({
     name: '',
@@ -347,7 +349,11 @@ export function VisitPage() {
                 </h3>
 
                 {submitted ? (
-                  <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center">
+                  <div
+                    className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center"
+                    role="status"
+                    aria-live="polite"
+                  >
                     <CheckCircle2 className="mx-auto mb-3 h-12 w-12 text-emerald-500" />
                     <p className="text-lg font-medium text-emerald-700">
                       {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}
@@ -466,21 +472,6 @@ export function VisitPage() {
           </Card>
         </section>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

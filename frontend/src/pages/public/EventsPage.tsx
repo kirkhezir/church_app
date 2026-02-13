@@ -23,6 +23,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface Event {
   id: string;
@@ -190,6 +191,7 @@ type ViewMode = 'grid' | 'list' | 'calendar';
 
 export function EventsPage() {
   const { language } = useI18n();
+  useDocumentTitle('Events', 'กิจกรรม', language);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 1)); // February 2026
@@ -254,6 +256,7 @@ export function EventsPage() {
                     <img
                       src={event.image}
                       alt={language === 'th' ? event.titleThai : event.title}
+                      loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute left-3 top-3 rounded-full bg-amber-500 px-3 py-1 text-xs font-medium text-white">
@@ -290,7 +293,7 @@ export function EventsPage() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`rounded-full px-3 py-1 text-sm transition-colors ${
+                  className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1 ${
                     selectedCategory === cat.id
                       ? 'bg-emerald-600 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -309,7 +312,7 @@ export function EventsPage() {
             >
               <button
                 onClick={() => setViewMode('grid')}
-                className={`rounded p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                className={`cursor-pointer rounded p-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                 aria-label={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
                 role="tab"
                 aria-selected={viewMode === 'grid'}
@@ -318,7 +321,7 @@ export function EventsPage() {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`rounded p-1.5 transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                className={`cursor-pointer rounded p-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                 aria-label={language === 'th' ? 'มุมมองรายการ' : 'List View'}
                 role="tab"
                 aria-selected={viewMode === 'list'}
@@ -327,7 +330,7 @@ export function EventsPage() {
               </button>
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`rounded p-1.5 transition-colors ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                className={`cursor-pointer rounded p-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                 aria-label={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
                 role="tab"
                 aria-selected={viewMode === 'calendar'}
@@ -511,7 +514,11 @@ export function EventsPage() {
                   const day = i + 1;
                   const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                   const dayEvents = getEventsForDate(dateStr);
-                  const isToday = dateStr === new Date().toISOString().split('T')[0];
+                  const isToday = (() => {
+                    const now = new Date();
+                    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                    return dateStr === todayStr;
+                  })();
 
                   return (
                     <div
@@ -582,21 +589,6 @@ export function EventsPage() {
           </Button>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

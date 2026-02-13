@@ -23,6 +23,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface Resource {
   id: string;
@@ -221,6 +222,7 @@ const externalLinks = [
 
 export function ResourcesPage() {
   const { language } = useI18n();
+  useDocumentTitle('Resources', 'ทรัพยากร', language);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -286,7 +288,7 @@ export function ResourcesPage() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`whitespace-nowrap rounded-full px-3 py-1 text-sm transition-colors ${
+                  className={`cursor-pointer whitespace-nowrap rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-1 ${
                     selectedCategory === cat.id
                       ? 'bg-teal-600 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -329,6 +331,7 @@ export function ResourcesPage() {
                             <img
                               src={resource.thumbnail}
                               alt=""
+                              loading="lazy"
                               className="h-20 w-20 shrink-0 rounded-lg object-cover"
                             />
                           ) : (
@@ -529,6 +532,11 @@ export function ResourcesPage() {
                 <Button
                   variant="outline"
                   className="border-teal-600 text-teal-600 hover:bg-teal-100"
+                  onClick={() => {
+                    window.location.href =
+                      'mailto:info@singburiadventist.org?subject=' +
+                      encodeURIComponent(language === 'th' ? 'ขอทรัพยากร' : 'Resource Request');
+                  }}
                 >
                   {language === 'th' ? 'ขอทรัพยากร' : 'Request Resource'}
                 </Button>
@@ -537,13 +545,6 @@ export function ResourcesPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

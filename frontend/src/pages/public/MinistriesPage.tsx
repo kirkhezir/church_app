@@ -5,24 +5,13 @@
  */
 
 import { Link } from 'react-router';
-import {
-  Users,
-  Baby,
-  Heart,
-  Music,
-  BookOpen,
-  Globe,
-  Utensils,
-  Compass,
-  HeartHandshake,
-  GraduationCap,
-  Church,
-  Mic2,
-} from 'lucide-react';
+import { Users } from 'lucide-react';
+import { ministryIconMap } from '@/constants/ministryIcons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface Ministry {
   id: string;
@@ -30,7 +19,6 @@ interface Ministry {
   nameThai: string;
   description: string;
   descriptionThai: string;
-  icon: React.ElementType;
   color: string;
   image: string;
   leader?: string;
@@ -46,7 +34,6 @@ const ministries: Ministry[] = [
       'Empowering young people to grow in faith through fellowship, service, and spiritual development.',
     descriptionThai:
       'เสริมพลังให้เยาวชนเติบโตในความเชื่อผ่านการสามัคคีธรรม การรับใช้ และการพัฒนาฝ่ายจิตวิญญาณ',
-    icon: Users,
     color: 'bg-blue-500',
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
     leader: 'Brother Prasert',
@@ -59,7 +46,6 @@ const ministries: Ministry[] = [
     description:
       'Teaching children about Jesus through fun, engaging activities and Bible stories.',
     descriptionThai: 'สอนเด็กๆ เกี่ยวกับพระเยซูผ่านกิจกรรมสนุกสนานและเรื่องราวในพระคัมภีร์',
-    icon: Baby,
     color: 'bg-pink-500',
     image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=80',
     leader: 'Sister Malee',
@@ -72,7 +58,6 @@ const ministries: Ministry[] = [
     description:
       'Supporting women in spiritual growth, fellowship, and community service opportunities.',
     descriptionThai: 'สนับสนุนสตรีในการเติบโตฝ่ายจิตวิญญาณ สามัคคีธรรม และโอกาสในการรับใช้ชุมชน',
-    icon: Heart,
     color: 'bg-rose-500',
     image: 'https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?w=600&q=80',
     leader: 'Sister Nittaya',
@@ -84,7 +69,6 @@ const ministries: Ministry[] = [
     nameThai: 'แผนกดนตรี',
     description: 'Leading worship through music, choir, and instrumental performances.',
     descriptionThai: 'นำนมัสการผ่านดนตรี คณะนักร้องประสานเสียง และการแสดงดนตรี',
-    icon: Music,
     color: 'bg-purple-500',
     image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
     leader: 'Brother Somchai',
@@ -96,7 +80,6 @@ const ministries: Ministry[] = [
     nameThai: 'โรงเรียนสะบาโต',
     description: 'Bible study classes for all ages, diving deep into Scripture each week.',
     descriptionThai: 'ชั้นเรียนพระคัมภีร์สำหรับทุกวัย ศึกษาพระคัมภีร์อย่างลึกซึ้งทุกสัปดาห์',
-    icon: BookOpen,
     color: 'bg-emerald-500',
     image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&q=80',
     leader: 'Elder Wichai',
@@ -110,7 +93,6 @@ const ministries: Ministry[] = [
       'Character building program for youth ages 10-15 with camping, honors, and community service.',
     descriptionThai:
       'โปรแกรมสร้างอุปนิสัยสำหรับเยาวชนอายุ 10-15 ปี พร้อมการตั้งแคมป์ เกียรติบัตร และการบริการชุมชน',
-    icon: Compass,
     color: 'bg-amber-500',
     image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&q=80',
     leader: 'Brother Prasit',
@@ -122,7 +104,6 @@ const ministries: Ministry[] = [
     nameThai: 'บริการชุมชน',
     description: 'Reaching out to help those in need through food distribution and assistance.',
     descriptionThai: 'ช่วยเหลือผู้ขัดสนผ่านการแจกอาหารและความช่วยเหลือ',
-    icon: HeartHandshake,
     color: 'bg-teal-500',
     image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80',
     leader: 'Deacon Somphong',
@@ -135,7 +116,6 @@ const ministries: Ministry[] = [
     description:
       'Promoting wholistic health through education, cooking classes, and wellness programs.',
     descriptionThai: 'ส่งเสริมสุขภาพองค์รวมผ่านการศึกษา ชั้นเรียนทำอาหาร และโปรแกรมสุขภาพ',
-    icon: Utensils,
     color: 'bg-green-500',
     image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80',
     leader: 'Sister Pornpan',
@@ -147,7 +127,6 @@ const ministries: Ministry[] = [
     nameThai: 'มิชชั่นและการเผยแพร่',
     description: 'Sharing the gospel locally and supporting global mission initiatives.',
     descriptionThai: 'แบ่งปันข่าวประเสริฐในท้องถิ่นและสนับสนุนโครงการมิชชั่นทั่วโลก',
-    icon: Globe,
     color: 'bg-cyan-500',
     image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80',
     leader: 'Pastor Somchai',
@@ -159,7 +138,6 @@ const ministries: Ministry[] = [
     nameThai: 'แผนกการศึกษา',
     description: 'Supporting Christian education and scholarship opportunities for church members.',
     descriptionThai: 'สนับสนุนการศึกษาคริสเตียนและโอกาสทุนการศึกษาสำหรับสมาชิกโบสถ์',
-    icon: GraduationCap,
     color: 'bg-indigo-500',
     image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80',
     leader: 'Elder Wichai',
@@ -171,7 +149,6 @@ const ministries: Ministry[] = [
     nameThai: 'แผนกมัคนายก',
     description: 'Serving the practical needs of the church and maintaining facilities.',
     descriptionThai: 'รับใช้ความต้องการเชิงปฏิบัติของโบสถ์และดูแลสถานที่',
-    icon: Church,
     color: 'bg-slate-500',
     image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=600&q=80',
     leader: 'Head Deacon Prasong',
@@ -183,7 +160,6 @@ const ministries: Ministry[] = [
     nameThai: 'แผนกสื่อ',
     description: 'Managing church communications, livestreaming, and digital presence.',
     descriptionThai: 'จัดการการสื่อสารของโบสถ์ การถ่ายทอดสด และการมีตัวตนทางดิจิทัล',
-    icon: Mic2,
     color: 'bg-red-500',
     image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&q=80',
     leader: 'Brother Apichart',
@@ -193,6 +169,7 @@ const ministries: Ministry[] = [
 
 export function MinistriesPage() {
   const { language } = useI18n();
+  useDocumentTitle('Our Ministries', 'แผนกพันธกิจ', language);
 
   return (
     <PublicLayout>
@@ -215,7 +192,7 @@ export function MinistriesPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ministries.map((ministry) => {
-            const Icon = ministry.icon;
+            const Icon = ministryIconMap[ministry.id] || Users;
             return (
               <Link key={ministry.id} to={`/ministries/${ministry.id}`}>
                 <Card className="group h-full overflow-hidden transition-all hover:shadow-xl">
@@ -281,21 +258,6 @@ export function MinistriesPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

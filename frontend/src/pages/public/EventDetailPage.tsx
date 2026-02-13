@@ -26,6 +26,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Sample event data (in production, fetch from API based on ID)
 const eventsData: Record<
@@ -246,6 +247,7 @@ Space is limited! Register early to secure your spot.`,
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { language } = useI18n();
+  useDocumentTitle('Event Details', 'รายละเอียดกิจกรรม', language);
   const [isRsvpSubmitted, setIsRsvpSubmitted] = useState(false);
 
   const event = id ? eventsData[id] : null;
@@ -260,8 +262,16 @@ export function EventDetailPage() {
   };
 
   const handleAddToCalendar = () => {
-    // Generate iCal format
-    const startDate = new Date(event.date + 'T' + event.time.split(' - ')[0].replace(' ', ''));
+    // Generate iCal format - parse AM/PM time properly
+    const timeStr = event.time.split(' - ')[0].trim();
+    const [timePart, ampm] = timeStr.split(/\s+/);
+    const [hours, minutes] = timePart.split(':').map(Number);
+    let hour24 = hours;
+    if (ampm?.toUpperCase() === 'PM' && hours !== 12) hour24 += 12;
+    if (ampm?.toUpperCase() === 'AM' && hours === 12) hour24 = 0;
+    const startDate = new Date(
+      `${event.date}T${String(hour24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`
+    );
     const title = encodeURIComponent(language === 'th' ? event.titleThai : event.title);
     const location = encodeURIComponent(event.address);
     const details = encodeURIComponent(
@@ -476,7 +486,23 @@ export function EventDetailPage() {
                       {language === 'th' ? 'ดูเส้นทาง' : 'Get Directions'}
                     </Button>
                   )}
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      const url = window.location.href;
+                      const title = language === 'th' ? event.titleThai : event.title;
+                      if (navigator.share) {
+                        navigator.share({ title, url }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(url).then(() => {
+                          alert(
+                            language === 'th' ? 'คัดลอกลิงก์แล้ว!' : 'Link copied to clipboard!'
+                          );
+                        });
+                      }
+                    }}
+                  >
                     <Share2 className="mr-2 h-4 w-4" />
                     {language === 'th' ? 'แชร์กิจกรรม' : 'Share Event'}
                   </Button>
@@ -553,13 +579,6 @@ export function EventDetailPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

@@ -5,8 +5,7 @@
  * Features lightbox view, filtering by category, and lazy loading
  */
 
-import { useState, useCallback, useEffect } from 'react';
-import { Link } from 'react-router';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   X,
   ChevronLeft,
@@ -24,6 +23,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Photo album categories
 interface Album {
@@ -193,12 +193,16 @@ type ViewMode = 'albums' | 'photos';
 
 export function GalleryPage() {
   const { language } = useI18n();
+  useDocumentTitle('Photo Gallery', 'แกลเลอรี่', language);
   const [viewMode, setViewMode] = useState<ViewMode>('albums');
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  const filteredPhotos = selectedAlbum ? photos.filter((p) => p.albumId === selectedAlbum) : photos;
+  const filteredPhotos = useMemo(
+    () => (selectedAlbum ? photos.filter((p) => p.albumId === selectedAlbum) : photos),
+    [selectedAlbum]
+  );
 
   const openLightbox = useCallback((photo: Photo, index: number) => {
     setLightboxPhoto(photo);
@@ -238,6 +242,13 @@ export function GalleryPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  // Cleanup: restore body overflow on unmount (e.g. if user navigates away while lightbox is open)
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   return (
     <PublicLayout>
@@ -454,21 +465,6 @@ export function GalleryPage() {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <Link to="/" className="hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

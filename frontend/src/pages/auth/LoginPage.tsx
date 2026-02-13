@@ -55,7 +55,13 @@ export default function LoginPage() {
       // Redirect to dashboard after successful login
       navigate('/app/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      // Use generic message to prevent user enumeration
+      const message = err.message?.toLowerCase();
+      if (message?.includes('locked') || message?.includes('too many')) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

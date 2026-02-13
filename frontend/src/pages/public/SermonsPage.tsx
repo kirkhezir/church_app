@@ -5,8 +5,7 @@
  * Links to YouTube or audio files
  */
 
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { useState, useMemo } from 'react';
 import {
   Play,
   Search,
@@ -24,6 +23,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface Sermon {
   id: string;
@@ -129,7 +129,7 @@ const speakerList = ['All Speakers', 'Pastor Somchai', 'Elder Prasert'];
 
 export function SermonsPage() {
   const { language } = useI18n();
-  const [sermons, setSermons] = useState<Sermon[]>(allSermons);
+  useDocumentTitle('Sermons', 'คำเทศนา', language);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('All Series');
   const [selectedSpeaker, setSelectedSpeaker] = useState('All Speakers');
@@ -137,8 +137,8 @@ export function SermonsPage() {
   const [selectedSermon, setSelectedSermon] = useState<Sermon | null>(null);
   const sermonsPerPage = 6;
 
-  // Filter sermons
-  useEffect(() => {
+  // Filter sermons (memoized to avoid extra re-renders)
+  const sermons = useMemo(() => {
     let filtered = allSermons;
 
     if (searchTerm) {
@@ -159,8 +159,7 @@ export function SermonsPage() {
       filtered = filtered.filter((s) => s.speaker === selectedSpeaker);
     }
 
-    setSermons(filtered);
-    setCurrentPage(1);
+    return filtered;
   }, [searchTerm, selectedSeries, selectedSpeaker]);
 
   // Pagination
@@ -201,7 +200,7 @@ export function SermonsPage() {
                 <div className="aspect-video bg-slate-900">
                   {selectedSermon.youtubeId ? (
                     <iframe
-                      src={`https://www.youtube.com/embed/${selectedSermon.youtubeId}?autoplay=1`}
+                      src={`https://www.youtube.com/embed/${selectedSermon.youtubeId}`}
                       className="h-full w-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
@@ -259,7 +258,10 @@ export function SermonsPage() {
                 type="text"
                 placeholder="Search sermons..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
@@ -268,7 +270,10 @@ export function SermonsPage() {
               <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <select
                 value={selectedSeries}
-                onChange={(e) => setSelectedSeries(e.target.value)}
+                onChange={(e) => {
+                  setSelectedSeries(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {seriesList.map((series) => (
@@ -283,7 +288,10 @@ export function SermonsPage() {
               <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <select
                 value={selectedSpeaker}
-                onChange={(e) => setSelectedSpeaker(e.target.value)}
+                onChange={(e) => {
+                  setSelectedSpeaker(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {speakerList.map((speaker) => (
@@ -315,6 +323,7 @@ export function SermonsPage() {
                       <img
                         src={sermon.thumbnailUrl}
                         alt={sermon.title}
+                        loading="lazy"
                         className="h-full w-full object-cover transition-transform group-hover:scale-105"
                       />
                     ) : (
@@ -387,21 +396,6 @@ export function SermonsPage() {
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

@@ -4,7 +4,7 @@
  * Church blog with announcements, mission stories, and member testimonies
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router';
 import {
   Newspaper,
@@ -22,6 +22,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface BlogPost {
   id: string;
@@ -145,21 +146,29 @@ const categories = [
 
 export function BlogPage() {
   const { language } = useI18n();
+  useDocumentTitle('Blog & News', 'บล็อกและข่าวสาร', language);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
 
-  const filteredPosts = blogPosts.filter((post) => {
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
-    const matchesSearch =
-      searchQuery === '' ||
-      (language === 'th' ? post.titleThai : post.title)
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      (language === 'th' ? post.excerptThai : post.excerpt)
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredPosts = useMemo(
+    () =>
+      blogPosts.filter((post) => {
+        const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+        const matchesSearch =
+          searchQuery === '' ||
+          (language === 'th' ? post.titleThai : post.title)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          (language === 'th' ? post.excerptThai : post.excerpt)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      }),
+    [selectedCategory, searchQuery, language]
+  );
 
   const featuredPosts = blogPosts.filter((post) => post.featured);
 
@@ -261,7 +270,7 @@ export function BlogPage() {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`flex items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors ${
+                    className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 ${
                       selectedCategory === cat.id
                         ? 'bg-blue-600 text-white'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -281,7 +290,7 @@ export function BlogPage() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {filteredPosts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post) => (
+            {filteredPosts.slice(0, visibleCount).map((post) => (
               <Link key={post.id} to={`/blog/${post.id}`}>
                 <Card className="group h-full overflow-hidden transition-shadow hover:shadow-xl">
                   <div className="relative h-48 overflow-hidden">
@@ -340,9 +349,9 @@ export function BlogPage() {
         )}
 
         {/* Load More */}
-        {filteredPosts.length > 0 && (
+        {filteredPosts.length > visibleCount && (
           <div className="mt-8 text-center">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => setVisibleCount((prev) => prev + 6)}>
               {language === 'th' ? 'โหลดเพิ่มเติม' : 'Load More'}
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
@@ -360,32 +369,35 @@ export function BlogPage() {
               : 'Subscribe to our newsletter for the latest news and articles'}
           </p>
           <div className="mx-auto flex max-w-md flex-col gap-3 sm:flex-row">
-            <input
-              type="email"
-              placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
-              className="flex-1 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
-            <Button className="bg-white text-blue-600 hover:bg-blue-50">
-              {language === 'th' ? 'สมัครรับข่าว' : 'Subscribe'}
-            </Button>
+            {!newsletterSubmitted ? (
+              <>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  className="flex-1 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+                <Button
+                  className="bg-white text-blue-600 hover:bg-blue-50"
+                  onClick={() => {
+                    if (newsletterEmail && newsletterEmail.includes('@')) {
+                      setNewsletterSubmitted(true);
+                    }
+                  }}
+                >
+                  {language === 'th' ? 'สมัครรับข่าว' : 'Subscribe'}
+                </Button>
+              </>
+            ) : (
+              <p className="py-3 text-center text-blue-100" role="status" aria-live="polite">
+                {language === 'th' ? 'ขอบคุณที่สมัคร!' : 'Thanks for subscribing!'}
+              </p>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

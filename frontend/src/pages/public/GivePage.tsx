@@ -5,7 +5,6 @@
  */
 
 import { useState } from 'react';
-import { Link } from 'react-router';
 import {
   Heart,
   CreditCard,
@@ -24,6 +23,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 type GivingCategory = 'tithe' | 'offering' | 'missions' | 'building' | 'youth' | 'other';
 type PaymentMethod = 'bank' | 'promptpay' | 'cash';
@@ -115,6 +115,7 @@ const bankAccounts: BankAccount[] = [
 
 export function GivePage() {
   const { language } = useI18n();
+  useDocumentTitle('Give', 'ถวาย', language);
   const [selectedCategory, setSelectedCategory] = useState<GivingCategory | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [amount, setAmount] = useState('');
@@ -122,9 +123,25 @@ export function GivePage() {
   const [showFAQ, setShowFAQ] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [amountError, setAmountError] = useState('');
+
   const presetAmounts = [100, 500, 1000, 2000, 5000];
 
+  const handleAmountChange = (value: string) => {
+    setAmount(value);
+    setAmountError('');
+  };
+
   const handleSubmit = () => {
+    const numAmount = parseFloat(amount);
+    if (!amount || isNaN(numAmount) || numAmount <= 0) {
+      setAmountError(
+        language === 'th'
+          ? 'กรุณาระบุจำนวนเงินที่ถูกต้อง'
+          : 'Please enter a valid amount greater than 0'
+      );
+      return;
+    }
     // In production, this would process the donation
     setIsSubmitted(true);
   };
@@ -206,7 +223,7 @@ export function GivePage() {
                         <button
                           key={option.id}
                           onClick={() => setSelectedCategory(option.id)}
-                          className={`rounded-lg border-2 p-4 text-left transition-all ${
+                          className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                             selectedCategory === option.id
                               ? 'border-amber-500 bg-amber-50'
                               : 'border-slate-200 hover:border-slate-300'
@@ -242,8 +259,8 @@ export function GivePage() {
                     {presetAmounts.map((preset) => (
                       <button
                         key={preset}
-                        onClick={() => setAmount(preset.toString())}
-                        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                        onClick={() => handleAmountChange(preset.toString())}
+                        className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 ${
                           amount === preset.toString()
                             ? 'bg-amber-600 text-white'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -259,12 +276,24 @@ export function GivePage() {
                     </span>
                     <input
                       type="number"
+                      min="1"
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      onChange={(e) => handleAmountChange(e.target.value)}
                       placeholder="0"
-                      className="w-full rounded-lg border border-slate-200 py-3 pl-8 pr-4 text-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                      className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus:outline-none focus:ring-2 ${
+                        amountError
+                          ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                          : 'border-slate-200 focus:border-amber-500 focus:ring-amber-200'
+                      }`}
+                      aria-invalid={!!amountError}
+                      aria-describedby={amountError ? 'amount-error' : undefined}
                     />
                   </div>
+                  {amountError && (
+                    <p id="amount-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {amountError}
+                    </p>
+                  )}
                   <div className="mt-4 flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -295,7 +324,7 @@ export function GivePage() {
                   <div className="grid gap-3 sm:grid-cols-3">
                     <button
                       onClick={() => setPaymentMethod('bank')}
-                      className={`rounded-lg border-2 p-4 text-center transition-all ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'bank'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-slate-200 hover:border-slate-300'
@@ -308,7 +337,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('promptpay')}
-                      className={`rounded-lg border-2 p-4 text-center transition-all ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'promptpay'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-slate-200 hover:border-slate-300'
@@ -319,7 +348,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('cash')}
-                      className={`rounded-lg border-2 p-4 text-center transition-all ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'cash'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-slate-200 hover:border-slate-300'
@@ -485,7 +514,7 @@ export function GivePage() {
                       <div key={faq.id} className="border-b border-slate-100 last:border-0">
                         <button
                           onClick={() => setShowFAQ(showFAQ === faq.id ? null : faq.id)}
-                          className="flex w-full items-center justify-between py-3 text-left text-sm"
+                          className="flex w-full cursor-pointer items-center justify-between py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400"
                         >
                           <span className="font-medium text-slate-900">
                             {language === 'th' ? faq.qThai : faq.q}
@@ -510,7 +539,7 @@ export function GivePage() {
           </div>
         ) : (
           /* Success State */
-          <div className="mx-auto max-w-lg py-12 text-center">
+          <div className="mx-auto max-w-lg py-12 text-center" role="status" aria-live="polite">
             <CheckCircle className="mx-auto mb-6 h-20 w-20 text-green-500" />
             <h2 className="mb-4 text-3xl font-bold text-slate-900">
               {language === 'th' ? 'ขอบคุณสำหรับการถวาย!' : 'Thank You for Your Gift!'}
@@ -540,7 +569,7 @@ export function GivePage() {
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-slate-500">{language === 'th' ? 'จำนวน:' : 'Amount:'}</dt>
-                    <dd className="font-medium">฿{parseInt(amount).toLocaleString()}</dd>
+                    <dd className="font-medium">฿{(parseInt(amount) || 0).toLocaleString()}</dd>
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-slate-500">
@@ -606,21 +635,6 @@ export function GivePage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

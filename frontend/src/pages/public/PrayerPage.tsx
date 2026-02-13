@@ -21,6 +21,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface PrayerRequest {
   id: string;
@@ -92,6 +93,7 @@ const categories = [
 
 export function PrayerPage() {
   const { language } = useI18n();
+  useDocumentTitle('Prayer Requests', 'คำขออธิษฐาน', language);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -107,7 +109,6 @@ export function PrayerPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In production, this would submit to an API
-    console.log('Prayer request submitted:', formData);
     setIsSubmitted(true);
   };
 
@@ -282,7 +283,7 @@ export function PrayerPage() {
                     </form>
                   </>
                 ) : (
-                  <div className="py-12 text-center">
+                  <div className="py-12 text-center" role="status" aria-live="polite">
                     <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
                     <h3 className="mb-2 text-xl font-bold text-slate-900">
                       {language === 'th' ? 'ส่งคำอธิษฐานสำเร็จ!' : 'Prayer Request Submitted!'}
@@ -396,21 +397,6 @@ export function PrayerPage() {
           </Link>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-          <div className="mt-2 flex justify-center gap-4">
-            <Link to="/" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'หน้าแรก' : 'Home'}
-            </Link>
-            <Link to="/privacy" className="transition-colors hover:text-blue-600">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }

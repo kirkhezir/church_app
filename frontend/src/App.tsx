@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
+import { PageErrorBoundary } from './components/common/ErrorBoundary';
 
 // Eagerly loaded - critical path (public landing pages)
 import LandingPage from './pages/public/LandingPage';
@@ -133,10 +134,33 @@ const PageLoader = () => (
 );
 
 const NotFoundPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-100">
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h1 className="mb-4 text-2xl font-bold">404 - Not Found</h1>
-      <p className="text-gray-600">The page you&apos;re looking for doesn&apos;t exist.</p>
+  <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
+        <svg
+          className="h-8 w-8 text-slate-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <h1 className="mb-2 text-2xl font-bold text-slate-900">404 — Page Not Found</h1>
+      <p className="mb-6 text-slate-600">
+        The page you&apos;re looking for doesn&apos;t exist or has been moved.
+      </p>
+      <a
+        href="/"
+        className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+      >
+        Return to Home
+      </a>
     </div>
   </div>
 );
@@ -157,316 +181,318 @@ const App: React.FC = () => {
       <ScrollToTop />
 
       <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* ============================================================ */}
-          {/* PUBLIC LANDING PAGES (no authentication required)            */}
-          {/* These use PublicLayout with church branding                   */}
-          {/* ============================================================ */}
+        <PageErrorBoundary>
+          <Routes>
+            {/* ============================================================ */}
+            {/* PUBLIC LANDING PAGES (no authentication required)            */}
+            {/* These use PublicLayout with church branding                   */}
+            {/* ============================================================ */}
 
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/privacy" element={<PrivacyPolicyPage />} />
-          <Route path="/visit" element={<VisitPage />} />
-          <Route path="/sermons" element={<SermonsPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/ministries" element={<MinistriesPage />} />
-          <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
-          <Route path="/events" element={<PublicEventsPage />} />
-          <Route path="/events/:id" element={<PublicEventDetailPage />} />
-          <Route path="/prayer" element={<PrayerPage />} />
-          <Route path="/give" element={<GivePage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/news" element={<BlogPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/visit" element={<VisitPage />} />
+            <Route path="/sermons" element={<SermonsPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/ministries" element={<MinistriesPage />} />
+            <Route path="/ministries/:slug" element={<MinistryDetailPage />} />
+            <Route path="/events" element={<PublicEventsPage />} />
+            <Route path="/events/:id" element={<PublicEventDetailPage />} />
+            <Route path="/prayer" element={<PrayerPage />} />
+            <Route path="/give" element={<GivePage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/news" element={<BlogPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
 
-          {/* ============================================================ */}
-          {/* AUTH PAGES (redirect to app if already authenticated)         */}
-          {/* ============================================================ */}
+            {/* ============================================================ */}
+            {/* AUTH PAGES (redirect to app if already authenticated)         */}
+            {/* ============================================================ */}
 
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <LoginPage />
-              </PublicRoute>
-            }
-          />
-          {/* Registration is admin-only — redirect visitors to login */}
-          <Route path="/register" element={<Navigate to="/login" replace />} />
-          <Route
-            path="/password-reset-request"
-            element={
-              <PublicRoute>
-                <PasswordResetRequestPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <PublicRoute>
-                <PasswordResetPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/mfa-verify"
-            element={
-              <PublicRoute>
-                <MFAVerificationPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/mfa-enroll"
-            element={
-              <PrivateRoute>
-                <MFAEnrollmentPage />
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              }
+            />
+            {/* Registration is admin-only — redirect visitors to login */}
+            <Route path="/register" element={<Navigate to="/login" replace />} />
+            <Route
+              path="/password-reset-request"
+              element={
+                <PublicRoute>
+                  <PasswordResetRequestPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <PublicRoute>
+                  <PasswordResetPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/mfa-verify"
+              element={
+                <PublicRoute>
+                  <MFAVerificationPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/mfa-enroll"
+              element={
+                <PrivateRoute>
+                  <MFAEnrollmentPage />
+                </PrivateRoute>
+              }
+            />
 
-          {/* ============================================================ */}
-          {/* PRIVATE APP PAGES (all under /app/*, require authentication) */}
-          {/* These use SidebarLayout with app navigation                   */}
-          {/* ============================================================ */}
+            {/* ============================================================ */}
+            {/* PRIVATE APP PAGES (all under /app/*, require authentication) */}
+            {/* These use SidebarLayout with app navigation                   */}
+            {/* ============================================================ */}
 
-          {/* Dashboard */}
-          <Route
-            path="/app/dashboard"
-            element={
-              <PrivateRoute>
-                <MemberDashboard />
-              </PrivateRoute>
-            }
-          />
+            {/* Dashboard */}
+            <Route
+              path="/app/dashboard"
+              element={
+                <PrivateRoute>
+                  <MemberDashboard />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Event Management */}
-          <Route
-            path="/app/events"
-            element={
-              <PrivateRoute>
-                <EventsListPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/events/create"
-            element={
-              <AdminRoute>
-                <EventCreatePage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/events/:id"
-            element={
-              <PrivateRoute>
-                <EventDetailPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/events/:id/edit"
-            element={
-              <AdminRoute>
-                <EventEditPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/events/:id/rsvps"
-            element={
-              <AdminRoute>
-                <RSVPListPage />
-              </AdminRoute>
-            }
-          />
+            {/* Event Management */}
+            <Route
+              path="/app/events"
+              element={
+                <PrivateRoute>
+                  <EventsListPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/events/create"
+              element={
+                <AdminRoute>
+                  <EventCreatePage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/events/:id"
+              element={
+                <PrivateRoute>
+                  <EventDetailPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/events/:id/edit"
+              element={
+                <AdminRoute>
+                  <EventEditPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/events/:id/rsvps"
+              element={
+                <AdminRoute>
+                  <RSVPListPage />
+                </AdminRoute>
+              }
+            />
 
-          {/* Announcements */}
-          <Route
-            path="/app/announcements"
-            element={
-              <PrivateRoute>
-                <AnnouncementsPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/announcements/:id"
-            element={
-              <PrivateRoute>
-                <AnnouncementDetailPage />
-              </PrivateRoute>
-            }
-          />
+            {/* Announcements */}
+            <Route
+              path="/app/announcements"
+              element={
+                <PrivateRoute>
+                  <AnnouncementsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/announcements/:id"
+              element={
+                <PrivateRoute>
+                  <AnnouncementDetailPage />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Member Directory */}
-          <Route
-            path="/app/members"
-            element={
-              <PrivateRoute>
-                <MemberDirectoryPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/members/:id"
-            element={
-              <PrivateRoute>
-                <MemberProfilePage />
-              </PrivateRoute>
-            }
-          />
+            {/* Member Directory */}
+            <Route
+              path="/app/members"
+              element={
+                <PrivateRoute>
+                  <MemberDirectoryPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/members/:id"
+              element={
+                <PrivateRoute>
+                  <MemberProfilePage />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Messaging */}
-          <Route
-            path="/app/messages"
-            element={
-              <PrivateRoute>
-                <MessagesListPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/messages/compose"
-            element={
-              <PrivateRoute>
-                <ComposeMessagePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/messages/:id"
-            element={
-              <PrivateRoute>
-                <MessageDetailPage />
-              </PrivateRoute>
-            }
-          />
+            {/* Messaging */}
+            <Route
+              path="/app/messages"
+              element={
+                <PrivateRoute>
+                  <MessagesListPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/messages/compose"
+              element={
+                <PrivateRoute>
+                  <ComposeMessagePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/messages/:id"
+              element={
+                <PrivateRoute>
+                  <MessageDetailPage />
+                </PrivateRoute>
+              }
+            />
 
-          {/* Profile & Settings */}
-          <Route
-            path="/app/profile"
-            element={
-              <PrivateRoute>
-                <EditProfilePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/notifications"
-            element={
-              <PrivateRoute>
-                <NotificationSettingsPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/app/settings"
-            element={
-              <PrivateRoute>
-                <SettingsPage />
-              </PrivateRoute>
-            }
-          />
+            {/* Profile & Settings */}
+            <Route
+              path="/app/profile"
+              element={
+                <PrivateRoute>
+                  <EditProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/notifications"
+              element={
+                <PrivateRoute>
+                  <NotificationSettingsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/settings"
+              element={
+                <PrivateRoute>
+                  <SettingsPage />
+                </PrivateRoute>
+              }
+            />
 
-          {/* ============================================================ */}
-          {/* ADMIN PAGES (under /app/admin/*, require ADMIN role)          */}
-          {/* ============================================================ */}
+            {/* ============================================================ */}
+            {/* ADMIN PAGES (under /app/admin/*, require ADMIN role)          */}
+            {/* ============================================================ */}
 
-          <Route
-            path="/app/admin/announcements"
-            element={
-              <AdminRoute>
-                <AdminAnnouncementsPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/announcements/create"
-            element={
-              <AdminRoute>
-                <AnnouncementCreatePage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/announcements/:id/edit"
-            element={
-              <AdminRoute>
-                <AnnouncementEditPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/announcements/:id/analytics"
-            element={
-              <AdminRoute>
-                <AnnouncementAnalyticsPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/members"
-            element={
-              <AdminRoute>
-                <AdminMemberListPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/members/create"
-            element={
-              <AdminRoute>
-                <AdminCreateMemberPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/audit-logs"
-            element={
-              <AdminRoute>
-                <AdminAuditLogsPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/export"
-            element={
-              <AdminRoute>
-                <AdminDataExportPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/health"
-            element={
-              <AdminRoute>
-                <AdminHealthPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/reports"
-            element={
-              <AdminRoute>
-                <AdminReportsPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/app/admin/analytics"
-            element={
-              <AdminRoute>
-                <AdminAnalyticsPage />
-              </AdminRoute>
-            }
-          />
+            <Route
+              path="/app/admin/announcements"
+              element={
+                <AdminRoute>
+                  <AdminAnnouncementsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/announcements/create"
+              element={
+                <AdminRoute>
+                  <AnnouncementCreatePage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/announcements/:id/edit"
+              element={
+                <AdminRoute>
+                  <AnnouncementEditPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/announcements/:id/analytics"
+              element={
+                <AdminRoute>
+                  <AnnouncementAnalyticsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/members"
+              element={
+                <AdminRoute>
+                  <AdminMemberListPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/members/create"
+              element={
+                <AdminRoute>
+                  <AdminCreateMemberPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/audit-logs"
+              element={
+                <AdminRoute>
+                  <AdminAuditLogsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/export"
+              element={
+                <AdminRoute>
+                  <AdminDataExportPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/health"
+              element={
+                <AdminRoute>
+                  <AdminHealthPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/reports"
+              element={
+                <AdminRoute>
+                  <AdminReportsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/analytics"
+              element={
+                <AdminRoute>
+                  <AdminAnalyticsPage />
+                </AdminRoute>
+              }
+            />
 
-          {/* 404 Not Found */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* 404 Not Found */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </PageErrorBoundary>
       </Suspense>
     </>
   );

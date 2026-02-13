@@ -59,6 +59,7 @@ import {
   VisitUsSection,
 } from '../../components/features/landing';
 import { useI18n } from '../../i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { SEO, DEFAULT_SEO } from '../../components/common/SEO';
 
 // =============================================================================
@@ -111,6 +112,9 @@ const SOCIAL_LINKS = {
 // MAIN LANDING PAGE
 // =============================================================================
 export function LandingPage() {
+  const { language } = useI18n();
+  useDocumentTitle('Home', 'หน้าแรก', language);
+
   return (
     <main className="min-h-screen bg-white dark:bg-slate-900">
       {/* SEO Meta Tags */}
@@ -225,12 +229,12 @@ function NavigationHeaderContent() {
           {/* Logo - Matching PublicLayout styling */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            className="flex cursor-pointer items-center gap-2 rounded-lg transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
             aria-label="Go to top"
           >
             <img
               src={CHURCH_LOGO}
-              alt="Church Logo"
+              alt={t('common.churchName')}
               className="h-10 w-10 rounded-full object-contain"
             />
             <div className="hidden sm:block">
@@ -247,7 +251,7 @@ function NavigationHeaderContent() {
                 // Dropdown menu for Explore
                 <div key={link.labelKey} className="group relative">
                   <button
-                    className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                       isScrolled
                         ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                         : 'text-white/90 hover:bg-white/10 hover:text-white'
@@ -306,7 +310,7 @@ function NavigationHeaderContent() {
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                     isScrolled
                       ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       : 'text-white/90 hover:bg-white/10 hover:text-white'
@@ -331,7 +335,7 @@ function NavigationHeaderContent() {
             {/* Contact Button with Icon */}
             <button
               onClick={() => scrollToSection('#contact')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+              className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
                 isScrolled
                   ? 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
                   : 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
@@ -345,7 +349,7 @@ function NavigationHeaderContent() {
             {/* Search Button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className={`rounded-lg p-2 transition-colors ${
+              className={`rounded-lg p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                 isScrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white/90 hover:bg-white/10'
               }`}
               aria-label="Search"
@@ -375,7 +379,7 @@ function NavigationHeaderContent() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`rounded-lg p-2 md:hidden ${
+            className={`rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 md:hidden ${
               isScrolled ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
             }`}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -648,7 +652,7 @@ function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToServices}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 transition-colors hover:text-white"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full text-white/60 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50"
         aria-label="Scroll to content"
       >
         <ChevronDown className="h-8 w-8 animate-bounce" />
@@ -797,7 +801,7 @@ function FooterSection() {
               <button
                 type="submit"
                 disabled={subscribed}
-                className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:bg-emerald-600"
+                className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:bg-emerald-600"
               >
                 {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
               </button>
@@ -898,7 +902,7 @@ function FooterSection() {
                       onClick={() =>
                         document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' })
                       }
-                      className="text-slate-400 transition-colors hover:text-white"
+                      className="cursor-pointer rounded text-slate-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
                       {t(link.labelKey)}
                     </button>

@@ -4,7 +4,7 @@
  * Allows users to reset their password using a token from email.
  */
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -17,22 +17,16 @@ export default function PasswordResetPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [token, setToken] = useState('');
+  const [token] = useState(() => searchParams.get('token') || '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    // Get token from URL query parameter
-    const tokenParam = searchParams.get('token');
-    if (tokenParam) {
-      setToken(tokenParam);
-    } else {
-      setError('Invalid or missing reset token. Please request a new password reset.');
-    }
-  }, [searchParams]);
+  const [error, setError] = useState(() =>
+    searchParams.get('token')
+      ? ''
+      : 'Invalid or missing reset token. Please request a new password reset.'
+  );
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 8) {
@@ -82,10 +76,6 @@ export default function PasswordResetPage() {
 
       if (response.data.success) {
         setSuccess(true);
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
       } else {
         setError(response.data.message || 'Failed to reset password');
       }
@@ -115,7 +105,9 @@ export default function PasswordResetPage() {
                 password.
               </AlertDescription>
             </Alert>
-            <p className="text-center text-sm text-gray-600">Redirecting to login page...</p>
+            <p className="text-center text-sm text-gray-600">
+              You can now log in with your new password.
+            </p>
             <Button asChild className="w-full">
               <Link to="/login">Go to Login</Link>
             </Button>

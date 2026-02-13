@@ -9,7 +9,7 @@
  * T297: Create MFA verification page
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,9 +42,13 @@ export default function MFAVerificationPage() {
 
   const state = location.state as LocationState | undefined;
 
+  useEffect(() => {
+    if (!state?.mfaToken) {
+      navigate('/login', { replace: true });
+    }
+  }, [state, navigate]);
+
   if (!state?.mfaToken) {
-    // No MFA token - redirect to login
-    navigate('/login');
     return null;
   }
 

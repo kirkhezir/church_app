@@ -9,9 +9,13 @@ import { Link } from 'react-router';
 import { ArrowLeft, Shield, Lock, Eye, Trash2, Mail, FileText } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
+import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export function PrivacyPolicyPage() {
   const lastUpdated = 'January 28, 2026';
+  const { language } = useI18n();
+  useDocumentTitle('Privacy Policy', 'นโยบายความเป็นส่วนตัว', language);
 
   return (
     <PublicLayout>
@@ -20,10 +24,19 @@ export function PrivacyPolicyPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           <Link to="/" className="inline-flex items-center gap-2 text-slate-300 hover:text-white">
             <ArrowLeft className="h-4 w-4" />
-            Back to Home
+            {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold">Privacy Policy</h1>
-          <p className="mt-2 text-slate-300">Last updated: {lastUpdated}</p>
+          <h1 className="mt-4 text-3xl font-bold">
+            {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
+          </h1>
+          <p className="mt-2 text-slate-300">
+            {language === 'th' ? 'อัปเดตล่าสุด: 28 มกราคม 2026' : `Last updated: ${lastUpdated}`}
+          </p>
+          {language === 'th' && (
+            <p className="mt-2 text-sm text-slate-400">
+              หมายเหตุ: นโยบายความเป็นส่วนตัวฉบับนี้จัดทำเป็นภาษาอังกฤษ
+            </p>
+          )}
         </div>
       </section>
 
@@ -243,7 +256,7 @@ export function PrivacyPolicyPage() {
           <Link to="/">
             <Button size="lg" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Home
+              {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
             </Button>
           </Link>
         </div>

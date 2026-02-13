@@ -93,14 +93,22 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
  * Page Error Boundary
  * Full-page error display for route-level errors
  */
-export class PageErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class PageErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState & { isChunkError?: boolean }
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState & { isChunkError?: boolean } {
+    const isChunkError =
+      error.name === 'ChunkLoadError' ||
+      error.message?.includes('Loading chunk') ||
+      error.message?.includes('dynamically imported module') ||
+      error.message?.includes('Failed to fetch');
+    return { hasError: true, error, isChunkError };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -129,10 +137,23 @@ export class PageErrorBoundary extends Component<ErrorBoundaryProps, ErrorBounda
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
-            <h1 className="mb-2 text-2xl font-bold text-gray-900">Oops! Something went wrong</h1>
-            <p className="mb-6 text-gray-600">
-              We're sorry, but something unexpected happened. Please try again.
-            </p>
+            {this.state.isChunkError ? (
+              <>
+                <h1 className="mb-2 text-2xl font-bold text-gray-900">Page Update Available</h1>
+                <p className="mb-6 text-gray-600">
+                  A new version of the app is available. Please reload to get the latest updates.
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="mb-2 text-2xl font-bold text-gray-900">
+                  Oops! Something went wrong
+                </h1>
+                <p className="mb-6 text-gray-600">
+                  We're sorry, but something unexpected happened. Please try again.
+                </p>
+              </>
+            )}
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mb-6 rounded-lg bg-gray-100 p-4 text-left">
                 <p className="font-mono text-sm text-red-600">{this.state.error.message}</p>

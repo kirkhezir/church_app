@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router';
+import { PublicFooter } from '@/components/layout/PublicFooter';
 import {
   Menu,
   X,
@@ -101,6 +102,20 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  // Handle hash scrolling after navigation
+  useEffect(() => {
+    if (location.hash) {
+      // Small delay to let the page render
+      const timer = setTimeout(() => {
+        const element = document.querySelector(location.hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [location.hash, location.pathname]);
+
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
     setOpenDropdown(null);
@@ -115,7 +130,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
           element.scrollIntoView({ behavior: 'smooth' });
         }
       }
-      // If not on home page, Link will navigate and then scroll
+      // If not on home page, Link will navigate and then the useEffect above handles scroll
     }
   };
 
@@ -129,6 +144,14 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Skip to content link for keyboard users */}
+      <a
+        href="#main-content"
+        className="fixed left-2 top-2 z-[100] -translate-y-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        Skip to main content
+      </a>
+
       {/* Navigation Header */}
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -142,7 +165,7 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
           <Link to="/" className="flex items-center gap-2">
             <img
               src={CHURCH_LOGO}
-              alt="Church Logo"
+              alt={t('common.churchName')}
               className="h-10 w-10 rounded-full object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -168,6 +191,16 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
                     <button
+                      aria-expanded={openDropdown === link.labelKey}
+                      aria-haspopup="true"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setOpenDropdown(openDropdown === link.labelKey ? null : link.labelKey);
+                        } else if (e.key === 'Escape') {
+                          setOpenDropdown(null);
+                        }
+                      }}
                       className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                         showTransparent
                           ? 'text-white/90 hover:bg-white/10 hover:text-white'
@@ -175,14 +208,20 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
                       }`}
                     >
                       {t(link.labelKey)}
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${openDropdown === link.labelKey ? 'rotate-180' : ''}`}
+                      />
                     </button>
                     {openDropdown === link.labelKey && (
-                      <div className="absolute left-0 top-full z-50 w-48 rounded-lg border border-slate-200 bg-white py-2 shadow-lg">
+                      <div
+                        role="menu"
+                        className="absolute left-0 top-full z-50 w-48 rounded-lg border border-slate-200 bg-white py-2 shadow-lg"
+                      >
                         {link.children.map((child) => (
                           <Link
                             key={child.href}
                             to={child.href}
+                            role="menuitem"
                             onClick={() => handleNavClick(child.href)}
                             className={`block px-4 py-2 text-sm transition-colors ${
                               isActive(child.href)
@@ -387,7 +426,10 @@ export function PublicLayout({ children, transparentHeader = false }: PublicLayo
       <FloatingLiveIndicator />
 
       {/* Main Content */}
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
+
+      {/* Shared Footer */}
+      <PublicFooter />
     </div>
   );
 }

@@ -1634,3 +1634,136 @@ Registration: Remove /register placeholder — admin-only creation is the intend
 i18n: Defer app-page localization — public pages already support Thai/English
 Architecture cleanup: Do incrementally alongside feature work rather than as a big-bang refactor
 Test gaps: Prioritize security-critical use cases over read-path ones already covered by contract tests
+
+### New Plan for All Landing pages components opus 4.6
+
+Plan: Church Landing Pages — Comprehensive Bug Fix, Accessibility & UX Enhancement
+TL;DR: A thorough audit of all 14 public pages, 5 auth pages, and shared layouts revealed 3 runtime bugs, 4 broken links, 6 non-functional buttons/forms, 15+ i18n gaps, 14 accessibility violations, and major code duplication (navigation defined twice, footer copy-pasted 12 times). This plan organizes fixes into 6 prioritized phases — from critical runtime bugs through architecture consolidation, accessibility/i18n, UX enhancements, design system alignment (using ui-ux-pro-max), and final polish. Each phase is independently shippable.
+
+Phase 1: Critical Runtime Bugs & Security Fixes (Priority: Immediate)
+Fix handleAddToCalendar crash in EventDetailPage.tsx:242-252 — The date string "2026-02-07T11:00AM" is invalid ISO 8601, causing toISOString() to throw RangeError. Parse AM/PM time to 24-hour format before constructing the Date.
+
+Fix navigate() called during render in MFAVerificationPage.tsx:47-49 — Wrap the !state?.mfaToken redirect in a useEffect to avoid the React anti-pattern warning.
+
+Fix token flash bug in PasswordResetPage.tsx:22-35 — Initialize token state directly from searchParams.get('token') instead of empty string to prevent the "Invalid Reset Link" view from flashing.
+
+Clean up setTimeout leak in PasswordResetPage.tsx:87 — Store the timer ID and return a cleanup function from the useEffect (or move the redirect into a useEffect with proper unmount handling).
+
+Remove console.log of prayer data in PrayerPage.tsx:105 — Leaks potentially sensitive personal information in production.
+
+Fix user enumeration risk in LoginPage.tsx:56 — Replace err.message with a generic "Invalid email or password" message regardless of the specific backend error.
+
+Review MFA secret flow in MFAEnrollmentPage.tsx:71 — Sending the TOTP secret from client→server on verify is a security concern. Verify server-side tracking and remove client-sent secret if the server already stores it from the enrollment step.
+
+Add Error Boundary — Wrap lazy-loaded routes in App.tsx with a React error boundary component that shows a retry UI when chunk loading fails, preventing full white-screen crashes.
+
+Phase 2: Broken Links, Dead Buttons & Navigation Fixes
+Fix broken blog links — BlogPage.tsx:297 links to /blog/:id but no BlogDetailPage route exists. Either create a BlogDetailPage.tsx component and add the route in App.tsx, or change links to anchor to expanded blog content on the same page.
+
+Fix "Load More" button in BlogPage.tsx:413-417 — Add onClick handler (paginate or reveal additional posts from the hardcoded array).
+
+Fix blog newsletter form in BlogPage.tsx:427-440 — Add name attribute to email input, onSubmit to form, and onClick to subscribe button. At minimum, show a success toast.
+
+Fix incomplete ministry detail pages — MinistryDetailPage.tsx:82-230 only has data for 2 of 12 ministries. Add detail data for all 12, or show a proper "Coming soon" placeholder instead of silently redirecting.
+
+Fix "Share Event" button in EventDetailPage.tsx:489-492 — Implement navigator.share() (with clipboard fallback) or a share menu.
+
+Fix "Request Resource" button in ResourcesPage.tsx:537-539 — Add onClick handler (modal form or mailto link).
+
+Fix resource download URLs in ResourcesPage.tsx — Replace "#" placeholder URLs with actual resources or disable buttons with a "Coming soon" tooltip.
+
+Fix hash link navigation in PublicLayout.tsx:113-120 — When navigating from a subpage to /#contact, add a useEffect watching location.hash after navigation to trigger scroll.
+
+Phase 3: Architecture Consolidation (DRY)
+Unify navigation into a single component — Extract the NavigationHeaderContent from LandingPage.tsx:156 into a shared PublicNavigation component. Both LandingPage and PublicLayout.tsx should use this same component (with props for variant: transparent vs solid). Remove the inline NavigationHeaderContent from LandingPage. Consolidate the duplicated NAV_LINKS array into a single shared constant.
+
+Add footer to PublicLayout — Create a shared PublicFooter component (rich version matching the LandingPage.tsx:815) and add it to PublicLayout.tsx. Remove all per-page inline footers from: AboutPage, VisitPage, SermonsPage, GalleryPage, MinistriesPage, PrayerPage, GivePage, BlogPage, ResourcesPage.
+
+Remove unused landing components — Delete or wire up the 7 exported-but-unused components in landing: NavigationHeader, AboutSection, PlanYourVisitSection, PrayerRequestSection, GiveSection, ProgressCountersSection, MemberPortalLink. If they're earmarked for future use, move them to a \_drafts/ directory or add // TODO comments.
+
+Share iconMap between pages — Move the ministry icon mapping from MinistryDetailPage.tsx:233-246 and MinistriesPage.tsx into a shared constants/ministries.ts file.
+
+Standardize import paths — Migrate all relative imports (../../components/) to @/ alias paths across all public pages (AboutPage.tsx:29, VisitPage.tsx:27, SermonsPage.tsx:23).
+
+Phase 4: Accessibility & i18n
+Add aria-live="assertive" to all error alerts across all auth pages (LoginPage.tsx, PasswordResetRequestPage.tsx, PasswordResetPage.tsx, MFAVerificationPage.tsx, MFAEnrollmentPage.tsx) and public form pages.
+
+Fix keyboard-inaccessible dropdown menus — LandingPage.tsx:252-257 and PublicLayout.tsx:165-180 use CSS :hover and onMouseEnter/onMouseLeave for dropdowns. Add aria-expanded, aria-haspopup, keyboard Enter/Space toggle, Escape to close, and focus trapping. Also add tap/click toggle for touch devices.
+
+Fix label associations — Add htmlFor/id pairs to all form inputs in: PrayerPage.tsx:146-177, GivePage.tsx:265, MFAVerificationPage.tsx:99, MFAEnrollmentPage.tsx:148. Add <label> elements to <select> filters in SermonsPage.tsx:245-260.
+
+Fix gallery keyboard navigation — GalleryPage.tsx:304-313 photo grid items are <div onClick>. Change to <button> or add role="button", tabIndex={0}, onKeyDown handler. Add aria-label to lightbox action buttons at GalleryPage.tsx:383-387.
+
+Fix ARIA roles on EventsPage — EventsPage.tsx:295-320 view tabs need aria-controls, id attributes, and content panels need role="tabpanel". Category filter buttons at EventsPage.tsx:276-293 need role="radiogroup" / role="radio".
+
+Add skip-to-content link to PublicLayout — PublicLayout.tsx lacks this; only LandingPage.tsx:109-114 has it.
+
+Translate logo alt text — Change "Church Logo" in LandingPage.tsx:237 and PublicLayout.tsx:146 to use t('common.churchName').
+
+Add autoComplete="one-time-code" to TOTP inputs in MFAVerificationPage.tsx and MFAEnrollmentPage.tsx.
+
+i18n: Translate all auth pages — All 5 auth pages have zero Thai translations. Add bilingual support using the existing useI18n() hook for: login form labels, error messages, MFA instructions, password reset flows.
+
+i18n: Translate remaining public page content — Priority order:
+
+PrivacyPolicyPage.tsx — entire page is English-only; doesn't even use useI18n().
+AboutPage.tsx:200-276 — Core beliefs, Our Story, Leadership — all English-only.
+VisitPage.tsx:56-119 — Service names, "What to Know" sections — all English-only.
+SermonsPage.tsx:43-116 — Sermon titles, speakers, descriptions.
+LandingPage.tsx:822-918 — Footer service times, contact heading, tagline.
+Add descriptive alt text to ministry gallery images in MinistryDetailPage.tsx:404-412 — currently empty alt="".
+Phase 5: UX Enhancements & Performance
+Generate a design system using ui-ux-pro-max — Run the toolkit to establish a formal design specification:
+Then align all pages with the resulting design-system/MASTER.md.
+
+Fix timezone bug in EventsPage calendar — EventsPage.tsx:525-527 isToday uses UTC toISOString(). Replace with local date formatting: new Intl.DateTimeFormat('en-CA').format(new Date()).
+
+Memoize computed values — Add useMemo to:
+
+LandingPage.tsx:559-585 tagline parsing
+EventsPage.tsx:207-213 getDaysInMonth / getEventsForDate
+GalleryPage.tsx:183-185 filteredPhotos
+SermonsPage.tsx:133-155 — Replace useEffect + setState filtering pattern with useMemo.
+Fix body overflow leak in GalleryPage.tsx:191 — Save and restore original document.body.style.overflow value instead of resetting to empty string.
+
+Add form validation — Add min="1" to amount input in GivePage.tsx:265, guard against NaN in summary at GivePage.tsx:535, add phone pattern validation in VisitPage.tsx:398-401.
+
+Remove YouTube autoplay in SermonsPage.tsx:210-215 — autoplay=1 is disruptive; let users opt-in to play.
+
+Improve the 404 page — Extract the inline NotFoundPage from App.tsx:135-141 into a dedicated component with church branding, a "Go Home" button, and proper <title> update via useEffect.
+
+Lazy-load non-critical eager routes — App.tsx eagerly loads AboutPage, VisitPage, SermonsPage, PrivacyPolicyPage. Convert these to React.lazy() imports to reduce initial bundle size.
+
+Add loading="lazy" to images missing it: pastor photo in AboutPage.tsx:370-375, community image at AboutPage.tsx:307-309, Google Maps iframe in VisitPage.tsx:238-250.
+
+Add image error fallbacks — All Unsplash images in AboutPage.tsx:44, elder photos at AboutPage.tsx:57-62, and gallery thumbnails need onError fallback handlers (show a placeholder/broken-image icon).
+
+Fix dynamic footer year — Replace hardcoded "2026" in inline footers across ~10 pages with {new Date().getFullYear()} (this is automatically resolved if Phase 3 step 18 consolidates footers into a shared component).
+
+Phase 6: Visual Polish & Design Consistency
+Standardize color usage — Replace ad-hoc color classes (text-blue-600, bg-gray-50, text-indigo-600) with theme tokens (text-primary, bg-background, text-primary-foreground) across auth and public pages per the shadcn-ui-guide.md and ui-ux-pro-max pre-delivery checklist.
+
+Add dark mode support to sub-pages — Only LandingPage.tsx:106 has dark: classes. Add dark mode variants to all public pages and PublicLayout.
+
+Add SEO <title> and meta tags — Only the landing page uses the <SEO> component. Add it to all 13 other public pages and all auth pages with appropriate per-page titles and descriptions.
+
+Add cursor-pointer to all interactive elements per ui-ux-pro-max checklist — Audit all card-based click targets (event cards, ministry cards, blog cards, gallery items) and ensure cursor-pointer is present.
+
+Ensure consistent card hover states — Use hover:shadow-lg transition-shadow duration-200 pattern consistently across all card grids (events, ministries, blog, resources, sermons).
+
+Fix mobile calendar usability — EventsPage.tsx:510 calendar cells are h-16 on mobile — too small. Increase to h-20 on mobile or switch to a list-based agenda view on small screens.
+
+Add logo error fallback in PublicLayout.tsx:149-151 — Currently hides the image with no replacement. Show text fallback "SBA" or church name.
+
+Verification
+Phase 1: Run the app, navigate to /events/1 and click "Add to Calendar" — should not throw. Visit /mfa-verify without state — should redirect cleanly without console warnings. Check /reset-password?token=test — no "Invalid" flash.
+Phase 2: Click every link on every page — confirm no 404s. Click every button — confirm all have handlers.
+Phase 3: Change a navigation link → confirm it updates on all pages. Verify no import from pattern remains.
+Phase 4: Run axe-core or Lighthouse accessibility audit across all pages — target 0 critical violations. Switch language to Thai — verify all visible text translates.
+Phase 5: Run npm run build — confirm bundle size is reduced. Open in Chrome DevTools → Performance tab — no unnecessary re-renders.
+Phase 6: Visual comparison at 375px, 768px, 1024px, 1440px breakpoints. Toggle dark mode. Run Lighthouse (Performance, Accessibility, SEO, Best Practices) — target 90+ on all.
+Decisions
+Shared footer strategy: Chose rich footer (matching LandingPage) in PublicLayout over minimal footer — provides consistent branding and navigation.
+Blog detail page: Chose creating a BlogDetailPage route over removing links — the blog data structure already supports individual posts.
+Navigation unification: Chose shared component with variant props over HOC — simpler, more explicit, easier to maintain.
+Design system: Will use ui-ux-pro-max --design-system --persist --stack shadcn to generate a MASTER.md before Phase 6 implementation, ensuring all visual polish is grounded in a formal spec rather than ad-hoc decisions.

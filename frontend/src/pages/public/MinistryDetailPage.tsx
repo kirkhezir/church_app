@@ -9,32 +9,14 @@
  * - How to get involved
  */
 
-import { useParams, Link, Navigate } from 'react-router';
-import {
-  ArrowLeft,
-  Users,
-  Calendar,
-  MapPin,
-  Clock,
-  Phone,
-  Mail,
-  ChevronRight,
-  Baby,
-  Heart,
-  Music,
-  BookOpen,
-  Globe,
-  Utensils,
-  Compass,
-  HeartHandshake,
-  GraduationCap,
-  Church,
-  Mic2,
-} from 'lucide-react';
+import { useParams, Link } from 'react-router';
+import { ArrowLeft, Users, Calendar, MapPin, Clock, Phone, Mail, ChevronRight } from 'lucide-react';
+import { ministryIconMap } from '@/constants/ministryIcons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Ministry data (in production, this would come from an API)
 const ministriesData: Record<
@@ -211,33 +193,40 @@ const ministriesData: Record<
   },
 };
 
-// Map of icons by ministry ID
-const iconMap: Record<string, React.ElementType> = {
-  youth: Users,
-  children: Baby,
-  women: Heart,
-  music: Music,
-  'sabbath-school': BookOpen,
-  pathfinders: Compass,
-  'community-service': HeartHandshake,
-  health: Utensils,
-  missions: Globe,
-  education: GraduationCap,
-  deacons: Church,
-  media: Mic2,
-};
-
 export function MinistryDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { language } = useI18n();
+  useDocumentTitle('Ministry Details', 'รายละเอียดแผนก', language);
 
   const ministry = slug ? ministriesData[slug] : null;
 
   if (!ministry) {
-    return <Navigate to="/ministries" replace />;
+    return (
+      <PublicLayout>
+        <section className="pb-16 pt-24">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+            <Users className="mx-auto mb-6 h-16 w-16 text-slate-300" />
+            <h1 className="mb-4 text-3xl font-bold text-slate-900">
+              {language === 'th' ? 'เร็วๆ นี้!' : 'Coming Soon!'}
+            </h1>
+            <p className="mb-8 text-lg text-slate-600">
+              {language === 'th'
+                ? 'ข้อมูลของแผนกนี้กำลังอัปเดต กรุณากลับมาเยี่ยมชมใหม่อีกครั้ง'
+                : 'Details for this ministry are being updated. Please check back soon!'}
+            </p>
+            <Link to="/ministries">
+              <Button>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {language === 'th' ? 'กลับไปหน้าแผนกทั้งหมด' : 'Back to All Ministries'}
+              </Button>
+            </Link>
+          </div>
+        </section>
+      </PublicLayout>
+    );
   }
 
-  const Icon = ministry.icon || iconMap[slug || ''] || Users;
+  const Icon = ministry.icon || ministryIconMap[slug || ''] || Users;
 
   return (
     <PublicLayout>
@@ -397,6 +386,7 @@ export function MinistryDetailPage() {
                     <img
                       src={ministry.leader.image}
                       alt={ministry.leader.name}
+                      loading="lazy"
                       className="h-12 w-12 rounded-full object-cover"
                     />
                   ) : (
@@ -482,13 +472,6 @@ export function MinistryDetailPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t bg-slate-50 py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-slate-600 sm:px-6">
-          <p>© 2026 Sing Buri Adventist Center. All rights reserved.</p>
-        </div>
-      </footer>
     </PublicLayout>
   );
 }
