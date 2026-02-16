@@ -5,7 +5,7 @@
  */
 
 import { useState, FormEvent } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,6 @@ import { apiClient } from '@/services/api/apiClient';
 
 export default function PasswordResetPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const [token] = useState(() => searchParams.get('token') || '');
   const [newPassword, setNewPassword] = useState('');

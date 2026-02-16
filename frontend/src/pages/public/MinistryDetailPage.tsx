@@ -10,7 +10,17 @@
  */
 
 import { useParams, Link } from 'react-router';
-import { ArrowLeft, Users, Calendar, MapPin, Clock, Phone, Mail, ChevronRight } from 'lucide-react';
+import {
+  ArrowLeft,
+  Users,
+  Calendar,
+  MapPin,
+  Clock,
+  Phone,
+  Mail,
+  ChevronRight,
+  Baby,
+} from 'lucide-react';
 import { ministryIconMap } from '@/constants/ministryIcons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
