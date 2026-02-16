@@ -139,13 +139,17 @@ export class Server {
    */
   private configureSwagger(): void {
     try {
-      // Try to load OpenAPI spec from specs folder
-      const openApiPath = path.resolve(
-        __dirname,
-        '../../../../specs/001-full-stack-web/contracts/openapi.yaml'
-      );
+      // Try multiple paths to find OpenAPI spec (handles dev, bundled, and different CWDs)
+      const specRelativePath = 'specs/001-full-stack-web/contracts/openapi.yaml';
+      const possiblePaths = [
+        path.resolve(process.cwd(), '..', specRelativePath), // From backend/ dir (Render: cd backend && npm start)
+        path.resolve(process.cwd(), specRelativePath), // From repo root
+        path.resolve(__dirname, '..', '..', specRelativePath), // From dist/ dir (esbuild bundle)
+        path.resolve(__dirname, '..', '..', '..', specRelativePath), // From src/presentation/ dir (dev)
+      ];
+      const openApiPath = possiblePaths.find((p) => fs.existsSync(p));
 
-      if (fs.existsSync(openApiPath)) {
+      if (openApiPath) {
         const swaggerDocument = YAML.load(openApiPath);
 
         // Configure Swagger UI options
