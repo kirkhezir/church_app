@@ -160,6 +160,21 @@ export class Server {
           explorer: true,
         };
 
+        // Override CSP specifically for Swagger UI pages
+        this.app.use(
+          '/api-docs',
+          helmet({
+            contentSecurityPolicy: {
+              directives: {
+                defaultSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+                imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+              },
+            },
+          })
+        );
+
         // Serve Swagger UI at /api-docs
         this.app.use(
           '/api-docs',

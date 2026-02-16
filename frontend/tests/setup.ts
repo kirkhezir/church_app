@@ -1,6 +1,11 @@
 // Frontend test setup
 import '@testing-library/jest-dom';
 import './__mocks__/importMeta';
+import { TextDecoder, TextEncoder } from 'util';
+
+// Polyfill TextEncoder/TextDecoder for jsdom test environment
+global.TextEncoder = TextEncoder as typeof global.TextEncoder;
+global.TextDecoder = TextDecoder as typeof global.TextDecoder;
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
