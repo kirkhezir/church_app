@@ -27,9 +27,18 @@ export class JWTService {
   private readonly refreshTokenExpiry: string;
 
   constructor() {
-    this.accessTokenSecret =
-      process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
-    this.refreshTokenSecret = process.env.JWT_REFRESH_SECRET || `${this.accessTokenSecret}-refresh`;
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET environment variable is required');
+    }
+    this.accessTokenSecret = jwtSecret;
+
+    const refreshSecret = process.env.JWT_REFRESH_SECRET;
+    if (!refreshSecret) {
+      throw new Error('JWT_REFRESH_SECRET environment variable is required');
+    }
+    this.refreshTokenSecret = refreshSecret;
+
     this.accessTokenExpiry = process.env.JWT_ACCESS_EXPIRY || '15m';
     this.refreshTokenExpiry = process.env.JWT_REFRESH_EXPIRY || '7d';
   }

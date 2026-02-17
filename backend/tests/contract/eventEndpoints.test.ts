@@ -15,6 +15,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -42,8 +43,9 @@ describe('Contract Tests: Event Endpoints', () => {
     role: 'ADMIN' | 'STAFF' | 'MEMBER' = 'MEMBER'
   ): Promise<string> {
     const hashedPassword = await passwordService.hash(password);
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email,
         passwordHash: hashedPassword,
         firstName: 'Event',
@@ -51,6 +53,7 @@ describe('Contract Tests: Event Endpoints', () => {
         role,
         phone: '+1234567890',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         failedLoginAttempts: 0,
       },
@@ -79,8 +82,9 @@ describe('Contract Tests: Event Endpoints', () => {
 
     console.log('📝 Creating test event with createdById:', createdById);
 
-    const event = await prisma.event.create({
+    const event = await prisma.events.create({
       data: {
+        id: randomUUID(),
         title: overrides?.title || 'Test Event',
         description: 'This is a test event for contract testing',
         startDateTime,
@@ -88,6 +92,7 @@ describe('Contract Tests: Event Endpoints', () => {
         location: 'Test Location',
         category: overrides?.category || 'WORSHIP',
         maxCapacity: overrides?.maxCapacity,
+        updatedAt: new Date(),
         createdById,
       },
     });
@@ -102,7 +107,7 @@ describe('Contract Tests: Event Endpoints', () => {
     await prisma.$connect();
 
     // Clean up any existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: {
           in: ['event-admin@example.com', 'event-member@example.com'],
@@ -111,8 +116,8 @@ describe('Contract Tests: Event Endpoints', () => {
     });
 
     // Clean up any existing events
-    await prisma.eventRSVP.deleteMany({});
-    await prisma.event.deleteMany({
+    await prisma.event_rsvps.deleteMany({});
+    await prisma.events.deleteMany({
       where: {
         title: {
           contains: 'Test Event',
@@ -159,7 +164,7 @@ describe('Contract Tests: Event Endpoints', () => {
   afterAll(async () => {
     // Cleanup RSVPs first (foreign key constraint)
     if (testEventIds.length > 0) {
-      await prisma.eventRSVP
+      await prisma.event_rsvps
         .deleteMany({
           where: { eventId: { in: testEventIds } },
         })
@@ -168,7 +173,7 @@ describe('Contract Tests: Event Endpoints', () => {
 
     // Cleanup events
     if (testEventIds.length > 0) {
-      await prisma.event
+      await prisma.events
         .deleteMany({
           where: { id: { in: testEventIds } },
         })
@@ -177,7 +182,7 @@ describe('Contract Tests: Event Endpoints', () => {
 
     // Cleanup members
     if (testMemberIds.length > 0) {
-      await prisma.member
+      await prisma.members
         .deleteMany({
           where: { id: { in: testMemberIds } },
         })
@@ -190,7 +195,7 @@ describe('Contract Tests: Event Endpoints', () => {
   describe('POST /api/v1/events', () => {
     it('should return 201 and create event for admin', async () => {
       // DEBUG: Check if admin member exists before making the request
-      const adminExists = await prisma.member.findUnique({ where: { id: adminId } });
+      const adminExists = await prisma.members.findUnique({ where: { id: adminId } });
       console.log('🔍 [TEST START] Admin member exists:', !!adminExists, 'ID:', adminId);
 
       const eventData = {
@@ -499,7 +504,7 @@ describe('Contract Tests: Event Endpoints', () => {
       expect(response.body.data).toHaveProperty('message');
 
       // Verify event is cancelled
-      const event = await prisma.event.findUnique({
+      const event = await prisma.events.findUnique({
         where: { id: testEventId },
       });
       expect(event?.cancelledAt).toBeTruthy();
@@ -636,11 +641,13 @@ describe('Contract Tests: Event Endpoints', () => {
       });
 
       // Create RSVP
-      await prisma.eventRSVP.create({
+      await prisma.event_rsvps.create({
         data: {
+          id: randomUUID(),
           eventId: testEventId,
           memberId: memberId,
           status: 'CONFIRMED',
+          updatedAt: new Date(),
         },
       });
     });
@@ -655,7 +662,7 @@ describe('Contract Tests: Event Endpoints', () => {
       expect(response.body.data).toHaveProperty('message');
 
       // Verify RSVP is deleted or cancelled
-      const rsvp = await prisma.eventRSVP.findFirst({
+      const rsvp = await prisma.event_rsvps.findFirst({
         where: {
           eventId: testEventId,
           memberId: memberId,
@@ -666,7 +673,7 @@ describe('Contract Tests: Event Endpoints', () => {
 
     it('should return 404 when no RSVP exists', async () => {
       // Delete existing RSVP first
-      await prisma.eventRSVP.deleteMany({
+      await prisma.event_rsvps.deleteMany({
         where: {
           eventId: testEventId,
           memberId: memberId,
@@ -710,11 +717,13 @@ describe('Contract Tests: Event Endpoints', () => {
       });
 
       // Create multiple RSVPs
-      await prisma.eventRSVP.create({
+      await prisma.event_rsvps.create({
         data: {
+          id: randomUUID(),
           eventId: testEventId,
           memberId: memberId,
           status: 'CONFIRMED',
+          updatedAt: new Date(),
         },
       });
     });

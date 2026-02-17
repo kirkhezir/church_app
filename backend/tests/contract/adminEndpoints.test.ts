@@ -13,6 +13,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -34,7 +35,7 @@ describe('Contract Tests: Admin Endpoints', () => {
 
   beforeAll(async () => {
     // Clean up existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: {
           in: [
@@ -50,14 +51,16 @@ describe('Contract Tests: Admin Endpoints', () => {
 
     // Create admin user
     const adminPassword = await passwordService.hash('AdminPass123!');
-    const admin = await prisma.member.create({
+    const admin = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'admin-test@singburi.church',
         passwordHash: adminPassword,
         firstName: 'Admin',
         lastName: 'Test',
         role: 'ADMIN',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
       },
     });
@@ -70,14 +73,16 @@ describe('Contract Tests: Admin Endpoints', () => {
 
     // Create staff user
     const staffPassword = await passwordService.hash('StaffPass123!');
-    const staff = await prisma.member.create({
+    const staff = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'staff-test@singburi.church',
         passwordHash: staffPassword,
         firstName: 'Staff',
         lastName: 'Test',
         role: 'STAFF',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
       },
     });
@@ -90,14 +95,16 @@ describe('Contract Tests: Admin Endpoints', () => {
 
     // Create regular member user
     const memberPassword = await passwordService.hash('MemberPass123!');
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'member-test@singburi.church',
         passwordHash: memberPassword,
         firstName: 'Member',
         lastName: 'Test',
         role: 'MEMBER',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
       },
     });
@@ -114,10 +121,10 @@ describe('Contract Tests: Admin Endpoints', () => {
     const allIds = [adminId, staffId, memberId, ...createdMemberIds].filter(Boolean);
     if (allIds.length > 0) {
       // Delete audit logs first (foreign key constraint)
-      await prisma.auditLog.deleteMany({
+      await prisma.audit_logs.deleteMany({
         where: { userId: { in: allIds } },
       });
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { id: { in: allIds } },
       });
     }
@@ -128,10 +135,10 @@ describe('Contract Tests: Admin Endpoints', () => {
     // Cleanup members created during tests
     if (createdMemberIds.length > 0) {
       // Delete audit logs first
-      await prisma.auditLog.deleteMany({
+      await prisma.audit_logs.deleteMany({
         where: { userId: { in: createdMemberIds } },
       });
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { id: { in: createdMemberIds } },
       });
       createdMemberIds = [];
@@ -374,14 +381,16 @@ describe('Contract Tests: Admin Endpoints', () => {
 
     beforeEach(async () => {
       // Create a member to delete
-      const member = await prisma.member.create({
+      const member = await prisma.members.create({
         data: {
+          id: randomUUID(),
           email: 'to-delete@example.com',
           passwordHash: await passwordService.hash('DeleteMe123!'),
           firstName: 'To',
           lastName: 'Delete',
           role: 'MEMBER',
           membershipDate: new Date(),
+          updatedAt: new Date(),
           privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         },
       });
@@ -390,7 +399,7 @@ describe('Contract Tests: Admin Endpoints', () => {
 
     afterEach(async () => {
       // Cleanup
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { email: 'to-delete@example.com' },
       });
     });
@@ -404,7 +413,7 @@ describe('Contract Tests: Admin Endpoints', () => {
       expect(response.body).toHaveProperty('message');
 
       // Verify soft delete
-      const deletedMember = await prisma.member.findUnique({
+      const deletedMember = await prisma.members.findUnique({
         where: { id: deletableMemberId },
       });
       expect(deletedMember?.deletedAt).not.toBeNull();

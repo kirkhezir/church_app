@@ -13,6 +13,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -35,7 +36,7 @@ describe.skip('MFA Integration Tests', () => {
 
   beforeAll(async () => {
     // Clean up existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: {
           in: [
@@ -49,14 +50,16 @@ describe.skip('MFA Integration Tests', () => {
 
     // Create admin user (MFA required)
     const adminPassword = await passwordService.hash('AdminMFA123!');
-    const admin = await prisma.member.create({
+    const admin = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'mfa-admin@singburi.church',
         passwordHash: adminPassword,
         firstName: 'MFA',
         lastName: 'Admin',
         role: 'ADMIN',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         mfaEnabled: false,
       },
@@ -70,14 +73,16 @@ describe.skip('MFA Integration Tests', () => {
 
     // Create staff user (MFA required)
     const staffPassword = await passwordService.hash('StaffMFA123!');
-    const staff = await prisma.member.create({
+    const staff = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'mfa-staff@singburi.church',
         passwordHash: staffPassword,
         firstName: 'MFA',
         lastName: 'Staff',
         role: 'STAFF',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         mfaEnabled: false,
       },
@@ -91,14 +96,16 @@ describe.skip('MFA Integration Tests', () => {
 
     // Create regular member (MFA optional)
     const memberPassword = await passwordService.hash('MemberMFA123!');
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'mfa-member@singburi.church',
         passwordHash: memberPassword,
         firstName: 'MFA',
         lastName: 'Member',
         role: 'MEMBER',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         mfaEnabled: false,
       },
@@ -113,7 +120,7 @@ describe.skip('MFA Integration Tests', () => {
 
   afterAll(async () => {
     // Cleanup
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         id: { in: [adminId, staffId, memberId].filter(Boolean) },
       },
@@ -142,7 +149,7 @@ describe.skip('MFA Integration Tests', () => {
 
     it('should prevent re-enrollment if MFA already enabled', async () => {
       // First, enable MFA for the user (simulate)
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: staffId },
         data: {
           mfaEnabled: true,
@@ -158,7 +165,7 @@ describe.skip('MFA Integration Tests', () => {
       expect(response.body.error).toContain('MFA already enabled');
 
       // Reset for other tests
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: staffId },
         data: {
           mfaEnabled: false,
@@ -238,7 +245,7 @@ describe.skip('MFA Integration Tests', () => {
   describe('POST /api/v1/auth/login - Login with MFA', () => {
     beforeAll(async () => {
       // Set up admin with MFA enabled
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: adminId },
         data: {
           mfaEnabled: true,
@@ -340,7 +347,7 @@ describe.skip('MFA Integration Tests', () => {
   describe('POST /api/v1/auth/mfa/backup-codes - Regenerate Backup Codes', () => {
     it('should regenerate backup codes for MFA-enabled user', async () => {
       // Ensure admin has MFA enabled
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: adminId },
         data: {
           mfaEnabled: true,
@@ -360,7 +367,7 @@ describe.skip('MFA Integration Tests', () => {
 
     it('should return 400 if MFA is not enabled', async () => {
       // Ensure member doesn't have MFA
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: memberId },
         data: {
           mfaEnabled: false,
@@ -386,7 +393,7 @@ describe.skip('MFA Integration Tests', () => {
   describe('DELETE /api/v1/auth/mfa - Disable MFA', () => {
     beforeEach(async () => {
       // Enable MFA for member
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: memberId },
         data: {
           mfaEnabled: true,
@@ -405,7 +412,7 @@ describe.skip('MFA Integration Tests', () => {
       expect(response.body.message).toContain('disabled');
 
       // Verify MFA is disabled
-      const member = await prisma.member.findUnique({
+      const member = await prisma.members.findUnique({
         where: { id: memberId },
       });
       expect(member?.mfaEnabled).toBe(false);
@@ -434,7 +441,7 @@ describe.skip('MFA Integration Tests', () => {
   describe('MFA Requirement for Admin/Staff', () => {
     it('should enforce MFA setup for admin access to protected routes', async () => {
       // Create admin without MFA
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: adminId },
         data: {
           mfaEnabled: false,
@@ -455,7 +462,7 @@ describe.skip('MFA Integration Tests', () => {
 
     it('should allow admin access after MFA is enabled', async () => {
       // Enable MFA for admin
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: adminId },
         data: {
           mfaEnabled: true,

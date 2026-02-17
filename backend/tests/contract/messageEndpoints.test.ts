@@ -12,6 +12,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -42,8 +43,9 @@ describe('Contract Tests: Message Endpoints', () => {
     lastName: string
   ): Promise<string> {
     const hashedPassword = await passwordService.hash(password);
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email,
         passwordHash: hashedPassword,
         firstName,
@@ -51,6 +53,7 @@ describe('Contract Tests: Message Endpoints', () => {
         role: 'MEMBER',
         phone: '+1234567890',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         failedLoginAttempts: 0,
       },
@@ -69,8 +72,9 @@ describe('Contract Tests: Message Endpoints', () => {
     body: string,
     isRead: boolean = false
   ): Promise<string> {
-    const message = await prisma.message.create({
+    const message = await prisma.messages.create({
       data: {
+        id: randomUUID(),
         senderId,
         recipientId,
         subject,
@@ -87,15 +91,23 @@ describe('Contract Tests: Message Endpoints', () => {
     console.log('🔧 Message Endpoints Tests: beforeAll started');
 
     // Clean up any existing test data
-    await prisma.message.deleteMany({
-      where: {
-        OR: [
-          { sender: { email: { contains: '@message-test.com' } } },
-          { recipient: { email: { contains: '@message-test.com' } } },
-        ],
-      },
+    // Find test member IDs first, then delete their messages by scalar FK
+    const existingMembers = await prisma.members.findMany({
+      where: { email: { contains: '@message-test.com' } },
+      select: { id: true },
     });
-    await prisma.member.deleteMany({
+    const existingIds = existingMembers.map((m: { id: string }) => m.id);
+    if (existingIds.length > 0) {
+      await prisma.messages.deleteMany({
+        where: {
+          OR: [
+            { senderId: { in: existingIds } },
+            { recipientId: { in: existingIds } },
+          ],
+        },
+      });
+    }
+    await prisma.members.deleteMany({
       where: { email: { contains: '@message-test.com' } },
     });
 
@@ -164,10 +176,10 @@ describe('Contract Tests: Message Endpoints', () => {
     console.log('🧹 Cleaning up test data...');
 
     // Clean up in reverse order
-    await prisma.message.deleteMany({
+    await prisma.messages.deleteMany({
       where: { id: { in: testMessageIds } },
     });
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: { id: { in: testMemberIds } },
     });
 
@@ -345,7 +357,7 @@ describe('Contract Tests: Message Endpoints', () => {
       );
 
       // Delete the message
-      await prisma.message.update({
+      await prisma.messages.update({
         where: { id: msgId },
         data: { deletedByRecipient: true },
       });
@@ -523,7 +535,7 @@ describe('Contract Tests: Message Endpoints', () => {
       expect(response.status).toBe(200);
 
       // Verify message is soft deleted for recipient
-      const deletedMsg = await prisma.message.findUnique({
+      const deletedMsg = await prisma.messages.findUnique({
         where: { id: msgId },
       });
       expect(deletedMsg?.deletedByRecipient).toBe(true);
@@ -545,7 +557,7 @@ describe('Contract Tests: Message Endpoints', () => {
       expect(response.status).toBe(200);
 
       // Verify message is soft deleted for sender
-      const deletedMsg = await prisma.message.findUnique({
+      const deletedMsg = await prisma.messages.findUnique({
         where: { id: msgId },
       });
       expect(deletedMsg?.deletedBySender).toBe(true);

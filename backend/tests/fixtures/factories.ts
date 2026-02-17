@@ -1,4 +1,5 @@
 import { Prisma, Role, EventCategory, RSVPStatus, Priority } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { testPrisma } from '../integration/setup';
 import * as bcrypt from 'bcrypt';
 
@@ -16,6 +17,7 @@ export class MemberFactory {
     const counter = ++MemberFactory.counter;
 
     const defaultData: Prisma.MemberCreateInput = {
+      id: randomUUID(),
       email: `member${counter}@test.com`,
       passwordHash: await bcrypt.hash('Test123!', 10),
       firstName: `FirstName${counter}`,
@@ -24,6 +26,7 @@ export class MemberFactory {
       address: `${counter} Test Street`,
       role: Role.MEMBER,
       membershipDate: new Date(),
+      updatedAt: new Date(),
       accountLocked: false,
       emailNotifications: true,
       privacySettings: {
@@ -34,7 +37,7 @@ export class MemberFactory {
     };
 
     const data = { ...defaultData, ...overrides };
-    return await testPrisma.member.create({ data });
+    return await testPrisma.members.create({ data });
   }
 
   /**
@@ -80,6 +83,7 @@ export class MemberFactory {
     const counter = ++MemberFactory.counter;
 
     const defaultData: Prisma.MemberCreateInput = {
+      id: randomUUID(),
       email: `member${counter}@test.com`,
       passwordHash: '$2b$10$hashedpassword',
       firstName: `FirstName${counter}`,
@@ -88,6 +92,7 @@ export class MemberFactory {
       address: `${counter} Test Street`,
       role: Role.MEMBER,
       membershipDate: new Date(),
+      updatedAt: new Date(),
       accountLocked: false,
       emailNotifications: true,
       privacySettings: {
@@ -131,6 +136,7 @@ export class EventFactory {
     endDateTime.setHours(endDateTime.getHours() + 2);
 
     const defaultData: Prisma.EventCreateInput = {
+      id: randomUUID(),
       title: `Test Event ${counter}`,
       description: `Description for test event ${counter}`,
       category: EventCategory.COMMUNITY,
@@ -138,11 +144,12 @@ export class EventFactory {
       endDateTime,
       location: `Test Location ${counter}`,
       maxCapacity: 50,
+      updatedAt: new Date(),
       creator: { connect: { id: creatorId } },
     };
 
     const data = { ...defaultData, ...overrides };
-    return await testPrisma.event.create({
+    return await testPrisma.events.create({
       data,
       include: {
         creator: true,
@@ -210,6 +217,7 @@ export class EventFactory {
     endDateTime.setHours(endDateTime.getHours() + 2);
 
     const defaultData: Prisma.EventCreateInput = {
+      id: randomUUID(),
       title: `Test Event ${counter}`,
       description: `Description for test event ${counter}`,
       category: EventCategory.COMMUNITY,
@@ -217,6 +225,7 @@ export class EventFactory {
       endDateTime,
       location: `Test Location ${counter}`,
       maxCapacity: 50,
+      updatedAt: new Date(),
       creator: { connect: { id: creatorId } },
     };
 
@@ -248,15 +257,17 @@ export class AnnouncementFactory {
     const counter = ++AnnouncementFactory.counter;
 
     const defaultData: Prisma.AnnouncementCreateInput = {
+      id: randomUUID(),
       title: `Test Announcement ${counter}`,
       content: `Content for test announcement ${counter}`,
       priority: Priority.NORMAL,
       publishedAt: new Date(),
+      updatedAt: new Date(),
       author: { connect: { id: authorId } },
     };
 
     const data = { ...defaultData, ...overrides };
-    return await testPrisma.announcement.create({
+    return await testPrisma.announcements.create({
       data,
       include: {
         author: true,
@@ -317,10 +328,12 @@ export class AnnouncementFactory {
     const counter = ++AnnouncementFactory.counter;
 
     const defaultData: Prisma.AnnouncementCreateInput = {
+      id: randomUUID(),
       title: `Test Announcement ${counter}`,
       content: `Content for test announcement ${counter}`,
       priority: Priority.NORMAL,
       publishedAt: new Date(),
+      updatedAt: new Date(),
       author: { connect: { id: authorId } },
     };
 
@@ -349,13 +362,15 @@ export class EventRSVPFactory {
     overrides?: Partial<Prisma.EventRSVPCreateInput>
   ): Promise<any> {
     const defaultData: Prisma.EventRSVPCreateInput = {
+      id: randomUUID(),
       status: RSVPStatus.CONFIRMED,
+      updatedAt: new Date(),
       event: { connect: { id: eventId } },
       member: { connect: { id: memberId } },
     };
 
     const data = { ...defaultData, ...overrides };
-    return await testPrisma.eventRSVP.create({
+    return await testPrisma.event_rsvps.create({
       data,
       include: {
         event: true,

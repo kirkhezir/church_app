@@ -30,8 +30,9 @@ router.post('/login', authRateLimiter, authController.login);
 /**
  * POST /api/v1/auth/refresh
  * Public endpoint - no authentication required (uses refresh token)
+ * Rate limited: same as auth endpoints
  */
-router.post('/refresh', authController.refresh);
+router.post('/refresh', authRateLimiter, authController.refresh);
 
 /**
  * POST /api/v1/auth/logout

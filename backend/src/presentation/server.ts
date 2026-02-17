@@ -32,6 +32,8 @@ export class Server {
 
   constructor() {
     this.app = express();
+    // Trust first proxy (Render.com / reverse proxy) for correct req.ip and rate limiting
+    this.app.set('trust proxy', 1);
     this.configureMiddleware();
     this.configureRoutes();
     this.configureErrorHandling();

@@ -11,6 +11,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -44,8 +45,9 @@ describe('Contract Tests: Member Directory Endpoints', () => {
     }>
   ): Promise<string> {
     const hashedPassword = await passwordService.hash(password);
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email,
         passwordHash: hashedPassword,
         firstName: overrides?.firstName || 'Test',
@@ -54,6 +56,7 @@ describe('Contract Tests: Member Directory Endpoints', () => {
         phone: overrides?.phone || '+1234567890',
         address: overrides?.address || '123 Test Street',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: overrides?.privacySettings || {
           showPhone: true,
           showEmail: true,
@@ -70,7 +73,7 @@ describe('Contract Tests: Member Directory Endpoints', () => {
     console.log('🔧 Member Directory Tests: beforeAll started');
 
     // Clean up any existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: { contains: '@directory-test.com' },
       },
@@ -116,7 +119,7 @@ describe('Contract Tests: Member Directory Endpoints', () => {
     console.log('🧹 Cleaning up test data...');
 
     // Clean up in reverse order of creation
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: { id: { in: testMemberIds } },
     });
 

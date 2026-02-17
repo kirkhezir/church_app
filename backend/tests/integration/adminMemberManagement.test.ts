@@ -15,6 +15,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -35,7 +36,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
 
   beforeAll(async () => {
     // Clean up existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: {
           startsWith: 'admin-mgmt-test',
@@ -45,14 +46,16 @@ describe.skip('Admin Member Management Integration Tests', () => {
 
     // Create admin user with MFA enabled
     const adminPassword = await passwordService.hash('AdminMgmt123!');
-    const admin = await prisma.member.create({
+    const admin = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email: 'admin-mgmt-test@singburi.church',
         passwordHash: adminPassword,
         firstName: 'Admin',
         lastName: 'Manager',
         role: 'ADMIN',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         mfaEnabled: true,
         mfaSecret: 'JBSWY3DPEHPK3PXP',
@@ -76,7 +79,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
 
     // Cleanup created members
     if (createdMemberIds.length > 0) {
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { id: { in: createdMemberIds } },
       });
       createdMemberIds = [];
@@ -84,7 +87,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
   });
 
   afterAll(async () => {
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: { id: adminId },
     });
     await prisma.$disconnect();
@@ -122,7 +125,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
         );
 
         // Verify member exists in database
-        const member = await prisma.member.findUnique({
+        const member = await prisma.members.findUnique({
           where: { email: newMemberData.email },
         });
         expect(member).not.toBeNull();
@@ -150,7 +153,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
         createdMemberIds.push(response.body.id);
 
         // Check database for default privacy settings
-        const member = await prisma.member.findUnique({
+        const member = await prisma.members.findUnique({
           where: { id: response.body.id },
         });
 
@@ -230,11 +233,13 @@ describe.skip('Admin Member Management Integration Tests', () => {
       ];
 
       for (const memberData of testMembers) {
-        const member = await prisma.member.create({
+        const member = await prisma.members.create({
           data: {
             ...memberData,
+            id: randomUUID(),
             passwordHash: await passwordService.hash('Test123!'),
             membershipDate: new Date(),
+            updatedAt: new Date(),
             privacySettings: { showPhone: true, showEmail: true, showAddress: true },
           },
         });
@@ -243,7 +248,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
     });
 
     afterAll(async () => {
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { id: { in: testMemberIds } },
       });
     });
@@ -302,14 +307,16 @@ describe.skip('Admin Member Management Integration Tests', () => {
     let toDeleteId: string;
 
     beforeEach(async () => {
-      const member = await prisma.member.create({
+      const member = await prisma.members.create({
         data: {
+          id: randomUUID(),
           email: 'to-be-deleted@example.com',
           passwordHash: await passwordService.hash('Delete123!'),
           firstName: 'Delete',
           lastName: 'Me',
           role: 'MEMBER',
           membershipDate: new Date(),
+          updatedAt: new Date(),
           privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         },
       });
@@ -317,7 +324,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
     });
 
     afterEach(async () => {
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { email: 'to-be-deleted@example.com' },
       });
     });
@@ -331,7 +338,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
         expect(response.body.message).toContain('deleted');
 
         // Verify soft delete
-        const member = await prisma.member.findUnique({
+        const member = await prisma.members.findUnique({
           where: { id: toDeleteId },
         });
         expect(member).not.toBeNull();
@@ -341,7 +348,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
 
     it('should exclude soft-deleted members from list', async () => {
       // Soft delete the member
-      await prisma.member.update({
+      await prisma.members.update({
         where: { id: toDeleteId },
         data: { deletedAt: new Date() },
       });
@@ -363,7 +370,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
 
       if (response.status === 200) {
         // Check audit log
-        const auditLog = await prisma.auditLog.findFirst({
+        const auditLog = await prisma.audit_logs.findFirst({
           where: {
             entityType: 'MEMBER',
             entityId: toDeleteId,
@@ -473,7 +480,7 @@ describe.skip('Admin Member Management Integration Tests', () => {
       if (response.status === 201) {
         createdMemberIds.push(response.body.id);
 
-        const auditLog = await prisma.auditLog.findFirst({
+        const auditLog = await prisma.audit_logs.findFirst({
           where: {
             entityType: 'MEMBER',
             entityId: response.body.id,

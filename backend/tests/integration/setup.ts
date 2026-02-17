@@ -34,13 +34,13 @@ export { contactService };
 export async function cleanDatabase(): Promise<void> {
   // Delete in order to respect foreign key constraints
   // Audit logs must be deleted first since they reference members
-  await testPrisma.auditLog.deleteMany();
-  await testPrisma.memberAnnouncementView.deleteMany();
-  await testPrisma.eventRSVP.deleteMany();
-  await testPrisma.message.deleteMany();
-  await testPrisma.announcement.deleteMany();
-  await testPrisma.event.deleteMany();
-  await testPrisma.member.deleteMany();
+  await testPrisma.audit_logs.deleteMany();
+  await testPrisma.member_announcement_views.deleteMany();
+  await testPrisma.event_rsvps.deleteMany();
+  await testPrisma.messages.deleteMany();
+  await testPrisma.announcements.deleteMany();
+  await testPrisma.events.deleteMany();
+  await testPrisma.members.deleteMany();
 }
 
 /**
@@ -102,20 +102,20 @@ export async function createTestMemberAndLogin(data: {
   role?: 'ADMIN' | 'STAFF' | 'MEMBER';
 }): Promise<{ token: string; memberId: string }> {
   // Delete existing member with this email if exists (including related data)
-  const existingMember = await testPrisma.member.findFirst({
+  const existingMember = await testPrisma.members.findFirst({
     where: { email: data.email },
   });
 
   if (existingMember) {
-    await testPrisma.auditLog.deleteMany({ where: { userId: existingMember.id } });
-    await testPrisma.memberAnnouncementView.deleteMany({ where: { memberId: existingMember.id } });
-    await testPrisma.eventRSVP.deleteMany({ where: { memberId: existingMember.id } });
-    await testPrisma.message.deleteMany({
+    await testPrisma.audit_logs.deleteMany({ where: { userId: existingMember.id } });
+    await testPrisma.member_announcement_views.deleteMany({ where: { memberId: existingMember.id } });
+    await testPrisma.event_rsvps.deleteMany({ where: { memberId: existingMember.id } });
+    await testPrisma.messages.deleteMany({
       where: { OR: [{ senderId: existingMember.id }, { recipientId: existingMember.id }] },
     });
-    await testPrisma.event.deleteMany({ where: { createdById: existingMember.id } });
-    await testPrisma.announcement.deleteMany({ where: { authorId: existingMember.id } });
-    await testPrisma.member.delete({ where: { id: existingMember.id } });
+    await testPrisma.events.deleteMany({ where: { createdById: existingMember.id } });
+    await testPrisma.announcements.deleteMany({ where: { authorId: existingMember.id } });
+    await testPrisma.members.delete({ where: { id: existingMember.id } });
   }
 
   // Register member
@@ -133,7 +133,7 @@ export async function createTestMemberAndLogin(data: {
 
   // Update role if needed (requires direct DB access)
   if (data.role && data.role !== 'MEMBER') {
-    await testPrisma.member.update({
+    await testPrisma.members.update({
       where: { id: memberId },
       data: { role: data.role },
     });

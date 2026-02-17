@@ -10,6 +10,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -26,8 +27,9 @@ describe('Contract Tests: Authentication Endpoints', () => {
    */
   async function createTestMember(email: string, password: string): Promise<string> {
     const hashedPassword = await passwordService.hash(password);
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email,
         passwordHash: hashedPassword,
         firstName: 'Auth',
@@ -35,6 +37,7 @@ describe('Contract Tests: Authentication Endpoints', () => {
         role: 'MEMBER',
         phone: '+1234567890',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         failedLoginAttempts: 0,
       },
@@ -45,7 +48,7 @@ describe('Contract Tests: Authentication Endpoints', () => {
 
   beforeAll(async () => {
     // Clean up any existing test data
-    await prisma.member.deleteMany({
+    await prisma.members.deleteMany({
       where: {
         email: {
           in: ['auth-test@example.com', 'lockout-test@example.com'],
@@ -57,7 +60,7 @@ describe('Contract Tests: Authentication Endpoints', () => {
   afterAll(async () => {
     // Cleanup all created members
     if (testMemberIds.length > 0) {
-      await prisma.member
+      await prisma.members
         .deleteMany({
           where: { id: { in: testMemberIds } },
         })

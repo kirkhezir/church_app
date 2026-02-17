@@ -12,6 +12,7 @@
  */
 
 import request from 'supertest';
+import { randomUUID } from 'crypto';
 import { Server } from '../../src/presentation/server';
 import prisma from '../../src/infrastructure/database/prismaClient';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
@@ -41,8 +42,9 @@ describe('Contract Tests: Announcement Endpoints', () => {
     role: 'ADMIN' | 'STAFF' | 'MEMBER' = 'MEMBER'
   ): Promise<string> {
     const hashedPassword = await passwordService.hash(password);
-    const member = await prisma.member.create({
+    const member = await prisma.members.create({
       data: {
+        id: randomUUID(),
         email,
         passwordHash: hashedPassword,
         firstName: 'Announcement',
@@ -50,6 +52,7 @@ describe('Contract Tests: Announcement Endpoints', () => {
         role,
         phone: '+1234567890',
         membershipDate: new Date(),
+        updatedAt: new Date(),
         privacySettings: { showPhone: true, showEmail: true, showAddress: true },
         failedLoginAttempts: 0,
       },
@@ -70,13 +73,15 @@ describe('Contract Tests: Announcement Endpoints', () => {
       archivedAt: Date | null;
     }>
   ): Promise<string> {
-    const announcement = await prisma.announcement.create({
+    const announcement = await prisma.announcements.create({
       data: {
+        id: randomUUID(),
         title: overrides?.title || 'Test Announcement',
         content: overrides?.content || 'This is a test announcement for contract testing',
         priority: overrides?.priority || 'NORMAL',
         authorId,
         publishedAt: new Date(),
+        updatedAt: new Date(),
         archivedAt: overrides?.archivedAt || null,
       },
     });
@@ -117,13 +122,13 @@ describe('Contract Tests: Announcement Endpoints', () => {
 
     // Clean up test data
     if (testAnnouncementIds.length > 0) {
-      await prisma.announcement.deleteMany({
+      await prisma.announcements.deleteMany({
         where: { id: { in: testAnnouncementIds } },
       });
     }
 
     if (testMemberIds.length > 0) {
-      await prisma.member.deleteMany({
+      await prisma.members.deleteMany({
         where: { id: { in: testMemberIds } },
       });
     }
@@ -497,7 +502,7 @@ describe('Contract Tests: Announcement Endpoints', () => {
       expect(response.status).toBe(200);
 
       // Verify announcement is archived
-      const announcement = await prisma.announcement.findUnique({
+      const announcement = await prisma.announcements.findUnique({
         where: { id: testAnnouncementId },
       });
       expect(announcement?.archivedAt).not.toBeNull();

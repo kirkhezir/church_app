@@ -48,6 +48,7 @@ export class PasswordService {
    * Generate a random password
    */
   generateRandomPassword(length: number = 12): string {
+    const crypto = require('crypto');
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
@@ -57,20 +58,22 @@ export class PasswordService {
     let password = '';
 
     // Ensure at least one of each required character type
-    password += uppercase[Math.floor(Math.random() * uppercase.length)];
-    password += lowercase[Math.floor(Math.random() * lowercase.length)];
-    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += uppercase[crypto.randomInt(uppercase.length)];
+    password += lowercase[crypto.randomInt(lowercase.length)];
+    password += numbers[crypto.randomInt(numbers.length)];
 
-    // Fill the rest randomly
+    // Fill the rest randomly using cryptographic PRNG
     for (let i = password.length; i < length; i++) {
-      password += allChars[Math.floor(Math.random() * allChars.length)];
+      password += allChars[crypto.randomInt(allChars.length)];
     }
 
-    // Shuffle the password
-    return password
-      .split('')
-      .sort(() => Math.random() - 0.5)
-      .join('');
+    // Shuffle the password using Fisher-Yates with crypto.randomInt
+    const chars = password.split('');
+    for (let i = chars.length - 1; i > 0; i--) {
+      const j = crypto.randomInt(i + 1);
+      [chars[i], chars[j]] = [chars[j], chars[i]];
+    }
+    return chars.join('');
   }
 }
 

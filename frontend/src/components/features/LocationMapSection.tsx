@@ -27,7 +27,9 @@ export function LocationMapSection() {
           <h2 id="location-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
             Find Us
           </h2>
-          <p className="text-lg text-slate-600">We&apos;d love to see you! Here&apos;s how to reach us</p>
+          <p className="text-lg text-slate-600">
+            We&apos;d love to see you! Here&apos;s how to reach us
+          </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-5">
