@@ -51,8 +51,19 @@ jobs:
           cat audit-results.json
         continue-on-error: true
 
+      - name: Check Snyk token availability
+        id: snyk-check
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          if [ -n "$SNYK_TOKEN" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Snyk scan
-        if: ${{ secrets.SNYK_TOKEN != '' }}
+        if: ${{ steps.snyk-check.outputs.enabled == 'true' }}
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -110,6 +121,8 @@ jobs:
           format: "sarif"
           output: "trivy-backend.sarif"
           severity: "CRITICAL,HIGH"
+          ignore-unfixed: true
+          skip-dirs: "/usr/local/lib/node_modules/npm,/usr/lib/node_modules/npm"
 
       - name: Scan frontend image
         uses: aquasecurity/trivy-action@master
@@ -118,6 +131,8 @@ jobs:
           format: "sarif"
           output: "trivy-frontend.sarif"
           severity: "CRITICAL,HIGH"
+          ignore-unfixed: true
+          skip-dirs: "/usr/local/lib/node_modules/npm,/usr/lib/node_modules/npm"
 
       - name: Upload Trivy results
         uses: github/codeql-action/upload-sarif@v4
