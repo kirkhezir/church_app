@@ -28,7 +28,7 @@
   "author": "Sing Buri Adventist Center",
   "license": "MIT",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
     "@sentry/node": "^10.29.0",
     "@types/bcrypt": "^5.0.2",
