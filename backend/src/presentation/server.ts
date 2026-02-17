@@ -178,12 +178,13 @@ export class Server {
           })
         );
 
-        // Serve Swagger UI at /api-docs
-        this.app.use(
-          '/api-docs',
-          swaggerUi.serve,
-          swaggerUi.setup(swaggerDocument, swaggerOptions)
-        );
+        // Serve Swagger UI static assets at /api-docs/*
+        this.app.use('/api-docs', swaggerUi.serve);
+
+        // Serve Swagger UI HTML only on docs root routes
+        const swaggerSetup = swaggerUi.setup(swaggerDocument, swaggerOptions);
+        this.app.get('/api-docs', swaggerSetup);
+        this.app.get('/api-docs/', swaggerSetup);
 
         // Serve raw OpenAPI spec at /api-docs/spec
         this.app.get('/api-docs/spec', (_req, res) => {
