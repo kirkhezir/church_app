@@ -140,7 +140,7 @@ export function ContactForm() {
             Get In Touch
           </h2>
           <p className="text-lg text-slate-600">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon
+            Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon
             as possible.
           </p>
         </div>
@@ -149,7 +149,7 @@ export function ContactForm() {
           <div className="border-b border-slate-100 bg-slate-50 px-6 py-4">
             <h3 className="text-lg font-semibold text-slate-900">Send Us A Message</h3>
             <p className="text-sm text-slate-600">
-              Fill out the form below and we'll get back to you shortly
+              Fill out the form below and we&apos;ll get back to you shortly
             </p>
           </div>
 

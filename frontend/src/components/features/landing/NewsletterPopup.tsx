@@ -132,7 +132,7 @@ export function NewsletterPopup({
       setTimeout(() => {
         setIsOpen(false);
       }, 3000);
-    } catch (err) {
+    } catch (_err) {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);

@@ -29,12 +29,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check required secrets
+        id: check-secrets
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DB_PASSWORD" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Required database secrets not configured, skipping backup"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up PostgreSQL client
+        if: steps.check-secrets.outputs.skip != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
       - name: Create backup
+        if: steps.check-secrets.outputs.skip != 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -62,18 +77,24 @@ jobs:
           echo "BACKUP_SIZE=$(ls -lh $BACKUP_FILE | awk '{print $5}')" >> $GITHUB_ENV
 
       - name: Upload to S3
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        if: steps.check-secrets.outputs.skip != 'true'
+        continue-on-error: true
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
           S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
         run: |
+          if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+            echo "AWS credentials not configured, skipping S3 upload"
+            exit 0
+          fi
           aws s3 cp $BACKUP_FILE s3://$S3_BUCKET/database-backups/
           aws s3 cp ${BACKUP_FILE}.sha256 s3://$S3_BUCKET/database-backups/
           echo "Backup uploaded to S3: s3://$S3_BUCKET/database-backups/$BACKUP_FILE"
 
       - name: Upload backup artifact
+        if: steps.check-secrets.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: database-backup-${{ github.run_number }}
@@ -83,13 +104,18 @@ jobs:
           retention-days: 7
 
       - name: Cleanup old S3 backups
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        if: steps.check-secrets.outputs.skip != 'true'
+        continue-on-error: true
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
           S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
         run: |
+          if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+            echo "AWS credentials not configured, skipping cleanup"
+            exit 0
+          fi
           # Remove backups older than retention period
           CUTOFF_DATE=$(date -d "-$BACKUP_RETENTION_DAYS days" +%Y-%m-%d)
           aws s3 ls s3://$S3_BUCKET/database-backups/ | while read -r line; do

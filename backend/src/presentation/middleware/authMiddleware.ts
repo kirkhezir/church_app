@@ -103,7 +103,7 @@ export const optionalAuthMiddleware = async (
     }
 
     next();
-  } catch (error) {
+  } catch (_error) {
     // Silently fail and continue
     next();
   }

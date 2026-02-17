@@ -2,6 +2,7 @@
 # Performance Testing Workflow
 # ============================================
 # Runs performance tests on staging
+# Requires STAGING_URL secret to be configured
 # ============================================
 
 name: Performance Tests
@@ -30,7 +31,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check staging URL
+        id: check-url
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+        run: |
+          if [ -z "$STAGING_URL" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "STAGING_URL not configured, skipping load tests"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install k6
+        if: steps.check-url.outputs.skip != 'true'
         run: |
           sudo gpg -k
           sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
@@ -39,6 +53,7 @@ jobs:
           sudo apt-get install k6
 
       - name: Create k6 test script
+        if: steps.check-url.outputs.skip != 'true'
         run: |
           cat > load-test.js << 'EOF'
           import http from 'k6/http';
@@ -82,6 +97,7 @@ jobs:
           EOF
 
       - name: Run load tests against staging
+        if: steps.check-url.outputs.skip != 'true'
         run: |
           k6 run \
             --out json=results.json \
@@ -90,6 +106,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload results
+        if: steps.check-url.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: k6-results
@@ -108,19 +125,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check staging URL
+        id: check-lighthouse
+        env:
+          STAGING_URL: ${{ secrets.STAGING_URL }}
+        run: |
+          if [ -z "$STAGING_URL" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "STAGING_URL not configured, skipping Lighthouse"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Lighthouse
+        if: steps.check-lighthouse.outputs.skip != 'true'
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            ${{ secrets.STAGING_URL || 'http://localhost:5173' }}
+            ${{ secrets.STAGING_URL }}
           budgetPath: ./lighthouse-budget.json
           uploadArtifacts: true
           temporaryPublicStorage: true
 
       - name: Check performance budget
+        if: steps.check-lighthouse.outputs.skip != 'true'
         run: |
           echo "Lighthouse audit complete"
-          # Add custom threshold checks here
 
   # ==========================================
   # Bundle Size Analysis

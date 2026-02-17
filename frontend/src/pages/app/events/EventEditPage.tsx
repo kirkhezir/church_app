@@ -60,7 +60,9 @@ export const EventEditPage: React.FC = () => {
 
   if (loading) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}>
+      <SidebarLayout
+        breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}
+      >
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <Skeleton className="mb-6 h-8 w-32" />
           <Card>
@@ -83,7 +85,9 @@ export const EventEditPage: React.FC = () => {
 
   if (error || !event) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}>
+      <SidebarLayout
+        breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Edit Event' }]}
+      >
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <Button variant="ghost" onClick={() => navigate('/app/events')}>
             <ArrowLeft className="mr-2 h-4 w-4" />

@@ -41,7 +41,9 @@ export const EventCreatePage: React.FC = () => {
   };
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Create Event' }]}>
+    <SidebarLayout
+      breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Create Event' }]}
+    >
       <div className="container mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="mb-6">

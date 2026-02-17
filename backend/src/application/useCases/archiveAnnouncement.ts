@@ -43,11 +43,11 @@ export async function archiveAnnouncement(id: string, userId: string): Promise<v
     await announcementRepository.archive(id);
 
     logger.info('Announcement archived successfully', { id });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to archive announcement', {
       id,
       userId,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }

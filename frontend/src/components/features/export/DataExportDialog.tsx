@@ -141,7 +141,7 @@ export function DataExportDialog({ dataType, onExport, trigger }: DataExportDial
         description: `${dataTypeLabels[dataType]} data exported successfully.`,
       });
       setIsOpen(false);
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Export failed',
         description: 'An error occurred while exporting data.',

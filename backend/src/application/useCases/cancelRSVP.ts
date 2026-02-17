@@ -103,6 +103,7 @@ export class CancelRSVP {
   /**
    * Send waitlist promotion email (async, non-blocking)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async sendWaitlistPromotionEmail(memberId: string, event: any): Promise<void> {
     try {
       const member = await this.memberRepository.findById(memberId);

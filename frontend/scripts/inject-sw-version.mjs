@@ -11,12 +11,12 @@ const SW_PATH = join(process.cwd(), 'public', 'sw.js');
 
 try {
   let swContent = readFileSync(SW_PATH, 'utf8');
-  
+
   // Replace the placeholder with actual build timestamp
   swContent = swContent.replace('__BUILD_TIMESTAMP__', BUILD_TIMESTAMP);
-  
+
   writeFileSync(SW_PATH, swContent);
-  
+
   console.log(`✓ Service Worker updated with build timestamp: ${BUILD_TIMESTAMP}`);
 } catch (error) {
   console.error('Failed to update service worker:', error);

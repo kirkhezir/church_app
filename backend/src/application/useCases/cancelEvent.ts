@@ -87,7 +87,9 @@ export class CancelEvent {
    * Send cancellation notifications to all attendees (async, non-blocking)
    */
   private async sendCancellationNotifications(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rsvps: any[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     event: any,
     reason?: string
   ): Promise<void> {

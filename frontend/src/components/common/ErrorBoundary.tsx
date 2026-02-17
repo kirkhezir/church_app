@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -150,7 +151,7 @@ export class PageErrorBoundary extends Component<
                   Oops! Something went wrong
                 </h1>
                 <p className="mb-6 text-gray-600">
-                  We're sorry, but something unexpected happened. Please try again.
+                  We&apos;re sorry, but something unexpected happened. Please try again.
                 </p>
               </>
             )}

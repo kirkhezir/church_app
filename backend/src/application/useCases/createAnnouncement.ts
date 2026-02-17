@@ -29,6 +29,7 @@ export async function createAnnouncement(
   content: string,
   priority: Priority = Priority.NORMAL,
   isDraft: boolean = false
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   try {
     logger.info('Creating announcement', { authorId, title, priority, isDraft });
@@ -84,10 +85,10 @@ export async function createAnnouncement(
     }
 
     return created;
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to create announcement', {
       authorId,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
@@ -96,7 +97,12 @@ export async function createAnnouncement(
 /**
  * Send urgent announcement emails to all members with notifications enabled
  */
-async function sendUrgentAnnouncementEmails(announcement: any, author: any): Promise<void> {
+async function sendUrgentAnnouncementEmails(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  announcement: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  author: any
+): Promise<void> {
   try {
     // Get all members with email notifications enabled
     const members = await memberRepository.findAll();
@@ -153,11 +159,11 @@ async function sendUrgentAnnouncementEmails(announcement: any, author: any): Pro
                 </div>
               `,
             });
-          } catch (error: any) {
+          } catch (error: unknown) {
             logger.error('Failed to send urgent announcement email to member', {
               memberId: member.id,
               email: member.email,
-              error: error.message,
+              error: error instanceof Error ? error.message : String(error),
             });
           }
         })
@@ -168,9 +174,9 @@ async function sendUrgentAnnouncementEmails(announcement: any, author: any): Pro
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Error in sendUrgentAnnouncementEmails', {
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }

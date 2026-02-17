@@ -12,6 +12,7 @@
 
 import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
 import { ISessionRepository } from '../../domain/interfaces/ISessionRepository';
+import { Member } from '../../domain/entities/Member';
 import { PasswordService } from '../../infrastructure/auth/passwordService';
 import { JWTService } from '../../infrastructure/auth/jwtService';
 import { logger } from '../../infrastructure/logging/logger';
@@ -226,7 +227,7 @@ export class AuthenticateUser {
    * Handle failed login attempt
    * Locks account after 5 failed attempts
    */
-  private async handleFailedLogin(member: any): Promise<void> {
+  private async handleFailedLogin(member: Member): Promise<void> {
     member.failedLoginAttempts += 1;
 
     if (member.failedLoginAttempts >= 5) {
