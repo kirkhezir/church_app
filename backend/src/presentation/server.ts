@@ -156,7 +156,7 @@ export class Server {
         const swaggerOptions = {
           customCss: '.swagger-ui .topbar { display: none }',
           customSiteTitle: 'Church Management API - Documentation',
-          customfavIcon: '/favicon.ico',
+          customfavIcon: './favicon-32x32.png',
           explorer: true,
         };
 
