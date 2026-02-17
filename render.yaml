@@ -12,10 +12,10 @@ services:
     buildFilter:
       paths:
         - backend/**
-        - specs/001-full-stack-web/contracts/openapi.yaml
+        - shared/**
+        - specs/**
         - package.json
         - package-lock.json
-        - tsconfig.json
         - render.yaml
     healthCheckPath: /health
     envVars:
