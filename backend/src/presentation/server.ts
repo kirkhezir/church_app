@@ -160,7 +160,7 @@ export class Server {
           explorer: true,
         };
 
-        // Override CSP specifically for Swagger UI pages
+        // Override CSP specifically for Swagger UI pages to allow all resources
         this.app.use(
           '/api-docs',
           helmet({
@@ -170,6 +170,9 @@ export class Server {
                 styleSrc: ["'self'", "'unsafe-inline'"],
                 scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
                 imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+                fontSrc: ["'self'", 'data:'],
+                connectSrc: ["'self'"],
+                baseUri: ["'self'"],
               },
             },
           })
