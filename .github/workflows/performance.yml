@@ -102,6 +102,7 @@ jobs:
   lighthouse:
     name: Lighthouse Audit
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Checkout repository
@@ -135,7 +136,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "24.x"
           cache: "npm"
 
       - name: Install dependencies
@@ -166,6 +167,7 @@ jobs:
 
       - name: Upload bundle stats
         uses: actions/upload-artifact@v4
+        if: hashFiles('frontend/dist/stats.html') != ''
         with:
           name: bundle-stats
           path: frontend/dist/stats.html

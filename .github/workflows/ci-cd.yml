@@ -13,7 +13,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "20.x"
+  NODE_VERSION: "24.x"
   REGISTRY: ghcr.io
   IMAGE_NAME_BACKEND: ${{ github.repository }}/backend
   IMAGE_NAME_FRONTEND: ${{ github.repository }}/frontend
