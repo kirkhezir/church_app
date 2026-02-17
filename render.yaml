@@ -3,11 +3,20 @@ services:
   - type: web
     name: church-app-backend
     runtime: node
+    rootDir: backend
     region: singapore
     plan: free
     branch: main
-    buildCommand: cd backend && npm install && npm run build
-    startCommand: cd backend && npm start
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    buildFilter:
+      paths:
+        - backend/**
+        - specs/001-full-stack-web/contracts/openapi.yaml
+        - package.json
+        - package-lock.json
+        - tsconfig.json
+        - render.yaml
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
