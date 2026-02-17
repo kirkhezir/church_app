@@ -37,7 +37,7 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/react": "^10.29.0",
-    "@tiptap/extension-link": "^3.10.5",
+    "@tiptap/extension-link": "^3.19.0",
     "@tiptap/extension-placeholder": "^3.10.5",
     "@tiptap/react": "^3.10.5",
     "@tiptap/starter-kit": "^3.10.5",
