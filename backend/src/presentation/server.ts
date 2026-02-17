@@ -179,7 +179,7 @@ export class Server {
         );
 
         // Serve Swagger UI static assets at /api-docs/*
-        this.app.use('/api-docs', swaggerUi.serve);
+        this.app.use('/api-docs', swaggerUi.serveFiles(swaggerDocument, swaggerOptions));
 
         // Serve Swagger UI HTML only on docs root routes
         const swaggerSetup = swaggerUi.setup(swaggerDocument, swaggerOptions);
