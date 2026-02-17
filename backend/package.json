@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^12.1.0",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@types/axios": "^0.9.36",
     "@types/ioredis": "^4.28.10",
     "@types/jest": "^29.5.14",
@@ -89,16 +89,16 @@
     "ajv-formats": "^3.0.1",
     "autocannon": "^8.0.0",
     "axios": "^1.13.2",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.0.1",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
     "globals": "^15.15.0",
     "jest": "^29.7.0",
     "prettier": "^3.1.1",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.5",
     "tsx": "^4.7.0",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.56.0"
   },
   "engines": {
     "node": "24.x",
