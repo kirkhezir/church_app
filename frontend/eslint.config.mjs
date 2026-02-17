@@ -69,6 +69,16 @@ export default tseslint.config(
     },
   },
 
+  // Node.js scripts (build tools)
+  {
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
   // ErrorBoundary exception
   {
     files: ['**/ErrorBoundary.tsx'],
