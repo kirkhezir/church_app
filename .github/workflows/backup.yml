@@ -16,6 +16,9 @@ on:
           - weekly
           - manual
 
+permissions:
+  contents: read
+
 env:
   BACKUP_RETENTION_DAYS: 30
 

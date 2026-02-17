@@ -18,6 +18,9 @@ on:
       - "backend/src/**"
       - "frontend/src/**"
 
+permissions:
+  contents: read
+
 jobs:
   # ==========================================
   # Load Testing

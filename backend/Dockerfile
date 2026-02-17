@@ -3,6 +3,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+# Update bundled npm dependencies for security fixes
+RUN npm install -g npm@11.10.0
+
 # Copy package files
 COPY package*.json ./
 
@@ -23,6 +26,9 @@ RUN npm run build
 FROM node:24-alpine AS production
 
 WORKDIR /app
+
+# Update bundled npm dependencies for security fixes
+RUN npm install -g npm@11.10.0
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \

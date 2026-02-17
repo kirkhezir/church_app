@@ -74,7 +74,7 @@ export class ExportEventData {
       where,
       include: {
         _count: {
-          select: { rsvps: true },
+          select: { event_rsvps: true },
         },
       },
     });
@@ -84,7 +84,7 @@ export class ExportEventData {
       const result: any = {};
       for (const field of this.exportFields) {
         if (field === 'rsvpCount') {
-          result.rsvpCount = event._count?.rsvps || 0;
+          result.rsvpCount = event._count?.event_rsvps || 0;
         } else if (event[field] !== undefined) {
           result[field] = event[field];
         }

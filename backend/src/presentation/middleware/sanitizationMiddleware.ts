@@ -3,6 +3,46 @@ import xss from 'xss';
 import validator from 'validator';
 import { logger } from '../../infrastructure/logging/logger';
 
+function isSafeUrlValue(value: string): boolean {
+  const normalized = value.trim();
+  if (!normalized) return false;
+
+  // Decode repeatedly to catch encoded protocol obfuscation (e.g. javascript%3A)
+  let decoded = normalized;
+  for (let i = 0; i < 3; i++) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+
+  const compact = decoded.replace(/[\u0000-\u001F\u007F\s]+/g, '');
+  const lower = compact.toLowerCase();
+
+  if (
+    lower.startsWith('javascript:') ||
+    lower.startsWith('vbscript:') ||
+    lower.startsWith('data:')
+  ) {
+    return false;
+  }
+
+  // Allow root-relative or fragment links for markdown anchors
+  if (compact.startsWith('/') || compact.startsWith('#')) {
+    return true;
+  }
+
+  try {
+    const parsed = new URL(compact);
+    return ['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Input Sanitization Middleware
  * Protects against XSS and injection attacks
@@ -96,12 +136,7 @@ export function sanitizeUrl(url: string): string | null {
 
   const trimmed = url.trim();
 
-  if (
-    !validator.isURL(trimmed, {
-      protocols: ['http', 'https'],
-      require_protocol: true,
-    })
-  ) {
+  if (!isSafeUrlValue(trimmed)) {
     return null;
   }
 
@@ -270,12 +305,19 @@ export function sanitizeMarkdown(content: string): string {
     stripIgnoreTag: true,
     stripIgnoreTagBody: ['script', 'style', 'iframe', 'object', 'embed'],
     onTagAttr: (tag, name, value) => {
-      // Only allow safe href values (no javascript:)
+      // Enforce strict protocol allowlist on href values
       if (tag === 'a' && name === 'href') {
-        if (value.toLowerCase().startsWith('javascript:')) {
+        if (!isSafeUrlValue(value)) {
           return '';
         }
       }
+
+      if (tag === 'a' && name === 'target') {
+        if (value !== '_blank' && value !== '_self') {
+          return '';
+        }
+      }
+
       return undefined; // Keep the attribute as-is
     },
   });

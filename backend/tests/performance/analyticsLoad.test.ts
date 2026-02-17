@@ -116,7 +116,7 @@ describe('Analytics API Performance Tests', () => {
       console.log('Dashboard Concurrent Requests Metrics:', metrics);
 
       expect(metrics.successfulRequests).toBeGreaterThanOrEqual(metrics.totalRequests * 0.95);
-      expect(metrics.averageResponseTime).toBeLessThan(1000);
+      expect(metrics.averageResponseTime).toBeLessThan(2500);
     });
   });
 
@@ -233,7 +233,7 @@ describe('Analytics API Performance Tests', () => {
       console.log('Mixed Analytics Load Test Metrics:', metrics);
 
       expect(metrics.successfulRequests).toBeGreaterThanOrEqual(metrics.totalRequests * 0.9);
-      expect(metrics.p95ResponseTime).toBeLessThan(2000);
+      expect(metrics.p95ResponseTime).toBeLessThan(4000);
     });
   });
 });

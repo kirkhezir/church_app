@@ -1,5 +1,6 @@
 import { EmailService } from '../../infrastructure/email/emailService';
 import { logger } from '../../infrastructure/logging/logger';
+import xss from 'xss';
 
 /**
  * Contact form data interface
@@ -225,48 +226,18 @@ export class ContactService {
 
     // Limit input length to prevent ReDoS attacks
     const maxLength = 10000;
-    let sanitized = input.length > maxLength ? input.substring(0, maxLength) : input;
+    const limited = input.length > maxLength ? input.substring(0, maxLength) : input;
 
     // Remove null bytes and other control characters (eslint-disable no-control-regex)
     // eslint-disable-next-line no-control-regex
-    sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+    const withoutControlChars = limited.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
 
-    // Remove script tags (use a simpler, non-backtracking pattern)
-    sanitized = sanitized.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-    sanitized = sanitized.replace(/<script[^>]*>/gi, '');
-
-    // Remove all dangerous protocol handlers (comprehensive list)
-    sanitized = sanitized.replace(/javascript\s*:/gi, '');
-    sanitized = sanitized.replace(/vbscript\s*:/gi, '');
-    sanitized = sanitized.replace(/data\s*:/gi, '');
-    sanitized = sanitized.replace(/expression\s*\(/gi, '');
-
-    // Remove event handlers - use a simpler pattern to avoid ReDoS
-    // Match on\w+ followed by = and remove the entire attribute
-    sanitized = sanitized.replace(/\s*on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]*)/gi, '');
-
-    // Remove iframes (use a simpler, non-backtracking pattern)
-    sanitized = sanitized.replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
-    sanitized = sanitized.replace(/<iframe[^>]*>/gi, '');
-
-    // Remove object, embed, and other dangerous tags
-    sanitized = sanitized.replace(/<object[^>]*>[\s\S]*?<\/object>/gi, '');
-    sanitized = sanitized.replace(/<embed[^>]*>/gi, '');
-    sanitized = sanitized.replace(/<applet[^>]*>[\s\S]*?<\/applet>/gi, '');
-    sanitized = sanitized.replace(/<form[^>]*>[\s\S]*?<\/form>/gi, '');
-    sanitized = sanitized.replace(/<meta[^>]*>/gi, '');
-    sanitized = sanitized.replace(/<link[^>]*>/gi, '');
-    sanitized = sanitized.replace(/<base[^>]*>/gi, '');
-
-    // Remove style tags that could contain expressions
-    sanitized = sanitized.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-
-    // Remove SVG tags (can contain scripts)
-    sanitized = sanitized.replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '');
-
-    // Remove any remaining tags with dangerous attributes
-    sanitized = sanitized.replace(/<[^>]*\s+src\s*=\s*["']?javascript:/gi, '<');
-    sanitized = sanitized.replace(/<[^>]*\s+href\s*=\s*["']?javascript:/gi, '<');
+    const sanitized = xss(withoutControlChars, {
+      whiteList: {},
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ['script', 'style', 'iframe', 'object', 'embed', 'svg', 'form'],
+      onTagAttr: () => '',
+    });
 
     return sanitized.trim();
   }

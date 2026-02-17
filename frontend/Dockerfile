@@ -3,6 +3,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+# Update bundled npm dependencies for security fixes
+RUN npm install -g npm@11.10.0
+
 # Build arguments for environment variables
 ARG VITE_API_URL
 ARG VITE_WS_URL
