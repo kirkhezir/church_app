@@ -85,7 +85,7 @@
     "@types/jest": "^29.5.14",
     "@types/speakeasy": "^2.0.10",
     "@types/supertest": "^6.0.3",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "autocannon": "^8.0.0",
     "axios": "^1.13.2",
