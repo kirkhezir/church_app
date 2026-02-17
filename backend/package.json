@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "prisma generate && npx esbuild src/index.ts --bundle --platform=node --outdir=dist --format=cjs --external:@prisma/client --external:bcrypt",
+    "build": "prisma generate && npx esbuild src/index.ts --bundle --platform=node --outdir=dist --format=cjs --external:@prisma/client --external:bcrypt --external:swagger-ui-express --external:swagger-ui-dist --external:swagger-ui-dist/*",
     "start": "node dist/index.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
