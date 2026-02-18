@@ -14,21 +14,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
-import {
-  MapPin,
-  Mail,
-  Phone,
-  Clock,
-  ArrowUp,
-  ChevronDown,
-  Heart,
-  Facebook,
-  Youtube,
-  Users,
-  BookOpen,
-  MessageCircle,
-} from 'lucide-react';
+import { MapPin, Clock, ArrowUp, ChevronDown, Heart, Users, BookOpen } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
 // Feature Components
@@ -38,6 +24,7 @@ import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator
 
 // Shared Navigation Header
 import { PublicNavigationHeader } from '../../components/layout/PublicNavigationHeader';
+import { PublicFooter } from '../../components/layout/PublicFooter';
 
 // Landing Page Components
 import {
@@ -66,21 +53,6 @@ const CHURCH_STATS = {
   families: '15+',
   years: '10+',
 } as const;
-
-// Church social media and contact links
-const SOCIAL_LINKS = {
-  facebook: 'https://www.facebook.com/singburiadventist',
-  youtube: 'https://www.youtube.com/@singburiadventist',
-  line: 'https://line.me/ti/p/@singburiadventist',
-} as const;
-
-// Quick links for foot section (replaces NAV_LINKS usage)
-const FOOTER_QUICK_LINKS = [
-  { labelKey: 'nav.home', href: '/', isPage: true },
-  { labelKey: 'nav.about', href: '/about', isPage: true },
-  { labelKey: 'nav.visit', href: '/visit', isPage: true },
-  { labelKey: 'nav.events', href: '/events', isPage: true },
-];
 
 // =============================================================================
 // MAIN LANDING PAGE
@@ -138,7 +110,7 @@ export function LandingPage() {
         <LocationMapSection />
       </section>
 
-      <FooterSection />
+      <PublicFooter showNewsletter />
       <BackToTopButton />
       <PWAInstallPrompt />
       <NewsletterPopup delay={60000} scrollTrigger={80} />
@@ -407,235 +379,6 @@ function AboutSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-// =============================================================================
-// FOOTER - Clean, Organized with Newsletter and SDA Badge
-// =============================================================================
-function FooterSection() {
-  const { t } = useI18n();
-  const currentYear = new Date().getFullYear();
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // In production, this would call an API
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
-    }
-  };
-
-  return (
-    <footer className="bg-slate-900 text-slate-300" role="contentinfo">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        {/* Newsletter Section */}
-        <div className="mb-10 rounded-xl bg-slate-800/50 p-6 sm:p-8">
-          <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-            <div className="flex-1">
-              <h3 className="mb-1 text-lg font-semibold text-white">{t('footer.stayConnected')}</h3>
-              <p className="text-sm text-slate-400">{t('footer.newsletterDesc')}</p>
-            </div>
-            <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-sm gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('footer.emailPlaceholder')}
-                required
-                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                aria-label={t('footer.emailPlaceholder')}
-              />
-              <button
-                type="submit"
-                disabled={subscribed}
-                className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:bg-emerald-600"
-              >
-                {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand with SDA Badge */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="mb-4 flex items-center gap-3">
-              <img src={CHURCH_LOGO} alt="" className="h-12 w-12 rounded-full object-contain" />
-              <div>
-                <p className="font-bold text-white">{t('common.churchName')}</p>
-              </div>
-            </div>
-            <p className="mb-3 text-sm text-slate-400">
-              A community of faith sharing God&apos;s love in Sing Buri, Thailand.
-            </p>
-            {/* SDA Affiliation Badge */}
-            <a
-              href="https://www.adventist.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-4 inline-flex items-center gap-2 rounded-md bg-slate-800 px-3 py-1.5 text-xs text-slate-300 transition-colors hover:bg-slate-700"
-            >
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              Seventh-day Adventist Church
-            </a>
-            <div className="mt-3 flex gap-3">
-              <a
-                href={SOCIAL_LINKS.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-blue-600 hover:text-white"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a
-                href={SOCIAL_LINKS.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-red-600 hover:text-white"
-                aria-label="YouTube"
-              >
-                <Youtube className="h-4 w-4" />
-              </a>
-              <a
-                href={SOCIAL_LINKS.line}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-green-500 hover:text-white"
-                aria-label="LINE Official Account"
-              >
-                <MessageCircle className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-
-          {/* Service Times */}
-          <div>
-            <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
-              <Clock className="h-4 w-4 text-amber-400" />
-              {t('footer.sabbathServices')}
-            </h3>
-            <ul className="space-y-2 text-sm">
-              <li className="flex justify-between">
-                <span>Sabbath School</span>
-                <span className="text-slate-400">9:00 AM</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Divine Service</span>
-                <span className="text-slate-400">11:00 AM</span>
-              </li>
-              <li className="flex justify-between">
-                <span>AY Program</span>
-                <span className="text-slate-400">2:30 PM</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="mb-4 font-semibold text-white">{t('footer.quickLinks')}</h3>
-            <ul className="space-y-2 text-sm">
-              {FOOTER_QUICK_LINKS.map((link) => (
-                <li key={link.href}>
-                  {link.isPage ? (
-                    <Link
-                      to={link.href}
-                      className="text-slate-400 transition-colors hover:text-white"
-                    >
-                      {t(link.labelKey)}
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' })
-                      }
-                      className="cursor-pointer rounded text-slate-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                      {t(link.labelKey)}
-                    </button>
-                  )}
-                </li>
-              ))}
-              <li>
-                <a
-                  href="https://www.adventist.org/beliefs/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-400 transition-colors hover:text-white"
-                >
-                  {t('footer.ourBeliefs')}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="mb-4 font-semibold text-white">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="tel:+66876106926"
-                  className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
-                >
-                  <Phone className="h-4 w-4 text-emerald-400" />
-                  +66 876-106-926
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SOCIAL_LINKS.line}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
-                >
-                  <MessageCircle className="h-4 w-4 text-green-400" />
-                  LINE: @singburiadventist
-                </a>
-              </li>
-              <li>
-                <a
-                  href="mailto:singburiadventistcenter@gmail.com"
-                  className="flex items-start gap-2 text-slate-400 transition-colors hover:text-white"
-                >
-                  <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                  <span className="max-w-[180px] truncate">singburiadventistcenter@gmail.com</span>
-                </a>
-              </li>
-              <li className="flex items-start gap-2 text-slate-400">
-                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-rose-400" />
-                <span>Bang Phutsa, Sing Buri 16000, Thailand</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-sm sm:flex-row">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-500 sm:justify-start">
-            <p>
-              © {currentYear} {t('common.churchName')}
-            </p>
-            <span className="hidden sm:inline">•</span>
-            <Link to="/privacy" className="transition-colors hover:text-white">
-              {t('footer.privacyPolicy')}
-            </Link>
-            <span className="hidden sm:inline">•</span>
-            <Link to="/terms" className="transition-colors hover:text-white">
-              {t('footer.termsOfService') || 'Terms of Service'}
-            </Link>
-          </div>
-          <p className="flex items-center gap-1.5 text-slate-400">
-            {t('footer.builtWith')} <Heart className="h-4 w-4 fill-rose-500 text-rose-500" />{' '}
-            {t('footer.forCommunity')}
-          </p>
-        </div>
-      </div>
-    </footer>
   );
 }
 

@@ -1,13 +1,16 @@
 /**
  * Shared Public Footer Component
  *
- * Used by PublicLayout for all public sub-pages.
- * Provides consistent footer with service times, quick links, contact info, and social links.
+ * Used by PublicLayout for all public sub-pages, and optionally on the Landing Page.
+ * Pass `showNewsletter` to render the newsletter signup section (home page only).
  */
 
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { Clock, Phone, Mail, MapPin, Heart, Facebook, Youtube, MessageCircle } from 'lucide-react';
 import { useI18n } from '@/i18n';
+
+const CHURCH_LOGO = '/church-logo.png';
 
 const SOCIAL_LINKS = {
   facebook: 'https://www.facebook.com/singburiadventist',
@@ -15,26 +18,76 @@ const SOCIAL_LINKS = {
   line: 'https://line.me/ti/p/@singburiadventist',
 } as const;
 
-export function PublicFooter() {
+interface PublicFooterProps {
+  /** Render the newsletter signup panel (home page only) */
+  showNewsletter?: boolean;
+}
+
+export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
   const { t, language } = useI18n();
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail('');
+      setTimeout(() => setSubscribed(false), 3000);
+    }
+  };
 
   return (
-    <footer className="border-t bg-slate-900 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Church Info */}
+    <footer className="border-t bg-slate-900 text-slate-300" role="contentinfo">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        {/* Newsletter Section — home page only */}
+        {showNewsletter && (
+          <div className="mb-10 rounded-xl bg-slate-800/50 p-6 sm:p-8">
+            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+              <div className="flex-1">
+                <h3 className="mb-1 text-lg font-semibold text-white">
+                  {t('footer.stayConnected')}
+                </h3>
+                <p className="text-sm text-slate-400">{t('footer.newsletterDesc')}</p>
+              </div>
+              <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-sm gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t('footer.emailPlaceholder')}
+                  required
+                  className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  aria-label={t('footer.emailPlaceholder')}
+                />
+                <button
+                  type="submit"
+                  disabled={subscribed}
+                  className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:bg-emerald-600"
+                >
+                  {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="grid gap-8 sm:grid-cols-2 sm:items-start md:grid-cols-4">
+          {/* Brand / Church Info */}
           <div>
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-4 flex items-center gap-3">
               <img
-                src="/church-logo.png"
+                src={CHURCH_LOGO}
                 alt={t('common.churchName')}
-                className="h-8 w-8 rounded-full object-contain"
+                className="h-12 w-12 rounded-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
-              <span className="text-lg font-bold text-white">{t('common.churchName')}</span>
+              <div>
+                <p className="font-bold text-white">{t('common.churchName')}</p>
+              </div>
             </div>
             <p className="mb-3 text-sm text-slate-400">
               {language === 'th'
@@ -85,7 +138,7 @@ export function PublicFooter() {
           <div>
             <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
               <Clock className="h-4 w-4 text-amber-400" />
-              {language === 'th' ? 'เวลานมัสการวันสะบาโต' : 'Sabbath Services'}
+              {t('footer.sabbathServices')}
             </h3>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
@@ -105,10 +158,13 @@ export function PublicFooter() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-4 font-semibold text-white">
-              {language === 'th' ? 'ลิงก์ด่วน' : 'Quick Links'}
-            </h3>
+            <h3 className="mb-4 font-semibold text-white">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/" className="text-slate-400 transition-colors hover:text-white">
+                  {language === 'th' ? 'หน้าแรก' : 'Home'}
+                </Link>
+              </li>
               <li>
                 <Link to="/about" className="text-slate-400 transition-colors hover:text-white">
                   {language === 'th' ? 'เกี่ยวกับเรา' : 'About'}
@@ -174,7 +230,7 @@ export function PublicFooter() {
                   className="flex items-start gap-2 text-slate-400 transition-colors hover:text-white"
                 >
                   <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                  <span className="break-all text-sm">singburiadventistcenter@gmail.com</span>
+                  <span className="break-all">singburiadventistcenter@gmail.com</span>
                 </a>
               </li>
               <li className="flex items-start gap-2 text-slate-400">
@@ -185,7 +241,7 @@ export function PublicFooter() {
           </div>
         </div>
 
-        {/* Bottom */}
+        {/* Bottom bar */}
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-sm sm:flex-row">
           <div className="flex flex-wrap items-center justify-center gap-4 text-slate-500 sm:justify-start">
             <p>
@@ -193,17 +249,16 @@ export function PublicFooter() {
             </p>
             <span className="hidden sm:inline">•</span>
             <Link to="/privacy" className="transition-colors hover:text-white">
-              {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
+              {t('footer.privacyPolicy')}
             </Link>
             <span className="hidden sm:inline">•</span>
             <Link to="/terms" className="transition-colors hover:text-white">
-              {language === 'th' ? 'เงื่อนไขการใช้บริการ' : 'Terms of Service'}
+              {t('footer.termsOfService')}
             </Link>
           </div>
           <p className="flex items-center gap-1.5 text-slate-400">
-            {language === 'th' ? 'สร้างด้วย' : 'Built with'}{' '}
-            <Heart className="h-4 w-4 fill-rose-500 text-rose-500" />{' '}
-            {language === 'th' ? 'เพื่อชุมชน' : 'for our community'}
+            {t('footer.builtWith')} <Heart className="h-4 w-4 fill-rose-500 text-rose-500" />{' '}
+            {t('footer.forCommunity')}
           </p>
         </div>
       </div>
