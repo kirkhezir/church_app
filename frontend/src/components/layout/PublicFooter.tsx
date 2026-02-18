@@ -195,6 +195,10 @@ export function PublicFooter() {
             <Link to="/privacy" className="transition-colors hover:text-white">
               {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
             </Link>
+            <span className="hidden sm:inline">•</span>
+            <Link to="/terms" className="transition-colors hover:text-white">
+              {language === 'th' ? 'เงื่อนไขการใช้บริการ' : 'Terms of Service'}
+            </Link>
           </div>
           <p className="flex items-center gap-1.5 text-slate-400">
             {language === 'th' ? 'สร้างด้วย' : 'Built with'}{' '}

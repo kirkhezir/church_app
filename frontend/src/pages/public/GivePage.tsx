@@ -93,7 +93,6 @@ interface BankAccount {
   bankThai: string;
   accountName: string;
   accountNumber: string;
-  logo: string;
 }
 
 const bankAccounts: BankAccount[] = [
@@ -102,14 +101,12 @@ const bankAccounts: BankAccount[] = [
     bankThai: 'ธนาคารกสิกรไทย',
     accountName: 'Sing Buri Adventist Center',
     accountNumber: 'xxx-x-xxxxx-x',
-    logo: '🏦',
   },
   {
     bank: 'Bangkok Bank',
     bankThai: 'ธนาคารกรุงเทพ',
     accountName: 'Sing Buri Adventist Center',
     accountNumber: 'xxx-x-xxxxx-x',
-    logo: '🏦',
   },
 ];
 
@@ -370,7 +367,7 @@ export function GivePage() {
                       {bankAccounts.map((account, i) => (
                         <div key={i} className="rounded-lg bg-slate-50 p-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl">{account.logo}</span>
+                            <Building2 className="h-6 w-6 text-blue-600" />
                             <span className="font-medium">
                               {language === 'th' ? account.bankThai : account.bank}
                             </span>

@@ -44,7 +44,7 @@ export function PrivacyPolicyPage() {
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
         <div className="prose prose-slate max-w-none">
           {/* Introduction */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                 <Shield className="h-5 w-5 text-blue-600" />
@@ -64,7 +64,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Information We Collect */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
                 <Eye className="h-5 w-5 text-emerald-600" />
@@ -104,7 +104,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* How We Use Your Information */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
                 <FileText className="h-5 w-5 text-purple-600" />
@@ -123,7 +123,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Data Protection */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
                 <Lock className="h-5 w-5 text-amber-600" />
@@ -149,7 +149,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Your Rights */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100">
                 <Trash2 className="h-5 w-5 text-rose-600" />
@@ -170,7 +170,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Third-Party Services */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <h2 className="mb-4 text-xl font-semibold text-slate-900">Third-Party Services</h2>
             <p className="text-slate-600">
               Our website may contain links to third-party websites or services. We are not
@@ -187,7 +187,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Cookies */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <h2 className="mb-4 text-xl font-semibold text-slate-900">Cookies and Tracking</h2>
             <p className="text-slate-600">
               We use cookies and similar technologies to enhance your experience on our website.
@@ -201,7 +201,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Children's Privacy */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <h2 className="mb-4 text-xl font-semibold text-slate-900">Children&apos;s Privacy</h2>
             <p className="text-slate-600">
               Our website is not intended for children under 13 years of age. We do not knowingly
@@ -211,7 +211,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Changes to Policy */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm sm:p-8">
+          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
             <h2 className="mb-4 text-xl font-semibold text-slate-900">Changes to This Policy</h2>
             <p className="text-slate-600">
               We may update this Privacy Policy from time to time. We will notify you of any changes
@@ -221,7 +221,7 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Contact Information */}
-          <section className="rounded-xl bg-blue-50 p-6 sm:p-8">
+          <section className="rounded-xl bg-blue-50 p-6 dark:bg-blue-900/20 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                 <Mail className="h-5 w-5 text-blue-600" />

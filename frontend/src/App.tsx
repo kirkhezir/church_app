@@ -19,7 +19,11 @@ const PublicEventDetailPage = lazy(() => import('./pages/public/EventDetailPage'
 const PrayerPage = lazy(() => import('./pages/public/PrayerPage'));
 const GivePage = lazy(() => import('./pages/public/GivePage'));
 const BlogPage = lazy(() => import('./pages/public/BlogPage'));
+const BlogDetailPage = lazy(() => import('./pages/public/BlogDetailPage'));
+const SermonDetailPage = lazy(() => import('./pages/public/SermonDetailPage'));
+const TermsOfServicePage = lazy(() => import('./pages/public/TermsOfServicePage'));
 const ResourcesPage = lazy(() => import('./pages/public/ResourcesPage'));
+const NotFoundPage = lazy(() => import('./pages/public/NotFoundPage'));
 
 // Route guards
 import { PrivateRoute } from './components/routing/PrivateRoute';
@@ -133,37 +137,7 @@ const PageLoader = () => (
   </div>
 );
 
-const NotFoundPage = () => (
-  <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-    <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
-        <svg
-          className="h-8 w-8 text-slate-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      </div>
-      <h1 className="mb-2 text-2xl font-bold text-slate-900">404 — Page Not Found</h1>
-      <p className="mb-6 text-slate-600">
-        The page you&apos;re looking for doesn&apos;t exist or has been moved.
-      </p>
-      <a
-        href="/"
-        className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
-      >
-        Return to Home
-      </a>
-    </div>
-  </div>
-);
+// NotFoundPage is now lazy-loaded from pages/public/NotFoundPage.tsx
 
 /**
  * Main App Component with Routing
@@ -201,7 +175,10 @@ const App: React.FC = () => {
             <Route path="/prayer" element={<PrayerPage />} />
             <Route path="/give" element={<GivePage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogDetailPage />} />
             <Route path="/news" element={<BlogPage />} />
+            <Route path="/sermons/:id" element={<SermonDetailPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/resources" element={<ResourcesPage />} />
 
             {/* ============================================================ */}

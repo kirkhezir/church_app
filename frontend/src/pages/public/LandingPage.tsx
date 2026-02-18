@@ -13,7 +13,7 @@
  * 7. Clean Typography - System fonts with proper scale
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import {
   MapPin,
@@ -21,20 +21,13 @@ import {
   Phone,
   Clock,
   ArrowUp,
-  Menu,
-  X,
-  LogIn,
+  ChevronDown,
   Heart,
   Facebook,
   Youtube,
-  ChevronDown,
   Users,
   BookOpen,
-  Gift,
   MessageCircle,
-  HeartHandshake,
-  Search,
-  MessageSquare,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -42,8 +35,9 @@ import { Button } from '../../components/ui/button';
 import LocationMapSection from '../../components/features/LocationMapSection';
 import { PWAInstallPrompt } from '../../components/features/pwa/PWAInstallPrompt';
 import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator';
-import LanguageToggle from '../../components/common/LanguageToggle';
-import GlobalSearch from '../../components/common/GlobalSearch';
+
+// Shared Navigation Header
+import { PublicNavigationHeader } from '../../components/layout/PublicNavigationHeader';
 
 // Landing Page Components
 import {
@@ -73,40 +67,20 @@ const CHURCH_STATS = {
   years: '10+',
 } as const;
 
-// Navigation links with translation keys
-interface NavLink {
-  labelKey: string;
-  href: string;
-  isPage?: boolean;
-  isExternal?: boolean;
-  children?: NavLink[];
-}
-
-const NAV_LINKS: NavLink[] = [
-  { labelKey: 'nav.home', href: '/', isPage: true },
-  { labelKey: 'nav.about', href: '/about', isPage: true },
-  { labelKey: 'nav.visit', href: '/visit', isPage: true },
-  {
-    labelKey: 'nav.explore',
-    href: '#',
-    children: [
-      { labelKey: 'nav.ministries', href: '/ministries', isPage: true },
-      { labelKey: 'nav.events', href: '/events', isPage: true },
-      { labelKey: 'nav.sermons', href: '/sermons', isPage: true },
-      { labelKey: 'nav.gallery', href: '/gallery', isPage: true },
-      { labelKey: 'nav.blog', href: '/blog', isPage: true },
-      { labelKey: 'nav.resources', href: '/resources', isPage: true },
-    ],
-  },
-  { labelKey: 'nav.prayer', href: '/prayer', isPage: true },
-];
-
 // Church social media and contact links
 const SOCIAL_LINKS = {
   facebook: 'https://www.facebook.com/singburiadventist',
   youtube: 'https://www.youtube.com/@singburiadventist',
   line: 'https://line.me/ti/p/@singburiadventist',
 } as const;
+
+// Quick links for foot section (replaces NAV_LINKS usage)
+const FOOTER_QUICK_LINKS = [
+  { labelKey: 'nav.home', href: '/', isPage: true },
+  { labelKey: 'nav.about', href: '/about', isPage: true },
+  { labelKey: 'nav.visit', href: '/visit', isPage: true },
+  { labelKey: 'nav.events', href: '/events', isPage: true },
+];
 
 // =============================================================================
 // MAIN LANDING PAGE
@@ -128,11 +102,8 @@ export function LandingPage() {
         Skip to main content
       </a>
       <OfflineIndicator />
-      {/* Fixed container for announcement + navigation */}
-      <div className="fixed inset-x-0 top-0 z-50">
-        <AnnouncementBanner />
-        <NavigationHeaderContent />
-      </div>
+      {/* Shared Navigation Header (transparent mode for hero) */}
+      <PublicNavigationHeader transparentHeader isHomePage topContent={<AnnouncementBanner />} />
       <HeroSection />
       <AboutSection />
 
@@ -172,326 +143,6 @@ export function LandingPage() {
       <PWAInstallPrompt />
       <NewsletterPopup delay={60000} scrollTrigger={80} />
     </main>
-  );
-}
-
-// =============================================================================
-// NAVIGATION HEADER - Clean, Professional Design
-// =============================================================================
-function NavigationHeaderContent() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { t } = useI18n();
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = useCallback((href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80; // Account for fixed header
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  }, []);
-
-  // Close mobile menu on escape key and keyboard shortcut for search
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsMobileMenuOpen(false);
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  return (
-    <>
-      {/* Global Search Modal */}
-      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
-      <header
-        className={`transition-all duration-300 ${
-          isScrolled
-            ? 'bg-white/95 shadow-md backdrop-blur-lg'
-            : 'bg-gradient-to-b from-black/50 to-transparent'
-        }`}
-      >
-        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Logo - Matching PublicLayout styling */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex cursor-pointer items-center gap-2 rounded-lg transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-            aria-label="Go to top"
-          >
-            <img
-              src={CHURCH_LOGO}
-              alt={t('common.churchName')}
-              className="h-10 w-10 rounded-full object-contain"
-            />
-            <div className="hidden sm:block">
-              <span className={`text-lg font-bold ${isScrolled ? 'text-slate-900' : 'text-white'}`}>
-                {t('common.churchName')}
-              </span>
-            </div>
-          </button>
-
-          {/* Desktop Navigation */}
-          <div className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((link) =>
-              link.children ? (
-                // Dropdown menu for Explore
-                <div key={link.labelKey} className="group relative">
-                  <button
-                    className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-                      isScrolled
-                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        : 'text-white/90 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    {t(link.labelKey)}
-                    <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                  </button>
-                  <div className="invisible absolute left-0 top-full z-50 min-w-[160px] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-                    <div className="rounded-lg border bg-white py-2 shadow-lg">
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          to={child.href}
-                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                        >
-                          {t(child.labelKey)}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : link.isPage ? (
-                link.labelKey === 'nav.home' ? (
-                  // Home link scrolls to top on home page
-                  <button
-                    key={link.href}
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                      isScrolled
-                        ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        : 'text-white/90 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    {t(link.labelKey)}
-                  </button>
-                ) : (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                      link.labelKey === 'nav.prayer'
-                        ? isScrolled
-                          ? 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'
-                          : 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200'
-                        : isScrolled
-                          ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                          : 'text-white/90 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    {link.labelKey === 'nav.prayer' && <HeartHandshake className="h-4 w-4" />}
-                    {t(link.labelKey)}
-                  </Link>
-                )
-              ) : (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-                    isScrolled
-                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  {t(link.labelKey)}
-                </button>
-              )
-            )}
-            {/* Give Button with Icon */}
-            <Link
-              to="/give"
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                isScrolled
-                  ? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
-                  : 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200'
-              }`}
-            >
-              <Gift className="h-4 w-4" />
-              {t('nav.give')}
-            </Link>
-            {/* Contact Button with Icon */}
-            <button
-              onClick={() => scrollToSection('#contact')}
-              className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
-                isScrolled
-                  ? 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
-                  : 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200'
-              }`}
-            >
-              <MessageSquare className="h-4 w-4" />
-              {t('nav.contact')}
-            </button>
-            {/* Language Toggle */}
-            <LanguageToggle compact lightMode={!isScrolled} />
-            {/* Search Button */}
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className={`rounded-lg p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-                isScrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white/90 hover:bg-white/10'
-              }`}
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </button>
-            {/* Login Button - Premium Design */}
-            <Link to="/login" className="ml-2">
-              <Button
-                size="sm"
-                className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
-                  isScrolled
-                    ? 'border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
-                    : 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-blue-600 hover:shadow-white/20'
-                }`}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <LogIn className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-                  {t('common.login')}
-                </span>
-                {/* Animated background shine effect */}
-                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              </Button>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 md:hidden ${
-              isScrolled ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
-            }`}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </nav>
-
-        {/* Mobile Menu with Backdrop */}
-        {isMobileMenuOpen && (
-          <div
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-        )}
-        <div
-          className={`relative z-50 md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="max-h-[80vh] overflow-y-auto bg-white px-4 pb-4 pt-2 shadow-lg">
-            {NAV_LINKS.map((link) =>
-              link.children ? (
-                // Mobile Explore dropdown - show as expandable section
-                <div key={link.labelKey} className="border-b border-slate-100 py-2">
-                  <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    {t(link.labelKey)}
-                  </p>
-                  {link.children.map((child) => (
-                    <Link
-                      key={child.href}
-                      to={child.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block w-full rounded-lg px-6 py-2.5 text-left text-sm font-medium text-slate-600 hover:bg-slate-50"
-                    >
-                      {t(child.labelKey)}
-                    </Link>
-                  ))}
-                </div>
-              ) : link.isPage ? (
-                link.labelKey === 'nav.home' ? (
-                  // Home link scrolls to top on home page
-                  <button
-                    key={link.href}
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    {t(link.labelKey)}
-                  </button>
-                ) : (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium ${
-                      link.labelKey === 'nav.prayer'
-                        ? 'text-purple-600 hover:bg-purple-50'
-                        : 'text-slate-700 hover:bg-slate-50'
-                    }`}
-                  >
-                    {link.labelKey === 'nav.prayer' && (
-                      <HeartHandshake className="h-5 w-5 text-purple-500" />
-                    )}
-                    {t(link.labelKey)}
-                  </Link>
-                )
-              ) : (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-50"
-                >
-                  {t(link.labelKey)}
-                </button>
-              )
-            )}
-            {/* Give Button Mobile */}
-            <Link
-              to="/give"
-              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-amber-600 hover:bg-amber-50"
-            >
-              <Gift className="h-5 w-5 text-amber-500" />
-              {t('nav.give')}
-            </Link>
-            {/* Contact Button Mobile */}
-            <button
-              onClick={() => scrollToSection('#contact')}
-              className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-base font-medium text-emerald-600 hover:bg-emerald-50"
-            >
-              <MessageSquare className="h-5 w-5 text-emerald-500" />
-              {t('nav.contact')}
-            </button>
-            {/* Mobile Login Button - Premium Design */}
-            <Link
-              to="/login"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="group relative mt-3 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-3.5 text-center font-semibold tracking-wide text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40"
-            >
-              <LogIn className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-              {t('common.memberLogin')}
-              {/* Animated shine effect */}
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-            </Link>
-          </div>
-        </div>
-      </header>
-    </>
   );
 }
 
@@ -888,7 +539,7 @@ function FooterSection() {
           <div>
             <h3 className="mb-4 font-semibold text-white">{t('footer.quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
-              {NAV_LINKS.slice(0, 4).map((link) => (
+              {FOOTER_QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   {link.isPage ? (
                     <Link
@@ -972,6 +623,10 @@ function FooterSection() {
             <span className="hidden sm:inline">•</span>
             <Link to="/privacy" className="transition-colors hover:text-white">
               {t('footer.privacyPolicy')}
+            </Link>
+            <span className="hidden sm:inline">•</span>
+            <Link to="/terms" className="transition-colors hover:text-white">
+              {t('footer.termsOfService') || 'Terms of Service'}
             </Link>
           </div>
           <p className="flex items-center gap-1.5 text-slate-400">

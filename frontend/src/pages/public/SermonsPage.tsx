@@ -19,6 +19,7 @@ import {
   ChevronRight,
   User,
 } from 'lucide-react';
+import { Link } from 'react-router';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
@@ -134,7 +135,7 @@ export function SermonsPage() {
   const [selectedSeries, setSelectedSeries] = useState('All Series');
   const [selectedSpeaker, setSelectedSpeaker] = useState('All Speakers');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSermon, setSelectedSermon] = useState<Sermon | null>(null);
+  // selectedSermon state removed — sermon cards now navigate to /sermons/:id
   const sermonsPerPage = 6;
 
   // Filter sermons (memoized to avoid extra re-renders)
@@ -192,62 +193,6 @@ export function SermonsPage() {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        {/* Featured/Selected Sermon */}
-        {selectedSermon && (
-          <section className="mb-8">
-            <Card className="overflow-hidden">
-              <div className="grid lg:grid-cols-2">
-                <div className="aspect-video bg-slate-900">
-                  {selectedSermon.youtubeId ? (
-                    <iframe
-                      src={`https://www.youtube.com/embed/${selectedSermon.youtubeId}`}
-                      className="h-full w-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      title={selectedSermon.title}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <p className="text-slate-400">Video coming soon</p>
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-6">
-                  <div className="mb-2 flex items-center gap-2">
-                    {selectedSermon.series && (
-                      <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                        {selectedSermon.series}
-                      </span>
-                    )}
-                    <span className="text-sm text-slate-500">
-                      {formatDate(selectedSermon.date)}
-                    </span>
-                  </div>
-                  <h2 className="mb-2 text-2xl font-bold text-slate-900">{selectedSermon.title}</h2>
-                  <div className="mb-4 flex items-center gap-4 text-sm text-slate-600">
-                    <span className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      {selectedSermon.speaker}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {selectedSermon.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <BookOpen className="h-4 w-4" />
-                      {selectedSermon.scripture}
-                    </span>
-                  </div>
-                  <p className="mb-4 text-slate-600">{selectedSermon.description}</p>
-                  <Button variant="outline" onClick={() => setSelectedSermon(null)}>
-                    Close
-                  </Button>
-                </CardContent>
-              </div>
-            </Card>
-          </section>
-        )}
-
         {/* Filters */}
         <section className="mb-8">
           <div className="flex flex-col gap-4 sm:flex-row">
@@ -256,13 +201,13 @@ export function SermonsPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search sermons..."
+                placeholder={language === 'th' ? 'ค้นหาคำเทศนา...' : 'Search sermons...'}
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               />
             </div>
             {/* Series Filter */}
@@ -274,7 +219,7 @@ export function SermonsPage() {
                   setSelectedSeries(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               >
                 {seriesList.map((series) => (
                   <option key={series} value={series}>
@@ -292,7 +237,7 @@ export function SermonsPage() {
                   setSelectedSpeaker(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               >
                 {speakerList.map((speaker) => (
                   <option key={speaker} value={speaker}>
@@ -307,64 +252,68 @@ export function SermonsPage() {
         {/* Sermons Grid */}
         <section className="mb-8">
           {displayedSermons.length === 0 ? (
-            <div className="rounded-lg bg-white p-12 text-center">
-              <p className="text-slate-500">No sermons found matching your criteria.</p>
+            <div className="rounded-lg bg-white p-12 text-center dark:bg-slate-900">
+              <p className="text-slate-500 dark:text-slate-400">
+                {language === 'th'
+                  ? 'ไม่พบคำเทศนาที่ตรงกับเกณฑ์ของคุณ'
+                  : 'No sermons found matching your criteria.'}
+              </p>
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {displayedSermons.map((sermon) => (
-                <Card
-                  key={sermon.id}
-                  className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg"
-                  onClick={() => setSelectedSermon(sermon)}
-                >
-                  <div className="relative aspect-video overflow-hidden bg-slate-200">
-                    {sermon.thumbnailUrl ? (
-                      <img
-                        src={sermon.thumbnailUrl}
-                        alt={sermon.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-slate-100">
-                        <BookOpen className="h-12 w-12 text-slate-300" />
+                <Link key={sermon.id} to={`/sermons/${sermon.id}`}>
+                  <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
+                    <div className="relative aspect-video overflow-hidden bg-slate-200">
+                      {sermon.thumbnailUrl ? (
+                        <img
+                          src={sermon.thumbnailUrl}
+                          alt={sermon.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center bg-slate-100">
+                          <BookOpen className="h-12 w-12 text-slate-300" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+                          <Play className="h-6 w-6 text-blue-600" />
+                        </div>
                       </div>
-                    )}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-                        <Play className="h-6 w-6 text-blue-600" />
-                      </div>
+                      {sermon.youtubeId && (
+                        <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
+                          <Youtube className="h-4 w-4 text-white" />
+                        </div>
+                      )}
+                      {!sermon.youtubeId && sermon.audioUrl && (
+                        <div className="absolute bottom-2 right-2 rounded bg-blue-600 px-2 py-0.5">
+                          <Headphones className="h-4 w-4 text-white" />
+                        </div>
+                      )}
                     </div>
-                    {sermon.youtubeId && (
-                      <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
-                        <Youtube className="h-4 w-4 text-white" />
+                    <CardContent className="p-4">
+                      <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(sermon.date)}
+                        <span className="text-slate-300">•</span>
+                        <Clock className="h-3 w-3" />
+                        {sermon.duration}
                       </div>
-                    )}
-                    {!sermon.youtubeId && sermon.audioUrl && (
-                      <div className="absolute bottom-2 right-2 rounded bg-blue-600 px-2 py-0.5">
-                        <Headphones className="h-4 w-4 text-white" />
+                      <h3 className="mb-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                        {sermon.title}
+                      </h3>
+                      <p className="mb-2 text-sm text-slate-600 dark:text-slate-400">
+                        {sermon.speaker}
+                      </p>
+                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                        <BookOpen className="h-3 w-3" />
+                        {sermon.scripture}
                       </div>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(sermon.date)}
-                      <span className="text-slate-300">•</span>
-                      <Clock className="h-3 w-3" />
-                      {sermon.duration}
-                    </div>
-                    <h3 className="mb-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600">
-                      {sermon.title}
-                    </h3>
-                    <p className="mb-2 text-sm text-slate-600">{sermon.speaker}</p>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <BookOpen className="h-3 w-3" />
-                      {sermon.scripture}
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           )}

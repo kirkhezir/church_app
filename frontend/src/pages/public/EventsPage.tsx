@@ -194,7 +194,7 @@ export function EventsPage() {
   useDocumentTitle('Events', 'กิจกรรม', language);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 1)); // February 2026
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const filteredEvents = useMemo(() => {
     return eventsData
