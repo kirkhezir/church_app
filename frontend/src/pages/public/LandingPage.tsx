@@ -225,7 +225,7 @@ function HeroSection() {
 
         {/* Live Countdown */}
         <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+          <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
           <span className="text-white/90">
             {t('hero.nextService')}{' '}
             <span className="font-semibold text-amber-300">
@@ -275,10 +275,10 @@ function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToServices}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full text-white/60 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full p-2 text-white/60 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50"
         aria-label="Scroll to content"
       >
-        <ChevronDown className="h-8 w-8 animate-bounce" />
+        <ChevronDown className="h-8 w-8 motion-safe:animate-bounce" />
       </button>
     </section>
   );
@@ -327,7 +327,7 @@ function AboutSection() {
             {/* Pastor Avatar */}
             <div className="flex-shrink-0">
               <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-100 text-3xl font-bold text-slate-400">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-100 text-3xl font-bold text-slate-500 dark:text-slate-400">
                   P
                 </div>
               </div>

@@ -25,108 +25,7 @@ import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-
-interface Sermon {
-  id: string;
-  title: string;
-  speaker: string;
-  date: string;
-  duration: string;
-  description: string;
-  scripture: string;
-  youtubeId?: string;
-  audioUrl?: string;
-  thumbnailUrl?: string;
-  series?: string;
-}
-
-// Sample sermons data
-const allSermons: Sermon[] = [
-  {
-    id: '1',
-    title: 'The Power of Faith in Uncertain Times',
-    speaker: 'Pastor Somchai',
-    date: '2026-01-25',
-    duration: '45 min',
-    description:
-      "Exploring how faith sustains us through life's challenges, drawing from Daniel's story.",
-    scripture: 'Daniel 3:17-18',
-    youtubeId: 'JG82QxIgb3Y', // Hillsong worship - actual Christian content
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=640&h=360&fit=crop&q=80',
-    series: 'Faith Foundations',
-  },
-  {
-    id: '2',
-    title: 'Walking in the Light',
-    speaker: 'Elder Prasert',
-    date: '2026-01-18',
-    duration: '38 min',
-    description: "Understanding what it means to walk in God's light and be a light to others.",
-    scripture: '1 John 1:5-7',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=640&h=360&fit=crop&q=80',
-    series: 'The Epistle of John',
-  },
-  {
-    id: '3',
-    title: 'The Sabbath Rest',
-    speaker: 'Pastor Somchai',
-    date: '2026-01-11',
-    duration: '42 min',
-    description: 'Discovering the blessing and meaning of Sabbath rest in our busy modern lives.',
-    scripture: 'Hebrews 4:9-11',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=640&h=360&fit=crop&q=80',
-    series: 'Foundations of Faith',
-  },
-  {
-    id: '4',
-    title: 'Grace That Transforms',
-    speaker: 'Pastor Somchai',
-    date: '2026-01-04',
-    duration: '40 min',
-    description: "Understanding God's transforming grace and how it changes our daily lives.",
-    scripture: 'Ephesians 2:8-9',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1445633883498-7f9922d37a3f?w=640&h=360&fit=crop&q=80',
-    series: 'Foundations of Faith',
-  },
-  {
-    id: '5',
-    title: 'The Joy of Service',
-    speaker: 'Elder Prasert',
-    date: '2025-12-28',
-    duration: '35 min',
-    description: 'Discovering joy in serving others as Jesus served us.',
-    scripture: 'Mark 10:45',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=640&h=360&fit=crop&q=80',
-    series: 'Living Like Jesus',
-  },
-  {
-    id: '6',
-    title: 'Hope for Tomorrow',
-    speaker: 'Pastor Somchai',
-    date: '2025-12-21',
-    duration: '50 min',
-    description: "The blessed hope of Christ's return and what it means for us today.",
-    scripture: 'Titus 2:13',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?w=640&h=360&fit=crop&q=80',
-    series: 'Advent Hope',
-  },
-];
-
-const seriesList = [
-  'All Series',
-  'Faith Foundations',
-  'The Epistle of John',
-  'Foundations of Faith',
-  'Living Like Jesus',
-  'Advent Hope',
-];
-const speakerList = ['All Speakers', 'Pastor Somchai', 'Elder Prasert'];
+import { sermons as allSermons, seriesList, speakerList } from '@/data/sermons';
 
 export function SermonsPage() {
   const { language } = useI18n();
@@ -301,9 +200,9 @@ export function SermonsPage() {
                         <Clock className="h-3 w-3" />
                         {sermon.duration}
                       </div>
-                      <h3 className="mb-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                      <h2 className="mb-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
                         {sermon.title}
-                      </h3>
+                      </h2>
                       <p className="mb-2 text-sm text-slate-600 dark:text-slate-400">
                         {sermon.speaker}
                       </p>

@@ -12,6 +12,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
+import { TableSkeleton } from '@/components/ui/skeletons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -140,10 +141,7 @@ export default function AdminMemberListPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="py-8 text-center">
-                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                <p className="mt-2 text-gray-600">Loading members...</p>
-              </div>
+              <TableSkeleton rows={5} columns={6} />
             ) : members.length === 0 ? (
               <div className="py-8 text-center text-gray-600">No members found</div>
             ) : (

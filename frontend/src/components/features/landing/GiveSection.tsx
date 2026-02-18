@@ -136,7 +136,9 @@ export function GiveSection() {
                       <div className="text-center">
                         <QrCode className="mx-auto h-16 w-16 text-slate-400" />
                         <p className="mt-2 text-xs text-slate-500">PromptPay QR Code</p>
-                        <p className="text-xs text-slate-400">Scan with banking app</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          Scan with banking app
+                        </p>
                       </div>
                     </div>
 

@@ -14,6 +14,7 @@ import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import apiClient from '@/services/api/apiClient';
 
 interface DashboardData {
@@ -78,10 +79,38 @@ export default function MemberDashboard() {
   if (loading) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
-        <div className="flex min-h-[400px] items-center justify-center">
-          <div className="text-center">
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
-            <p className="mt-4 text-sm text-gray-600">Loading dashboard...</p>
+        <div className="space-y-4">
+          {/* Welcome header skeleton */}
+          <div className="rounded-lg bg-white p-6 shadow dark:bg-slate-800">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="mt-2 h-4 w-80" />
+          </div>
+          {/* Stats skeleton */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-lg bg-white px-4 py-5 shadow dark:bg-slate-800 sm:p-6"
+              >
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="mt-2 h-8 w-12" />
+              </div>
+            ))}
+          </div>
+          {/* Widgets skeleton */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className="rounded-lg bg-white p-6 shadow dark:bg-slate-800">
+              <Skeleton className="mx-auto h-20 w-20 rounded-full" />
+              <Skeleton className="mx-auto mt-4 h-5 w-32" />
+              <Skeleton className="mx-auto mt-2 h-4 w-24" />
+            </div>
+            <div className="space-y-4 lg:col-span-2">
+              <div className="space-y-3 rounded-lg bg-white p-6 shadow dark:bg-slate-800">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+              </div>
+            </div>
           </div>
         </div>
       </SidebarLayout>

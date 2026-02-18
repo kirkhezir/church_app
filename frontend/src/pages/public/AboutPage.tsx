@@ -292,6 +292,8 @@ export function AboutPage() {
               <img
                 src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop&q=80"
                 alt="Church community"
+                width={600}
+                height={400}
                 className="rounded-2xl shadow-xl"
               />
               <div className="absolute -bottom-6 -left-6 rounded-xl bg-blue-600 p-6 text-white shadow-lg">
@@ -456,7 +458,9 @@ export function AboutPage() {
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-medium text-slate-900">{officer.name}</p>
-                          <p className="truncate text-xs text-slate-400">{officer.nameThai}</p>
+                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                            {officer.nameThai}
+                          </p>
                           <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
                         </div>
                       </div>

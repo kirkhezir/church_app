@@ -33,7 +33,7 @@ export function PrivacyPolicyPage() {
             {language === 'th' ? 'อัปเดตล่าสุด: 28 มกราคม 2026' : `Last updated: ${lastUpdated}`}
           </p>
           {language === 'th' && (
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
               หมายเหตุ: นโยบายความเป็นส่วนตัวฉบับนี้จัดทำเป็นภาษาอังกฤษ
             </p>
           )}

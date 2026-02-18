@@ -293,7 +293,7 @@ export function PrayerRequestSection() {
                   )}
                 </Button>
 
-                <p className="text-center text-xs text-slate-400">
+                <p className="text-center text-xs text-slate-500 dark:text-slate-400">
                   By submitting, you agree that your request may be shared with our prayer team
                   (unless marked private).
                 </p>

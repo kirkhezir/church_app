@@ -77,7 +77,7 @@ export function NotFoundPage() {
             </Link>
             <button
               onClick={() => window.history.back()}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
               <ArrowLeft className="h-4 w-4" />
               {language === 'th' ? 'ย้อนกลับ' : 'Go Back'}
@@ -117,7 +117,7 @@ export function NotFoundPage() {
                 ? '"เพราะเรารู้แผนงานที่เรามีไว้สำหรับเจ้า" พระเจ้าตรัส "แผนงานเพื่อความเจริญรุ่งเรืองและไม่ใช่เพื่อทำร้ายเจ้า แผนงานเพื่อให้ความหวังและอนาคตแก่เจ้า"'
                 : '"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."'}
             </p>
-            <p className="mt-2 text-sm font-medium text-slate-400 dark:text-slate-500">
+            <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
               {language === 'th' ? '— เยเรมีย์ 29:11' : '— Jeremiah 29:11'}
             </p>
           </div>

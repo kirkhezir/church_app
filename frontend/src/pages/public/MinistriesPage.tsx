@@ -12,160 +12,7 @@ import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-
-interface Ministry {
-  id: string;
-  name: string;
-  nameThai: string;
-  description: string;
-  descriptionThai: string;
-  color: string;
-  image: string;
-  leader?: string;
-  meetingTime?: string;
-}
-
-const ministries: Ministry[] = [
-  {
-    id: 'youth',
-    name: 'Youth Ministry (AY)',
-    nameThai: 'แผนกเยาวชน (AY)',
-    description:
-      'Empowering young people to grow in faith through fellowship, service, and spiritual development.',
-    descriptionThai:
-      'เสริมพลังให้เยาวชนเติบโตในความเชื่อผ่านการสามัคคีธรรม การรับใช้ และการพัฒนาฝ่ายจิตวิญญาณ',
-    color: 'bg-blue-500',
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
-    leader: 'Brother Prasert',
-    meetingTime: 'Saturday 2:30 PM',
-  },
-  {
-    id: 'children',
-    name: "Children's Ministry",
-    nameThai: 'แผนกเด็ก',
-    description:
-      'Teaching children about Jesus through fun, engaging activities and Bible stories.',
-    descriptionThai: 'สอนเด็กๆ เกี่ยวกับพระเยซูผ่านกิจกรรมสนุกสนานและเรื่องราวในพระคัมภีร์',
-    color: 'bg-pink-500',
-    image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=80',
-    leader: 'Sister Malee',
-    meetingTime: 'Sabbath School 9:00 AM',
-  },
-  {
-    id: 'women',
-    name: "Women's Ministry",
-    nameThai: 'แผนกสตรี',
-    description:
-      'Supporting women in spiritual growth, fellowship, and community service opportunities.',
-    descriptionThai: 'สนับสนุนสตรีในการเติบโตฝ่ายจิตวิญญาณ สามัคคีธรรม และโอกาสในการรับใช้ชุมชน',
-    color: 'bg-rose-500',
-    image: 'https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?w=600&q=80',
-    leader: 'Sister Nittaya',
-    meetingTime: 'Monthly meetings',
-  },
-  {
-    id: 'music',
-    name: 'Music Ministry',
-    nameThai: 'แผนกดนตรี',
-    description: 'Leading worship through music, choir, and instrumental performances.',
-    descriptionThai: 'นำนมัสการผ่านดนตรี คณะนักร้องประสานเสียง และการแสดงดนตรี',
-    color: 'bg-purple-500',
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
-    leader: 'Brother Somchai',
-    meetingTime: 'Practice: Friday 6:00 PM',
-  },
-  {
-    id: 'sabbath-school',
-    name: 'Sabbath School',
-    nameThai: 'โรงเรียนสะบาโต',
-    description: 'Bible study classes for all ages, diving deep into Scripture each week.',
-    descriptionThai: 'ชั้นเรียนพระคัมภีร์สำหรับทุกวัย ศึกษาพระคัมภีร์อย่างลึกซึ้งทุกสัปดาห์',
-    color: 'bg-emerald-500',
-    image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&q=80',
-    leader: 'Elder Wichai',
-    meetingTime: 'Saturday 9:00 AM',
-  },
-  {
-    id: 'pathfinders',
-    name: 'Pathfinders',
-    nameThai: 'พาธไฟน์เดอร์',
-    description:
-      'Character building program for youth ages 10-15 with camping, honors, and community service.',
-    descriptionThai:
-      'โปรแกรมสร้างอุปนิสัยสำหรับเยาวชนอายุ 10-15 ปี พร้อมการตั้งแคมป์ เกียรติบัตร และการบริการชุมชน',
-    color: 'bg-amber-500',
-    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&q=80',
-    leader: 'Brother Prasit',
-    meetingTime: 'Sunday 9:00 AM',
-  },
-  {
-    id: 'community-service',
-    name: 'Community Services',
-    nameThai: 'บริการชุมชน',
-    description: 'Reaching out to help those in need through food distribution and assistance.',
-    descriptionThai: 'ช่วยเหลือผู้ขัดสนผ่านการแจกอาหารและความช่วยเหลือ',
-    color: 'bg-teal-500',
-    image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80',
-    leader: 'Deacon Somphong',
-    meetingTime: 'As scheduled',
-  },
-  {
-    id: 'health',
-    name: 'Health Ministry',
-    nameThai: 'แผนกสุขภาพ',
-    description:
-      'Promoting wholistic health through education, cooking classes, and wellness programs.',
-    descriptionThai: 'ส่งเสริมสุขภาพองค์รวมผ่านการศึกษา ชั้นเรียนทำอาหาร และโปรแกรมสุขภาพ',
-    color: 'bg-green-500',
-    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80',
-    leader: 'Sister Pornpan',
-    meetingTime: 'Quarterly programs',
-  },
-  {
-    id: 'missions',
-    name: 'Mission & Outreach',
-    nameThai: 'มิชชั่นและการเผยแพร่',
-    description: 'Sharing the gospel locally and supporting global mission initiatives.',
-    descriptionThai: 'แบ่งปันข่าวประเสริฐในท้องถิ่นและสนับสนุนโครงการมิชชั่นทั่วโลก',
-    color: 'bg-cyan-500',
-    image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80',
-    leader: 'Pastor Somchai',
-    meetingTime: 'Monthly planning',
-  },
-  {
-    id: 'education',
-    name: 'Education Ministry',
-    nameThai: 'แผนกการศึกษา',
-    description: 'Supporting Christian education and scholarship opportunities for church members.',
-    descriptionThai: 'สนับสนุนการศึกษาคริสเตียนและโอกาสทุนการศึกษาสำหรับสมาชิกโบสถ์',
-    color: 'bg-indigo-500',
-    image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80',
-    leader: 'Elder Wichai',
-    meetingTime: 'As needed',
-  },
-  {
-    id: 'deacons',
-    name: 'Deacon Ministry',
-    nameThai: 'แผนกมัคนายก',
-    description: 'Serving the practical needs of the church and maintaining facilities.',
-    descriptionThai: 'รับใช้ความต้องการเชิงปฏิบัติของโบสถ์และดูแลสถานที่',
-    color: 'bg-slate-500',
-    image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=600&q=80',
-    leader: 'Head Deacon Prasong',
-    meetingTime: 'As needed',
-  },
-  {
-    id: 'media',
-    name: 'Media Ministry',
-    nameThai: 'แผนกสื่อ',
-    description: 'Managing church communications, livestreaming, and digital presence.',
-    descriptionThai: 'จัดการการสื่อสารของโบสถ์ การถ่ายทอดสด และการมีตัวตนทางดิจิทัล',
-    color: 'bg-red-500',
-    image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&q=80',
-    leader: 'Brother Apichart',
-    meetingTime: 'Weekly coordination',
-  },
-];
+import { ministries } from '@/data/ministries';
 
 export function MinistriesPage() {
   const { language } = useI18n();
@@ -209,9 +56,9 @@ export function MinistriesPage() {
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <h3 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-blue-600">
+                    <h2 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-blue-600">
                       {language === 'th' ? ministry.nameThai : ministry.name}
-                    </h3>
+                    </h2>
                     <p className="mb-3 text-sm text-slate-600">
                       {language === 'th' ? ministry.descriptionThai : ministry.description}
                     </p>
