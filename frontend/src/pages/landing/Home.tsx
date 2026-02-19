@@ -58,7 +58,7 @@ const CHURCH_STATS = {
 // =============================================================================
 // MAIN LANDING PAGE
 // =============================================================================
-export function LandingPage() {
+export function HomePage() {
   const { language } = useI18n();
   useDocumentTitle('Home', 'หน้าแรก', language);
   const revealRef = useScrollReveal<HTMLDivElement>();
@@ -436,4 +436,4 @@ function BackToTopButton() {
   );
 }
 
-export default LandingPage;
+export default HomePage;

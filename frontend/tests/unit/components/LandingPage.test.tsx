@@ -30,8 +30,8 @@ describe('LandingPage Component', () => {
     // Try to import the component (will fail in RED phase)
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const module = require('../../../src/pages/public/LandingPage');
-      LandingPage = module.default || module.LandingPage;
+      const module = require('../../../src/pages/landing/Home');
+      LandingPage = module.default || module.HomePage;
     } catch (error) {
       LandingPage = undefined;
     }

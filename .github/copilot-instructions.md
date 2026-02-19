@@ -70,11 +70,13 @@ frontend/src/
 ```
 
 **Key Separation Pattern:**
-- **Public pages** (`pages/public/*`) → Root paths: `/`, `/about`, `/events`, `/visit`, etc.
+
+- **Public pages** (`pages/landing/*`) → Root paths: `/`, `/about`, `/events`, `/visit`, etc.
 - **Auth pages** (`pages/auth/*`) → Public paths: `/login`, `/register`, `/mfa-verify`, etc.
 - **App pages** (`pages/app/*`) → Protected paths: `/app/dashboard`, `/app/events`, `/app/admin/*`, etc. (behind `PrivateRoute`)
 
 **API Endpoints vs UI Routes (CRITICAL):**
+
 - Backend API endpoints use `/api/v1/{resource}` pattern (e.g., `/api/v1/members/dashboard`)
 - Frontend uses `/app/*` Only for React Router paths, NOT for API calls
 - When calling `apiClient.get()`, use `/members/dashboard`, NOT `/app/members/dashboard`
@@ -260,6 +262,7 @@ logger.error("Failed to send email", { error: error.message });
 ```
 
 **CRITICAL**: Never confuse frontend routes (`/app/*`) with backend API paths (`/api/v1/*`)
+
 - When calling `apiClient.get('/members/dashboard')`, the full URL becomes `http://localhost:3000/api/v1/members/dashboard`
 - The `/app` prefix is ONLY for frontend React Router paths
 - API calls should reference `/members/`, `/events/`, `/announcements/`, NOT `/app/members/`
@@ -271,7 +274,7 @@ logger.error("Failed to send email", { error: error.message });
 import apiClient from "../api/apiClient";
 export const eventService = {
   async getEvents(): Promise<Event[]> {
-    return await apiClient.get("/events");  // Correct: /api/v1/events
+    return await apiClient.get("/events"); // Correct: /api/v1/events
   },
   // ...
 };

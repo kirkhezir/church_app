@@ -2,28 +2,28 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
 import { PageErrorBoundary } from './components/common/ErrorBoundary';
 
-// Eagerly loaded - critical path (public landing pages)
-import LandingPage from './pages/public/LandingPage';
-import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
-import VisitPage from './pages/public/VisitPage';
-import SermonsPage from './pages/public/SermonsPage';
-import AboutPage from './pages/public/AboutPage';
+// Eagerly loaded - critical path (landing pages)
+import HomePage from './pages/landing/Home';
+import PrivacyPolicyPage from './pages/landing/PrivacyPolicyPage';
+import VisitPage from './pages/landing/VisitPage';
+import SermonsPage from './pages/landing/SermonsPage';
+import AboutPage from './pages/landing/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 
-// Lazy-loaded public landing pages
-const GalleryPage = lazy(() => import('./pages/public/GalleryPage'));
-const MinistriesPage = lazy(() => import('./pages/public/MinistriesPage'));
-const MinistryDetailPage = lazy(() => import('./pages/public/MinistryDetailPage'));
-const PublicEventsPage = lazy(() => import('./pages/public/EventsPage'));
-const PublicEventDetailPage = lazy(() => import('./pages/public/EventDetailPage'));
-const PrayerPage = lazy(() => import('./pages/public/PrayerPage'));
-const GivePage = lazy(() => import('./pages/public/GivePage'));
-const BlogPage = lazy(() => import('./pages/public/BlogPage'));
-const BlogDetailPage = lazy(() => import('./pages/public/BlogDetailPage'));
-const SermonDetailPage = lazy(() => import('./pages/public/SermonDetailPage'));
-const TermsOfServicePage = lazy(() => import('./pages/public/TermsOfServicePage'));
-const ResourcesPage = lazy(() => import('./pages/public/ResourcesPage'));
-const NotFoundPage = lazy(() => import('./pages/public/NotFoundPage'));
+// Lazy-loaded landing pages
+const GalleryPage = lazy(() => import('./pages/landing/GalleryPage'));
+const MinistriesPage = lazy(() => import('./pages/landing/MinistriesPage'));
+const MinistryDetailPage = lazy(() => import('./pages/landing/MinistryDetailPage'));
+const PublicEventsPage = lazy(() => import('./pages/landing/EventsPage'));
+const PublicEventDetailPage = lazy(() => import('./pages/landing/EventDetailPage'));
+const PrayerPage = lazy(() => import('./pages/landing/PrayerPage'));
+const GivePage = lazy(() => import('./pages/landing/GivePage'));
+const BlogPage = lazy(() => import('./pages/landing/BlogPage'));
+const BlogDetailPage = lazy(() => import('./pages/landing/BlogDetailPage'));
+const SermonDetailPage = lazy(() => import('./pages/landing/SermonDetailPage'));
+const TermsOfServicePage = lazy(() => import('./pages/landing/TermsOfServicePage'));
+const ResourcesPage = lazy(() => import('./pages/landing/ResourcesPage'));
+const NotFoundPage = lazy(() => import('./pages/landing/NotFoundPage'));
 
 // Route guards
 import { PrivateRoute } from './components/routing/PrivateRoute';
@@ -137,7 +137,7 @@ const PageLoader = () => (
   </div>
 );
 
-// NotFoundPage is now lazy-loaded from pages/public/NotFoundPage.tsx
+// NotFoundPage is now lazy-loaded from pages/landing/NotFoundPage.tsx
 
 /**
  * Main App Component with Routing
@@ -162,7 +162,7 @@ const App: React.FC = () => {
             {/* These use PublicLayout with church branding                   */}
             {/* ============================================================ */}
 
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/visit" element={<VisitPage />} />
