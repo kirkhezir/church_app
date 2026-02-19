@@ -32,7 +32,7 @@ export function MinistryDetailPage() {
         <section className="pb-16 pt-24">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
             <Users className="mx-auto mb-6 h-16 w-16 text-blue-200" />
-            <h1 className="mb-4 text-3xl font-bold text-foreground text-balance">
+            <h1 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'เร็วๆ นี้!' : 'Coming Soon!'}
             </h1>
             <p className="mb-8 text-lg text-muted-foreground">
@@ -77,7 +77,7 @@ export function MinistryDetailPage() {
               <div className={`rounded-full ${ministry.color} p-3`}>
                 <Icon className="h-6 w-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-white sm:text-4xl text-balance">
+              <h1 className="text-balance text-3xl font-bold text-white sm:text-4xl">
                 {language === 'th' ? ministry.nameThai : ministry.name}
               </h1>
             </div>
@@ -93,7 +93,7 @@ export function MinistryDetailPage() {
             {/* Description */}
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
+                <h2 className="mb-4 text-balance text-xl font-bold text-foreground">
                   {language === 'th' ? 'เกี่ยวกับแผนกนี้' : 'About This Ministry'}
                 </h2>
                 <div className="prose max-w-none text-muted-foreground">
@@ -112,7 +112,7 @@ export function MinistryDetailPage() {
             {ministry.gallery && ministry.gallery.length > 0 && (
               <Card className="mb-8">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
+                  <h2 className="mb-4 text-balance text-xl font-bold text-foreground">
                     {language === 'th' ? 'แกลเลอรี่' : 'Gallery'}
                   </h2>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -120,7 +120,7 @@ export function MinistryDetailPage() {
                       <img
                         key={i}
                         src={img}
-                        alt=""
+                        alt={`${language === 'th' ? ministry.nameThai : ministry.name} gallery photo ${i + 1}`}
                         className="aspect-square rounded-lg object-cover"
                         loading="lazy"
                       />
@@ -140,7 +140,7 @@ export function MinistryDetailPage() {
             {/* How to Join */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
+                <h2 className="mb-4 text-balance text-xl font-bold text-foreground">
                   {language === 'th' ? 'วิธีเข้าร่วม' : 'How to Get Involved'}
                 </h2>
                 <ul className="space-y-3">

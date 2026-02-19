@@ -29,6 +29,7 @@ import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 // Church leadership data
 const PASTOR = {
@@ -222,6 +223,7 @@ const CORE_BELIEFS = [
 export function AboutPage() {
   const { language } = useI18n();
   useDocumentTitle('About Us', 'เกี่ยวกับเรา', language);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <PublicLayout>
@@ -246,274 +248,280 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <h2 className="mb-6 text-balance text-3xl font-bold text-foreground">
-                {language === 'th' ? 'เรื่องราวของเรา' : 'Our Story'}
-              </h2>
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Sing Buri Adventist Center was established in 2015 with a small group of believers
-                  committed to sharing the everlasting gospel in central Thailand.
-                </p>
-                <p>
-                  Over the years, God has blessed our congregation with growth in both numbers and
-                  spiritual depth. Today, we are a vibrant community of families, young people, and
-                  individuals from diverse backgrounds united by our love for Christ.
-                </p>
-                <p>
-                  Our mission is to make disciples of all nations, baptizing them and teaching them
-                  to observe all that Jesus has commanded. We are part of the worldwide Seventh-day
-                  Adventist Church with over 21 million members globally.
-                </p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link to="/visit">
-                  <Button size="lg">
-                    {language === 'th' ? 'วางแผนเยี่ยมชม' : 'Plan Your Visit'}
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <a
-                  href="https://www.adventist.org/beliefs/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" size="lg">
-                    {language === 'th' ? '28 หลักความเชื่อ' : '28 Fundamental Beliefs'}
-                  </Button>
-                </a>
-              </div>
-            </div>
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop&q=80"
-                alt="Church community"
-                width={600}
-                height={400}
-                className="rounded-2xl shadow-xl"
-              />
-              <div className="absolute -bottom-6 -left-6 rounded-xl bg-blue-600 p-6 text-white shadow-lg">
-                <div className="text-4xl font-bold tabular-nums">10+</div>
-                <div className="text-blue-100">Years of Ministry</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Core Beliefs */}
-      <section className="bg-slate-50 py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-10 text-center">
-            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
-              {language === 'th' ? 'หลักความเชื่อหลัก' : 'What We Believe'}
-            </h2>
-            <p className="mx-auto max-w-2xl text-muted-foreground">
-              As Seventh-day Adventists, our beliefs are centered on Jesus Christ and His Word.
-            </p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {CORE_BELIEFS.map((belief, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="p-6">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
-                    <belief.icon className="h-7 w-7 text-blue-600" />
-                  </div>
-                  <h3 className="mb-2 font-semibold text-foreground">{belief.title}</h3>
-                  <p className="text-sm text-muted-foreground">{belief.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pastor Section */}
-      <section className="py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-10 text-center">
-            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
-              {language === 'th' ? 'ศิษยาภิบาลของเรา' : 'Our Pastor'}
-            </h2>
-          </div>
-          <Card className="mx-auto max-w-4xl overflow-hidden">
-            <div className="grid md:grid-cols-3">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-center text-white">
-                <img
-                  src={PASTOR.photo}
-                  alt={PASTOR.name}
-                  className="mx-auto mb-4 h-40 w-40 rounded-full border-4 border-white/30 object-cover"
-                />
-                <h3 className="text-xl font-bold">{PASTOR.name}</h3>
-                <p className="text-blue-100">{PASTOR.nameThai}</p>
-                <p className="mt-2 text-sm font-medium text-blue-200">{PASTOR.title}</p>
-              </div>
-              <CardContent className="p-8 md:col-span-2">
-                <Quote className="mb-4 h-8 w-8 text-blue-200" />
-                <p className="mb-6 text-lg italic text-muted-foreground">{PASTOR.bio}</p>
-                <div className="space-y-3">
+      <div ref={revealRef}>
+        {/* Our Story */}
+        <section className="reveal py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              <div>
+                <h2 className="mb-6 text-balance text-3xl font-bold text-foreground">
+                  {language === 'th' ? 'เรื่องราวของเรา' : 'Our Story'}
+                </h2>
+                <div className="space-y-4 text-muted-foreground">
+                  <p>
+                    Sing Buri Adventist Center was established in 2015 with a small group of
+                    believers committed to sharing the everlasting gospel in central Thailand.
+                  </p>
+                  <p>
+                    Over the years, God has blessed our congregation with growth in both numbers and
+                    spiritual depth. Today, we are a vibrant community of families, young people,
+                    and individuals from diverse backgrounds united by our love for Christ.
+                  </p>
+                  <p>
+                    Our mission is to make disciples of all nations, baptizing them and teaching
+                    them to observe all that Jesus has commanded. We are part of the worldwide
+                    Seventh-day Adventist Church with over 21 million members globally.
+                  </p>
+                </div>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <Link to="/visit">
+                    <Button size="lg">
+                      {language === 'th' ? 'วางแผนเยี่ยมชม' : 'Plan Your Visit'}
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                   <a
-                    href={`mailto:${PASTOR.email}`}
-                    className="flex items-center gap-3 text-muted-foreground hover:text-primary"
+                    href="https://www.adventist.org/beliefs/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Mail className="h-5 w-5" />
-                    {PASTOR.email}
-                  </a>
-                  <a
-                    href={`tel:${PASTOR.phone}`}
-                    className="flex items-center gap-3 text-muted-foreground hover:text-primary"
-                  >
-                    <Phone className="h-5 w-5" />
-                    {PASTOR.phone}
+                    <Button variant="outline" size="lg">
+                      {language === 'th' ? '28 หลักความเชื่อ' : '28 Fundamental Beliefs'}
+                    </Button>
                   </a>
                 </div>
-              </CardContent>
+              </div>
+              <div className="relative">
+                <img
+                  src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop&q=80"
+                  alt="Church community"
+                  width={600}
+                  height={400}
+                  fetchPriority="high"
+                  className="rounded-2xl shadow-xl"
+                />
+                <div className="absolute -bottom-6 -left-6 rounded-xl bg-blue-600 p-6 text-white shadow-lg">
+                  <div className="text-4xl font-bold tabular-nums">10+</div>
+                  <div className="text-blue-100">Years of Ministry</div>
+                </div>
+              </div>
             </div>
-          </Card>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* Elders */}
-      <section className="bg-slate-50 py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-10 text-center">
-            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
-              {language === 'th' ? 'ผู้ปกครอง' : 'Church Elders'}
-            </h2>
-            <p className="text-muted-foreground">
-              Our elders provide spiritual leadership and guidance to the congregation.
-            </p>
-          </div>
-          <div className="mx-auto grid max-w-2xl gap-6 sm:grid-cols-2">
-            {ELDERS.map((elder, index) => (
-              <Card key={index} className="group text-center transition-shadow hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="relative mx-auto mb-4 h-24 w-24">
-                    <img
-                      src={elder.photo}
-                      alt={elder.name}
-                      className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200"
-                    />
-                    <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
-                      <Award className="h-3.5 w-3.5" />
+        {/* Core Beliefs */}
+        <section className="reveal bg-slate-50 py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10 text-center">
+              <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
+                {language === 'th' ? 'หลักความเชื่อหลัก' : 'What We Believe'}
+              </h2>
+              <p className="mx-auto max-w-2xl text-muted-foreground">
+                As Seventh-day Adventists, our beliefs are centered on Jesus Christ and His Word.
+              </p>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {CORE_BELIEFS.map((belief, index) => (
+                <Card key={index} className="text-center">
+                  <CardContent className="p-6">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
+                      <belief.icon className="h-7 w-7 text-blue-600" />
                     </div>
-                  </div>
-                  <h3 className="font-semibold text-foreground">{elder.name}</h3>
-                  <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
-                  <p className="mt-1 text-sm font-medium text-blue-600">{elder.title}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Church Officers */}
-      <section className="py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-10 text-center">
-            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
-              {language === 'th' ? 'เจ้าหน้าที่โบสถ์' : 'Church Officers'}
-            </h2>
-            <p className="text-muted-foreground">
-              Our dedicated officers serve the church in various capacities.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {CHURCH_OFFICERS_BY_DEPT.map((dept, deptIndex) => {
-              const DeptIcon = dept.icon;
-              return (
-                <Card
-                  key={deptIndex}
-                  className="group overflow-hidden transition-shadow hover:shadow-lg"
-                >
-                  {/* Department header bar */}
-                  <div className={`${dept.iconBg} px-6 py-4`}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-sm">
-                        <DeptIcon className={`h-4.5 w-4.5 ${dept.accent}`} />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">
-                          {language === 'th' ? dept.departmentThai : dept.department}
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          {dept.members.length} {dept.members.length === 1 ? 'member' : 'members'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Members list */}
-                  <CardContent className="divide-y divide-slate-100 p-0">
-                    {dept.members.map((officer, idx) => (
-                      <div key={idx} className="flex items-center gap-4 px-6 py-4">
-                        <img
-                          src={getAvatarUrl(officer.name)}
-                          alt={officer.name}
-                          className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-foreground">{officer.name}</p>
-                          <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground">
-                            {officer.nameThai}
-                          </p>
-                          <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
-                        </div>
-                      </div>
-                    ))}
+                    <h3 className="mb-2 font-semibold text-foreground">{belief.title}</h3>
+                    <p className="text-sm text-muted-foreground">{belief.description}</p>
                   </CardContent>
                 </Card>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Mission Statement */}
-      <section className="bg-gradient-to-br from-blue-900 to-indigo-900 py-16 text-white">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <Award className="mx-auto mb-6 h-12 w-12 text-blue-300" />
-          <h2 className="mb-4 text-balance text-3xl font-bold">
-            {language === 'th' ? 'พันธกิจของเรา' : 'Our Mission'}
-          </h2>
-          <p className="mb-8 text-xl text-blue-100">
-            &ldquo;Go therefore and make disciples of all nations, baptizing them in the name of the
-            Father and of the Son and of the Holy Spirit, teaching them to observe all that I have
-            commanded you.&rdquo;
-          </p>
-          <p className="text-lg font-medium">— Matthew 28:19-20</p>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
-            {language === 'th' ? 'มาร่วมเป็นส่วนหนึ่งกับเรา' : 'Join Our Family'}
-          </h2>
-          <p className="mb-8 text-lg text-muted-foreground">
-            {language === 'th'
-              ? 'ไม่ว่าคุณจะอยู่ที่ไหนในการเดินทางแห่งศรัทธา เรายินดีต้อนรับคุณ'
-              : "Wherever you are on your faith journey, there's a place for you here."}
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/visit">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                {language === 'th' ? 'วางแผนเยี่ยมชม' : 'Plan Your Visit'}
-              </Button>
-            </Link>
-            <Link to="/#contact">
-              <Button variant="outline" size="lg">
-                {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
-              </Button>
-            </Link>
+        {/* Pastor Section */}
+        <section className="reveal py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10 text-center">
+              <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
+                {language === 'th' ? 'ศิษยาภิบาลของเรา' : 'Our Pastor'}
+              </h2>
+            </div>
+            <Card className="mx-auto max-w-4xl overflow-hidden">
+              <div className="grid md:grid-cols-3">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-center text-white">
+                  <img
+                    src={PASTOR.photo}
+                    alt={PASTOR.name}
+                    loading="lazy"
+                    className="mx-auto mb-4 h-40 w-40 rounded-full border-4 border-white/30 object-cover"
+                  />
+                  <h3 className="text-xl font-bold">{PASTOR.name}</h3>
+                  <p className="text-blue-100">{PASTOR.nameThai}</p>
+                  <p className="mt-2 text-sm font-medium text-blue-200">{PASTOR.title}</p>
+                </div>
+                <CardContent className="p-8 md:col-span-2">
+                  <Quote className="mb-4 h-8 w-8 text-blue-200" />
+                  <p className="mb-6 text-lg italic text-muted-foreground">{PASTOR.bio}</p>
+                  <div className="space-y-3">
+                    <a
+                      href={`mailto:${PASTOR.email}`}
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary"
+                    >
+                      <Mail className="h-5 w-5" />
+                      {PASTOR.email}
+                    </a>
+                    <a
+                      href={`tel:${PASTOR.phone}`}
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary"
+                    >
+                      <Phone className="h-5 w-5" />
+                      {PASTOR.phone}
+                    </a>
+                  </div>
+                </CardContent>
+              </div>
+            </Card>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* Elders */}
+        <section className="reveal bg-slate-50 py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10 text-center">
+              <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
+                {language === 'th' ? 'ผู้ปกครอง' : 'Church Elders'}
+              </h2>
+              <p className="text-muted-foreground">
+                Our elders provide spiritual leadership and guidance to the congregation.
+              </p>
+            </div>
+            <div className="mx-auto grid max-w-2xl gap-6 sm:grid-cols-2">
+              {ELDERS.map((elder, index) => (
+                <Card key={index} className="group text-center transition-shadow hover:shadow-lg">
+                  <CardContent className="p-6">
+                    <div className="relative mx-auto mb-4 h-24 w-24">
+                      <img
+                        src={elder.photo}
+                        alt={elder.name}
+                        loading="lazy"
+                        className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200"
+                      />
+                      <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
+                        <Award className="h-3.5 w-3.5" />
+                      </div>
+                    </div>
+                    <h3 className="font-semibold text-foreground">{elder.name}</h3>
+                    <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
+                    <p className="mt-1 text-sm font-medium text-blue-600">{elder.title}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Church Officers */}
+        <section className="reveal py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10 text-center">
+              <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
+                {language === 'th' ? 'เจ้าหน้าที่โบสถ์' : 'Church Officers'}
+              </h2>
+              <p className="text-muted-foreground">
+                Our dedicated officers serve the church in various capacities.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {CHURCH_OFFICERS_BY_DEPT.map((dept, deptIndex) => {
+                const DeptIcon = dept.icon;
+                return (
+                  <Card
+                    key={deptIndex}
+                    className="group overflow-hidden transition-shadow hover:shadow-lg"
+                  >
+                    {/* Department header bar */}
+                    <div className={`${dept.iconBg} px-6 py-4`}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                          <DeptIcon className={`h-4.5 w-4.5 ${dept.accent}`} />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground">
+                            {language === 'th' ? dept.departmentThai : dept.department}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            {dept.members.length} {dept.members.length === 1 ? 'member' : 'members'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Members list */}
+                    <CardContent className="divide-y divide-slate-100 p-0">
+                      {dept.members.map((officer, idx) => (
+                        <div key={idx} className="flex items-center gap-4 px-6 py-4">
+                          <img
+                            src={getAvatarUrl(officer.name)}
+                            alt={officer.name}
+                            loading="lazy"
+                            className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium text-foreground">{officer.name}</p>
+                            <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground">
+                              {officer.nameThai}
+                            </p>
+                            <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Mission Statement */}
+        <section className="reveal bg-gradient-to-br from-blue-900 to-indigo-900 py-16 text-white">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+            <Award className="mx-auto mb-6 h-12 w-12 text-blue-300" />
+            <h2 className="mb-4 text-balance text-3xl font-bold">
+              {language === 'th' ? 'พันธกิจของเรา' : 'Our Mission'}
+            </h2>
+            <p className="mb-8 text-xl text-blue-100">
+              &ldquo;Go therefore and make disciples of all nations, baptizing them in the name of
+              the Father and of the Son and of the Holy Spirit, teaching them to observe all that I
+              have commanded you.&rdquo;
+            </p>
+            <p className="text-lg font-medium">— Matthew 28:19-20</p>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="reveal py-16">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
+              {language === 'th' ? 'มาร่วมเป็นส่วนหนึ่งกับเรา' : 'Join Our Family'}
+            </h2>
+            <p className="mb-8 text-lg text-muted-foreground">
+              {language === 'th'
+                ? 'ไม่ว่าคุณจะอยู่ที่ไหนในการเดินทางแห่งศรัทธา เรายินดีต้อนรับคุณ'
+                : "Wherever you are on your faith journey, there's a place for you here."}
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/visit">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                  {language === 'th' ? 'วางแผนเยี่ยมชม' : 'Plan Your Visit'}
+                </Button>
+              </Link>
+              <Link to="/#contact">
+                <Button variant="outline" size="lg">
+                  {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
     </PublicLayout>
   );
 }

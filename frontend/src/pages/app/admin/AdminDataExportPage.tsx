@@ -89,7 +89,7 @@ export default function AdminDataExportPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Data Export' }]}>
       <div className="container mx-auto max-w-2xl px-4 py-4">
-        <h1 className="mb-6 text-2xl font-bold text-balance">Data Export</h1>
+        <h1 className="mb-6 text-balance text-2xl font-bold">Data Export</h1>
 
         <Card>
           <CardHeader>
@@ -114,7 +114,9 @@ export default function AdminDataExportPage() {
 
             {/* Export Type */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Data Type</label>
+              <label htmlFor="export-data-type" className="text-sm font-medium">
+                Data Type
+              </label>
               <Select
                 value={exportType}
                 onValueChange={(v: 'members' | 'events') => setExportType(v)}
@@ -131,7 +133,9 @@ export default function AdminDataExportPage() {
 
             {/* Format */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Format</label>
+              <label htmlFor="export-format" className="text-sm font-medium">
+                Format
+              </label>
               <Select value={format} onValueChange={(v: 'json' | 'csv') => setFormat(v)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -146,7 +150,9 @@ export default function AdminDataExportPage() {
             {/* Filter by role (members only) */}
             {exportType === 'members' && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Filter by Role (optional)</label>
+                <label htmlFor="export-role-filter" className="text-sm font-medium">
+                  Filter by Role (optional)
+                </label>
                 <Select value={roleFilter} onValueChange={setRoleFilter}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Roles" />
@@ -164,7 +170,9 @@ export default function AdminDataExportPage() {
             {/* Filter by category (events only) */}
             {exportType === 'events' && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Filter by Category (optional)</label>
+                <label htmlFor="export-category-filter" className="text-sm font-medium">
+                  Filter by Category (optional)
+                </label>
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Categories" />
@@ -184,16 +192,26 @@ export default function AdminDataExportPage() {
             {/* Date Range */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Start Date (optional)</label>
+                <label htmlFor="export-start-date" className="text-sm font-medium">
+                  Start Date (optional)
+                </label>
                 <Input
+                  id="export-start-date"
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">End Date (optional)</label>
-                <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <label htmlFor="export-end-date" className="text-sm font-medium">
+                  End Date (optional)
+                </label>
+                <Input
+                  id="export-end-date"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
               </div>
             </div>
 

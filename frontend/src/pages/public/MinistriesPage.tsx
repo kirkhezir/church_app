@@ -12,11 +12,13 @@ import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ministries } from '@/data/ministries';
 
 export function MinistriesPage() {
   const { language } = useI18n();
   useDocumentTitle('Our Ministries', 'แผนกพันธกิจ', language);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <PublicLayout>
@@ -36,8 +38,8 @@ export function MinistriesPage() {
       </section>
 
       {/* Ministries Grid */}
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="reveal grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ministries.map((ministry) => {
             const Icon = ministryIconMap[ministry.id] || Users;
             return (
@@ -78,7 +80,7 @@ export function MinistriesPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
+        <div className="reveal mt-16 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
           <h2 className="mb-2 text-balance text-2xl font-bold">
             {language === 'th' ? 'พร้อมที่จะมีส่วนร่วม?' : 'Ready to Get Involved?'}
           </h2>
