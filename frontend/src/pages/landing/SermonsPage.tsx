@@ -24,9 +24,9 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { sermons as allSermons, seriesList, speakerList } from '@/data/sermons';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { sermons as allSermons, seriesList, speakerList, type Sermon } from '../../data/sermons';
 
 export function SermonsPage() {
   const { language } = useI18n();
@@ -162,7 +162,7 @@ export function SermonsPage() {
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {displayedSermons.map((sermon) => (
+              {displayedSermons.map((sermon: Sermon) => (
                 <Link key={sermon.id} to={`/sermons/${sermon.id}`}>
                   <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
                     <div className="relative aspect-video overflow-hidden bg-muted">
