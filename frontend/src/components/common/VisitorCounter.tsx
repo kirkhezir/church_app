@@ -112,13 +112,13 @@ export function SocialProofStats({ className = '' }: SocialProofStatsProps) {
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
-          <div key={index} className="flex items-center gap-3 rounded-xl bg-white p-4 shadow-sm">
+          <div key={index} className="flex items-center gap-3 rounded-xl bg-card p-4 shadow-sm">
             <div className={`rounded-lg p-2 ${stat.color}`}>
               <Icon className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-              <p className="text-sm text-slate-500">{stat.label}</p>
+              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-sm text-muted-foreground">{stat.label}</p>
             </div>
           </div>
         );

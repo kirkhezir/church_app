@@ -24,10 +24,10 @@ export function LocationMapSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
             Find Us
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             We&apos;d love to see you! Here&apos;s how to reach us
           </p>
         </div>
@@ -35,7 +35,7 @@ export function LocationMapSection() {
         <div className="grid gap-8 lg:grid-cols-5">
           {/* Map */}
           <div className="lg:col-span-3">
-            <div className="overflow-hidden rounded-xl bg-slate-100">
+            <div className="overflow-hidden rounded-xl bg-muted">
               <div className="aspect-video w-full">
                 <iframe
                   title="Google Maps - Sing Buri Adventist Center"
@@ -61,43 +61,43 @@ export function LocationMapSection() {
           {/* Contact Information */}
           <div className="space-y-4 lg:col-span-2">
             {/* Address */}
-            <div className="rounded-xl bg-slate-50 p-5">
+            <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
                   <MapPin className="h-5 w-5" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Address</h3>
+                <h3 className="text-lg font-semibold text-foreground">Address</h3>
               </div>
-              <address className="not-italic text-slate-600">
-                <p className="font-medium text-slate-900">Sing Buri Adventist Center</p>
+              <address className="not-italic text-muted-foreground">
+                <p className="font-medium text-foreground">Sing Buri Adventist Center</p>
                 <p>Bang Phutsa, Mueang Sing Buri District,</p>
                 <p>Sing Buri 16000 Thailand</p>
               </address>
             </div>
 
             {/* Phone */}
-            <div className="rounded-xl bg-slate-50 p-5">
+            <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
                   <Phone className="h-5 w-5" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Phone</h3>
+                <h3 className="text-lg font-semibold text-foreground">Phone</h3>
               </div>
               <a href="tel:+66876106926" className="font-medium text-blue-600 hover:underline">
                 +66 (0) 876-106-926
               </a>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Call us for any questions or to schedule a visit
               </p>
             </div>
 
             {/* Email */}
-            <div className="rounded-xl bg-slate-50 p-5">
+            <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
                   <Mail className="h-5 w-5" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Email</h3>
+                <h3 className="text-lg font-semibold text-foreground">Email</h3>
               </div>
               <a
                 href="mailto:singburiadventistcenter@gmail.com"
@@ -105,7 +105,7 @@ export function LocationMapSection() {
               >
                 singburiadventistcenter@gmail.com
               </a>
-              <p className="mt-1 text-sm text-slate-500">Send us a message anytime</p>
+              <p className="mt-1 text-sm text-muted-foreground">Send us a message anytime</p>
             </div>
           </div>
         </div>

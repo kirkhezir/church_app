@@ -14,7 +14,7 @@ interface LayoutProps {
  */
 export const Layout: React.FC<LayoutProps> = ({ children, showNavigation = true }) => {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header />
       {showNavigation && <Navigation />}
       <main className="container mx-auto flex-1 px-4 py-8">{children}</main>

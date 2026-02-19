@@ -31,7 +31,7 @@ export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
           <CardTitle>Upcoming Events</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500">No upcoming events</p>
+          <p className="text-sm text-muted-foreground">No upcoming events</p>
         </CardContent>
       </Card>
     );
@@ -64,20 +64,20 @@ export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
             return (
               <div
                 key={event.id}
-                className="flex items-start space-x-4 rounded-lg border p-4 transition-colors hover:bg-gray-50"
+                className="flex items-start space-x-4 rounded-lg border p-4 transition-colors hover:bg-background"
               >
                 <div className="flex-shrink-0">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-600">{startDate.getDate()}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       {startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}
                     </div>
                   </div>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium text-gray-900">{event.title}</p>
-                  <p className="text-sm text-gray-500">{event.description}</p>
-                  <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                  <p className="font-medium text-foreground">{event.title}</p>
+                  <p className="text-sm text-muted-foreground">{event.description}</p>
+                  <div className="mt-2 flex items-center space-x-4 text-xs text-muted-foreground">
                     <span>
                       {dateStr} at {timeStr}
                     </span>

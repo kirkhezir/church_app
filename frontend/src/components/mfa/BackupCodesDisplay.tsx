@@ -103,9 +103,9 @@ If you lose access to your authenticator app, you can use one of these codes to 
           </AlertDescription>
         </Alert>
 
-        <div className="grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-4 font-mono text-sm">
+        <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4 font-mono text-sm">
           {codes.map((code, index) => (
-            <div key={index} className="rounded px-2 py-1 hover:bg-gray-200">
+            <div key={index} className="rounded px-2 py-1 hover:bg-muted">
               {code}
             </div>
           ))}
@@ -129,9 +129,9 @@ If you lose access to your authenticator app, you can use one of these codes to 
               type="checkbox"
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-border"
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-foreground/80">
               I have saved my backup codes in a secure location
             </span>
           </label>

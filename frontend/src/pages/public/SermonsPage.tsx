@@ -78,12 +78,12 @@ export function SermonsPage() {
   return (
     <PublicLayout>
       {/* Header */}
-      <section className="bg-gradient-to-r from-slate-800 to-slate-900 pb-12 pt-20 text-white">
+      <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 pb-12 pt-20 text-white">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h1 className="text-3xl font-bold sm:text-4xl">
             {language === 'th' ? 'คำเทศนา' : 'Sermons'}
           </h1>
-          <p className="mt-2 text-lg text-slate-300">
+          <p className="mt-2 text-lg text-blue-100">
             {language === 'th'
               ? 'รับชมหรือรับฟังข้อความจากครอบครัวโบสถ์ของเรา'
               : 'Watch or listen to messages from our church family'}
@@ -97,7 +97,7 @@ export function SermonsPage() {
           <div className="flex flex-col gap-4 sm:flex-row">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder={language === 'th' ? 'ค้นหาคำเทศนา...' : 'Search sermons...'}
@@ -106,19 +106,19 @@ export function SermonsPage() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
             {/* Series Filter */}
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <select
                 value={selectedSeries}
                 onChange={(e) => {
                   setSelectedSeries(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 {seriesList.map((series) => (
                   <option key={series} value={series}>
@@ -129,14 +129,14 @@ export function SermonsPage() {
             </div>
             {/* Speaker Filter */}
             <div className="relative">
-              <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <select
                 value={selectedSpeaker}
                 onChange={(e) => {
                   setSelectedSpeaker(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 {speakerList.map((speaker) => (
                   <option key={speaker} value={speaker}>
@@ -151,8 +151,8 @@ export function SermonsPage() {
         {/* Sermons Grid */}
         <section className="mb-8">
           {displayedSermons.length === 0 ? (
-            <div className="rounded-lg bg-white p-12 text-center dark:bg-slate-900">
-              <p className="text-slate-500 dark:text-slate-400">
+            <div className="rounded-lg bg-card p-12 text-center">
+              <p className="text-muted-foreground">
                 {language === 'th'
                   ? 'ไม่พบคำเทศนาที่ตรงกับเกณฑ์ของคุณ'
                   : 'No sermons found matching your criteria.'}
@@ -163,7 +163,7 @@ export function SermonsPage() {
               {displayedSermons.map((sermon) => (
                 <Link key={sermon.id} to={`/sermons/${sermon.id}`}>
                   <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
-                    <div className="relative aspect-video overflow-hidden bg-slate-200">
+                    <div className="relative aspect-video overflow-hidden bg-muted">
                       {sermon.thumbnailUrl ? (
                         <img
                           src={sermon.thumbnailUrl}
@@ -172,8 +172,8 @@ export function SermonsPage() {
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center bg-slate-100">
-                          <BookOpen className="h-12 w-12 text-slate-300" />
+                        <div className="flex h-full items-center justify-center bg-muted">
+                          <BookOpen className="h-12 w-12 text-muted-foreground/50" />
                         </div>
                       )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
@@ -193,20 +193,18 @@ export function SermonsPage() {
                       )}
                     </div>
                     <CardContent className="p-4">
-                      <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                      <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         {formatDate(sermon.date)}
-                        <span className="text-slate-300">•</span>
+                        <span className="text-border">•</span>
                         <Clock className="h-3 w-3" />
                         {sermon.duration}
                       </div>
-                      <h2 className="mb-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                      <h2 className="mb-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary">
                         {sermon.title}
                       </h2>
-                      <p className="mb-2 text-sm text-slate-600 dark:text-slate-400">
-                        {sermon.speaker}
-                      </p>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <BookOpen className="h-3 w-3" />
                         {sermon.scripture}
                       </div>
@@ -229,7 +227,7 @@ export function SermonsPage() {
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="px-4 text-sm text-slate-600">
+            <span className="px-4 text-sm text-muted-foreground">
               {language === 'th' ? 'หน้า' : 'Page'} {currentPage} {language === 'th' ? 'จาก' : 'of'}{' '}
               {totalPages}
             </span>

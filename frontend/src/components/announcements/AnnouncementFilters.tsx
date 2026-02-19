@@ -76,7 +76,7 @@ export function AnnouncementFilters({ onFiltersChange, authors, loading = false 
     <div className="space-y-3 sm:space-y-4">
       {/* Real-time Search Input */}
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search announcements"
           value={filters.search}
@@ -88,7 +88,7 @@ export function AnnouncementFilters({ onFiltersChange, authors, loading = false 
           <button
             type="button"
             onClick={() => setFilters({ ...filters, search: '' })}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
             aria-label="Clear search"
           >
             <XIcon className="h-4 w-4" />

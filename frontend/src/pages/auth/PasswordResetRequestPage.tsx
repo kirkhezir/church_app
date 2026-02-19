@@ -43,7 +43,7 @@ export default function PasswordResetRequestPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Check Your Email</CardTitle>
@@ -56,7 +56,7 @@ export default function PasswordResetRequestPage() {
                 instructions. Please check your email and follow the link to reset your password.
               </AlertDescription>
             </Alert>
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-muted-foreground">
               <p>Didn&apos;t receive the email? Check your spam folder.</p>
               <p className="mt-2">The reset link will expire in 1 hour.</p>
             </div>
@@ -70,7 +70,7 @@ export default function PasswordResetRequestPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Reset Password</CardTitle>

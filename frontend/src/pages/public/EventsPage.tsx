@@ -79,9 +79,9 @@ export function EventsPage() {
 
       {/* Featured Events Carousel */}
       {featuredEvents.length > 0 && (
-        <div className="bg-slate-50 py-8">
+        <div className="bg-muted py-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-4 text-lg font-semibold text-slate-900">
+            <h2 className="mb-4 text-lg font-semibold text-foreground">
               {language === 'th' ? 'กิจกรรมเด่น' : 'Featured Events'}
             </h2>
             <div className="flex gap-4 overflow-x-auto pb-4">
@@ -103,10 +103,10 @@ export function EventsPage() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-slate-900 group-hover:text-emerald-600">
+                    <h3 className="font-semibold text-foreground group-hover:text-emerald-600">
                       {language === 'th' ? event.titleThai : event.title}
                     </h3>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       <Calendar className="mr-1 inline h-3 w-3" />
                       {new Date(event.date).toLocaleDateString(
                         language === 'th' ? 'th-TH' : 'en-US',
@@ -122,12 +122,12 @@ export function EventsPage() {
       )}
 
       {/* Controls */}
-      <div className="sticky top-16 z-40 border-b bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Category Filter */}
             <div className="flex flex-wrap items-center gap-2">
-              <Filter className="h-4 w-4 text-slate-400" />
+              <Filter className="h-4 w-4 text-muted-foreground" />
               {categories.map((cat) => (
                 <button
                   key={cat.id}
@@ -135,7 +135,7 @@ export function EventsPage() {
                   className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1 ${
                     selectedCategory === cat.id
                       ? 'bg-emerald-600 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-muted text-muted-foreground hover:bg-muted'
                   }`}
                 >
                   {language === 'th' ? cat.nameThai : cat.name}
@@ -145,7 +145,7 @@ export function EventsPage() {
 
             {/* View Toggle */}
             <div
-              className="flex items-center gap-1 rounded-lg bg-slate-100 p-1"
+              className="flex items-center gap-1 rounded-lg bg-muted p-1"
               role="tablist"
               aria-label={language === 'th' ? 'เปลี่ยนมุมมอง' : 'Change view'}
             >
@@ -203,7 +203,7 @@ export function EventsPage() {
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <div className="mb-2 flex items-center gap-2 text-sm text-slate-500">
+                    <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
                       <span>
                         {new Date(event.date).toLocaleDateString(
@@ -215,13 +215,13 @@ export function EventsPage() {
                       <Clock className="h-4 w-4" />
                       <span>{event.time}</span>
                     </div>
-                    <h3 className="mb-2 font-bold text-slate-900 group-hover:text-emerald-600">
+                    <h3 className="mb-2 font-bold text-foreground group-hover:text-emerald-600">
                       {language === 'th' ? event.titleThai : event.title}
                     </h3>
-                    <p className="mb-3 line-clamp-2 text-sm text-slate-600">
+                    <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">
                       {language === 'th' ? event.descriptionThai : event.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="h-4 w-4" />
                       <span>{language === 'th' ? event.locationThai : event.location}</span>
                     </div>
@@ -258,8 +258,8 @@ export function EventsPage() {
                       />
                     </div>
                     <CardContent className="flex-1 p-5">
-                      <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+                      <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
                           {language === 'th' ? event.categoryThai : event.category}
                         </span>
                         <Calendar className="h-4 w-4" />
@@ -270,13 +270,13 @@ export function EventsPage() {
                           )}
                         </span>
                       </div>
-                      <h3 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-emerald-600">
+                      <h3 className="mb-2 text-lg font-bold text-foreground group-hover:text-emerald-600">
                         {language === 'th' ? event.titleThai : event.title}
                       </h3>
-                      <p className="mb-3 text-sm text-slate-600">
+                      <p className="mb-3 text-sm text-muted-foreground">
                         {language === 'th' ? event.descriptionThai : event.description}
                       </p>
-                      <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {event.time}
@@ -299,7 +299,7 @@ export function EventsPage() {
             <CardContent className="p-6">
               {/* Calendar Header */}
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-foreground">
                   {currentMonth.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', {
                     month: 'long',
                     year: 'numeric',
@@ -338,14 +338,14 @@ export function EventsPage() {
                   ? ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
                   : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
                 ).map((day) => (
-                  <div key={day} className="py-2 text-center text-sm font-medium text-slate-500">
+                  <div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
                     {day}
                   </div>
                 ))}
 
                 {/* Empty cells for days before month starts */}
                 {Array.from({ length: firstDay }).map((_, i) => (
-                  <div key={`empty-${i}`} className="h-16 rounded bg-slate-50 p-1 sm:h-24" />
+                  <div key={`empty-${i}`} className="h-16 rounded bg-muted p-1 sm:h-24" />
                 ))}
 
                 {/* Calendar Days */}
@@ -363,7 +363,7 @@ export function EventsPage() {
                     <div
                       key={day}
                       className={`h-16 overflow-hidden rounded border p-1 sm:h-24 ${
-                        isToday ? 'border-emerald-500 bg-emerald-50' : 'border-slate-100 bg-white'
+                        isToday ? 'border-emerald-500 bg-emerald-50' : 'border-border bg-white'
                       } ${dayEvents.length > 0 ? 'cursor-pointer hover:border-emerald-300' : ''}`}
                       title={
                         dayEvents.length > 0
@@ -374,7 +374,7 @@ export function EventsPage() {
                       }
                     >
                       <div
-                        className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}
+                        className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600' : 'text-foreground/80'}`}
                       >
                         {day}
                       </div>
@@ -392,7 +392,7 @@ export function EventsPage() {
                           </Link>
                         ))}
                         {dayEvents.length > 2 && (
-                          <div className="text-xs text-slate-500">
+                          <div className="text-xs text-muted-foreground">
                             +{dayEvents.length - 2} {language === 'th' ? 'เพิ่มเติม' : 'more'}
                           </div>
                         )}
@@ -403,7 +403,7 @@ export function EventsPage() {
               </div>
 
               {/* Mobile hint */}
-              <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400 sm:hidden">
+              <p className="mt-4 text-center text-xs text-muted-foreground sm:hidden">
                 {language === 'th'
                   ? 'เปลี่ยนเป็นมุมมองรายการเพื่อดูรายละเอียดเพิ่มเติม'
                   : 'Switch to list view for more details on mobile'}

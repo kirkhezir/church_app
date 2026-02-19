@@ -49,7 +49,7 @@ export function MissionStatementSection() {
     >
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h2 id="mission-heading" className="mb-4 text-4xl font-bold text-gray-900">
+          <h2 id="mission-heading" className="mb-4 text-4xl font-bold text-foreground">
             Our Mission
           </h2>
           <div className="mx-auto h-1 w-24 rounded bg-gradient-to-r from-blue-600 to-purple-600"></div>
@@ -73,8 +73,8 @@ export function MissionStatementSection() {
         </div>
 
         <div className="mb-8 text-center">
-          <h3 className="mb-4 text-3xl font-bold text-gray-900">Our Core Values</h3>
-          <p className="text-lg text-gray-600">
+          <h3 className="mb-4 text-3xl font-bold text-foreground">Our Core Values</h3>
+          <p className="text-lg text-muted-foreground">
             The principles that guide our ministry and community
           </p>
         </div>
@@ -89,8 +89,8 @@ export function MissionStatementSection() {
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg transition-transform group-hover:scale-110">
                   <value.icon className="h-8 w-8" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-gray-900">{value.title}</h3>
-                <p className="leading-relaxed text-gray-600">{value.description}</p>
+                <h3 className="mb-2 text-xl font-bold text-foreground">{value.title}</h3>
+                <p className="leading-relaxed text-muted-foreground">{value.description}</p>
               </CardContent>
             </Card>
           ))}

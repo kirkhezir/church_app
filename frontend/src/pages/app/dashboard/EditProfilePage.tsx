@@ -127,7 +127,7 @@ export default function EditProfilePage() {
       <SidebarLayout breadcrumbs={[{ label: 'Profile' }]}>
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
-            <p className="text-center text-gray-600">Loading profile...</p>
+            <p className="text-center text-muted-foreground">Loading profile...</p>
           </CardContent>
         </Card>
       </SidebarLayout>
@@ -187,7 +187,7 @@ export default function EditProfilePage() {
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input id="email" type="email" value={formData.email} disabled />
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Email cannot be changed. Contact admin to update.
                   </p>
                 </div>
@@ -202,7 +202,7 @@ export default function EditProfilePage() {
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     disabled={loading}
                   />
-                  <p className="text-xs text-gray-500">Use E.164 format (e.g., +66812345678)</p>
+                  <p className="text-xs text-muted-foreground">Use E.164 format (e.g., +66812345678)</p>
                 </div>
 
                 <div className="space-y-2">
@@ -220,7 +220,7 @@ export default function EditProfilePage() {
               {/* Privacy Settings */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Privacy Settings</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Control what other members can see about you
                 </p>
 

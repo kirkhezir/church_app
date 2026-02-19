@@ -63,7 +63,7 @@ export function AnnouncementsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
           <h1 className="mb-2 text-2xl font-bold sm:text-3xl">Church Announcements</h1>
-          <p className="text-sm text-gray-600 sm:text-base">
+          <p className="text-sm text-muted-foreground sm:text-base">
             Stay updated with the latest news and information
           </p>
         </div>
@@ -122,12 +122,12 @@ export function AnnouncementsPage() {
       {!loading && !error && (
         <>
           {!announcements || announcements.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center sm:p-12">
-              <BellIcon className="mx-auto mb-3 h-10 w-10 text-gray-400 sm:mb-4 sm:h-12 sm:w-12" />
-              <h3 className="mb-2 text-base font-medium text-gray-900 sm:text-lg">
+            <div className="rounded-lg border border-dashed border-border bg-background p-8 text-center sm:p-12">
+              <BellIcon className="mx-auto mb-3 h-10 w-10 text-muted-foreground sm:mb-4 sm:h-12 sm:w-12" />
+              <h3 className="mb-2 text-base font-medium text-foreground sm:text-lg">
                 No {showArchived ? 'archived ' : ''}announcements
               </h3>
-              <p className="text-sm text-gray-600 sm:text-base">
+              <p className="text-sm text-muted-foreground sm:text-base">
                 {showArchived
                   ? 'There are no archived announcements at this time.'
                   : 'There are no active announcements at this time.'}
@@ -148,7 +148,7 @@ export function AnnouncementsPage() {
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
             <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:mt-8 sm:flex-row sm:gap-0">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} total)
               </div>
               <div className="flex gap-2">

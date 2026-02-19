@@ -100,7 +100,7 @@ export function AnnouncementDetailPage() {
         </h1>
 
         {/* Meta Information */}
-        <div className="mb-4 flex flex-col gap-2 border-b border-gray-200 pb-3 text-xs text-gray-600 sm:mb-6 sm:flex-row sm:flex-wrap sm:gap-4 sm:pb-4 sm:text-sm">
+        <div className="mb-4 flex flex-col gap-2 border-b border-border pb-3 text-xs text-muted-foreground sm:mb-6 sm:flex-row sm:flex-wrap sm:gap-4 sm:pb-4 sm:text-sm">
           <div className="flex items-center gap-2">
             <UserIcon className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>
@@ -115,7 +115,7 @@ export function AnnouncementDetailPage() {
 
         {/* Content */}
         <div className="prose prose-sm prose-gray sm:prose-base max-w-none">
-          <div className="whitespace-pre-wrap text-gray-700">{announcement.content}</div>
+          <div className="whitespace-pre-wrap text-foreground/80">{announcement.content}</div>
         </div>
       </div>
     </div>

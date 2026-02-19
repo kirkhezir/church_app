@@ -112,12 +112,12 @@ export function AnnouncementForm({
           className={!isTitleValid && title.length > 0 ? 'border-red-500' : ''}
         />
         <div className="flex justify-between text-sm">
-          <span className={title.length < titleMinLength ? 'text-red-500' : 'text-gray-500'}>
+          <span className={title.length < titleMinLength ? 'text-red-500' : 'text-muted-foreground'}>
             {title.length < titleMinLength
               ? `Minimum ${titleMinLength} characters`
               : 'Title looks good'}
           </span>
-          <span className={titleCharsRemaining < 20 ? 'text-orange-500' : 'text-gray-500'}>
+          <span className={titleCharsRemaining < 20 ? 'text-orange-500' : 'text-muted-foreground'}>
             {titleCharsRemaining} characters remaining
           </span>
         </div>
@@ -170,7 +170,7 @@ export function AnnouncementForm({
           placeholder="Write your announcement here..."
           disabled={isLoading}
         />
-        <p className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-gray-500'}`}>
+        <p className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-muted-foreground'}`}>
           {content.trim().length === 0
             ? 'Content is required'
             : 'Write your announcement in plain text'}
@@ -178,14 +178,14 @@ export function AnnouncementForm({
       </div>
 
       {/* Draft Toggle */}
-      <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4">
+      <div className="flex items-center justify-between rounded-lg border border-border bg-background p-4">
         <div className="flex items-center gap-3">
-          <SaveIcon className="h-5 w-5 text-gray-600" />
+          <SaveIcon className="h-5 w-5 text-muted-foreground" />
           <div>
             <Label htmlFor="draft-toggle" className="cursor-pointer font-medium">
               Save as Draft
             </Label>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Draft announcements won&apos;t be published or trigger notifications
             </p>
           </div>

@@ -117,7 +117,7 @@ export function AnnouncementAnalyticsPage() {
             Back to Announcements
           </Button>
           <h1 className="text-3xl font-bold">Announcement Analytics</h1>
-          <p className="mt-2 text-gray-600">{announcementTitle}</p>
+          <p className="mt-2 text-muted-foreground">{announcementTitle}</p>
         </div>
 
         {/* Summary Cards */}
@@ -126,11 +126,11 @@ export function AnnouncementAnalyticsPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-              <EyeIcon className="h-4 w-4 text-gray-600" />
+              <EyeIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{analytics.totalViews}</div>
-              <p className="mt-1 text-xs text-gray-600">Unique member views</p>
+              <p className="mt-1 text-xs text-muted-foreground">Unique member views</p>
             </CardContent>
           </Card>
 
@@ -138,7 +138,7 @@ export function AnnouncementAnalyticsPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">First Viewed</CardTitle>
-              <CalendarIcon className="h-4 w-4 text-gray-600" />
+              <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-lg font-medium">
@@ -146,7 +146,7 @@ export function AnnouncementAnalyticsPage() {
                   ? format(new Date(analytics.firstViewed), 'MMM d, yyyy')
                   : 'N/A'}
               </div>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {analytics.firstViewed
                   ? format(new Date(analytics.firstViewed), 'h:mm a')
                   : 'No views yet'}
@@ -158,7 +158,7 @@ export function AnnouncementAnalyticsPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Last Viewed</CardTitle>
-              <UsersIcon className="h-4 w-4 text-gray-600" />
+              <UsersIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-lg font-medium">
@@ -166,7 +166,7 @@ export function AnnouncementAnalyticsPage() {
                   ? format(new Date(analytics.lastViewed), 'MMM d, yyyy')
                   : 'N/A'}
               </div>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {analytics.lastViewed
                   ? format(new Date(analytics.lastViewed), 'h:mm a')
                   : 'No views yet'}
@@ -179,15 +179,15 @@ export function AnnouncementAnalyticsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Recent Views</CardTitle>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Latest {analytics.recentViews.length} member
               {analytics.recentViews.length !== 1 ? 's' : ''} who viewed this announcement
             </p>
           </CardHeader>
           <CardContent>
             {analytics.recentViews.length === 0 ? (
-              <div className="py-8 text-center text-gray-500">
-                <EyeIcon className="mx-auto mb-2 h-12 w-12 text-gray-400" />
+              <div className="py-8 text-center text-muted-foreground">
+                <EyeIcon className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
                 <p>No views yet</p>
               </div>
             ) : (
@@ -208,14 +208,14 @@ export function AnnouncementAnalyticsPage() {
                         <p className="font-medium">
                           {view.member.firstName} {view.member.lastName}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           {format(new Date(view.viewedAt), 'MMM d, yyyy')}
                         </p>
                       </div>
                     </div>
                     {/* Time */}
                     <div className="text-right">
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         {format(new Date(view.viewedAt), 'h:mm a')}
                       </p>
                     </div>

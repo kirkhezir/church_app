@@ -74,7 +74,7 @@ export function BlogDetailPage() {
       // Bold headers
       if (block.startsWith('**') && block.endsWith('**')) {
         return (
-          <h2 key={i} className="mb-3 mt-6 text-lg font-bold text-slate-900 dark:text-slate-100">
+          <h2 key={i} className="mb-3 mt-6 text-lg font-bold text-foreground">
             {block.replace(/\*\*/g, '')}
           </h2>
         );
@@ -84,10 +84,10 @@ export function BlogDetailPage() {
         const parts = block.split('**');
         return (
           <div key={i} className="mb-4">
-            <h2 className="mb-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+            <h2 className="mb-2 text-lg font-bold text-foreground">
               {parts[1]}
             </h2>
-            {parts[2] && <p className="text-slate-600 dark:text-slate-400">{parts[2]}</p>}
+            {parts[2] && <p className="text-muted-foreground">{parts[2]}</p>}
           </div>
         );
       }
@@ -99,13 +99,13 @@ export function BlogDetailPage() {
         return (
           <div key={i} className="mb-4">
             {heading && !heading.startsWith('- ') && (
-              <h2 className="mb-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="mb-2 text-lg font-bold text-foreground">
                 {heading.replace(/\*\*/g, '')}
               </h2>
             )}
             <ul className="space-y-1 pl-4">
               {items.map((item, j) => (
-                <li key={j} className="flex items-start gap-2 text-slate-600 dark:text-slate-400">
+                <li key={j} className="flex items-start gap-2 text-muted-foreground">
                   <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
                   {item.slice(2)}
                 </li>
@@ -120,7 +120,7 @@ export function BlogDetailPage() {
         return (
           <ol
             key={i}
-            className="mb-4 list-decimal space-y-1 pl-6 text-slate-600 dark:text-slate-400"
+            className="mb-4 list-decimal space-y-1 pl-6 text-muted-foreground"
           >
             {lines.map((line, j) => (
               <li key={j}>{line.replace(/^\d+\.\s/, '')}</li>
@@ -130,7 +130,7 @@ export function BlogDetailPage() {
       }
       // Regular paragraph
       return (
-        <p key={i} className="mb-4 leading-relaxed text-slate-600 dark:text-slate-400">
+        <p key={i} className="mb-4 leading-relaxed text-muted-foreground">
           {block}
         </p>
       );
@@ -157,19 +157,19 @@ export function BlogDetailPage() {
         {/* Back Link */}
         <Link
           to="/blog"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary dark:text-muted-foreground dark:hover:text-blue-400"
         >
           <ArrowLeft className="h-4 w-4" />
           {language === 'th' ? 'กลับไปบล็อก' : 'Back to Blog'}
         </Link>
 
         {/* Title */}
-        <h1 className="mb-4 text-3xl font-bold text-slate-900 dark:text-slate-100 sm:text-4xl">
+        <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
           {title}
         </h1>
 
         {/* Meta */}
-        <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+        <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <User className="h-4 w-4" />
             {post.author}
@@ -184,12 +184,12 @@ export function BlogDetailPage() {
           </span>
           <button
             onClick={handleShare}
-            className="relative ml-auto flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
+            className="relative ml-auto flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
           >
             <Share2 className="h-4 w-4" />
             {language === 'th' ? 'แชร์' : 'Share'}
             {shareMessage && (
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-slate-200 dark:text-slate-800">
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-muted dark:text-slate-800">
                 {shareMessage}
               </span>
             )}
@@ -200,9 +200,9 @@ export function BlogDetailPage() {
         <div className="prose-like max-w-none">{renderContent(content)}</div>
 
         {/* Tags / Category */}
-        <div className="mt-8 flex items-center gap-2 border-t border-slate-200 pt-6 dark:border-slate-700">
-          <Tag className="h-4 w-4 text-slate-400" />
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+        <div className="mt-8 flex items-center gap-2 border-t border-border pt-6 dark:border-border">
+          <Tag className="h-4 w-4 text-muted-foreground" />
+          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground dark:text-blue-200">
             {category}
           </span>
         </div>
@@ -210,9 +210,9 @@ export function BlogDetailPage() {
 
       {/* Related Posts */}
       {displayRelated.length > 0 && (
-        <section className="border-t border-slate-200 bg-slate-50 py-12 dark:border-slate-800 dark:bg-slate-900/50">
+        <section className="border-t border-border bg-muted py-12">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-6 text-xl font-bold text-slate-900 dark:text-slate-100">
+            <h2 className="mb-6 text-xl font-bold text-foreground">
               {language === 'th' ? 'บทความที่เกี่ยวข้อง' : 'Related Articles'}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,10 +231,10 @@ export function BlogDetailPage() {
                       <span className="text-xs font-medium text-blue-600">
                         {language === 'th' ? related.categoryThai : related.category}
                       </span>
-                      <h3 className="mt-1 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                      <h3 className="mt-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary">
                         {language === 'th' ? related.titleThai : related.title}
                       </h3>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {formatDate(related.date)} &middot; {related.readTime}{' '}
                         {language === 'th' ? 'นาที' : 'min'}
                       </p>

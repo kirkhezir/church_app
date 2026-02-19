@@ -205,7 +205,7 @@ export default function AdminDataExportPage() {
             </Button>
 
             {/* Info */}
-            <div className="space-y-2 text-sm text-gray-600">
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 <strong>Note:</strong>
               </p>

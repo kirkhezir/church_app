@@ -171,10 +171,10 @@ export function VisitUsSection() {
             <Calendar className="mr-2 h-4 w-4" />
             {language === 'th' ? 'ร่วมนมัสการกับเรา' : 'Join us this Sabbath'}
           </span>
-          <h2 id="visit-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="visit-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
             {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             {language === 'th'
               ? 'ทุกคนยินดีต้อนรับ! มาร่วมนมัสการวันสะบาโตกับเรา'
               : 'Everyone is welcome! Join our warm community for Sabbath worship.'}
@@ -192,11 +192,11 @@ export function VisitUsSection() {
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
                   <service.icon className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="font-semibold text-slate-900">
+                <h3 className="font-semibold text-foreground">
                   {language === 'th' ? service.nameThai : service.name}
                 </h3>
                 <p className="my-1 text-2xl font-bold text-blue-600">{service.time}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-muted-foreground">
                   {language === 'th' ? service.descriptionThai : service.description}
                 </p>
               </CardContent>
@@ -215,7 +215,7 @@ export function VisitUsSection() {
         {/* Visit Info - Tabbed Design (Better UX) */}
         <Card className="mb-10 overflow-hidden">
           {/* Tab Navigation - Horizontal scroll on mobile with visible labels */}
-          <div className="scrollbar-hide flex overflow-x-auto border-b border-slate-200 bg-slate-50">
+          <div className="scrollbar-hide flex overflow-x-auto border-b border-border bg-muted">
             {visitInfoItems.map((item) => (
               <button
                 key={item.id}
@@ -223,7 +223,7 @@ export function VisitUsSection() {
                 className={`flex min-w-max flex-1 items-center justify-center gap-2 whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
                   activeTab === item.id
                     ? 'border-b-2 border-blue-600 bg-white text-blue-600'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -244,23 +244,23 @@ export function VisitUsSection() {
                     <activeItem.icon className="h-6 w-6 text-blue-600 sm:h-7 sm:w-7" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
+                    <h3 className="text-lg font-bold text-foreground sm:text-xl">
                       {language === 'th' ? activeItem.titleThai : activeItem.title}
                     </h3>
-                    <p className="text-xs text-slate-500 sm:text-sm">
+                    <p className="text-xs text-muted-foreground sm:text-sm">
                       {language === 'th' ? activeItem.descriptionThai : activeItem.description}
                     </p>
                   </div>
                 </div>
 
                 {/* Details List */}
-                <div className="flex-1 md:border-l md:border-slate-200 md:pl-6">
+                <div className="flex-1 md:border-l md:border-border md:pl-6">
                   <ul className="grid gap-3 sm:grid-cols-2">
                     {(language === 'th' ? activeItem.detailsThai : activeItem.details).map(
                       (detail, idx) => (
                         <li key={idx} className="flex items-start gap-3">
                           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" />
-                          <span className="text-slate-700">{detail}</span>
+                          <span className="text-foreground/80">{detail}</span>
                         </li>
                       )
                     )}

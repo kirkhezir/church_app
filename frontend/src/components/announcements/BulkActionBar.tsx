@@ -27,16 +27,16 @@ export function BulkActionBar({
 
   return (
     <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 animate-in slide-in-from-bottom-5">
-      <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg sm:gap-3 sm:p-4">
+      <div className="flex items-center gap-2 rounded-lg border border-border bg-card p-3 shadow-lg sm:gap-3 sm:p-4">
         {/* Selection Count */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-900 sm:text-base">
+          <span className="text-sm font-medium text-foreground sm:text-base">
             {selectedCount} {selectedCount === 1 ? 'item' : 'items'} selected
           </span>
         </div>
 
         {/* Divider */}
-        <div className="h-6 w-px bg-gray-200" />
+        <div className="h-6 w-px bg-muted" />
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">

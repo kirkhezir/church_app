@@ -327,10 +327,10 @@ export function EventDetailPage() {
             {/* Description */}
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-slate-900">
+                <h2 className="mb-4 text-xl font-bold text-foreground">
                   {language === 'th' ? 'รายละเอียดกิจกรรม' : 'Event Details'}
                 </h2>
-                <div className="prose max-w-none text-slate-600">
+                <div className="prose max-w-none text-muted-foreground">
                   {(language === 'th' ? event.fullDescriptionThai : event.fullDescription)
                     .split('\n\n')
                     .map((para, i) => (
@@ -346,7 +346,7 @@ export function EventDetailPage() {
             {event.schedule && event.schedule.length > 0 && (
               <Card className="mb-8">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-slate-900">
+                  <h2 className="mb-4 text-xl font-bold text-foreground">
                     {language === 'th' ? 'กำหนดการ' : 'Schedule'}
                   </h2>
                   <div className="space-y-3">
@@ -355,7 +355,7 @@ export function EventDetailPage() {
                         <span className="w-24 shrink-0 font-medium text-emerald-600">
                           {item.time}
                         </span>
-                        <span className="text-slate-600">
+                        <span className="text-muted-foreground">
                           {language === 'th' ? item.activityThai : item.activity}
                         </span>
                       </div>
@@ -369,13 +369,13 @@ export function EventDetailPage() {
             {event.whatToBring && event.whatToBring.length > 0 && (
               <Card>
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-slate-900">
+                  <h2 className="mb-4 text-xl font-bold text-foreground">
                     {language === 'th' ? 'สิ่งที่ควรนำมา' : 'What to Bring'}
                   </h2>
                   <ul className="space-y-2">
                     {(language === 'th' ? event.whatToBringThai : event.whatToBring)?.map(
                       (item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-slate-600">
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground">
                           <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                           <span>{item}</span>
                         </li>
@@ -396,10 +396,10 @@ export function EventDetailPage() {
                   <div className="flex items-start gap-3">
                     <Calendar className="mt-0.5 h-5 w-5 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'วันที่' : 'Date'}
                       </p>
-                      <p className="text-slate-600">
+                      <p className="text-muted-foreground">
                         {new Date(event.date).toLocaleDateString(
                           language === 'th' ? 'th-TH' : 'en-US',
                           { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -419,31 +419,31 @@ export function EventDetailPage() {
                   <div className="flex items-start gap-3">
                     <Clock className="mt-0.5 h-5 w-5 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'เวลา' : 'Time'}
                       </p>
-                      <p className="text-slate-600">{event.time}</p>
+                      <p className="text-muted-foreground">{event.time}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <MapPin className="mt-0.5 h-5 w-5 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'สถานที่' : 'Location'}
                       </p>
-                      <p className="text-slate-600">
+                      <p className="text-muted-foreground">
                         {language === 'th' ? event.locationThai : event.location}
                       </p>
-                      <p className="mt-1 text-sm text-slate-500">{event.address}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{event.address}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Users className="mt-0.5 h-5 w-5 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'ผู้จัด' : 'Organizer'}
                       </p>
-                      <p className="text-slate-600">
+                      <p className="text-muted-foreground">
                         {language === 'th' ? event.organizerThai : event.organizer}
                       </p>
                     </div>
@@ -452,7 +452,7 @@ export function EventDetailPage() {
                     <div className="flex items-start gap-3">
                       <Phone className="mt-0.5 h-5 w-5 text-emerald-500" />
                       <div>
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-foreground">
                           {language === 'th' ? 'ติดต่อ' : 'Contact'}
                         </p>
                         <a
@@ -514,19 +514,19 @@ export function EventDetailPage() {
             {event.rsvpRequired && (
               <Card className="border-emerald-200 bg-emerald-50">
                 <CardContent className="p-6">
-                  <h3 className="mb-3 font-bold text-slate-900">
+                  <h3 className="mb-3 font-bold text-foreground">
                     {language === 'th' ? 'ลงทะเบียน' : 'RSVP'}
                   </h3>
                   {!isRsvpSubmitted ? (
                     <>
                       {spotsRemaining !== null && (
-                        <p className="mb-3 text-sm text-slate-600">
+                        <p className="mb-3 text-sm text-muted-foreground">
                           <Users className="mr-1 inline h-4 w-4" />
                           {spotsRemaining} {language === 'th' ? 'ที่นั่งว่าง' : 'spots remaining'}
                         </p>
                       )}
                       {event.rsvpDeadline && (
-                        <p className="mb-4 text-sm text-slate-600">
+                        <p className="mb-4 text-sm text-muted-foreground">
                           {language === 'th' ? 'ลงทะเบียนภายใน: ' : 'Register by: '}
                           {new Date(event.rsvpDeadline).toLocaleDateString(
                             language === 'th' ? 'th-TH' : 'en-US'
@@ -546,7 +546,7 @@ export function EventDetailPage() {
                       <p className="font-medium text-emerald-700">
                         {language === 'th' ? 'ลงทะเบียนสำเร็จ!' : 'Successfully Registered!'}
                       </p>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {language === 'th'
                           ? 'เราจะส่งรายละเอียดทางอีเมล'
                           : "We'll send you details via email"}

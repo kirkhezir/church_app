@@ -59,7 +59,7 @@ export function AnnouncementCreatePage() {
           Back
         </Button>
         <h1 className="text-2xl font-bold sm:text-3xl">Create New Announcement</h1>
-        <p className="mt-2 text-sm text-gray-600 sm:text-base">
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
           Share important information with the church community
         </p>
       </div>

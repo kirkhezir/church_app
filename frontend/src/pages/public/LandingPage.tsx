@@ -315,27 +315,29 @@ function AboutSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
-          <h2 id="about-heading" className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="about-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
             {t('about.title')}
           </h2>
-          <p className="text-lg text-slate-600">{t('about.description')}</p>
+          <p className="text-lg text-muted-foreground">{t('about.description')}</p>
         </div>
 
         {/* Pastor Welcome Card */}
         <div className="mx-auto mt-10 max-w-3xl">
-          <div className="flex flex-col items-center gap-6 rounded-2xl bg-slate-50 p-6 sm:flex-row sm:p-8">
+          <div className="flex flex-col items-center gap-6 rounded-2xl bg-muted p-6 sm:flex-row sm:p-8">
             {/* Pastor Avatar */}
             <div className="flex-shrink-0">
               <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-100 text-3xl font-bold text-slate-500 dark:text-slate-400">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-muted text-3xl font-bold text-muted-foreground">
                   P
                 </div>
               </div>
             </div>
             <div className="text-center sm:text-left">
-              <p className="mb-2 italic text-slate-700">&ldquo;{t('about.pastorWelcome')}&rdquo;</p>
-              <p className="font-semibold text-slate-900">{t('about.pastorTitle')}</p>
-              <p className="text-sm text-slate-500">Sing Buri Adventist Center</p>
+              <p className="mb-2 italic text-foreground/80">
+                &ldquo;{t('about.pastorWelcome')}&rdquo;
+              </p>
+              <p className="font-semibold text-foreground">{t('about.pastorTitle')}</p>
+              <p className="text-sm text-muted-foreground">Sing Buri Adventist Center</p>
             </div>
           </div>
         </div>
@@ -351,21 +353,21 @@ function AboutSection() {
           {values.map((value) => (
             <div
               key={value.title}
-              className="rounded-xl bg-slate-50 p-6 text-center transition-shadow hover:shadow-lg"
+              className="rounded-xl bg-muted p-6 text-center transition-shadow hover:shadow-lg"
             >
               <div
                 className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl ${value.color} text-white`}
               >
                 <value.icon className="h-7 w-7" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-slate-900">{value.title}</h3>
-              <p className="text-slate-600">{value.description}</p>
+              <h3 className="mb-2 text-lg font-semibold text-foreground">{value.title}</h3>
+              <p className="text-muted-foreground">{value.description}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-lg text-slate-600">{t('about.welcomeMessage')}</p>
+          <p className="text-lg text-muted-foreground">{t('about.welcomeMessage')}</p>
           <a
             href="https://www.adventist.org/beliefs/"
             target="_blank"

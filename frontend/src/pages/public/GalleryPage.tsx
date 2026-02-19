@@ -105,7 +105,7 @@ export function GalleryPage() {
       </section>
 
       {/* Controls */}
-      <div className="sticky top-16 z-40 border-b bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2">
             {selectedAlbum && (
@@ -119,7 +119,7 @@ export function GalleryPage() {
                 {language === 'th' ? 'อัลบั้มทั้งหมด' : 'All Albums'}
               </Button>
             )}
-            <span className="text-sm text-slate-600">
+            <span className="text-sm text-muted-foreground">
               {selectedAlbum
                 ? `${filteredPhotos.length} ${language === 'th' ? 'รูป' : 'photos'}`
                 : `${albums.length} ${language === 'th' ? 'อัลบั้ม' : 'albums'}`}

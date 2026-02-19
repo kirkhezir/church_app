@@ -33,28 +33,28 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="text-2xl font-bold text-gray-900">
+          <div className="text-2xl font-bold text-foreground">
             {profile.firstName} {profile.lastName}
           </div>
-          <div className="text-sm text-gray-500">{profile.role}</div>
+          <div className="text-sm text-muted-foreground">{profile.role}</div>
         </div>
 
         <div className="space-y-2">
           <div>
-            <div className="text-xs font-medium text-gray-500">Email</div>
-            <div className="text-sm text-gray-900">{profile.email}</div>
+            <div className="text-xs font-medium text-muted-foreground">Email</div>
+            <div className="text-sm text-foreground">{profile.email}</div>
           </div>
 
           {profile.phone && (
             <div>
-              <div className="text-xs font-medium text-gray-500">Phone</div>
-              <div className="text-sm text-gray-900">{profile.phone}</div>
+              <div className="text-xs font-medium text-muted-foreground">Phone</div>
+              <div className="text-sm text-foreground">{profile.phone}</div>
             </div>
           )}
 
           <div>
-            <div className="text-xs font-medium text-gray-500">Member Since</div>
-            <div className="text-sm text-gray-900">{memberSince}</div>
+            <div className="text-xs font-medium text-muted-foreground">Member Since</div>
+            <div className="text-sm text-foreground">{memberSince}</div>
           </div>
         </div>
 

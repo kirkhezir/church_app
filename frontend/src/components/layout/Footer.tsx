@@ -15,11 +15,11 @@ export const Footer: React.FC = () => {
           {/* About Section */}
           <div>
             <h3 className="mb-4 text-lg font-bold text-white">Sing Buri Adventist Center</h3>
-            <p className="mb-4 text-sm text-gray-400">
+            <p className="mb-4 text-sm text-muted-foreground">
               A welcoming community of faith serving the Sing Buri area. Join us for worship,
               fellowship, and spiritual growth.
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               ศูนย์แอดเวนตีสต์สิงห์บุรี
               <br />
               ชุมชนแห่งศรัทธาที่อบอุ่น
@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm">
               <li className="flex items-start space-x-2">
                 <svg
-                  className="mt-0.5 h-5 w-5 text-gray-400"
+                  className="mt-0.5 h-5 w-5 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -81,7 +81,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-2">
                 <svg
-                  className="mt-0.5 h-5 w-5 text-gray-400"
+                  className="mt-0.5 h-5 w-5 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -102,7 +102,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-2">
                 <svg
-                  className="mt-0.5 h-5 w-5 text-gray-400"
+                  className="mt-0.5 h-5 w-5 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -116,7 +116,7 @@ export const Footer: React.FC = () => {
                 </svg>
                 <div>
                   <p>Sabbath Services:</p>
-                  <p className="text-gray-400">Saturday 9:30 AM - 12:00 PM</p>
+                  <p className="text-muted-foreground">Saturday 9:30 AM - 12:00 PM</p>
                 </div>
               </li>
             </ul>
@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="mt-8 border-t border-gray-800 pt-6">
           <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               © {currentYear} Sing Buri Adventist Center. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm">

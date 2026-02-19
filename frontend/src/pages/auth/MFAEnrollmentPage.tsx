@@ -86,10 +86,10 @@ export default function MFAEnrollmentPage() {
 
   if (step === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Setting up MFA...</p>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Setting up MFA...</p>
         </div>
       </div>
     );
@@ -97,7 +97,7 @@ export default function MFAEnrollmentPage() {
 
   if (step === 'backup') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <div className="w-full max-w-lg">
           <BackupCodesDisplay codes={backupCodes} onComplete={handleComplete} />
         </div>
@@ -106,7 +106,7 @@ export default function MFAEnrollmentPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-center text-2xl font-bold">
@@ -126,7 +126,7 @@ export default function MFAEnrollmentPage() {
 
           <div className="space-y-4">
             <div className="text-center">
-              <p className="mb-4 text-sm text-gray-600">
+              <p className="mb-4 text-sm text-muted-foreground">
                 Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
               </p>
 
@@ -147,14 +147,14 @@ export default function MFAEnrollmentPage() {
               </button>
 
               {showSecret && (
-                <div className="mt-2 break-all rounded bg-gray-100 p-3 font-mono text-sm">
+                <div className="mt-2 break-all rounded bg-muted p-3 font-mono text-sm">
                   {secret}
                 </div>
               )}
             </div>
 
             <div className="border-t pt-4">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-foreground/80">
                 Enter the 6-digit code from your authenticator app
               </label>
               <Input

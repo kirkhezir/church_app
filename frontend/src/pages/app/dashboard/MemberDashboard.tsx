@@ -2,18 +2,22 @@
  * Member Dashboard Page (T097)
  *
  * Main dashboard view for authenticated members showing:
+ * - Welcome banner with greeting
+ * - Quick stats (events, announcements, RSVPs) in shadcn Cards
  * - Profile summary widget
- * - Upcoming events widget
- * - Recent announcements widget
- * - Quick stats
+ * - Upcoming events + announcements widgets
+ *
+ * Design System: design-system/pages/dashboard.md
  */
 
 import { useState, useEffect } from 'react';
+import { Calendar, Bell, CheckCircle } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import apiClient from '@/services/api/apiClient';
 
@@ -79,37 +83,44 @@ export default function MemberDashboard() {
   if (loading) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Welcome header skeleton */}
-          <div className="rounded-lg bg-white p-6 shadow dark:bg-slate-800">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="mt-2 h-4 w-80" />
-          </div>
+          <Card>
+            <CardContent className="p-6">
+              <Skeleton className="h-8 w-64" />
+              <Skeleton className="mt-2 h-4 w-80" />
+            </CardContent>
+          </Card>
           {/* Stats skeleton */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-lg bg-white px-4 py-5 shadow dark:bg-slate-800 sm:p-6"
-              >
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="mt-2 h-8 w-12" />
-              </div>
+              <Card key={i}>
+                <CardHeader className="pb-2">
+                  <Skeleton className="h-4 w-24" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-8 w-12" />
+                </CardContent>
+              </Card>
             ))}
           </div>
           {/* Widgets skeleton */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="rounded-lg bg-white p-6 shadow dark:bg-slate-800">
-              <Skeleton className="mx-auto h-20 w-20 rounded-full" />
-              <Skeleton className="mx-auto mt-4 h-5 w-32" />
-              <Skeleton className="mx-auto mt-2 h-4 w-24" />
-            </div>
+            <Card>
+              <CardContent className="p-6">
+                <Skeleton className="mx-auto h-20 w-20 rounded-full" />
+                <Skeleton className="mx-auto mt-4 h-5 w-32" />
+                <Skeleton className="mx-auto mt-2 h-4 w-24" />
+              </CardContent>
+            </Card>
             <div className="space-y-4 lg:col-span-2">
-              <div className="space-y-3 rounded-lg bg-white p-6 shadow dark:bg-slate-800">
-                <Skeleton className="h-5 w-40" />
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-              </div>
+              <Card>
+                <CardContent className="space-y-3 p-6">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-16 w-full" />
+                  <Skeleton className="h-16 w-full" />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -134,37 +145,56 @@ export default function MemberDashboard() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
       {/* Welcome Header */}
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Welcome back, {dashboard.profile.firstName}!
-        </h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Here&apos;s what&apos;s happening in your church community
-        </p>
-      </div>
+      <Card className="border-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg dark:from-blue-700 dark:to-blue-900">
+        <CardContent className="p-6">
+          <h1 className="text-3xl font-bold">Welcome back, {dashboard.profile.firstName}!</h1>
+          <p className="mt-1 text-sm text-blue-100">
+            Here&apos;s what&apos;s happening in your church community
+          </p>
+        </CardContent>
+      </Card>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <div className="truncate text-sm font-medium text-gray-500">Upcoming Events</div>
-          <div className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-            {dashboard.stats.upcomingEventsCount}
-          </div>
-        </div>
+        <Card className="transition-shadow duration-200 hover:shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Upcoming Events
+            </CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold tracking-tight">
+              {dashboard.stats.upcomingEventsCount}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <div className="truncate text-sm font-medium text-gray-500">Unread Announcements</div>
-          <div className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-            {dashboard.stats.unreadAnnouncementsCount}
-          </div>
-        </div>
+        <Card className="transition-shadow duration-200 hover:shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Unread Announcements
+            </CardTitle>
+            <Bell className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold tracking-tight">
+              {dashboard.stats.unreadAnnouncementsCount}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <div className="truncate text-sm font-medium text-gray-500">My RSVPs</div>
-          <div className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-            {dashboard.stats.myRsvpCount}
-          </div>
-        </div>
+        <Card className="transition-shadow duration-200 hover:shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-semibold tracking-tight">
+              {dashboard.stats.myRsvpCount}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Dashboard Widgets */}

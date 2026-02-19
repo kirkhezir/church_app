@@ -72,7 +72,7 @@ export default function NotificationSettingsPage() {
       <SidebarLayout breadcrumbs={[{ label: 'Notifications' }]}>
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
-            <p className="text-center text-gray-600">Loading preferences...</p>
+            <p className="text-center text-muted-foreground">Loading preferences...</p>
           </CardContent>
         </Card>
       </SidebarLayout>
@@ -115,7 +115,7 @@ export default function NotificationSettingsPage() {
                     >
                       Enable Email Notifications
                     </Label>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Receive email notifications for announcements, events, and messages
                     </p>
                   </div>
@@ -139,8 +139,8 @@ export default function NotificationSettingsPage() {
                   </ul>
                 </div>
 
-                <div className="rounded-lg bg-gray-100 p-4">
-                  <p className="text-sm text-gray-600">
+                <div className="rounded-lg bg-muted p-4">
+                  <p className="text-sm text-muted-foreground">
                     <strong>Note:</strong> Critical security notifications (password resets, account
                     changes) will always be sent regardless of this setting.
                   </p>
@@ -149,11 +149,11 @@ export default function NotificationSettingsPage() {
 
               {/* Future Enhancement Section */}
               <div className="space-y-4 rounded-lg border border-dashed p-4">
-                <h3 className="text-lg font-semibold text-gray-400">Coming Soon</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="text-lg font-semibold text-muted-foreground">Coming Soon</h3>
+                <p className="text-sm text-muted-foreground">
                   Additional notification preferences will be available in future updates:
                 </p>
-                <ul className="space-y-1 text-sm text-gray-500">
+                <ul className="space-y-1 text-sm text-muted-foreground">
                   <li>• Separate controls for different notification types</li>
                   <li>• SMS/text message notifications</li>
                   <li>• Notification frequency preferences</li>

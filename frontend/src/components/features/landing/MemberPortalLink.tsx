@@ -57,7 +57,7 @@ export function MemberPortalLink({ variant = 'floating' }: MemberPortalLinkProps
           </div>
         </div>
         <Link to="/login">
-          <Button size="lg" className="gap-2 bg-white text-gray-900 hover:bg-blue-50">
+          <Button size="lg" className="gap-2 bg-white text-foreground hover:bg-blue-50">
             <LogIn className="h-5 w-5" />
             Login to Dashboard
             <ArrowRight className="h-4 w-4" />

@@ -183,7 +183,7 @@ export function VisitPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         {/* Service Times */}
         <section className="mb-12">
-          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-slate-900">
+          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-foreground">
             <Clock className="h-6 w-6 text-blue-600" />
             {language === 'th' ? 'เวลานมัสการ' : 'Service Times'}
           </h2>
@@ -191,9 +191,9 @@ export function VisitPage() {
             {services.map((service, index) => (
               <Card key={index} className="border-l-4 border-l-blue-600">
                 <CardContent className="p-5">
-                  <h3 className="text-lg font-semibold text-slate-900">{service.name}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{service.name}</h3>
                   <p className="mb-2 text-xl font-bold text-blue-600">{service.time}</p>
-                  <p className="text-sm text-slate-600">{service.description}</p>
+                  <p className="text-sm text-muted-foreground">{service.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -202,7 +202,7 @@ export function VisitPage() {
 
         {/* What to Know */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">What to Know Before You Come</h2>
+          <h2 className="mb-6 text-2xl font-bold text-foreground">What to Know Before You Come</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {visitInfoSections.map((section, index) => (
               <Card key={index} className="h-full">
@@ -211,11 +211,11 @@ export function VisitPage() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                       <section.icon className="h-5 w-5 text-blue-600" />
                     </div>
-                    <h3 className="font-semibold text-slate-900">{section.title}</h3>
+                    <h3 className="font-semibold text-foreground">{section.title}</h3>
                   </div>
                   <ul className="space-y-2">
                     {section.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
+                      <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
                         <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
                         {item}
                       </li>
@@ -231,7 +231,7 @@ export function VisitPage() {
         <section className="mb-12">
           {/* Map - Full width at top */}
           <Card className="mb-6 overflow-hidden">
-            <div className="aspect-[21/9] bg-slate-200">
+            <div className="aspect-[21/9] bg-muted">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3855.800285887927!2d100.40142999999999!3d14.8924418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e1f18a81a744c7%3A0x867c5a12e90f0d17!2sSingburi%20Seventh%20Day%20Adventist%20(SDA)%20Center!5e0!3m2!1sen!2sth!4v1762180423839!5m2!1sen!2sth"
                 width="100%"
@@ -248,8 +248,8 @@ export function VisitPage() {
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-blue-600" />
                   <div>
-                    <p className="font-medium text-slate-900">Sing Buri Adventist Center</p>
-                    <p className="text-sm text-slate-600">Bang Phutsa, Sing Buri 16000, Thailand</p>
+                    <p className="font-medium text-foreground">Sing Buri Adventist Center</p>
+                    <p className="text-sm text-muted-foreground">Bang Phutsa, Sing Buri 16000, Thailand</p>
                   </div>
                 </div>
                 <Button
@@ -277,10 +277,10 @@ export function VisitPage() {
                   <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm">
                     <MessageSquare className="h-7 w-7 text-emerald-600" />
                   </div>
-                  <h3 className="mb-2 text-2xl font-bold text-slate-900">
+                  <h3 className="mb-2 text-2xl font-bold text-foreground">
                     {language === 'th' ? 'มีคำถาม?' : 'Have Questions?'}
                   </h3>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     {language === 'th'
                       ? 'เราพร้อมช่วยเหลือคุณ! ดูข้อมูลติดต่อทั้งหมดรวมถึงโทรศัพท์ อีเมล LINE และที่อยู่ของเรา'
                       : "We're here to help! Find all our contact details including phone, email, LINE, and address."}
@@ -289,13 +289,13 @@ export function VisitPage() {
 
                 {/* Quick Contact Features */}
                 <div className="my-6 space-y-3">
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Phone className="h-4 w-4 text-emerald-600" />
                     <span>
                       {language === 'th' ? 'โทรศัพท์พร้อมรับสาย' : 'Phone support available'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <MessageSquare className="h-4 w-4 text-emerald-600" />
                     <span>{language === 'th' ? 'ติดต่อทาง LINE' : 'Contact via LINE'}</span>
                   </div>
@@ -343,7 +343,7 @@ export function VisitPage() {
             {/* Contact Form */}
             <Card>
               <CardContent className="p-6">
-                <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-slate-900">
+                <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
                   <Send className="h-5 w-5" />
                   {language === 'th' ? 'ส่งข้อความถึงเรา' : 'Send Us a Message'}
                 </h3>

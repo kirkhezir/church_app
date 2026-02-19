@@ -104,11 +104,11 @@ function AnimatedCounter({ stat, isVisible }: { stat: Stat; isVisible: boolean }
       >
         <stat.icon className="h-10 w-10" />
       </div>
-      <div className="mb-2 text-5xl font-bold text-gray-900 md:text-6xl">
+      <div className="mb-2 text-5xl font-bold text-foreground md:text-6xl">
         {count}
         {stat.suffix}
       </div>
-      <div className="text-lg text-gray-600">{stat.label}</div>
+      <div className="text-lg text-muted-foreground">{stat.label}</div>
     </div>
   );
 }

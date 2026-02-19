@@ -117,21 +117,21 @@ export function FAQSection() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-8 text-center">
-          <h2 id="faq-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="faq-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-slate-600">Common questions about visiting our church</p>
+          <p className="text-lg text-muted-foreground">Common questions about visiting our church</p>
         </div>
 
         {/* Search Box */}
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             placeholder="Search questions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-border bg-muted py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
             aria-label="Search frequently asked questions"
           />
         </div>
@@ -143,20 +143,20 @@ export function FAQSection() {
               <AccordionItem
                 key={item.id}
                 value={item.id}
-                className="rounded-lg border border-slate-200 bg-white px-4 transition-colors data-[state=open]:bg-slate-50 sm:px-5"
+                className="rounded-lg border border-border bg-white px-4 transition-colors data-[state=open]:bg-muted sm:px-5"
               >
-                <AccordionTrigger className="py-4 text-left font-medium text-slate-900 hover:no-underline sm:text-lg">
+                <AccordionTrigger className="py-4 text-left font-medium text-foreground hover:no-underline sm:text-lg">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 leading-relaxed text-slate-600">
+                <AccordionContent className="pb-4 leading-relaxed text-muted-foreground">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         ) : (
-          <div className="rounded-lg bg-slate-50 p-8 text-center">
-            <p className="text-slate-600">No questions found matching "{searchQuery}"</p>
+          <div className="rounded-lg bg-muted p-8 text-center">
+            <p className="text-muted-foreground">No questions found matching "{searchQuery}"</p>
             <Button
               variant="ghost"
               size="sm"

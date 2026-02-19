@@ -39,10 +39,10 @@ export function AboutSection() {
       <div className="mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
+          <h2 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
             Welcome to Our Church Family
           </h2>
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
+          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-muted-foreground">
             The Sing Buri Adventist Center is a community of faith dedicated to sharing the love of
             Christ. We gather every Sabbath (Saturday) to worship, learn, and grow together.
           </p>
@@ -76,8 +76,8 @@ export function AboutSection() {
                 >
                   <value.icon className="h-8 w-8" />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-gray-900">{value.title}</h3>
-                <p className="leading-relaxed text-gray-600">{value.description}</p>
+                <h3 className="mb-3 text-xl font-bold text-foreground">{value.title}</h3>
+                <p className="leading-relaxed text-muted-foreground">{value.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -85,7 +85,7 @@ export function AboutSection() {
 
         {/* Simple CTA */}
         <div className="mt-16 text-center">
-          <p className="mb-4 text-lg text-gray-600">
+          <p className="mb-4 text-lg text-muted-foreground">
             Whether you're seeking spiritual growth or simply a place to belong —
           </p>
           <p className="text-2xl font-bold text-blue-600">You're welcome here.</p>

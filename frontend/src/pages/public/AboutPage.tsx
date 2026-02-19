@@ -251,10 +251,10 @@ export function AboutPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <h2 className="mb-6 text-3xl font-bold text-slate-900">
+              <h2 className="mb-6 text-3xl font-bold text-foreground">
                 {language === 'th' ? 'เรื่องราวของเรา' : 'Our Story'}
               </h2>
-              <div className="space-y-4 text-slate-600">
+              <div className="space-y-4 text-muted-foreground">
                 <p>
                   Sing Buri Adventist Center was established in 2015 with a small group of believers
                   committed to sharing the everlasting gospel in central Thailand.
@@ -309,10 +309,10 @@ export function AboutPage() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-slate-900">
+            <h2 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'หลักความเชื่อหลัก' : 'What We Believe'}
             </h2>
-            <p className="mx-auto max-w-2xl text-slate-600">
+            <p className="mx-auto max-w-2xl text-muted-foreground">
               As Seventh-day Adventists, our beliefs are centered on Jesus Christ and His Word.
             </p>
           </div>
@@ -323,8 +323,8 @@ export function AboutPage() {
                   <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
                     <belief.icon className="h-7 w-7 text-blue-600" />
                   </div>
-                  <h3 className="mb-2 font-semibold text-slate-900">{belief.title}</h3>
-                  <p className="text-sm text-slate-600">{belief.description}</p>
+                  <h3 className="mb-2 font-semibold text-foreground">{belief.title}</h3>
+                  <p className="text-sm text-muted-foreground">{belief.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -336,7 +336,7 @@ export function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-slate-900">
+            <h2 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'ศิษยาภิบาลของเรา' : 'Our Pastor'}
             </h2>
           </div>
@@ -354,18 +354,18 @@ export function AboutPage() {
               </div>
               <CardContent className="p-8 md:col-span-2">
                 <Quote className="mb-4 h-8 w-8 text-blue-200" />
-                <p className="mb-6 text-lg italic text-slate-600">{PASTOR.bio}</p>
+                <p className="mb-6 text-lg italic text-muted-foreground">{PASTOR.bio}</p>
                 <div className="space-y-3">
                   <a
                     href={`mailto:${PASTOR.email}`}
-                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600"
+                    className="flex items-center gap-3 text-muted-foreground hover:text-primary"
                   >
                     <Mail className="h-5 w-5" />
                     {PASTOR.email}
                   </a>
                   <a
                     href={`tel:${PASTOR.phone}`}
-                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600"
+                    className="flex items-center gap-3 text-muted-foreground hover:text-primary"
                   >
                     <Phone className="h-5 w-5" />
                     {PASTOR.phone}
@@ -381,10 +381,10 @@ export function AboutPage() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-slate-900">
+            <h2 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'ผู้ปกครอง' : 'Church Elders'}
             </h2>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Our elders provide spiritual leadership and guidance to the congregation.
             </p>
           </div>
@@ -402,8 +402,8 @@ export function AboutPage() {
                       <Award className="h-3.5 w-3.5" />
                     </div>
                   </div>
-                  <h3 className="font-semibold text-slate-900">{elder.name}</h3>
-                  <p className="text-sm text-slate-500">{elder.nameThai}</p>
+                  <h3 className="font-semibold text-foreground">{elder.name}</h3>
+                  <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
                   <p className="mt-1 text-sm font-medium text-blue-600">{elder.title}</p>
                 </CardContent>
               </Card>
@@ -416,10 +416,10 @@ export function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-slate-900">
+            <h2 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'เจ้าหน้าที่โบสถ์' : 'Church Officers'}
             </h2>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Our dedicated officers serve the church in various capacities.
             </p>
           </div>
@@ -438,10 +438,10 @@ export function AboutPage() {
                         <DeptIcon className={`h-4.5 w-4.5 ${dept.accent}`} />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-900">
+                        <h3 className="font-semibold text-foreground">
                           {language === 'th' ? dept.departmentThai : dept.department}
                         </h3>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                           {dept.members.length} {dept.members.length === 1 ? 'member' : 'members'}
                         </p>
                       </div>
@@ -457,8 +457,8 @@ export function AboutPage() {
                           className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100"
                         />
                         <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-slate-900">{officer.name}</p>
-                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                          <p className="truncate font-medium text-foreground">{officer.name}</p>
+                          <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground">
                             {officer.nameThai}
                           </p>
                           <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
@@ -492,10 +492,10 @@ export function AboutPage() {
       {/* CTA Section */}
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <h2 className="mb-4 text-3xl font-bold text-slate-900">
+          <h2 className="mb-4 text-3xl font-bold text-foreground">
             {language === 'th' ? 'มาร่วมเป็นส่วนหนึ่งกับเรา' : 'Join Our Family'}
           </h2>
-          <p className="mb-8 text-lg text-slate-600">
+          <p className="mb-8 text-lg text-muted-foreground">
             {language === 'th'
               ? 'ไม่ว่าคุณจะอยู่ที่ไหนในการเดินทางแห่งศรัทธา เรายินดีต้อนรับคุณ'
               : "Wherever you are on your faith journey, there's a place for you here."}

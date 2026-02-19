@@ -154,7 +154,7 @@ export function LatestSermonSection() {
             <h2 id="sermons-heading" className="mb-2 text-3xl font-bold text-white sm:text-4xl">
               Latest Message
             </h2>
-            <p className="text-slate-400">Missed a Sabbath? Catch up on our recent sermons.</p>
+            <p className="text-muted-foreground">Missed a Sabbath? Catch up on our recent sermons.</p>
           </div>
           <Link to="/sermons">
             <Button
@@ -192,7 +192,7 @@ export function LatestSermonSection() {
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-700 to-slate-900">
-                        <BookOpen className="h-20 w-20 text-slate-600" />
+                        <BookOpen className="h-20 w-20 text-muted-foreground" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/40" />
@@ -201,7 +201,7 @@ export function LatestSermonSection() {
                       className="absolute inset-0 flex items-center justify-center"
                       aria-label={`Play ${latestSermon.title}`}
                     >
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-lg transition-transform hover:scale-110">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform hover:scale-110">
                         <Play className="ml-1 h-8 w-8" />
                       </div>
                     </button>
@@ -220,7 +220,7 @@ export function LatestSermonSection() {
                   {latestSermon.title}
                 </h3>
 
-                <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-slate-400">
+                <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <User className="h-4 w-4" />
                     {latestSermon.speaker}
@@ -277,7 +277,7 @@ export function LatestSermonSection() {
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center">
-                          <BookOpen className="h-6 w-6 text-slate-500" />
+                          <BookOpen className="h-6 w-6 text-muted-foreground" />
                         </div>
                       )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
@@ -290,7 +290,7 @@ export function LatestSermonSection() {
                       <h4 className="mb-1 line-clamp-2 text-sm font-medium text-white">
                         {sermon.title}
                       </h4>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-muted-foreground">
                         {sermon.speaker} • {formatDate(sermon.date)}
                       </p>
                       {sermon.scripture && (
@@ -303,7 +303,7 @@ export function LatestSermonSection() {
             ))}
 
             {/* View All Link */}
-            <button className="group flex w-full items-center justify-center gap-2 rounded-lg border border-slate-700 py-3 text-sm font-medium text-slate-400 transition-colors hover:border-slate-600 hover:text-white">
+            <button className="group flex w-full items-center justify-center gap-2 rounded-lg border border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-slate-600 hover:text-white">
               View All Messages
               <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </button>

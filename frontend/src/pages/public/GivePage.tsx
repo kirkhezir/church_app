@@ -210,7 +210,7 @@ export function GivePage() {
               {/* Step 1: Select Category */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-slate-900">
+                  <h2 className="mb-4 text-lg font-bold text-foreground">
                     {language === 'th' ? '1. เลือกประเภทการถวาย' : '1. Select Giving Category'}
                   </h2>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -223,18 +223,18 @@ export function GivePage() {
                           className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                             selectedCategory === option.id
                               ? 'border-amber-500 bg-amber-50'
-                              : 'border-slate-200 hover:border-slate-300'
+                              : 'border-border hover:border-border'
                           }`}
                         >
                           <div className="flex items-start gap-3">
                             <Icon
-                              className={`h-5 w-5 ${selectedCategory === option.id ? 'text-amber-600' : 'text-slate-400'}`}
+                              className={`h-5 w-5 ${selectedCategory === option.id ? 'text-amber-600' : 'text-muted-foreground'}`}
                             />
                             <div>
-                              <p className="font-medium text-slate-900">
+                              <p className="font-medium text-foreground">
                                 {language === 'th' ? option.nameThai : option.name}
                               </p>
-                              <p className="text-sm text-slate-500">
+                              <p className="text-sm text-muted-foreground">
                                 {language === 'th' ? option.descriptionThai : option.description}
                               </p>
                             </div>
@@ -249,7 +249,7 @@ export function GivePage() {
               {/* Step 2: Enter Amount */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-slate-900">
+                  <h2 className="mb-4 text-lg font-bold text-foreground">
                     {language === 'th' ? '2. จำนวนเงิน' : '2. Enter Amount'}
                   </h2>
                   <div className="mb-4 flex flex-wrap gap-2">
@@ -260,7 +260,7 @@ export function GivePage() {
                         className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 ${
                           amount === preset.toString()
                             ? 'bg-amber-600 text-white'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            : 'bg-muted text-foreground/80 hover:bg-muted'
                         }`}
                       >
                         ฿{preset.toLocaleString()}
@@ -268,7 +268,7 @@ export function GivePage() {
                     ))}
                   </div>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg text-slate-500">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
                       ฿
                     </span>
                     <input
@@ -280,7 +280,7 @@ export function GivePage() {
                       className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus:outline-none focus:ring-2 ${
                         amountError
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                          : 'border-slate-200 focus:border-amber-500 focus:ring-amber-200'
+                          : 'border-border focus:border-amber-500 focus:ring-amber-200'
                       }`}
                       aria-invalid={!!amountError}
                       aria-describedby={amountError ? 'amount-error' : undefined}
@@ -297,11 +297,11 @@ export function GivePage() {
                       id="recurring"
                       checked={isRecurring}
                       onChange={(e) => setIsRecurring(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                      className="h-4 w-4 rounded border-border text-amber-600 focus:ring-amber-500"
                     />
                     <label
                       htmlFor="recurring"
-                      className="flex items-center gap-1 text-sm text-slate-600"
+                      className="flex items-center gap-1 text-sm text-muted-foreground"
                     >
                       <Repeat className="h-4 w-4" />
                       {language === 'th'
@@ -315,7 +315,7 @@ export function GivePage() {
               {/* Step 3: Payment Method */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-slate-900">
+                  <h2 className="mb-4 text-lg font-bold text-foreground">
                     {language === 'th' ? '3. วิธีการชำระเงิน' : '3. Payment Method'}
                   </h2>
                   <div className="grid gap-3 sm:grid-cols-3">
@@ -324,7 +324,7 @@ export function GivePage() {
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'bank'
                           ? 'border-amber-500 bg-amber-50'
-                          : 'border-slate-200 hover:border-slate-300'
+                          : 'border-border hover:border-border'
                       }`}
                     >
                       <Building2 className="mx-auto mb-2 h-8 w-8 text-amber-600" />
@@ -337,7 +337,7 @@ export function GivePage() {
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'promptpay'
                           ? 'border-amber-500 bg-amber-50'
-                          : 'border-slate-200 hover:border-slate-300'
+                          : 'border-border hover:border-border'
                       }`}
                     >
                       <QrCode className="mx-auto mb-2 h-8 w-8 text-amber-600" />
@@ -348,7 +348,7 @@ export function GivePage() {
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'cash'
                           ? 'border-amber-500 bg-amber-50'
-                          : 'border-slate-200 hover:border-slate-300'
+                          : 'border-border hover:border-border'
                       }`}
                     >
                       <Banknote className="mx-auto mb-2 h-8 w-8 text-amber-600" />
@@ -359,24 +359,24 @@ export function GivePage() {
                   {/* Payment Details */}
                   {paymentMethod === 'bank' && (
                     <div className="mt-6 space-y-4">
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-muted-foreground">
                         {language === 'th'
                           ? 'โอนเงินไปยังบัญชีใดบัญชีหนึ่งด้านล่าง:'
                           : 'Transfer to any of the accounts below:'}
                       </p>
                       {bankAccounts.map((account, i) => (
-                        <div key={i} className="rounded-lg bg-slate-50 p-4">
+                        <div key={i} className="rounded-lg bg-muted p-4">
                           <div className="flex items-center gap-2">
                             <Building2 className="h-6 w-6 text-blue-600" />
                             <span className="font-medium">
                               {language === 'th' ? account.bankThai : account.bank}
                             </span>
                           </div>
-                          <p className="mt-2 text-sm text-slate-600">
+                          <p className="mt-2 text-sm text-muted-foreground">
                             {language === 'th' ? 'ชื่อบัญชี:' : 'Account Name:'}{' '}
                             {account.accountName}
                           </p>
-                          <p className="font-mono text-lg font-bold text-slate-900">
+                          <p className="font-mono text-lg font-bold text-foreground">
                             {account.accountNumber}
                           </p>
                         </div>
@@ -386,17 +386,17 @@ export function GivePage() {
 
                   {paymentMethod === 'promptpay' && (
                     <div className="mt-6 text-center">
-                      <div className="mx-auto flex h-48 w-48 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-4">
+                      <div className="mx-auto flex h-48 w-48 items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted p-4">
                         <div className="text-center">
-                          <QrCode className="mx-auto h-16 w-16 text-slate-400" />
-                          <p className="mt-2 text-xs text-slate-500">
+                          <QrCode className="mx-auto h-16 w-16 text-muted-foreground" />
+                          <p className="mt-2 text-xs text-muted-foreground">
                             {language === 'th'
                               ? 'QR Code จะแสดงที่นี่'
                               : 'QR Code will appear here'}
                           </p>
                         </div>
                       </div>
-                      <p className="mt-4 text-sm text-slate-600">
+                      <p className="mt-4 text-sm text-muted-foreground">
                         {language === 'th'
                           ? 'สแกน QR Code เพื่อชำระเงินผ่าน PromptPay'
                           : 'Scan QR Code to pay via PromptPay'}
@@ -408,8 +408,8 @@ export function GivePage() {
                   )}
 
                   {paymentMethod === 'cash' && (
-                    <div className="mt-6 rounded-lg bg-slate-50 p-4">
-                      <p className="text-slate-600">
+                    <div className="mt-6 rounded-lg bg-muted p-4">
+                      <p className="text-muted-foreground">
                         {language === 'th' ? (
                           <>
                             คุณสามารถถวายเงินสดได้ที่โบสถ์ในวันสะบาโต ใส่ซองถวายและระบุประเภทการถวาย
@@ -468,17 +468,17 @@ export function GivePage() {
               {/* Other Ways to Give */}
               <Card>
                 <CardContent className="p-5">
-                  <h3 className="mb-4 font-bold text-slate-900">
+                  <h3 className="mb-4 font-bold text-foreground">
                     {language === 'th' ? 'วิธีอื่นในการถวาย' : 'Other Ways to Give'}
                   </h3>
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-start gap-2">
                       <Smartphone className="mt-0.5 h-4 w-4 text-amber-600" />
                       <div>
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-foreground">
                           {language === 'th' ? 'แอปธนาคาร' : 'Mobile Banking'}
                         </p>
-                        <p className="text-slate-500">
+                        <p className="text-muted-foreground">
                           {language === 'th'
                             ? 'โอนผ่านแอปธนาคารของคุณ'
                             : 'Transfer via your bank app'}
@@ -488,8 +488,8 @@ export function GivePage() {
                     <li className="flex items-start gap-2">
                       <CreditCard className="mt-0.5 h-4 w-4 text-amber-600" />
                       <div>
-                        <p className="font-medium text-slate-900">AdventistGiving.org</p>
-                        <p className="text-slate-500">
+                        <p className="font-medium text-foreground">AdventistGiving.org</p>
+                        <p className="text-muted-foreground">
                           {language === 'th'
                             ? 'ถวายออนไลน์ผ่านเว็บไซต์ทั่วโลก'
                             : 'Give online through worldwide portal'}
@@ -503,27 +503,27 @@ export function GivePage() {
               {/* FAQ */}
               <Card>
                 <CardContent className="p-5">
-                  <h3 className="mb-4 font-bold text-slate-900">
+                  <h3 className="mb-4 font-bold text-foreground">
                     {language === 'th' ? 'คำถามที่พบบ่อย' : 'FAQ'}
                   </h3>
                   <div className="space-y-2">
                     {faqs.map((faq) => (
-                      <div key={faq.id} className="border-b border-slate-100 last:border-0">
+                      <div key={faq.id} className="border-b border-border last:border-0">
                         <button
                           onClick={() => setShowFAQ(showFAQ === faq.id ? null : faq.id)}
                           className="flex w-full cursor-pointer items-center justify-between py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400"
                         >
-                          <span className="font-medium text-slate-900">
+                          <span className="font-medium text-foreground">
                             {language === 'th' ? faq.qThai : faq.q}
                           </span>
                           {showFAQ === faq.id ? (
-                            <ChevronUp className="h-4 w-4 text-slate-400" />
+                            <ChevronUp className="h-4 w-4 text-muted-foreground" />
                           ) : (
-                            <ChevronDown className="h-4 w-4 text-slate-400" />
+                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
                           )}
                         </button>
                         {showFAQ === faq.id && (
-                          <p className="pb-3 text-sm text-slate-600">
+                          <p className="pb-3 text-sm text-muted-foreground">
                             {language === 'th' ? faq.aThai : faq.a}
                           </p>
                         )}
@@ -538,22 +538,22 @@ export function GivePage() {
           /* Success State */
           <div className="mx-auto max-w-lg py-12 text-center" role="status" aria-live="polite">
             <CheckCircle className="mx-auto mb-6 h-20 w-20 text-green-500" />
-            <h2 className="mb-4 text-3xl font-bold text-slate-900">
+            <h2 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'ขอบคุณสำหรับการถวาย!' : 'Thank You for Your Gift!'}
             </h2>
-            <p className="mb-8 text-lg text-slate-600">
+            <p className="mb-8 text-lg text-muted-foreground">
               {language === 'th'
                 ? 'การถวายของคุณจะช่วยสนับสนุนงานของพระเจ้าในชุมชนของเราและทั่วโลก'
                 : "Your generosity helps support God's work in our community and around the world."}
             </p>
             <Card className="mb-8 text-left">
               <CardContent className="p-6">
-                <h3 className="mb-4 font-bold text-slate-900">
+                <h3 className="mb-4 font-bold text-foreground">
                   {language === 'th' ? 'สรุปการถวาย' : 'Giving Summary'}
                 </h3>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">
+                    <dt className="text-muted-foreground">
                       {language === 'th' ? 'ประเภท:' : 'Category:'}
                     </dt>
                     <dd className="font-medium">
@@ -565,11 +565,13 @@ export function GivePage() {
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">{language === 'th' ? 'จำนวน:' : 'Amount:'}</dt>
+                    <dt className="text-muted-foreground">
+                      {language === 'th' ? 'จำนวน:' : 'Amount:'}
+                    </dt>
                     <dd className="font-medium">฿{(parseInt(amount) || 0).toLocaleString()}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">
+                    <dt className="text-muted-foreground">
                       {language === 'th' ? 'วิธีชำระเงิน:' : 'Method:'}
                     </dt>
                     <dd className="font-medium">
@@ -586,7 +588,7 @@ export function GivePage() {
                   </div>
                   {isRecurring && (
                     <div className="flex justify-between">
-                      <dt className="text-slate-500">
+                      <dt className="text-muted-foreground">
                         {language === 'th' ? 'ความถี่:' : 'Frequency:'}
                       </dt>
                       <dd className="font-medium text-amber-600">

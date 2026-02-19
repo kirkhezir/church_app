@@ -97,12 +97,12 @@ export function PhotoGallerySection() {
   };
 
   return (
-    <section className="bg-slate-50 py-16 sm:py-24">
+    <section className="bg-muted py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">Our Church Family</h2>
-          <p className="text-lg text-slate-600">Moments of faith, fellowship, and community</p>
+          <h2 className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">Our Church Family</h2>
+          <p className="text-lg text-muted-foreground">Moments of faith, fellowship, and community</p>
         </div>
 
         {/* Photo Grid - Masonry-style */}
@@ -111,7 +111,7 @@ export function PhotoGallerySection() {
             <button
               key={image.id}
               onClick={() => openLightbox(image, index)}
-              className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-muted transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               <img
                 src={image.src}
@@ -182,11 +182,11 @@ export function PhotoGallerySection() {
                     className="max-h-[70vh] w-auto rounded-lg object-contain"
                   />
                   <div className="mt-4 text-center text-white">
-                    <p className="text-xs uppercase tracking-wide text-slate-400">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       {selectedImage.category}
                     </p>
                     <p className="mt-1 text-lg font-medium">{selectedImage.caption}</p>
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-2 text-sm text-muted-foreground">
                       {selectedIndex + 1} / {galleryImages.length}
                     </p>
                   </div>

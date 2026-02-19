@@ -86,7 +86,7 @@ export default function MFAVerificationPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-center text-2xl font-bold">
@@ -107,12 +107,12 @@ export default function MFAVerificationPage() {
               </Alert>
             )}
 
-            <div className="mb-4 text-center text-sm text-gray-600">
-              Signing in as <span className="font-medium">{state.email}</span>
+            <div className="mb-4 text-center text-sm text-muted-foreground">
+              Signing in as <span className="font-medium text-foreground">{state.email}</span>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-foreground">
                 {useBackupCode ? 'Backup Code' : 'Verification Code'}
               </label>
               <Input
@@ -140,7 +140,7 @@ export default function MFAVerificationPage() {
                   setCode('');
                   setError('');
                 }}
-                className="text-sm text-blue-600 underline hover:text-blue-800"
+                className="cursor-pointer text-sm text-primary underline transition-colors duration-200 hover:text-primary/80"
               >
                 {useBackupCode ? 'Use authenticator code instead' : 'Use backup code'}
               </button>

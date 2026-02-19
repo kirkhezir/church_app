@@ -150,12 +150,12 @@ export function PrayerPage() {
               <CardContent className="p-6">
                 {!isSubmitted ? (
                   <>
-                    <h2 className="mb-6 text-xl font-bold text-slate-900">
+                    <h2 className="mb-6 text-xl font-bold text-foreground">
                       {language === 'th' ? 'ส่งคำอธิษฐาน' : 'Submit a Prayer Request'}
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">
+                        <label className="mb-1 block text-sm font-medium text-foreground/80">
                           {language === 'th' ? 'ชื่อของคุณ (ไม่จำเป็น)' : 'Your Name (optional)'}
                         </label>
                         <input
@@ -163,29 +163,29 @@ export function PrayerPage() {
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder={language === 'th' ? 'ไม่ระบุตัวตน' : 'Anonymous'}
-                          className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">
+                        <label className="mb-1 block text-sm font-medium text-foreground/80">
                           {language === 'th' ? 'อีเมล (ไม่จำเป็น)' : 'Email (optional)'}
                         </label>
                         <input
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">
+                        <label className="mb-1 block text-sm font-medium text-foreground/80">
                           {language === 'th' ? 'หมวดหมู่' : 'Category'} *
                         </label>
                         <select
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                           required
-                          className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
                         >
                           <option value="">
                             {language === 'th' ? 'เลือกหมวดหมู่' : 'Select a category'}
@@ -198,7 +198,7 @@ export function PrayerPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">
+                        <label className="mb-1 block text-sm font-medium text-foreground/80">
                           {language === 'th' ? 'คำอธิษฐานของคุณ' : 'Your Prayer Request'} *
                         </label>
                         <textarea
@@ -211,11 +211,11 @@ export function PrayerPage() {
                               ? 'แบ่งปันคำอธิษฐานของคุณ...'
                               : 'Share your prayer request...'
                           }
-                          className="w-full rounded-lg border border-slate-200 px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
                         />
                       </div>
 
-                      <div className="space-y-3 rounded-lg bg-slate-50 p-4">
+                      <div className="space-y-3 rounded-lg bg-muted p-4">
                         <div className="flex items-start gap-3">
                           <input
                             type="checkbox"
@@ -224,9 +224,9 @@ export function PrayerPage() {
                             onChange={(e) =>
                               setFormData({ ...formData, isPublic: e.target.checked })
                             }
-                            className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                            className="mt-1 h-4 w-4 rounded border-border text-purple-600 focus:ring-purple-500"
                           />
-                          <label htmlFor="isPublic" className="text-sm text-slate-600">
+                          <label htmlFor="isPublic" className="text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 font-medium">
                               {formData.isPublic ? (
                                 <Eye className="h-4 w-4" />
@@ -237,7 +237,7 @@ export function PrayerPage() {
                                 ? 'แชร์บนกำแพงอธิษฐาน (ไม่ระบุตัวตน)'
                                 : 'Share on Prayer Wall (anonymous)'}
                             </span>
-                            <span className="text-slate-500">
+                            <span className="text-muted-foreground">
                               {language === 'th'
                                 ? 'ให้ผู้อื่นอธิษฐานเผื่อคุณ'
                                 : 'Allow others to pray for you'}
@@ -252,15 +252,15 @@ export function PrayerPage() {
                             onChange={(e) =>
                               setFormData({ ...formData, wantsPastorContact: e.target.checked })
                             }
-                            className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                            className="mt-1 h-4 w-4 rounded border-border text-purple-600 focus:ring-purple-500"
                           />
-                          <label htmlFor="pastorContact" className="text-sm text-slate-600">
+                          <label htmlFor="pastorContact" className="text-sm text-muted-foreground">
                             <span className="font-medium">
                               {language === 'th'
                                 ? 'ต้องการให้ศิษยาภิบาลติดต่อ'
                                 : 'Request pastor contact'}
                             </span>
-                            <span className="block text-slate-500">
+                            <span className="block text-muted-foreground">
                               {language === 'th'
                                 ? 'ศิษยาภิบาลจะติดต่อคุณเป็นการส่วนตัว'
                                 : 'The pastor will reach out to you personally'}
@@ -269,7 +269,7 @@ export function PrayerPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Lock className="h-4 w-4" />
                         {language === 'th'
                           ? 'คำอธิษฐานของคุณจะถูกเก็บเป็นความลับ'
@@ -285,10 +285,10 @@ export function PrayerPage() {
                 ) : (
                   <div className="py-12 text-center" role="status" aria-live="polite">
                     <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
-                    <h3 className="mb-2 text-xl font-bold text-slate-900">
+                    <h3 className="mb-2 text-xl font-bold text-foreground">
                       {language === 'th' ? 'ส่งคำอธิษฐานสำเร็จ!' : 'Prayer Request Submitted!'}
                     </h3>
-                    <p className="mb-6 text-slate-600">
+                    <p className="mb-6 text-muted-foreground">
                       {language === 'th'
                         ? 'ทีมอธิษฐานของเราจะอธิษฐานเผื่อคุณ พระเจ้าทรงได้ยินคำอธิษฐานของคุณ'
                         : 'Our prayer team will be praying for you. God hears your prayers.'}
@@ -318,11 +318,11 @@ export function PrayerPage() {
 
           {/* Prayer Wall */}
           <div>
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-slate-900">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-foreground">
               <Users className="h-5 w-5 text-purple-600" />
               {language === 'th' ? 'กำแพงอธิษฐาน' : 'Prayer Wall'}
             </h2>
-            <p className="mb-4 text-sm text-slate-600">
+            <p className="mb-4 text-sm text-muted-foreground">
               {language === 'th'
                 ? 'อธิษฐานเผื่อพี่น้องในชุมชนของเรา คลิก "ฉันอธิษฐานแล้ว" เพื่อแสดงการสนับสนุน'
                 : 'Pray for our community members. Click "I Prayed" to show your support.'}
@@ -335,7 +335,7 @@ export function PrayerPage() {
                       <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
                         {language === 'th' ? prayer.categoryThai : prayer.category}
                       </span>
-                      <span className="flex items-center gap-1 text-xs text-slate-500">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         {new Date(prayer.date).toLocaleDateString(
                           language === 'th' ? 'th-TH' : 'en-US',
@@ -343,9 +343,9 @@ export function PrayerPage() {
                         )}
                       </span>
                     </div>
-                    <p className="mb-3 text-slate-700">{prayer.request}</p>
+                    <p className="mb-3 text-foreground/80">{prayer.request}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-500">— {prayer.name}</span>
+                      <span className="text-sm text-muted-foreground">— {prayer.name}</span>
                       <Button
                         size="sm"
                         variant={prayedFor.includes(prayer.id) ? 'default' : 'outline'}

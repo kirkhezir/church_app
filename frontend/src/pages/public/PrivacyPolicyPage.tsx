@@ -20,20 +20,20 @@ export function PrivacyPolicyPage() {
   return (
     <PublicLayout>
       {/* Header */}
-      <section className="bg-gradient-to-r from-slate-800 to-slate-900 pb-12 pt-24 text-white">
+      <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 pb-12 pt-24 text-white">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-slate-300 hover:text-white">
+          <Link to="/" className="inline-flex items-center gap-2 text-blue-200 hover:text-white">
             <ArrowLeft className="h-4 w-4" />
             {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
           </Link>
           <h1 className="mt-4 text-3xl font-bold">
             {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
           </h1>
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-blue-200">
             {language === 'th' ? 'อัปเดตล่าสุด: 28 มกราคม 2026' : `Last updated: ${lastUpdated}`}
           </p>
           {language === 'th' && (
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-sm text-muted-foreground">
               หมายเหตุ: นโยบายความเป็นส่วนตัวฉบับนี้จัดทำเป็นภาษาอังกฤษ
             </p>
           )}
@@ -44,58 +44,58 @@ export function PrivacyPolicyPage() {
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
         <div className="prose prose-slate max-w-none">
           {/* Introduction */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                 <Shield className="h-5 w-5 text-blue-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Introduction</h2>
+              <h2 className="text-xl font-semibold text-foreground">Introduction</h2>
             </div>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Sing Buri Adventist Center (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
               respects your privacy and is committed to protecting your personal information. This
               Privacy Policy explains how we collect, use, disclose, and safeguard your information
               when you visit our website and use our services.
             </p>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 text-muted-foreground">
               Please read this privacy policy carefully. If you do not agree with the terms of this
               privacy policy, please do not access the site.
             </p>
           </section>
 
           {/* Information We Collect */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
                 <Eye className="h-5 w-5 text-emerald-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Information We Collect</h2>
+              <h2 className="text-xl font-semibold text-foreground">Information We Collect</h2>
             </div>
 
-            <h3 className="mt-6 text-lg font-medium text-slate-900">Personal Information</h3>
-            <p className="mt-2 text-slate-600">
+            <h3 className="mt-6 text-lg font-medium text-foreground">Personal Information</h3>
+            <p className="mt-2 text-muted-foreground">
               We may collect personal information that you voluntarily provide when you:
             </p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>Register as a member</li>
               <li>Subscribe to our newsletter</li>
               <li>Submit a contact form or prayer request</li>
               <li>RSVP for events</li>
               <li>Make a donation</li>
             </ul>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-muted-foreground">
               This information may include your name, email address, phone number, mailing address,
               and any other information you choose to provide.
             </p>
 
-            <h3 className="mt-6 text-lg font-medium text-slate-900">
+            <h3 className="mt-6 text-lg font-medium text-foreground">
               Automatically Collected Information
             </h3>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-muted-foreground">
               When you visit our website, we may automatically collect certain information about
               your device and usage patterns, including:
             </p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>IP address and browser type</li>
               <li>Device information</li>
               <li>Pages viewed and time spent</li>
@@ -104,15 +104,15 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* How We Use Your Information */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
                 <FileText className="h-5 w-5 text-purple-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">How We Use Your Information</h2>
+              <h2 className="text-xl font-semibold text-foreground">How We Use Your Information</h2>
             </div>
-            <p className="text-slate-600">We use the information we collect to:</p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <p className="text-muted-foreground">We use the information we collect to:</p>
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>Provide, maintain, and improve our services</li>
               <li>Send you church announcements and newsletters (with your consent)</li>
               <li>Process event registrations and donations</li>
@@ -123,25 +123,25 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Data Protection */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
                 <Lock className="h-5 w-5 text-amber-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Data Protection</h2>
+              <h2 className="text-xl font-semibold text-foreground">Data Protection</h2>
             </div>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               We implement appropriate technical and organizational security measures to protect
               your personal information against unauthorized access, alteration, disclosure, or
               destruction. These measures include:
             </p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>Encryption of data in transit (HTTPS)</li>
               <li>Secure storage with access controls</li>
               <li>Regular security assessments</li>
               <li>Staff training on data protection</li>
             </ul>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 text-muted-foreground">
               However, no method of transmission over the Internet or electronic storage is 100%
               secure. While we strive to protect your information, we cannot guarantee absolute
               security.
@@ -149,36 +149,36 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Your Rights */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100">
                 <Trash2 className="h-5 w-5 text-rose-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Your Rights</h2>
+              <h2 className="text-xl font-semibold text-foreground">Your Rights</h2>
             </div>
-            <p className="text-slate-600">You have the right to:</p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <p className="text-muted-foreground">You have the right to:</p>
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>Access your personal information</li>
               <li>Correct inaccurate data</li>
               <li>Request deletion of your data</li>
               <li>Opt out of marketing communications</li>
               <li>Withdraw consent at any time</li>
             </ul>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 text-muted-foreground">
               To exercise any of these rights, please contact us using the information below.
             </p>
           </section>
 
           {/* Third-Party Services */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">Third-Party Services</h2>
-            <p className="text-slate-600">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">Third-Party Services</h2>
+            <p className="text-muted-foreground">
               Our website may contain links to third-party websites or services. We are not
               responsible for the privacy practices of these external sites. We encourage you to
               review the privacy policies of any third-party sites you visit.
             </p>
-            <p className="mt-4 text-slate-600">We may use third-party services for:</p>
-            <ul className="mt-3 list-disc pl-6 text-slate-600">
+            <p className="mt-4 text-muted-foreground">We may use third-party services for:</p>
+            <ul className="mt-3 list-disc pl-6 text-muted-foreground">
               <li>Payment processing (for donations)</li>
               <li>Email communications</li>
               <li>Website analytics</li>
@@ -187,23 +187,23 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Cookies */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">Cookies and Tracking</h2>
-            <p className="text-slate-600">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">Cookies and Tracking</h2>
+            <p className="text-muted-foreground">
               We use cookies and similar technologies to enhance your experience on our website.
               Cookies are small files stored on your device that help us remember your preferences
               and understand how you use our site.
             </p>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 text-muted-foreground">
               You can control cookies through your browser settings. Note that disabling cookies may
               affect some functionality of our website.
             </p>
           </section>
 
           {/* Children's Privacy */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">Children&apos;s Privacy</h2>
-            <p className="text-slate-600">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">Children&apos;s Privacy</h2>
+            <p className="text-muted-foreground">
               Our website is not intended for children under 13 years of age. We do not knowingly
               collect personal information from children under 13. If you believe we have collected
               information from a child under 13, please contact us immediately.
@@ -211,9 +211,9 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Changes to Policy */}
-          <section className="mb-12 rounded-xl bg-white p-6 shadow-sm dark:bg-slate-900 sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">Changes to This Policy</h2>
-            <p className="text-slate-600">
+          <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">Changes to This Policy</h2>
+            <p className="text-muted-foreground">
               We may update this Privacy Policy from time to time. We will notify you of any changes
               by posting the new Privacy Policy on this page and updating the &quot;Last
               updated&quot; date. We encourage you to review this Privacy Policy periodically.
@@ -226,13 +226,13 @@ export function PrivacyPolicyPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                 <Mail className="h-5 w-5 text-blue-600" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900">Contact Us</h2>
+              <h2 className="text-xl font-semibold text-foreground">Contact Us</h2>
             </div>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               If you have questions about this Privacy Policy or our data practices, please contact
               us:
             </p>
-            <div className="mt-4 space-y-2 text-slate-700">
+            <div className="mt-4 space-y-2 text-foreground/80">
               <p>
                 <strong>Sing Buri Adventist Center</strong>
               </p>

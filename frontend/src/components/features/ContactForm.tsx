@@ -133,22 +133,22 @@ export function ContactForm() {
   };
 
   return (
-    <section id="contact" className="bg-slate-50 py-16 sm:py-24" aria-labelledby="contact-heading">
+    <section id="contact" className="bg-muted py-16 sm:py-24" aria-labelledby="contact-heading">
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         <div className="mb-10 text-center">
-          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
             Get In Touch
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll
             respond as soon as possible.
           </p>
         </div>
 
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50 px-6 py-4">
-            <h3 className="text-lg font-semibold text-slate-900">Send Us A Message</h3>
-            <p className="text-sm text-slate-600">
+          <div className="border-b border-border bg-muted px-6 py-4">
+            <h3 className="text-lg font-semibold text-foreground">Send Us A Message</h3>
+            <p className="text-sm text-muted-foreground">
               Fill out the form below and we&apos;ll get back to you shortly
             </p>
           </div>
@@ -193,7 +193,7 @@ export function ContactForm() {
             <form onSubmit={handleSubmit} noValidate role="form" aria-label="Contact form">
               {/* Name Field */}
               <div className="mb-4">
-                <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground/80">
                   Name *
                 </label>
                 <input
@@ -202,8 +202,8 @@ export function ContactForm() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-primary ${
+                    errors.name ? 'border-red-500' : 'border-border'
                   }`}
                   aria-invalid={errors.name ? 'true' : 'false'}
                   aria-describedby={errors.name ? 'name-error' : undefined}
@@ -217,7 +217,7 @@ export function ContactForm() {
 
               {/* Email Field */}
               <div className="mb-4">
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground/80">
                   Email *
                 </label>
                 <input
@@ -226,8 +226,8 @@ export function ContactForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-primary ${
+                    errors.email ? 'border-red-500' : 'border-border'
                   }`}
                   aria-invalid={errors.email ? 'true' : 'false'}
                   aria-describedby={errors.email ? 'email-error' : undefined}
@@ -241,7 +241,7 @@ export function ContactForm() {
 
               {/* Subject Field */}
               <div className="mb-4">
-                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-gray-700">
+                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-foreground/80">
                   Subject *
                 </label>
                 <input
@@ -250,8 +250,8 @@ export function ContactForm() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 ${
-                    errors.subject ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-primary ${
+                    errors.subject ? 'border-red-500' : 'border-border'
                   }`}
                   aria-invalid={errors.subject ? 'true' : 'false'}
                   aria-describedby={errors.subject ? 'subject-error' : undefined}
@@ -265,7 +265,7 @@ export function ContactForm() {
 
               {/* Message Field */}
               <div className="mb-6">
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-gray-700">
+                <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground/80">
                   Message * (minimum 20 characters)
                 </label>
                 <textarea
@@ -274,8 +274,8 @@ export function ContactForm() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 ${
-                    errors.message ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full rounded-md border px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-primary ${
+                    errors.message ? 'border-red-500' : 'border-border'
                   }`}
                   aria-invalid={errors.message ? 'true' : 'false'}
                   aria-describedby={errors.message ? 'message-error' : undefined}

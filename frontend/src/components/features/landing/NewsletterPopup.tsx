@@ -166,7 +166,7 @@ export function NewsletterPopup({
               <div className="space-y-2">
                 <Label htmlFor="newsletter-email">Email Address</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="newsletter-email"
                     type="email"
@@ -212,7 +212,7 @@ export function NewsletterPopup({
                 )}
               </Button>
 
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-center text-xs text-muted-foreground">
                 We respect your privacy. Unsubscribe at any time.
               </p>
             </form>
@@ -220,7 +220,7 @@ export function NewsletterPopup({
             <div className="mt-4 text-center">
               <button
                 onClick={handleDismiss}
-                className="text-sm text-gray-500 underline hover:text-gray-700"
+                className="text-sm text-muted-foreground underline hover:text-foreground/80"
               >
                 No thanks, maybe later
               </button>

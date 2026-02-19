@@ -91,7 +91,7 @@ export default function PasswordResetPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Password Reset Successful</CardTitle>
@@ -104,7 +104,7 @@ export default function PasswordResetPage() {
                 password.
               </AlertDescription>
             </Alert>
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm text-muted-foreground">
               You can now log in with your new password.
             </p>
             <Button asChild className="w-full">
@@ -118,7 +118,7 @@ export default function PasswordResetPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Invalid Reset Link</CardTitle>
@@ -138,7 +138,7 @@ export default function PasswordResetPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Reset Your Password</CardTitle>
@@ -164,7 +164,7 @@ export default function PasswordResetPage() {
                 required
                 disabled={loading}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Password must be at least 8 characters with uppercase, lowercase, number, and
                 special character.
               </p>

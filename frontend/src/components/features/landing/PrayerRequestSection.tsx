@@ -121,14 +121,14 @@ export function PrayerRequestSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-rose-100 p-3">
             <Heart className="h-8 w-8 text-rose-600" />
           </div>
-          <h2 id="prayer-heading" className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="prayer-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
             Share Your Prayer Request
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             &ldquo;Cast all your anxiety on Him because He cares for you.&rdquo;{' '}
-            <span className="text-slate-500">— 1 Peter 5:7</span>
+            <span className="text-muted-foreground">— 1 Peter 5:7</span>
           </p>
-          <p className="mt-4 text-slate-600">
+          <p className="mt-4 text-muted-foreground">
             Our prayer team is here to support you. Every request is treated with care and
             confidentiality.
           </p>
@@ -136,7 +136,7 @@ export function PrayerRequestSection() {
 
         {/* Prayer Request Form */}
         <Card className="mx-auto max-w-2xl shadow-lg">
-          <CardHeader className="border-b bg-slate-50">
+          <CardHeader className="border-b bg-muted">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Shield className="h-5 w-5 text-blue-600" />
               We Pray for Every Request
@@ -152,13 +152,13 @@ export function PrayerRequestSection() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
                   <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-slate-900">Thank You for Sharing</h3>
-                <p className="text-slate-600">
+                <h3 className="mb-2 text-xl font-semibold text-foreground">Thank You for Sharing</h3>
+                <p className="text-muted-foreground">
                   Your prayer request has been received. Our prayer team will be lifting you up in
                   prayer.
                 </p>
                 {formData.wantFollowUp && (
-                  <p className="mt-2 text-sm text-slate-500">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     We&apos;ll follow up with you at the email provided.
                   </p>
                 )}
@@ -174,7 +174,7 @@ export function PrayerRequestSection() {
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="How should we address you?"
-                    className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {formErrors.name && <p className="text-sm text-rose-600">{formErrors.name}</p>}
                 </div>
@@ -183,7 +183,7 @@ export function PrayerRequestSection() {
                 <div className="space-y-2">
                   <Label htmlFor="prayer-email">
                     Email Address{' '}
-                    <span className="text-slate-400">
+                    <span className="text-muted-foreground">
                       {formData.wantFollowUp ? '(required)' : '(optional)'}
                     </span>
                   </Label>
@@ -193,7 +193,7 @@ export function PrayerRequestSection() {
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {formErrors.email && <p className="text-sm text-rose-600">{formErrors.email}</p>}
                 </div>
@@ -207,7 +207,7 @@ export function PrayerRequestSection() {
                     onChange={(e) => handleInputChange('request', e.target.value)}
                     placeholder="Share what's on your heart..."
                     rows={5}
-                    className="w-full resize-none rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full resize-none rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {formErrors.request && (
                     <p className="text-sm text-rose-600">{formErrors.request}</p>
@@ -215,20 +215,20 @@ export function PrayerRequestSection() {
                 </div>
 
                 {/* Privacy Options */}
-                <div className="space-y-3 rounded-lg bg-slate-50 p-4">
+                <div className="space-y-3 rounded-lg bg-muted p-4">
                   <div className="flex items-start gap-3">
                     <input
                       id="is-private"
                       type="checkbox"
                       checked={formData.isPrivate}
                       onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      className="mt-1 h-4 w-4 rounded border-border text-blue-600 focus:ring-primary"
                     />
                     <label htmlFor="is-private" className="flex cursor-pointer items-start gap-2">
-                      <Lock className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
+                      <Lock className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
                       <div>
-                        <span className="font-medium text-slate-700">Keep Private</span>
-                        <p className="text-sm text-slate-500">
+                        <span className="font-medium text-foreground/80">Keep Private</span>
+                        <p className="text-sm text-muted-foreground">
                           Only the pastoral team will see this request
                         </p>
                       </div>
@@ -241,16 +241,16 @@ export function PrayerRequestSection() {
                       type="checkbox"
                       checked={formData.wantFollowUp}
                       onChange={(e) => handleInputChange('wantFollowUp', e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      className="mt-1 h-4 w-4 rounded border-border text-blue-600 focus:ring-primary"
                     />
                     <label
                       htmlFor="want-follow-up"
                       className="flex cursor-pointer items-start gap-2"
                     >
-                      <Users className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
+                      <Users className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
                       <div>
-                        <span className="font-medium text-slate-700">Request Follow-up</span>
-                        <p className="text-sm text-slate-500">
+                        <span className="font-medium text-foreground/80">Request Follow-up</span>
+                        <p className="text-sm text-muted-foreground">
                           Someone from our team will reach out to you
                         </p>
                       </div>
@@ -259,7 +259,7 @@ export function PrayerRequestSection() {
                 </div>
 
                 {/* Privacy Indicator */}
-                <div className="flex items-center gap-2 text-sm text-slate-500">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Shield className="h-4 w-4" />
                   <span>
                     {formData.isPrivate
@@ -293,7 +293,7 @@ export function PrayerRequestSection() {
                   )}
                 </Button>
 
-                <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-center text-xs text-muted-foreground">
                   By submitting, you agree that your request may be shared with our prayer team
                   (unless marked private).
                 </p>

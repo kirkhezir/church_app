@@ -127,7 +127,7 @@ export function SermonDetailPage() {
           {/* Back Link */}
           <Link
             to="/sermons"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary dark:text-muted-foreground dark:hover:text-blue-400"
           >
             <ArrowLeft className="h-4 w-4" />
             {language === 'th' ? 'กลับไปคำเทศนา' : 'Back to Sermons'}
@@ -138,11 +138,11 @@ export function SermonDetailPage() {
             {/* Left: Main Content */}
             <div className="lg:col-span-2">
               {/* Title & Meta */}
-              <h1 className="mb-4 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
+              <h1 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl">
                 {sermon.title}
               </h1>
 
-              <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+              <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <User className="h-4 w-4" />
                   {sermon.speaker}
@@ -157,12 +157,12 @@ export function SermonDetailPage() {
                 </span>
                 <button
                   onClick={handleShare}
-                  className="relative flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
+                  className="relative flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
                 >
                   <Share2 className="h-4 w-4" />
                   {language === 'th' ? 'แชร์' : 'Share'}
                   {shareMessage && (
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-slate-200 dark:text-slate-800">
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-muted dark:text-slate-800">
                       {shareMessage}
                     </span>
                   )}
@@ -193,7 +193,7 @@ export function SermonDetailPage() {
                     return (
                       <div key={i}>
                         {heading && !heading.startsWith('- ') && (
-                          <p className="mb-2 font-semibold text-slate-900 dark:text-slate-100">
+                          <p className="mb-2 font-semibold text-foreground">
                             {heading.replace(/^- /, '')}
                           </p>
                         )}
@@ -201,7 +201,7 @@ export function SermonDetailPage() {
                           {items.map((item, j) => (
                             <li
                               key={j}
-                              className="flex items-start gap-2 text-slate-600 dark:text-slate-400"
+                              className="flex items-start gap-2 text-muted-foreground"
                             >
                               <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
                               {item.slice(2)}
@@ -212,7 +212,7 @@ export function SermonDetailPage() {
                     );
                   }
                   return (
-                    <p key={i} className="leading-relaxed text-slate-600 dark:text-slate-400">
+                    <p key={i} className="leading-relaxed text-muted-foreground">
                       {paragraph}
                     </p>
                   );
@@ -221,8 +221,8 @@ export function SermonDetailPage() {
 
               {/* Audio Player */}
               {sermon.audioUrl && (
-                <div className="mt-8 rounded-lg border border-slate-200 p-4 dark:border-slate-700">
-                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+                <div className="mt-8 rounded-lg border border-border p-4 dark:border-border">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground/80">
                     <Headphones className="h-4 w-4" />
                     {language === 'th' ? 'ฟังเสียง' : 'Listen to Audio'}
                   </div>
@@ -255,27 +255,27 @@ export function SermonDetailPage() {
               {sermon.series && (
                 <Card>
                   <CardContent className="p-5">
-                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                       {language === 'th' ? 'ชุดเทศนา' : 'Sermon Series'}
                     </h2>
-                    <p className="mb-4 text-lg font-bold text-slate-900 dark:text-slate-100">
+                    <p className="mb-4 text-lg font-bold text-foreground">
                       {sermon.series}
                     </p>
                     {seriesSermons.length > 0 && (
                       <div className="space-y-3">
-                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        <p className="text-xs font-medium text-muted-foreground">
                           {language === 'th' ? 'เทศนาอื่นในชุดนี้' : 'More from this series'}
                         </p>
                         {seriesSermons.map((s) => (
                           <Link
                             key={s.id}
                             to={`/sermons/${s.id}`}
-                            className="group block rounded-lg border border-slate-100 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:border-slate-800 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
+                            className="group block rounded-lg border border-border p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
                           >
-                            <p className="text-sm font-medium text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                            <p className="text-sm font-medium text-foreground group-hover:text-primary">
                               {s.title}
                             </p>
-                            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {s.speaker} &middot; {formatDate(s.date)}
                             </p>
                           </Link>
@@ -289,32 +289,32 @@ export function SermonDetailPage() {
               {/* Speaker Card */}
               <Card>
                 <CardContent className="p-5">
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {language === 'th' ? 'ผู้เทศนา' : 'Speaker'}
                   </h2>
                   <div className="mb-4 flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
                       <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">
+                    <p className="font-semibold text-foreground">
                       {sermon.speaker}
                     </p>
                   </div>
                   {speakerSermons.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      <p className="text-xs font-medium text-muted-foreground">
                         {language === 'th' ? 'เทศนาอื่นโดยผู้นี้' : 'More from this speaker'}
                       </p>
                       {speakerSermons.map((s) => (
                         <Link
                           key={s.id}
                           to={`/sermons/${s.id}`}
-                          className="group block rounded-lg border border-slate-100 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:border-slate-800 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
+                          className="group block rounded-lg border border-border p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
                         >
-                          <p className="text-sm font-medium text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                          <p className="text-sm font-medium text-foreground group-hover:text-primary">
                             {s.title}
                           </p>
-                          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             {formatDate(s.date)} &middot; {s.duration}
                           </p>
                         </Link>
@@ -327,7 +327,7 @@ export function SermonDetailPage() {
               {/* Quick Actions */}
               <Card>
                 <CardContent className="space-y-3 p-5">
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {language === 'th' ? 'ลิงก์ด่วน' : 'Quick Links'}
                   </h2>
                   <Link to="/sermons">

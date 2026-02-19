@@ -309,8 +309,8 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
       {/* Search Modal */}
       <div className="relative z-10 mx-4 w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-2xl">
         {/* Search Input */}
-        <div className="flex items-center border-b border-slate-200 px-4">
-          <Search className="h-5 w-5 text-slate-400" />
+        <div className="flex items-center border-b border-border px-4">
+          <Search className="h-5 w-5 text-muted-foreground" />
           <input
             ref={inputRef}
             type="text"
@@ -323,28 +323,28 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
             }
             className="flex-1 px-4 py-4 text-lg focus:outline-none"
           />
-          <button onClick={onClose} className="rounded-lg p-2 transition-colors hover:bg-slate-100">
-            <X className="h-5 w-5 text-slate-400" />
+          <button onClick={onClose} className="rounded-lg p-2 transition-colors hover:bg-muted">
+            <X className="h-5 w-5 text-muted-foreground" />
           </button>
         </div>
 
         {/* Results */}
         <div className="max-h-[60vh] overflow-y-auto">
           {query.trim() === '' ? (
-            <div className="p-8 text-center text-slate-500">
-              <Search className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+            <div className="p-8 text-center text-muted-foreground">
+              <Search className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <p>{language === 'th' ? 'พิมพ์เพื่อค้นหา...' : 'Start typing to search...'}</p>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {language === 'th' ? 'กด ESC เพื่อปิด' : 'Press ESC to close'}
               </p>
             </div>
           ) : results.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-muted-foreground">
               <p>
                 {language === 'th' ? 'ไม่พบผลลัพธ์สำหรับ' : 'No results found for'} &quot;{query}
                 &quot;
               </p>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {language === 'th' ? 'ลองค้นหาคำอื่น' : 'Try a different search term'}
               </p>
             </div>
@@ -356,7 +356,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                   <button
                     key={result.id}
                     onClick={() => handleSelect(result)}
-                    className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-slate-50"
+                    className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-muted"
                   >
                     <div
                       className={`rounded-lg p-2 ${
@@ -368,16 +368,16 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                               ? 'bg-blue-100 text-blue-600'
                               : result.type === 'blog'
                                 ? 'bg-amber-100 text-amber-600'
-                                : 'bg-slate-100 text-slate-600'
+                                : 'bg-muted text-muted-foreground'
                       }`}
                     >
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-slate-900">
+                      <p className="truncate font-medium text-foreground">
                         {language === 'th' ? result.titleThai : result.title}
                       </p>
-                      <p className="truncate text-sm text-slate-500">
+                      <p className="truncate text-sm text-muted-foreground">
                         {language === 'th' ? result.descriptionThai : result.description}
                         {result.date && (
                           <span className="ml-2">
@@ -390,10 +390,10 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                         )}
                       </p>
                     </div>
-                    <span className="shrink-0 text-xs text-slate-400">
+                    <span className="shrink-0 text-xs text-muted-foreground">
                       {getTypeLabel(result.type, language)}
                     </span>
-                    <ArrowRight className="h-4 w-4 text-slate-300" />
+                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
                   </button>
                 );
               })}
@@ -402,7 +402,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-500">
+        <div className="flex items-center justify-between border-t border-border bg-muted px-4 py-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <kbd className="rounded border bg-white px-1.5 py-0.5 text-[10px]">↵</kbd>

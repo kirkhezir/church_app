@@ -56,14 +56,14 @@ export function MinistriesPage() {
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <h2 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-blue-600">
+                    <h2 className="mb-2 text-lg font-bold text-foreground group-hover:text-primary">
                       {language === 'th' ? ministry.nameThai : ministry.name}
                     </h2>
-                    <p className="mb-3 text-sm text-slate-600">
+                    <p className="mb-3 text-sm text-muted-foreground">
                       {language === 'th' ? ministry.descriptionThai : ministry.description}
                     </p>
                     {ministry.meetingTime && (
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-foreground">
                         <span className="font-medium">
                           {language === 'th' ? 'เวลาประชุม:' : 'Meeting:'}{' '}
                         </span>

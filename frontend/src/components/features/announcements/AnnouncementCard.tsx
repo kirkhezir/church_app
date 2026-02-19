@@ -57,7 +57,7 @@ export function AnnouncementCard({
                 </span>
               )}
               {isArchived && (
-                <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800">
+                <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium text-foreground">
                   Archived
                 </span>
               )}
@@ -68,11 +68,11 @@ export function AnnouncementCard({
       </CardHeader>
 
       <CardContent>
-        <CardDescription className="mb-4 whitespace-pre-wrap text-sm text-gray-700">
+        <CardDescription className="mb-4 whitespace-pre-wrap text-sm text-foreground/80">
           {contentPreview}
         </CardDescription>
 
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <UserIcon className="h-4 w-4" />
             <span>

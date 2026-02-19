@@ -29,7 +29,7 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
           <CardTitle>Recent Announcements</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500">No recent announcements</p>
+          <p className="text-sm text-muted-foreground">No recent announcements</p>
         </CardContent>
       </Card>
     );
@@ -44,9 +44,9 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
       case 'NORMAL':
         return 'bg-blue-100 text-blue-800';
       case 'LOW':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -72,19 +72,19 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
             return (
               <div
                 key={announcement.id}
-                className={`rounded-lg border p-4 transition-colors hover:bg-gray-50 ${
+                className={`rounded-lg border p-4 transition-colors hover:bg-background ${
                   !announcement.isRead ? 'border-blue-300 bg-blue-50/50' : ''
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-medium text-gray-900">{announcement.title}</h3>
+                      <h3 className="font-medium text-foreground">{announcement.title}</h3>
                       {!announcement.isRead && (
                         <span className="flex h-2 w-2 rounded-full bg-blue-600" title="Unread" />
                       )}
                     </div>
-                    <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                       {announcement.content}
                     </p>
                     <div className="mt-2 flex items-center space-x-3">
@@ -95,7 +95,7 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
                       >
                         {announcement.priority}
                       </span>
-                      <span className="text-xs text-gray-500">{publishedDate}</span>
+                      <span className="text-xs text-muted-foreground">{publishedDate}</span>
                     </div>
                   </div>
                 </div>

@@ -130,25 +130,25 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default error UI
       return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="flex min-h-screen items-center justify-center bg-background px-4">
           <div className="max-w-md text-center">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
               <AlertTriangle className="h-10 w-10 text-red-600" />
             </div>
 
-            <h1 className="mb-2 text-2xl font-bold text-gray-900">Something went wrong</h1>
+            <h1 className="mb-2 text-2xl font-bold text-foreground">Something went wrong</h1>
 
-            <p className="mb-6 text-gray-600">
+            <p className="mb-6 text-muted-foreground">
               We&apos;re sorry, but something unexpected happened. Our team has been notified and is
               working to fix the issue.
             </p>
 
             {/* Error details in development */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mb-6 rounded-lg bg-gray-100 p-4 text-left">
+              <div className="mb-6 rounded-lg bg-muted p-4 text-left">
                 <p className="mb-2 font-mono text-sm text-red-600">{this.state.error.message}</p>
                 {this.state.errorInfo && (
-                  <details className="text-xs text-gray-500">
+                  <details className="text-xs text-muted-foreground">
                     <summary className="cursor-pointer">Stack trace</summary>
                     <pre className="mt-2 overflow-auto whitespace-pre-wrap">
                       {this.state.errorInfo.componentStack}
@@ -170,7 +170,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </Button>
             </div>
 
-            <p className="mt-6 text-sm text-gray-500">
+            <p className="mt-6 text-sm text-muted-foreground">
               If this problem persists, please{' '}
               <a href="/contact" className="text-primary underline hover:no-underline">
                 contact support

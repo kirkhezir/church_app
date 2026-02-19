@@ -57,9 +57,9 @@ export function LanguageToggle({
 
   const baseClasses = lightMode
     ? 'text-white hover:bg-white/10'
-    : 'text-slate-600 hover:bg-slate-100';
+    : 'text-muted-foreground hover:bg-muted';
 
-  const dropdownClasses = lightMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200';
+  const dropdownClasses = lightMode ? 'bg-slate-800 border-border' : 'bg-white border-border';
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -91,7 +91,7 @@ export function LanguageToggle({
               key={lang}
               onClick={() => handleLanguageChange(lang)}
               className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors ${
-                lightMode ? 'text-white hover:bg-slate-700' : 'text-slate-700 hover:bg-slate-50'
+                lightMode ? 'text-white hover:bg-slate-700' : 'text-foreground/80 hover:bg-muted'
               } ${language === lang ? 'font-medium' : ''}`}
               role="option"
               aria-selected={language === lang}

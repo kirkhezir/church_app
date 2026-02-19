@@ -133,33 +133,33 @@ export class PageErrorBoundary extends Component<
       }
 
       return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+        <div className="flex min-h-screen items-center justify-center bg-background p-4">
           <div className="text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
             {this.state.isChunkError ? (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-gray-900">Page Update Available</h1>
-                <p className="mb-6 text-gray-600">
+                <h1 className="mb-2 text-2xl font-bold text-foreground">Page Update Available</h1>
+                <p className="mb-6 text-muted-foreground">
                   A new version of the app is available. Please reload to get the latest updates.
                 </p>
               </>
             ) : (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-gray-900">
+                <h1 className="mb-2 text-2xl font-bold text-foreground">
                   Oops! Something went wrong
                 </h1>
-                <p className="mb-6 text-gray-600">
+                <p className="mb-6 text-muted-foreground">
                   We&apos;re sorry, but something unexpected happened. Please try again.
                 </p>
               </>
             )}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mb-6 rounded-lg bg-gray-100 p-4 text-left">
+              <div className="mb-6 rounded-lg bg-muted p-4 text-left">
                 <p className="font-mono text-sm text-red-600">{this.state.error.message}</p>
                 {this.state.errorInfo && (
-                  <pre className="mt-2 overflow-auto text-xs text-gray-500">
+                  <pre className="mt-2 overflow-auto text-xs text-muted-foreground">
                     {this.state.errorInfo.componentStack}
                   </pre>
                 )}

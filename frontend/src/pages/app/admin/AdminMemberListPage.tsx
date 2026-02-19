@@ -87,7 +87,7 @@ export default function AdminMemberListPage() {
       case 'STAFF':
         return 'bg-blue-100 text-blue-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -143,7 +143,7 @@ export default function AdminMemberListPage() {
             {loading ? (
               <TableSkeleton rows={5} columns={6} />
             ) : members.length === 0 ? (
-              <div className="py-8 text-center text-gray-600">No members found</div>
+              <div className="py-8 text-center text-muted-foreground">No members found</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -159,7 +159,7 @@ export default function AdminMemberListPage() {
                   </thead>
                   <tbody>
                     {members.map((member) => (
-                      <tr key={member.id} className="border-b hover:bg-gray-50">
+                      <tr key={member.id} className="border-b hover:bg-background">
                         <td className="px-4 py-3">
                           {member.firstName} {member.lastName}
                         </td>
@@ -178,7 +178,7 @@ export default function AdminMemberListPage() {
                           {member.mfaEnabled ? (
                             <span className="text-green-600">✓ Enabled</span>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-muted-foreground">-</span>
                           )}
                         </td>
                         <td className="px-4 py-3">

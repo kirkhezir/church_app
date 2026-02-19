@@ -253,7 +253,7 @@ export function AdminAnnouncementsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1">
           <h1 className="text-2xl font-bold sm:text-3xl">Manage Announcements</h1>
-          <p className="mt-1 text-sm text-gray-600 sm:mt-2 sm:text-base">
+          <p className="mt-1 text-sm text-muted-foreground sm:mt-2 sm:text-base">
             Create, edit, and manage church announcements
           </p>
         </div>
@@ -330,12 +330,12 @@ export function AdminAnnouncementsPage() {
       {!loading && (
         <>
           {announcements.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center sm:p-12">
-              <BellIcon className="mx-auto mb-3 h-10 w-10 text-gray-400 sm:mb-4 sm:h-12 sm:w-12" />
-              <h3 className="mb-2 text-base font-medium text-gray-900 sm:text-lg">
+            <div className="rounded-lg border border-dashed border-border bg-background p-8 text-center sm:p-12">
+              <BellIcon className="mx-auto mb-3 h-10 w-10 text-muted-foreground sm:mb-4 sm:h-12 sm:w-12" />
+              <h3 className="mb-2 text-base font-medium text-foreground sm:text-lg">
                 No {showArchived ? 'archived ' : ''}announcements
               </h3>
-              <p className="mb-4 text-sm text-gray-600 sm:text-base">
+              <p className="mb-4 text-sm text-muted-foreground sm:text-base">
                 {showArchived
                   ? 'There are no archived announcements.'
                   : 'Get started by creating your first announcement.'}
@@ -353,7 +353,7 @@ export function AdminAnnouncementsPage() {
               <div className="hidden md:block">
                 <div className="overflow-x-auto rounded-lg border bg-white shadow">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-background">
                       <tr>
                         <th className="w-12 px-4 py-3">
                           <Checkbox
@@ -364,29 +364,29 @@ export function AdminAnnouncementsPage() {
                             onCheckedChange={handleSelectAll}
                           />
                         </th>
-                        <th className="min-w-[200px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="min-w-[200px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Title
                         </th>
-                        <th className="w-24 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="w-24 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Priority
                         </th>
-                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Author
                         </th>
-                        <th className="w-28 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="w-28 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Status
                         </th>
-                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Published
                         </th>
-                        <th className="w-40 px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th className="w-40 px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
                       {announcements.map((announcement) => (
-                        <tr key={announcement.id} className="hover:bg-gray-50">
+                        <tr key={announcement.id} className="hover:bg-background">
                           <td className="px-4 py-4">
                             <Checkbox
                               checked={selectedIds.includes(announcement.id)}
@@ -396,7 +396,7 @@ export function AdminAnnouncementsPage() {
                             />
                           </td>
                           <td className="px-4 py-3">
-                            <div className="max-w-[250px] truncate font-medium text-gray-900">
+                            <div className="max-w-[250px] truncate font-medium text-foreground">
                               {announcement.title}
                             </div>
                           </td>
@@ -413,7 +413,7 @@ export function AdminAnnouncementsPage() {
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
                             <div className="truncate">
                               {announcement.author.firstName} {announcement.author.lastName}
                             </div>
@@ -430,7 +430,7 @@ export function AdminAnnouncementsPage() {
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
                             {format(new Date(announcement.publishedAt), 'MMM d, yyyy')}
                           </td>
                           <td className="whitespace-nowrap px-4 py-3 text-right text-sm font-medium">
@@ -547,8 +547,8 @@ export function AdminAnnouncementsPage() {
                   <div key={announcement.id} className="rounded-lg border bg-white p-4 shadow-sm">
                     <div className="mb-3 flex items-start justify-between">
                       <div className="flex-1">
-                        <h3 className="mb-1 font-medium text-gray-900">{announcement.title}</h3>
-                        <p className="text-xs text-gray-500">
+                        <h3 className="mb-1 font-medium text-foreground">{announcement.title}</h3>
+                        <p className="text-xs text-muted-foreground">
                           By {announcement.author.firstName} {announcement.author.lastName}
                         </p>
                       </div>
@@ -564,7 +564,7 @@ export function AdminAnnouncementsPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mb-3 text-xs text-gray-600">
+                    <p className="mb-3 text-xs text-muted-foreground">
                       {format(new Date(announcement.publishedAt), 'MMM d, yyyy')}
                     </p>
                     <div className="flex gap-2">
@@ -609,7 +609,7 @@ export function AdminAnnouncementsPage() {
           {/* Pagination */}
           {pagination.totalPages > 1 && (
             <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-0">
-              <div className="text-xs text-gray-600 sm:text-sm">
+              <div className="text-xs text-muted-foreground sm:text-sm">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} total)
               </div>
               <div className="flex gap-2">

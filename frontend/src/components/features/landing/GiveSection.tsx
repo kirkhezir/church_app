@@ -87,20 +87,20 @@ export function GiveSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-amber-100 p-3">
             <Gift className="h-8 w-8 text-amber-600" />
           </div>
-          <h2 id="give-heading" className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl">
+          <h2 id="give-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
             Support Our Ministry
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             &ldquo;Each of you should give what you have decided in your heart to give, not
             reluctantly or under compulsion, for God loves a cheerful giver.&rdquo;
           </p>
-          <p className="mt-1 text-slate-500">— 2 Corinthians 9:7</p>
+          <p className="mt-1 text-muted-foreground">— 2 Corinthians 9:7</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Giving Options Card */}
           <Card className="shadow-lg">
-            <CardHeader className="border-b bg-slate-50">
+            <CardHeader className="border-b bg-muted">
               <CardTitle className="flex items-center gap-2">
                 <Heart className="h-5 w-5 text-rose-500" />
                 Ways to Give
@@ -118,7 +118,7 @@ export function GiveSection() {
                     className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-all ${
                       selectedOption === option.id
                         ? 'bg-amber-500 text-white shadow-md'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'bg-muted text-muted-foreground hover:bg-muted'
                     }`}
                   >
                     <option.icon className="h-4 w-4" />
@@ -131,12 +131,12 @@ export function GiveSection() {
               {selectedOption === 'promptpay' && (
                 <div className="space-y-6">
                   {/* QR Code Placeholder */}
-                  <div className="flex flex-col items-center rounded-xl bg-white p-6 shadow-inner">
-                    <div className="mb-4 flex h-48 w-48 items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50">
+                  <div className="flex flex-col items-center rounded-xl bg-card p-6 shadow-inner">
+                    <div className="mb-4 flex h-48 w-48 items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted">
                       <div className="text-center">
-                        <QrCode className="mx-auto h-16 w-16 text-slate-400" />
-                        <p className="mt-2 text-xs text-slate-500">PromptPay QR Code</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <QrCode className="mx-auto h-16 w-16 text-muted-foreground" />
+                        <p className="mt-2 text-xs text-muted-foreground">PromptPay QR Code</p>
+                        <p className="text-xs text-muted-foreground">
                           Scan with banking app
                         </p>
                       </div>
@@ -144,12 +144,12 @@ export function GiveSection() {
 
                     {/* PromptPay ID */}
                     <div className="mt-4 text-center">
-                      <p className="text-sm text-slate-500">PromptPay ID</p>
+                      <p className="text-sm text-muted-foreground">PromptPay ID</p>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="text-xl font-bold text-slate-900">{PROMPTPAY_ID}</span>
+                        <span className="text-xl font-bold text-foreground">{PROMPTPAY_ID}</span>
                         <button
                           onClick={() => copyToClipboard(PROMPTPAY_ID, 'promptpay')}
-                          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-muted-foreground"
                           aria-label="Copy PromptPay ID"
                         >
                           {copiedField === 'promptpay' ? (
@@ -178,26 +178,26 @@ export function GiveSection() {
               {/* Bank Transfer Option */}
               {selectedOption === 'bank' && (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-slate-200 bg-white p-4">
+                  <div className="rounded-xl border border-border bg-white p-4">
                     <div className="mb-4 flex items-center gap-3">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                         <Building2 className="h-6 w-6 text-blue-600" />
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-900">{BANK_DETAILS.bankName}</p>
-                        <p className="text-sm text-slate-500">{BANK_DETAILS.branch}</p>
+                        <p className="font-semibold text-foreground">{BANK_DETAILS.bankName}</p>
+                        <p className="text-sm text-muted-foreground">{BANK_DETAILS.branch}</p>
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between rounded-lg bg-slate-50 p-3">
+                      <div className="flex items-center justify-between rounded-lg bg-muted p-3">
                         <div>
-                          <p className="text-xs text-slate-500">Account Name</p>
-                          <p className="font-medium text-slate-900">{BANK_DETAILS.accountName}</p>
+                          <p className="text-xs text-muted-foreground">Account Name</p>
+                          <p className="font-medium text-foreground">{BANK_DETAILS.accountName}</p>
                         </div>
                         <button
                           onClick={() => copyToClipboard(BANK_DETAILS.accountName, 'name')}
-                          className="rounded-lg p-2 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+                          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-muted-foreground"
                           aria-label="Copy account name"
                         >
                           {copiedField === 'name' ? (
@@ -208,10 +208,10 @@ export function GiveSection() {
                         </button>
                       </div>
 
-                      <div className="flex items-center justify-between rounded-lg bg-slate-50 p-3">
+                      <div className="flex items-center justify-between rounded-lg bg-muted p-3">
                         <div>
-                          <p className="text-xs text-slate-500">Account Number</p>
-                          <p className="font-mono text-lg font-bold text-slate-900">
+                          <p className="text-xs text-muted-foreground">Account Number</p>
+                          <p className="font-mono text-lg font-bold text-foreground">
                             {BANK_DETAILS.accountNumber}
                           </p>
                         </div>
@@ -219,7 +219,7 @@ export function GiveSection() {
                           onClick={() =>
                             copyToClipboard(BANK_DETAILS.accountNumber.replace(/-/g, ''), 'account')
                           }
-                          className="rounded-lg p-2 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+                          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-muted-foreground"
                           aria-label="Copy account number"
                         >
                           {copiedField === 'account' ? (
@@ -248,7 +248,7 @@ export function GiveSection() {
           <div className="space-y-6">
             {/* Fund Usage */}
             <Card className="shadow-lg">
-              <CardHeader className="border-b bg-slate-50">
+              <CardHeader className="border-b bg-muted">
                 <CardTitle>How Your Gift is Used</CardTitle>
                 <CardDescription>
                   Transparent stewardship of your generous contributions
@@ -260,10 +260,10 @@ export function GiveSection() {
                   {fundUsage.map((item) => (
                     <div key={item.label}>
                       <div className="mb-1 flex justify-between text-sm">
-                        <span className="font-medium text-slate-700">{item.label}</span>
-                        <span className="text-slate-500">{item.percentage}%</span>
+                        <span className="font-medium text-foreground/80">{item.label}</span>
+                        <span className="text-muted-foreground">{item.percentage}%</span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                      <div className="h-2 overflow-hidden rounded-full bg-muted">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600"
                           style={{ width: `${item.percentage}%` }}
@@ -278,8 +278,8 @@ export function GiveSection() {
             {/* Special Giving */}
             <Card className="border-2 border-amber-200 bg-amber-50">
               <CardContent className="p-6">
-                <h3 className="mb-3 font-semibold text-slate-900">Special Giving Options</h3>
-                <ul className="space-y-2 text-sm text-slate-700">
+                <h3 className="mb-3 font-semibold text-foreground">Special Giving Options</h3>
+                <ul className="space-y-2 text-sm text-foreground/80">
                   <li className="flex items-start gap-2">
                     <Heart className="mt-0.5 h-4 w-4 flex-shrink-0 text-rose-500" />
                     <span>
@@ -299,15 +299,15 @@ export function GiveSection() {
                     </span>
                   </li>
                 </ul>
-                <p className="mt-4 text-xs text-slate-500">
+                <p className="mt-4 text-xs text-muted-foreground">
                   For designated giving, include the fund name in your transfer reference.
                 </p>
               </CardContent>
             </Card>
 
             {/* Questions */}
-            <div className="rounded-lg bg-slate-50 p-4 text-center">
-              <p className="mb-3 text-sm text-slate-600">
+            <div className="rounded-lg bg-muted p-4 text-center">
+              <p className="mb-3 text-sm text-muted-foreground">
                 Questions about giving or need a receipt?
               </p>
               <Button

@@ -133,11 +133,11 @@ export function PlanYourVisitSection() {
           </span>
           <h2
             id="plan-visit-heading"
-            className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl"
+            className="mb-4 text-3xl font-bold text-foreground sm:text-4xl"
           >
             Plan Your Visit
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-muted-foreground">
             We&apos;re excited to meet you! Here&apos;s everything you need to know for a
             comfortable first visit.
           </p>
@@ -152,8 +152,8 @@ export function PlanYourVisitSection() {
                   <Clock className="h-4 w-4 text-blue-600" />
                   <span className="text-lg font-bold text-blue-600">{service.time}</span>
                 </div>
-                <h3 className="font-semibold text-slate-900">{service.name}</h3>
-                <p className="mt-1 text-sm text-slate-500">{service.description}</p>
+                <h3 className="font-semibold text-foreground">{service.name}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{service.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -170,7 +170,7 @@ export function PlanYourVisitSection() {
             >
               <button
                 onClick={() => toggleExpand(item.id)}
-                className="flex w-full items-center justify-between p-4 text-left hover:bg-slate-50"
+                className="flex w-full items-center justify-between p-4 text-left hover:bg-muted"
                 aria-expanded={expandedId === item.id}
                 aria-controls={`content-${item.id}`}
               >
@@ -179,14 +179,14 @@ export function PlanYourVisitSection() {
                     <item.icon className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">{item.title}</h3>
-                    <p className="text-sm text-slate-500">{item.description}</p>
+                    <h3 className="font-semibold text-foreground">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
                   </div>
                 </div>
                 {expandedId === item.id ? (
-                  <ChevronUp className="h-5 w-5 text-slate-400" />
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-slate-400" />
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
                 )}
               </button>
 
@@ -198,12 +198,12 @@ export function PlanYourVisitSection() {
                 }`}
               >
                 {item.details && (
-                  <div className="border-t border-slate-100 bg-slate-50 p-4">
+                  <div className="border-t border-border bg-muted p-4">
                     <ul className="space-y-2">
                       {item.details.map((detail, idx) => (
                         <li key={idx} className="flex items-start gap-3">
                           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" />
-                          <span className="text-slate-700">{detail}</span>
+                          <span className="text-foreground/80">{detail}</span>
                         </li>
                       ))}
                     </ul>

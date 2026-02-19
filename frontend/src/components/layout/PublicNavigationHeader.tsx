@@ -183,7 +183,7 @@ export function PublicNavigationHeader({
     ? isHomePage
       ? 'bg-gradient-to-b from-black/50 to-transparent'
       : 'bg-transparent'
-    : 'border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur-md';
+    : 'border-b border-border bg-background/95 shadow-sm backdrop-blur-md';
 
   /** Should this link render as a <button> instead of a <Link>? */
   const isButtonLink = (link: NavLink) =>
@@ -206,7 +206,7 @@ export function PublicNavigationHeader({
         if (isActive(link.href)) {
           return `${base} ${showTransparent ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`;
         }
-        return `${base} ${showTransparent ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`;
+        return `${base} ${showTransparent ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`;
     }
   };
 
@@ -221,7 +221,7 @@ export function PublicNavigationHeader({
       case 'nav.contact':
         return `${base} text-emerald-600 hover:bg-emerald-50`;
       default:
-        return `${base} ${isActive(link.href) ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-100'}`;
+        return `${base} ${isActive(link.href) ? 'bg-blue-50 text-blue-600' : 'text-foreground/80 hover:bg-muted'}`;
     }
   };
 
@@ -277,7 +277,7 @@ export function PublicNavigationHeader({
                 />
                 <div className="hidden sm:block">
                   <span
-                    className={`text-lg font-bold ${showTransparent ? 'text-white' : 'text-slate-900'}`}
+                    className={`text-lg font-bold ${showTransparent ? 'text-white' : 'text-foreground'}`}
                   >
                     {t('common.churchName')}
                   </span>
@@ -295,7 +295,7 @@ export function PublicNavigationHeader({
                 />
                 <div className="hidden sm:block">
                   <span
-                    className={`text-lg font-bold ${showTransparent ? 'text-white' : 'text-slate-900'}`}
+                    className={`text-lg font-bold ${showTransparent ? 'text-white' : 'text-foreground'}`}
                   >
                     {t('common.churchName')}
                   </span>
@@ -327,7 +327,7 @@ export function PublicNavigationHeader({
                         className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                           showTransparent
                             ? 'text-white/90 hover:bg-white/10 hover:text-white'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                         }`}
                       >
                         {t(link.labelKey)}
@@ -338,7 +338,7 @@ export function PublicNavigationHeader({
                       {openDropdown === link.labelKey && (
                         <div
                           role="menu"
-                          className="absolute left-0 top-full z-50 w-48 rounded-lg border border-slate-200 bg-white py-2 shadow-lg"
+                          className="absolute left-0 top-full z-50 w-48 rounded-lg border border-border bg-white py-2 shadow-lg"
                         >
                           {link.children.map((child) => (
                             <Link
@@ -352,7 +352,7 @@ export function PublicNavigationHeader({
                               className={`block px-4 py-2 text-sm transition-colors ${
                                 isActive(child.href)
                                   ? 'bg-blue-50 text-blue-600'
-                                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                               }`}
                             >
                               {t(child.labelKey)}
@@ -390,7 +390,7 @@ export function PublicNavigationHeader({
                 className={`rounded-lg p-2 transition-colors ${
                   showTransparent
                     ? 'text-white/90 hover:bg-white/10'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    : 'text-muted-foreground hover:bg-muted'
                 }`}
                 aria-label="Search"
               >
@@ -406,7 +406,7 @@ export function PublicNavigationHeader({
                   size="sm"
                   className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
                     showTransparent
-                      ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-blue-600 hover:shadow-white/20'
+                      ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-primary hover:shadow-white/20'
                       : 'border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
                   }`}
                 >
@@ -428,7 +428,7 @@ export function PublicNavigationHeader({
                 className={`rounded-lg p-2 ${
                   showTransparent
                     ? 'text-white hover:bg-white/10'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    : 'text-foreground/80 hover:bg-muted'
                 }`}
                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMobileMenuOpen}
@@ -448,7 +448,7 @@ export function PublicNavigationHeader({
                 aria-hidden="true"
               />
               {/* Panel */}
-              <div className="relative z-50 max-h-[80vh] overflow-y-auto border-b border-slate-200 bg-white p-4 shadow-lg md:hidden">
+              <div className="relative z-50 max-h-[80vh] overflow-y-auto border-b border-border bg-card p-4 shadow-lg md:hidden">
                 <div className="flex flex-col space-y-1">
                   {NAV_LINKS.map((link) =>
                     link.children ? (
@@ -458,7 +458,7 @@ export function PublicNavigationHeader({
                           onClick={() =>
                             setOpenDropdown(openDropdown === link.labelKey ? null : link.labelKey)
                           }
-                          className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+                          className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-base font-medium text-foreground/80 hover:bg-muted"
                         >
                           {t(link.labelKey)}
                           <ChevronDown
@@ -466,7 +466,7 @@ export function PublicNavigationHeader({
                           />
                         </button>
                         {openDropdown === link.labelKey && (
-                          <div className="ml-4 space-y-1 border-l-2 border-slate-200 pl-4">
+                          <div className="ml-4 space-y-1 border-l-2 border-border pl-4">
                             {link.children.map((child) => (
                               <Link
                                 key={child.href}
@@ -478,7 +478,7 @@ export function PublicNavigationHeader({
                                 className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                                   isActive(child.href)
                                     ? 'bg-blue-50 text-blue-600'
-                                    : 'text-slate-600 hover:bg-slate-100'
+                                    : 'text-muted-foreground hover:bg-muted'
                                 }`}
                               >
                                 {t(child.labelKey)}

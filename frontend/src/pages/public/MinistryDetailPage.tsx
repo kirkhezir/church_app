@@ -31,11 +31,11 @@ export function MinistryDetailPage() {
       <PublicLayout>
         <section className="pb-16 pt-24">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-            <Users className="mx-auto mb-6 h-16 w-16 text-slate-300" />
-            <h1 className="mb-4 text-3xl font-bold text-slate-900">
+            <Users className="mx-auto mb-6 h-16 w-16 text-blue-200" />
+            <h1 className="mb-4 text-3xl font-bold text-foreground">
               {language === 'th' ? 'เร็วๆ นี้!' : 'Coming Soon!'}
             </h1>
-            <p className="mb-8 text-lg text-slate-600">
+            <p className="mb-8 text-lg text-muted-foreground">
               {language === 'th'
                 ? 'ข้อมูลของแผนกนี้กำลังอัปเดต กรุณากลับมาเยี่ยมชมใหม่อีกครั้ง'
                 : 'Details for this ministry are being updated. Please check back soon!'}
@@ -93,10 +93,10 @@ export function MinistryDetailPage() {
             {/* Description */}
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-slate-900">
+                <h2 className="mb-4 text-xl font-bold text-foreground">
                   {language === 'th' ? 'เกี่ยวกับแผนกนี้' : 'About This Ministry'}
                 </h2>
-                <div className="prose max-w-none text-slate-600">
+                <div className="prose max-w-none text-muted-foreground">
                   {(language === 'th' ? ministry.fullDescriptionThai : ministry.fullDescription)
                     .split('\n\n')
                     .map((para, i) => (
@@ -112,7 +112,7 @@ export function MinistryDetailPage() {
             {ministry.gallery && ministry.gallery.length > 0 && (
               <Card className="mb-8">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-slate-900">
+                  <h2 className="mb-4 text-xl font-bold text-foreground">
                     {language === 'th' ? 'แกลเลอรี่' : 'Gallery'}
                   </h2>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -140,7 +140,7 @@ export function MinistryDetailPage() {
             {/* How to Join */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-slate-900">
+                <h2 className="mb-4 text-xl font-bold text-foreground">
                   {language === 'th' ? 'วิธีเข้าร่วม' : 'How to Get Involved'}
                 </h2>
                 <ul className="space-y-3">
@@ -150,7 +150,7 @@ export function MinistryDetailPage() {
                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-600">
                           {i + 1}
                         </span>
-                        <span className="text-slate-600">{item}</span>
+                        <span className="text-muted-foreground">{item}</span>
                       </li>
                     )
                   )}
@@ -171,28 +171,28 @@ export function MinistryDetailPage() {
             {/* Meeting Info */}
             <Card>
               <CardContent className="p-6">
-                <h3 className="mb-4 font-bold text-slate-900">
+                <h3 className="mb-4 font-bold text-foreground">
                   {language === 'th' ? 'ข้อมูลการประชุม' : 'Meeting Info'}
                 </h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start gap-3">
-                    <Clock className="mt-0.5 h-4 w-4 text-slate-400" />
+                    <Clock className="mt-0.5 h-4 w-4 text-muted-foreground" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'เวลา' : 'Time'}
                       </p>
-                      <p className="text-slate-600">
+                      <p className="text-muted-foreground">
                         {language === 'th' ? ministry.meetingTimeThai : ministry.meetingTime}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <MapPin className="mt-0.5 h-4 w-4 text-slate-400" />
+                    <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {language === 'th' ? 'สถานที่' : 'Location'}
                       </p>
-                      <p className="text-slate-600">
+                      <p className="text-muted-foreground">
                         {language === 'th' ? ministry.locationThai : ministry.location}
                       </p>
                     </div>
@@ -204,7 +204,7 @@ export function MinistryDetailPage() {
             {/* Leadership */}
             <Card>
               <CardContent className="p-6">
-                <h3 className="mb-4 font-bold text-slate-900">
+                <h3 className="mb-4 font-bold text-foreground">
                   {language === 'th' ? 'ผู้นำ' : 'Leadership'}
                 </h3>
                 <div className="mb-4 flex items-center gap-3">
@@ -216,27 +216,27 @@ export function MinistryDetailPage() {
                       className="h-12 w-12 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-200">
-                      <Users className="h-6 w-6 text-slate-400" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                      <Users className="h-6 w-6 text-muted-foreground" />
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-slate-900">{ministry.leader.name}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="font-medium text-foreground">{ministry.leader.name}</p>
+                    <p className="text-sm text-muted-foreground">
                       {language === 'th' ? ministry.leader.roleThai : ministry.leader.role}
                     </p>
                   </div>
                 </div>
                 {ministry.leader.phone && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Phone className="h-4 w-4" />
                     <span>{ministry.leader.phone}</span>
                   </div>
                 )}
                 {ministry.leader.email && (
-                  <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
+                  <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                     <Mail className="h-4 w-4" />
-                    <a href={`mailto:${ministry.leader.email}`} className="hover:text-blue-600">
+                    <a href={`mailto:${ministry.leader.email}`} className="hover:text-primary">
                       {ministry.leader.email}
                     </a>
                   </div>
@@ -244,14 +244,14 @@ export function MinistryDetailPage() {
 
                 {ministry.team && ministry.team.length > 0 && (
                   <div className="mt-4 border-t pt-4">
-                    <h4 className="mb-3 text-sm font-medium text-slate-900">
+                    <h4 className="mb-3 text-sm font-medium text-foreground">
                       {language === 'th' ? 'ทีม' : 'Team'}
                     </h4>
                     <ul className="space-y-2 text-sm">
                       {ministry.team.map((member, i) => (
-                        <li key={i} className="text-slate-600">
+                        <li key={i} className="text-muted-foreground">
                           <span className="font-medium">{member.name}</span>
-                          <span className="text-slate-400"> - </span>
+                          <span className="text-muted-foreground"> - </span>
                           {language === 'th' ? member.roleThai : member.role}
                         </li>
                       ))}
@@ -265,16 +265,16 @@ export function MinistryDetailPage() {
             {ministry.events && ministry.events.length > 0 && (
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="mb-4 font-bold text-slate-900">
+                  <h3 className="mb-4 font-bold text-foreground">
                     {language === 'th' ? 'กิจกรรมที่จะมาถึง' : 'Upcoming Events'}
                   </h3>
                   <ul className="space-y-3">
                     {ministry.events.map((event, i) => (
                       <li key={i} className="border-l-2 border-blue-500 pl-3">
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-foreground">
                           {language === 'th' ? event.titleThai : event.title}
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-muted-foreground">
                           <Calendar className="mr-1 inline h-3 w-3" />
                           {new Date(event.date).toLocaleDateString(
                             language === 'th' ? 'th-TH' : 'en-US',

@@ -94,7 +94,7 @@ export default function AdminCreateMemberPage() {
             </CardHeader>
 
             <CardContent className="space-y-4">
-              <div className="rounded-lg bg-gray-100 p-4">
+              <div className="rounded-lg bg-muted p-4">
                 <h3 className="mb-2 font-medium">Member Details</h3>
                 <p>
                   <strong>Name:</strong> {success.firstName} {success.lastName}
@@ -110,7 +110,7 @@ export default function AdminCreateMemberPage() {
               <Alert>
                 <AlertDescription>
                   <strong>Temporary Password:</strong>
-                  <code className="ml-2 rounded bg-gray-200 px-2 py-1">
+                  <code className="ml-2 rounded bg-muted px-2 py-1">
                     {success.temporaryPassword}
                   </code>
                   <p className="mt-2 text-sm">

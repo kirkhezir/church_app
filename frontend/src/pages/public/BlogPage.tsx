@@ -71,7 +71,7 @@ export function BlogPage() {
           <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'ข่าวสารและบทความ' : 'News & Blog'}
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-300">
+          <p className="mx-auto max-w-2xl text-lg text-blue-200">
             {language === 'th'
               ? 'อัปเดตล่าสุด ประกาศ และเรื่องราวที่สร้างแรงบันดาลใจจากชุมชนของเรา'
               : 'Latest updates, announcements, and inspiring stories from our community'}
@@ -81,9 +81,9 @@ export function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <div className="bg-slate-50 py-8">
+        <div className="bg-muted py-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-6 text-lg font-semibold text-slate-900">
+            <h2 className="mb-6 text-lg font-semibold text-foreground">
               {language === 'th' ? 'บทความเด่น' : 'Featured Stories'}
             </h2>
             <div className="grid gap-6 md:grid-cols-2">
@@ -108,13 +108,13 @@ export function BlogPage() {
                       <span className="text-xs font-medium text-blue-600">
                         {language === 'th' ? post.categoryThai : post.category}
                       </span>
-                      <h3 className="mt-2 font-bold text-slate-900 group-hover:text-blue-600">
+                      <h3 className="mt-2 font-bold text-foreground group-hover:text-primary">
                         {language === 'th' ? post.titleThai : post.title}
                       </h3>
-                      <p className="mt-2 line-clamp-2 text-sm text-slate-600">
+                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                         {language === 'th' ? post.excerptThai : post.excerpt}
                       </p>
-                      <div className="mt-4 flex items-center gap-3 text-xs text-slate-500">
+                      <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {new Date(post.date).toLocaleDateString(
@@ -137,18 +137,18 @@ export function BlogPage() {
       )}
 
       {/* Filters */}
-      <div className="sticky top-16 z-40 border-b bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Search */}
             <div className="relative flex-1 sm:max-w-xs">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder={language === 'th' ? 'ค้นหาบทความ...' : 'Search articles...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 py-2 pl-9 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-blue-200"
               />
             </div>
 
@@ -163,7 +163,7 @@ export function BlogPage() {
                     className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 ${
                       selectedCategory === cat.id
                         ? 'bg-blue-600 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'bg-muted text-muted-foreground hover:bg-muted'
                     }`}
                   >
                     <Icon className="h-3 w-3" />
@@ -191,20 +191,20 @@ export function BlogPage() {
                       loading="lazy"
                     />
                     <div className="absolute left-3 top-3">
-                      <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-slate-700">
+                      <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-foreground/80">
                         <Tag className="mr-1 inline h-3 w-3" />
                         {language === 'th' ? post.categoryThai : post.category}
                       </span>
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <h3 className="mb-2 line-clamp-2 font-bold text-slate-900 group-hover:text-blue-600">
+                    <h3 className="mb-2 line-clamp-2 font-bold text-foreground group-hover:text-primary">
                       {language === 'th' ? post.titleThai : post.title}
                     </h3>
-                    <p className="mb-4 line-clamp-2 text-sm text-slate-600">
+                    <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
                       {language === 'th' ? post.excerptThai : post.excerpt}
                     </p>
-                    <div className="flex items-center justify-between text-xs text-slate-500">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <div className="flex items-center gap-2">
                         <User className="h-3 w-3" />
                         <span>{post.author}</span>
@@ -226,11 +226,11 @@ export function BlogPage() {
           </div>
         ) : (
           <div className="py-12 text-center">
-            <Newspaper className="mx-auto mb-4 h-12 w-12 text-slate-300" />
-            <h3 className="mb-2 text-lg font-medium text-slate-900">
+            <Newspaper className="mx-auto mb-4 h-12 w-12 text-blue-200" />
+            <h3 className="mb-2 text-lg font-medium text-foreground">
               {language === 'th' ? 'ไม่พบบทความ' : 'No articles found'}
             </h3>
-            <p className="text-slate-500">
+            <p className="text-muted-foreground">
               {language === 'th'
                 ? 'ลองเปลี่ยนคำค้นหาหรือหมวดหมู่'
                 : 'Try adjusting your search or category filter'}
@@ -267,7 +267,7 @@ export function BlogPage() {
                   placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="flex-1 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="flex-1 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-300"
                 />
                 <Button
                   className="bg-white text-blue-600 hover:bg-blue-50"

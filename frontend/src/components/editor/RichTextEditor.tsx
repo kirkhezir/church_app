@@ -85,10 +85,10 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="rounded-lg border border-gray-300 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+    <div className="rounded-lg border border-border focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
       {/* Toolbar */}
       {!disabled && (
-        <div className="flex flex-wrap gap-1 border-b border-gray-200 bg-gray-50 p-2">
+        <div className="flex flex-wrap gap-1 border-b border-border bg-background p-2">
           {/* Bold */}
           <Button
             type="button"
@@ -161,7 +161,7 @@ export function RichTextEditor({
             <LinkIcon className="h-4 w-4" />
           </Button>
 
-          <div className="mx-2 h-6 w-px bg-gray-300" />
+          <div className="mx-2 h-6 w-px bg-border" />
 
           {/* Undo */}
           <Button

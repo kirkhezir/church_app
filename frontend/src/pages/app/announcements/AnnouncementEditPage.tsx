@@ -132,7 +132,7 @@ export function AnnouncementEditPage() {
           Back
         </Button>
         <h1 className="text-2xl font-bold sm:text-3xl">Edit Announcement</h1>
-        <p className="mt-2 text-sm text-gray-600 sm:text-base">Update announcement details</p>
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">Update announcement details</p>
       </div>
 
       {/* Success Message */}

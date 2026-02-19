@@ -58,10 +58,10 @@ export function NotFoundPage() {
           </div>
 
           {/* Message */}
-          <h1 className="mb-3 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
+          <h1 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl">
             {language === 'th' ? 'ไม่พบหน้าที่คุณต้องการ' : 'Page Not Found'}
           </h1>
-          <p className="mx-auto mb-8 max-w-md text-slate-500 dark:text-slate-400">
+          <p className="mx-auto mb-8 max-w-md text-muted-foreground">
             {language === 'th'
               ? 'ขออภัย หน้าที่คุณกำลังมองหาอาจถูกย้าย ลบ หรือไม่เคยมีอยู่ ลองลิงก์ด้านล่างเพื่อค้นหาสิ่งที่คุณต้องการ'
               : "Sorry, the page you're looking for may have been moved, deleted, or never existed. Try the links below to find what you need."}
@@ -77,7 +77,7 @@ export function NotFoundPage() {
             </Link>
             <button
               onClick={() => window.history.back()}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-6 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <ArrowLeft className="h-4 w-4" />
               {language === 'th' ? 'ย้อนกลับ' : 'Go Back'}
@@ -86,7 +86,7 @@ export function NotFoundPage() {
 
           {/* Quick Links Grid */}
           <div className="mx-auto max-w-2xl">
-            <p className="mb-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+            <p className="mb-4 text-sm font-medium text-muted-foreground">
               {language === 'th' ? 'หรือลองหน้าเหล่านี้:' : 'Or try these pages:'}
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -94,16 +94,16 @@ export function NotFoundPage() {
                 <Link
                   key={to}
                   to={to}
-                  className="group flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left transition-all hover:border-blue-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-blue-600"
+                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-all hover:border-blue-300 hover:shadow-md dark:border-border dark:hover:border-blue-600"
                 >
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-100">
+                    <p className="font-semibold text-foreground group-hover:text-primary">
                       {label}
                     </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">{description}</p>
+                    <p className="text-sm text-muted-foreground">{description}</p>
                   </div>
                 </Link>
               ))}
@@ -111,13 +111,13 @@ export function NotFoundPage() {
           </div>
 
           {/* Scripture Quote */}
-          <div className="mt-12 rounded-xl bg-slate-50 p-6 dark:bg-slate-800/50">
-            <p className="italic text-slate-500 dark:text-slate-400">
+          <div className="p-6/50 mt-12 rounded-xl bg-muted">
+            <p className="italic text-muted-foreground">
               {language === 'th'
                 ? '"เพราะเรารู้แผนงานที่เรามีไว้สำหรับเจ้า" พระเจ้าตรัส "แผนงานเพื่อความเจริญรุ่งเรืองและไม่ใช่เพื่อทำร้ายเจ้า แผนงานเพื่อให้ความหวังและอนาคตแก่เจ้า"'
                 : '"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."'}
             </p>
-            <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-sm font-medium text-muted-foreground">
               {language === 'th' ? '— เยเรมีย์ 29:11' : '— Jeremiah 29:11'}
             </p>
           </div>

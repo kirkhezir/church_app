@@ -181,22 +181,22 @@ export function MinistryCardsSection() {
   };
 
   return (
-    <section className="bg-slate-50 py-16 sm:py-24" aria-labelledby="ministries-heading">
+    <section className="bg-muted py-16 sm:py-24" aria-labelledby="ministries-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2
             id="ministries-heading"
-            className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl"
+            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl"
           >
             Our Ministries
           </h2>
-          <p className="text-lg text-slate-600">Find your place to serve and grow with us</p>
+          <p className="text-lg text-muted-foreground">Find your place to serve and grow with us</p>
         </div>
 
         {/* Filter Buttons */}
         <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
-          <Filter className="mr-1 h-4 w-4 text-slate-500" aria-hidden="true" />
+          <Filter className="mr-1 h-4 w-4 text-muted-foreground" aria-hidden="true" />
           {filterOptions.map((option) => (
             <button
               key={option.value}
@@ -204,7 +204,7 @@ export function MinistryCardsSection() {
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeFilter === option.value
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-100'
+                  : 'bg-white text-muted-foreground hover:bg-muted'
               }`}
               aria-pressed={activeFilter === option.value}
             >
@@ -218,7 +218,7 @@ export function MinistryCardsSection() {
           {filteredMinistries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border border-slate-200 bg-white transition-all hover:shadow-lg"
+              className="group overflow-hidden border border-border bg-white transition-all hover:shadow-lg"
             >
               <CardContent className="flex h-full flex-col p-5">
                 {/* Icon + Title */}
@@ -228,11 +228,11 @@ export function MinistryCardsSection() {
                   >
                     <ministry.icon className={`h-5 w-5 ${ministry.color}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900">{ministry.name}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{ministry.name}</h3>
                 </div>
 
                 {/* Description */}
-                <p className="mb-4 flex-grow text-sm leading-relaxed text-slate-600">
+                <p className="mb-4 flex-grow text-sm leading-relaxed text-muted-foreground">
                   {ministry.description}
                 </p>
 
@@ -241,13 +241,13 @@ export function MinistryCardsSection() {
                   {ministry.activities.slice(0, 3).map((activity, idx) => (
                     <span
                       key={idx}
-                      className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600"
+                      className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
                     >
                       {activity}
                     </span>
                   ))}
                   {ministry.activities.length > 3 && (
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                       +{ministry.activities.length - 3}
                     </span>
                   )}
@@ -258,7 +258,7 @@ export function MinistryCardsSection() {
                   variant="outline"
                   size="sm"
                   onClick={() => openVolunteerDialog(ministry)}
-                  className="mt-auto w-full gap-2 border-slate-200 hover:bg-slate-50"
+                  className="mt-auto w-full gap-2 border-border hover:bg-muted"
                 >
                   <HeartHandshake className="h-4 w-4" />
                   Get Involved
@@ -270,7 +270,7 @@ export function MinistryCardsSection() {
 
         {/* Call to Action */}
         <div className="mt-12 text-center">
-          <p className="mb-4 text-slate-600">
+          <p className="mb-4 text-muted-foreground">
             Not sure where to start? We&apos;d love to help you find your place!
           </p>
           <Button
@@ -305,7 +305,7 @@ export function MinistryCardsSection() {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
                 <CheckCircle2 className="h-8 w-8 text-emerald-600" />
               </div>
-              <p className="text-slate-600">
+              <p className="text-muted-foreground">
                 We&apos;re excited to have you interested in{' '}
                 <strong>{selectedMinistry?.name}</strong>!
               </p>
@@ -316,7 +316,7 @@ export function MinistryCardsSection() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="vol-name" className="text-sm font-medium text-slate-700">
+                <label htmlFor="vol-name" className="text-sm font-medium text-foreground/80">
                   Your Name *
                 </label>
                 <input
@@ -325,13 +325,13 @@ export function MinistryCardsSection() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Your full name"
                 />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="vol-email" className="text-sm font-medium text-slate-700">
+                <label htmlFor="vol-email" className="text-sm font-medium text-foreground/80">
                   Email Address *
                 </label>
                 <input
@@ -340,13 +340,13 @@ export function MinistryCardsSection() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="vol-phone" className="text-sm font-medium text-slate-700">
+                <label htmlFor="vol-phone" className="text-sm font-medium text-foreground/80">
                   Phone Number
                 </label>
                 <input
@@ -354,13 +354,13 @@ export function MinistryCardsSection() {
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Your phone number"
                 />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="vol-message" className="text-sm font-medium text-slate-700">
+                <label htmlFor="vol-message" className="text-sm font-medium text-foreground/80">
                   Tell us about yourself
                 </label>
                 <textarea
@@ -368,7 +368,7 @@ export function MinistryCardsSection() {
                   rows={3}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full resize-none rounded-lg border border-border px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Share any relevant experience or why you're interested..."
                 />
               </div>

@@ -83,10 +83,10 @@ export function UpcomingEventsSection() {
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h2 id="events-heading" className="text-3xl font-bold text-slate-900 sm:text-4xl">
+            <h2 id="events-heading" className="text-3xl font-bold text-foreground sm:text-4xl">
               Upcoming Events
             </h2>
-            <p className="mt-1 text-lg text-slate-600">See what's happening at our church</p>
+            <p className="mt-1 text-lg text-muted-foreground">See what's happening at our church</p>
           </div>
           <Link to="/events">
             <Button className="bg-blue-600 hover:bg-blue-700">
@@ -121,7 +121,7 @@ export function UpcomingEventsSection() {
 
               return (
                 <Link to={`/events/${event.id}`} key={event.id}>
-                  <Card className="group h-full overflow-hidden border border-slate-200 transition-shadow hover:shadow-md">
+                  <Card className="group h-full overflow-hidden border border-border transition-shadow hover:shadow-md">
                     <CardContent className="p-5">
                       {/* Date + Category */}
                       <div className="mb-3 flex items-center justify-between">
@@ -139,12 +139,12 @@ export function UpcomingEventsSection() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="mb-2 line-clamp-2 font-semibold text-slate-900 group-hover:text-blue-600">
+                      <h3 className="mb-2 line-clamp-2 font-semibold text-foreground group-hover:text-primary">
                         {event.title}
                       </h3>
 
                       {/* Details */}
-                      <div className="space-y-1 text-sm text-slate-500">
+                      <div className="space-y-1 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                           <Clock className="h-3.5 w-3.5" />
                           <span>{timeStr}</span>

@@ -145,7 +145,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="border-b border-gray-200 bg-white">
+    <nav className="border-b border-border bg-white">
       <div className="container mx-auto px-4">
         <div className="flex items-center space-x-1 overflow-x-auto">
           {filteredNavItems.map((item) => (
@@ -157,7 +157,7 @@ export const Navigation: React.FC = () => {
                 ${
                   isActive(item.path)
                     ? 'border-b-2 border-blue-600 bg-blue-50 text-blue-600'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    : 'text-muted-foreground hover:bg-background hover:text-foreground'
                 }
               `}
             >

@@ -55,7 +55,7 @@ export function NavigationHeader() {
       {/* Main Navigation */}
       <header
         className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-md' : 'bg-transparent'
+          isScrolled ? 'bg-background/95 shadow-lg backdrop-blur-md' : 'bg-transparent'
         }`}
       >
         <nav className="mx-auto max-w-7xl px-4 py-3">
@@ -68,7 +68,7 @@ export function NavigationHeader() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`flex items-center gap-2 text-xl font-bold transition-colors ${
-                isScrolled ? 'text-gray-900' : 'text-white'
+                isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               <Church className="h-8 w-8" />
@@ -83,7 +83,7 @@ export function NavigationHeader() {
                   onClick={() => scrollToSection(link.href)}
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
+                      ? 'text-foreground/80 hover:bg-muted hover:text-primary'
                       : 'text-white/90 hover:bg-white/10 hover:text-white'
                   }`}
                 >
@@ -113,7 +113,7 @@ export function NavigationHeader() {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`rounded-lg p-2 lg:hidden ${
-                  isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
+                  isScrolled ? 'text-foreground/80 hover:bg-muted' : 'text-white hover:bg-white/10'
                 }`}
                 aria-label="Toggle menu"
               >
@@ -125,13 +125,13 @@ export function NavigationHeader() {
 
         {/* Mobile Menu */}
         <div className={`lg:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="border-t border-gray-200 bg-white px-4 py-4 shadow-lg">
+          <div className="border-t border-border bg-white px-4 py-4 shadow-lg">
             <div className="space-y-1">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
-                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-gray-700 hover:bg-gray-100"
+                  className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-foreground/80 hover:bg-muted"
                 >
                   <link.icon className="h-5 w-5 text-blue-600" />
                   {link.label}

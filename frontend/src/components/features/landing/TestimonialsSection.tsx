@@ -97,11 +97,11 @@ export function TestimonialsSection() {
         <div className="mb-10 text-center">
           <h2
             id="testimonials-heading"
-            className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl"
+            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl"
           >
             What Our Members Say
           </h2>
-          <p className="text-lg text-slate-600">Stories from our church family</p>
+          <p className="text-lg text-muted-foreground">Stories from our church family</p>
         </div>
 
         {/* Testimonial Card */}
@@ -116,11 +116,11 @@ export function TestimonialsSection() {
             }
           }}
         >
-          <Card className="bg-slate-50 shadow-none">
+          <Card className="bg-muted shadow-none">
             <CardContent className="p-6 sm:p-10">
               <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" aria-hidden="true" />
 
-              <blockquote className="mb-6 text-center text-lg text-slate-700 sm:text-xl">
+              <blockquote className="mb-6 text-center text-lg text-foreground/80 sm:text-xl">
                 "{currentTestimonial.quote}"
               </blockquote>
 
@@ -140,9 +140,9 @@ export function TestimonialsSection() {
               )}
 
               <div className="text-center">
-                <p className="font-semibold text-slate-900">{currentTestimonial.name}</p>
+                <p className="font-semibold text-foreground">{currentTestimonial.name}</p>
                 {currentTestimonial.role && (
-                  <p className="text-sm text-slate-500">{currentTestimonial.role}</p>
+                  <p className="text-sm text-muted-foreground">{currentTestimonial.role}</p>
                 )}
               </div>
             </CardContent>
