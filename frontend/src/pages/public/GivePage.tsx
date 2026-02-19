@@ -222,7 +222,7 @@ export function GivePage() {
                         <button
                           key={option.id}
                           onClick={() => setSelectedCategory(option.id)}
-                          className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                          className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                             selectedCategory === option.id
                               ? 'border-amber-500 bg-amber-50'
                               : 'border-border hover:border-border'
@@ -259,7 +259,7 @@ export function GivePage() {
                       <button
                         key={preset}
                         onClick={() => handleAmountChange(preset.toString())}
-                        className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1 ${
+                        className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1 ${
                           amount === preset.toString()
                             ? 'bg-amber-600 text-white'
                             : 'bg-muted text-foreground/80 hover:bg-muted'
@@ -279,7 +279,7 @@ export function GivePage() {
                       value={amount}
                       onChange={(e) => handleAmountChange(e.target.value)}
                       placeholder="0"
-                      className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus:outline-none focus:ring-2 ${
+                      className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus-visible:outline-none focus-visible:ring-2 ${
                         amountError
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                           : 'border-border focus:border-amber-500 focus:ring-amber-200'
@@ -323,7 +323,7 @@ export function GivePage() {
                   <div className="grid gap-3 sm:grid-cols-3">
                     <button
                       onClick={() => setPaymentMethod('bank')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'bank'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -336,7 +336,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('promptpay')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'promptpay'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -347,7 +347,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('cash')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'cash'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -513,7 +513,7 @@ export function GivePage() {
                       <div key={faq.id} className="border-b border-border last:border-0">
                         <button
                           onClick={() => setShowFAQ(showFAQ === faq.id ? null : faq.id)}
-                          className="flex w-full cursor-pointer items-center justify-between py-3 text-left text-sm focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-400"
+                          className="flex w-full cursor-pointer items-center justify-between py-3 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-400"
                         >
                           <span className="font-medium text-foreground">
                             {language === 'th' ? faq.qThai : faq.q}

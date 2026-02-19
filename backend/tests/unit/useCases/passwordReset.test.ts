@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 /**
  * Unit Tests: RequestPasswordReset & ResetPassword Use Cases (T071)
  *

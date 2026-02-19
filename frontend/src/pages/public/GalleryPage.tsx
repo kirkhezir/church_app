@@ -229,7 +229,7 @@ export function GalleryPage() {
           {/* Close Button */}
           <button
             onClick={closeLightbox}
-            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             aria-label={language === 'th' ? 'ปิด' : 'Close lightbox'}
           >
             <X className="h-6 w-6" />
@@ -241,7 +241,7 @@ export function GalleryPage() {
               e.stopPropagation();
               navigateLightbox('prev');
             }}
-            className="absolute left-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="absolute left-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             aria-label={language === 'th' ? 'รูปก่อนหน้า' : 'Previous photo'}
           >
             <ChevronLeft className="h-8 w-8" />
@@ -251,7 +251,7 @@ export function GalleryPage() {
               e.stopPropagation();
               navigateLightbox('next');
             }}
-            className="absolute right-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="absolute right-4 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             aria-label={language === 'th' ? 'รูปถัดไป' : 'Next photo'}
           >
             <ChevronRight className="h-8 w-8" />

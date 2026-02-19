@@ -108,7 +108,7 @@ export function SermonsPage() {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               />
             </div>
             {/* Series Filter */}
@@ -120,7 +120,7 @@ export function SermonsPage() {
                   setSelectedSeries(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               >
                 {seriesList.map((series) => (
                   <option key={series} value={series}>
@@ -138,7 +138,7 @@ export function SermonsPage() {
                   setSelectedSpeaker(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               >
                 {speakerList.map((speaker) => (
                   <option key={speaker} value={speaker}>

@@ -84,7 +84,7 @@ export function ResourcesPage() {
                 placeholder={language === 'th' ? 'ค้นหาทรัพยากร...' : 'Search resources...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+                className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200"
               />
             </div>
 
@@ -94,7 +94,7 @@ export function ResourcesPage() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`cursor-pointer whitespace-nowrap rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-1 ${
+                  className={`cursor-pointer whitespace-nowrap rounded-full px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-1 ${
                     selectedCategory === cat.id
                       ? 'bg-teal-600 text-white'
                       : 'bg-muted text-muted-foreground hover:bg-muted'

@@ -299,7 +299,7 @@ function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToServices}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full p-2 text-white/60 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full p-2 text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
         aria-label="Scroll to content"
       >
         <ChevronDown className="h-8 w-8 motion-safe:animate-bounce" />
@@ -428,7 +428,7 @@ function BackToTopButton() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
       aria-label="Back to top"
     >
       <ArrowUp className="h-5 w-5" />

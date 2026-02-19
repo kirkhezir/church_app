@@ -163,7 +163,7 @@ export function PrayerPage() {
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder={language === 'th' ? 'ไม่ระบุตัวตน' : 'Anonymous'}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         />
                       </div>
                       <div>
@@ -174,7 +174,7 @@ export function PrayerPage() {
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         />
                       </div>
                       <div>
@@ -185,7 +185,7 @@ export function PrayerPage() {
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                           required
-                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         >
                           <option value="">
                             {language === 'th' ? 'เลือกหมวดหมู่' : 'Select a category'}
@@ -211,7 +211,7 @@ export function PrayerPage() {
                               ? 'แบ่งปันคำอธิษฐานของคุณ...'
                               : 'Share your prayer request...'
                           }
-                          className="w-full rounded-lg border border-border px-4 py-2 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         />
                       </div>
 
