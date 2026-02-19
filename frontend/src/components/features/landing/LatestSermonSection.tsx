@@ -151,10 +151,15 @@ export function LatestSermonSection() {
         {/* Section Header */}
         <div className="mb-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="text-center sm:text-left">
-            <h2 id="sermons-heading" className="mb-2 text-3xl font-bold text-white sm:text-4xl text-balance">
+            <h2
+              id="sermons-heading"
+              className="mb-2 text-balance text-3xl font-bold text-white sm:text-4xl"
+            >
               Latest Message
             </h2>
-            <p className="text-muted-foreground">Missed a Sabbath? Catch up on our recent sermons.</p>
+            <p className="text-muted-foreground">
+              Missed a Sabbath? Catch up on our recent sermons.
+            </p>
           </div>
           <Link to="/sermons">
             <Button
@@ -189,6 +194,9 @@ export function LatestSermonSection() {
                         src={latestSermon.thumbnailUrl}
                         alt={latestSermon.title}
                         className="h-full w-full object-cover"
+                        width={640}
+                        height={360}
+                        loading="eager"
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-700 to-slate-900">
@@ -263,7 +271,7 @@ export function LatestSermonSection() {
             {recentSermons.map((sermon) => (
               <Card
                 key={sermon.id}
-                className="cursor-pointer bg-slate-800/50 transition-colors hover:bg-slate-700/50"
+                className="bg-slate-800/50 transition-colors hover:bg-slate-700/50"
               >
                 <CardContent className="p-4">
                   <div className="flex gap-4">
@@ -274,6 +282,9 @@ export function LatestSermonSection() {
                           src={sermon.thumbnailUrl}
                           alt=""
                           className="h-full w-full object-cover"
+                          width={96}
+                          height={64}
+                          loading="lazy"
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center">

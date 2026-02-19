@@ -95,6 +95,8 @@ export default function PasswordResetRequestPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                spellCheck={false}
+                autoCapitalize="none"
               />
             </div>
 

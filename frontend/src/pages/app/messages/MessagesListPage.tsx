@@ -90,7 +90,7 @@ export function MessagesListPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold text-balance">
+          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <Mail className="h-8 w-8" />
             Messages
           </h1>
@@ -154,6 +154,14 @@ export function MessagesListPage() {
                         !message.isRead && activeFolder === 'inbox' ? 'bg-primary/5' : ''
                       }`}
                       onClick={() => handleViewMessage(message.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleViewMessage(message.id);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
                     >
                       <Avatar className="h-10 w-10">
                         <AvatarFallback>
@@ -222,8 +230,8 @@ export function MessagesListPage() {
                 </h3>
                 <p className="mt-2 text-muted-foreground">
                   {activeFolder === 'inbox'
-                    ? "You don't have any messages yet"
-                    : "You haven't sent any messages yet"}
+                    ? 'You don\u2019t have any messages yet'
+                    : 'You haven\u2019t sent any messages yet'}
                 </p>
                 {activeFolder === 'inbox' && (
                   <Button className="mt-4" onClick={handleCompose}>

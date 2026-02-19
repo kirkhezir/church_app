@@ -144,7 +144,7 @@ export function NewsletterPopup({
       <DialogContent className="sm:max-w-md">
         <button
           onClick={handleDismiss}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
@@ -174,6 +174,7 @@ export function NewsletterPopup({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
+                    spellCheck={false}
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
@@ -202,7 +203,7 @@ export function NewsletterPopup({
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    Subscribing...
+                    Subscribing\u2026
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
@@ -233,8 +234,8 @@ export function NewsletterPopup({
             </div>
             <DialogTitle className="mb-2 text-2xl">Thank You!</DialogTitle>
             <DialogDescription className="text-base">
-              You've been successfully subscribed to our newsletter. We'll keep you updated with the
-              latest news and events.
+              You\u2019ve been successfully subscribed to our newsletter. We\u2019ll keep you
+              updated with the latest news and events.
             </DialogDescription>
           </div>
         )}

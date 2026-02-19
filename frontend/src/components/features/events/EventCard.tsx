@@ -6,6 +6,7 @@
  * Handles: click to view details
  */
 
+import { memo } from 'react';
 import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon } from 'lucide-react';
 import { Event, EventCategory } from '../../../types/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
@@ -33,7 +34,7 @@ const categoryColors: Record<EventCategory, string> = {
   FELLOWSHIP: 'bg-orange-100 text-orange-800',
 };
 
-export function EventCard({
+export const EventCard = memo(function EventCard({
   event,
   onViewDetails,
   onRSVP,
@@ -158,4 +159,4 @@ export function EventCard({
       </CardContent>
     </Card>
   );
-}
+});

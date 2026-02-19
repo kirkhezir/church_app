@@ -22,6 +22,12 @@ export default {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        cta: {
+          DEFAULT: 'hsl(var(--color-cta))',
+          hover: 'hsl(38 92% 42%)',
+        },
+        success: 'hsl(var(--color-success))',
+        warning: 'hsl(var(--color-warning))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -72,6 +78,13 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        'brand-sm': 'var(--shadow-sm)',
+        'brand-md': 'var(--shadow-md)',
+        'brand-lg': 'var(--shadow-lg)',
+        'brand-xl': 'var(--shadow-xl)',
+        'cta-glow': '0 0 18px 4px rgba(245, 158, 11, 0.3)',
       },
       keyframes: {
         'accordion-down': {

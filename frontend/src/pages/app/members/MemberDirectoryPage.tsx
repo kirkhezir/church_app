@@ -150,7 +150,7 @@ export function MemberDirectoryPage() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold text-balance">
+          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <Users className="h-8 w-8" />
             Member Directory
           </h1>
@@ -245,6 +245,14 @@ export function MemberDirectoryPage() {
                 selectedMembers.some((m) => m.id === member.id) ? 'ring-2 ring-primary' : ''
               }`}
               onClick={() => handleViewProfile(member.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleViewProfile(member.id);
+                }
+              }}
+              role="button"
+              tabIndex={0}
             >
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">

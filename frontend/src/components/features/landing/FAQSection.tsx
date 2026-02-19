@@ -117,10 +117,15 @@ export function FAQSection() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-8 text-center">
-          <h2 id="faq-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="faq-heading"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-muted-foreground">Common questions about visiting our church</p>
+          <p className="text-lg text-muted-foreground">
+            Common questions about visiting our church
+          </p>
         </div>
 
         {/* Search Box */}
@@ -128,10 +133,10 @@ export function FAQSection() {
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
-            placeholder="Search questions..."
+            placeholder="Search questions\u2026"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-border bg-muted py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-border bg-muted py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             aria-label="Search frequently asked questions"
           />
         </div>
@@ -156,7 +161,9 @@ export function FAQSection() {
           </Accordion>
         ) : (
           <div className="rounded-lg bg-muted p-8 text-center">
-            <p className="text-muted-foreground">No questions found matching "{searchQuery}"</p>
+            <p className="text-muted-foreground">
+              No questions found matching &ldquo;{searchQuery}&rdquo;
+            </p>
             <Button
               variant="ghost"
               size="sm"

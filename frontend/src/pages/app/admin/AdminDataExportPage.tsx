@@ -218,7 +218,7 @@ export default function AdminDataExportPage() {
             {/* Export Button */}
             <Button onClick={handleExport} disabled={loading} className="w-full">
               {loading
-                ? 'Exporting...'
+                ? 'Exporting\u2026'
                 : `Export ${exportType === 'members' ? 'Members' : 'Events'}`}
             </Button>
 

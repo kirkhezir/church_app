@@ -6,6 +6,7 @@
  * Handles: click to view full announcement
  */
 
+import { memo } from 'react';
 import { BellIcon, AlertCircleIcon, CalendarIcon, UserIcon } from 'lucide-react';
 import { Announcement } from '@/services/endpoints/announcementService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +19,7 @@ interface AnnouncementCardProps {
   showFullContent?: boolean;
 }
 
-export function AnnouncementCard({
+export const AnnouncementCard = memo(function AnnouncementCard({
   announcement,
   onViewDetails,
   showFullContent = false,
@@ -30,7 +31,7 @@ export function AnnouncementCard({
   // Truncate content for preview (first 200 characters)
   const contentPreview =
     announcement.content.length > 200 && !showFullContent
-      ? announcement.content.substring(0, 200) + '...'
+      ? announcement.content.substring(0, 200) + '\u2026'
       : announcement.content;
 
   return (
@@ -100,4 +101,4 @@ export function AnnouncementCard({
       </CardContent>
     </Card>
   );
-}
+});

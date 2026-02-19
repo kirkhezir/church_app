@@ -71,12 +71,12 @@ export function PrayerGiveCTASection() {
               </h3>
               <p className="mb-2 text-base text-purple-200/90">
                 {isEn
-                  ? "You don't have to carry your burdens alone. Our prayer team is here for you."
+                  ? 'You don\u2019t have to carry your burdens alone. Our prayer team is here for you.'
                   : 'คุณไม่ต้องแบกรับภาระคนเดียว ทีมอธิษฐานของเราอยู่ที่นี่เพื่อคุณ'}
               </p>
               <p className="mb-8 text-sm italic text-purple-300/60">
                 {isEn
-                  ? '"Cast all your anxiety on Him because He cares for you." — 1 Peter 5:7'
+                  ? '\u201CCast all your anxiety on Him because He cares for you.\u201D \u2014 1 Peter 5:7'
                   : '"จงละความกังวลทั้งสิ้นของท่านไว้กับพระองค์ เพราะพระองค์ทรงห่วงใยท่าน" — 1 เปโตร 5:7'}
               </p>
 
@@ -121,7 +121,7 @@ export function PrayerGiveCTASection() {
               </p>
               <p className="mb-8 text-sm italic text-purple-300/60">
                 {isEn
-                  ? '"God loves a cheerful giver." — 2 Corinthians 9:7'
+                  ? '\u201CGod loves a cheerful giver.\u201D \u2014 2 Corinthians 9:7'
                   : '"พระเจ้าทรงรักคนที่ให้ด้วยใจยินดี" — 2 โครินธ์ 9:7'}
               </p>
 

@@ -13,6 +13,27 @@
 
 @layer base {
   :root {
+    /* --- Design System Tokens (MASTER.md) --- */
+    --color-cta: 38 92% 50%; /* #F59E0B — amber CTA */
+    --color-success: 142 71% 45%; /* #16A34A */
+    --color-warning: 38 92% 50%; /* #D97706 */
+    --color-error: 0 84% 60%; /* #DC2626 */
+
+    /* Spacing scale */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+
+    /* Shadow depths */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
     /* --- Church Brand Palette (light) --- */
     --background: 210 40% 98%; /* #F8FAFC — soft slate */
     --foreground: 222 47% 11%; /* #0F172A — slate-900 */
@@ -161,6 +182,25 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Tabular numbers for stats, dates, counts */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Content visibility for below-fold performance */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+
+  /* Text wrapping utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
   }
 }
 

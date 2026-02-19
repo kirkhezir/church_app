@@ -5,6 +5,7 @@
  */
 
 import { Link } from 'react-router';
+import { memo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 
@@ -23,7 +24,9 @@ interface UpcomingEventsWidgetProps {
   events: Event[];
 }
 
-export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
+export const UpcomingEventsWidget = memo(function UpcomingEventsWidget({
+  events,
+}: UpcomingEventsWidgetProps) {
   if (events.length === 0) {
     return (
       <Card>
@@ -101,4 +104,4 @@ export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
       </CardContent>
     </Card>
   );
-}
+});

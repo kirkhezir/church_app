@@ -77,6 +77,10 @@ export default function LoginPage() {
           src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&h=1600&fit=crop&q=80"
           alt="Church interior with warm light"
           className="absolute inset-0 h-full w-full object-cover"
+          width={1200}
+          height={1600}
+          loading="eager"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-slate-900/80" />
 
@@ -87,13 +91,15 @@ export default function LoginPage() {
               src="/church-logo.png"
               alt="Sing Buri Adventist Center"
               className="h-10 w-10 rounded-full border-2 border-white/20 object-contain"
+              width={40}
+              height={40}
             />
             <span className="text-lg font-semibold text-white/90">Sing Buri Adventist Center</span>
           </div>
 
           {/* Welcome Message */}
           <div className="max-w-md">
-            <h1 className="mb-4 text-4xl font-bold leading-tight text-white text-balance">
+            <h1 className="mb-4 text-balance text-4xl font-bold leading-tight text-white">
               Welcome back to your church community
             </h1>
             <p className="mb-8 text-lg text-blue-100/80">
@@ -133,6 +139,8 @@ export default function LoginPage() {
               src="/church-logo.png"
               alt="Sing Buri Adventist Center"
               className="h-12 w-12 rounded-full object-contain"
+              width={48}
+              height={48}
             />
             <span className="text-lg font-semibold text-foreground">
               Sing Buri Adventist Center
@@ -170,6 +178,8 @@ export default function LoginPage() {
                     required
                     disabled={loading}
                     autoComplete="email"
+                    spellCheck={false}
+                    autoCapitalize="none"
                     className="transition-colors duration-200"
                   />
                 </div>
@@ -204,7 +214,7 @@ export default function LoginPage() {
               <CardFooter className="flex flex-col space-y-4">
                 <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
                   {loading ? (
-                    'Signing in...'
+                    'Signing in\u2026'
                   ) : (
                     <>
                       <LogIn className="mr-2 h-4 w-4" />

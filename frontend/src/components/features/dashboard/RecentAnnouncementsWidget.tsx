@@ -5,6 +5,7 @@
  */
 
 import { Link } from 'react-router';
+import { memo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 
@@ -21,7 +22,9 @@ interface RecentAnnouncementsWidgetProps {
   announcements: Announcement[];
 }
 
-export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncementsWidgetProps) {
+export const RecentAnnouncementsWidget = memo(function RecentAnnouncementsWidget({
+  announcements,
+}: RecentAnnouncementsWidgetProps) {
   if (announcements.length === 0) {
     return (
       <Card>
@@ -106,4 +109,4 @@ export function RecentAnnouncementsWidget({ announcements }: RecentAnnouncements
       </CardContent>
     </Card>
   );
-}
+});

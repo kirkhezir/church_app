@@ -5,7 +5,7 @@
  * Conditionally uses SidebarLayout for authenticated users
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { CalendarIcon, PlusIcon, List, LayoutGrid } from 'lucide-react';
 import { useEvents, useEventRSVP } from '@/hooks/useEvents';
@@ -50,30 +50,36 @@ export function EventsListPage() {
     setEndDate('');
   };
 
-  const handleViewDetails = (eventId: string) => {
-    navigate(`/app/events/${eventId}`);
-  };
-
-  const handleRSVP = async (eventId: string) => {
-    if (!user) {
-      // Redirect to login if not authenticated
-      navigate('/login', { state: { from: `/app/events/${eventId}` } });
-      return;
-    }
-
-    try {
-      await rsvpToEvent(eventId);
-      // Show success message or navigate to event details
+  const handleViewDetails = useCallback(
+    (eventId: string) => {
       navigate(`/app/events/${eventId}`);
-    } catch (err) {
-      // Error is already handled by the hook
-      console.error('RSVP failed:', err);
-    }
-  };
+    },
+    [navigate]
+  );
 
-  const handleCreateEvent = () => {
+  const handleRSVP = useCallback(
+    async (eventId: string) => {
+      if (!user) {
+        // Redirect to login if not authenticated
+        navigate('/login', { state: { from: `/app/events/${eventId}` } });
+        return;
+      }
+
+      try {
+        await rsvpToEvent(eventId);
+        // Show success message or navigate to event details
+        navigate(`/app/events/${eventId}`);
+      } catch (err) {
+        // Error is already handled by the hook
+        console.error('RSVP failed:', err);
+      }
+    },
+    [user, navigate, rsvpToEvent]
+  );
+
+  const handleCreateEvent = useCallback(() => {
     navigate('/app/events/create');
-  };
+  }, [navigate]);
 
   const canCreateEvents = user && (user.role === 'ADMIN' || user.role === 'STAFF');
 
@@ -83,7 +89,7 @@ export function EventsListPage() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold text-balance">
+          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <CalendarIcon className="h-8 w-8" />
             Church Events
           </h1>

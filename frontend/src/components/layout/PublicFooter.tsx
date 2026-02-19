@@ -58,13 +58,14 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('footer.emailPlaceholder')}
                   required
-                  className="flex-1 rounded-lg border border-border bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="flex-1 rounded-lg border border-border bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  spellCheck={false}
                   aria-label={t('footer.emailPlaceholder')}
                 />
                 <button
                   type="submit"
                   disabled={subscribed}
-                  className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:bg-emerald-600"
+                  className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 disabled:bg-emerald-600"
                 >
                   {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
                 </button>
@@ -81,6 +82,9 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                 src={CHURCH_LOGO}
                 alt={t('common.churchName')}
                 className="h-12 w-12 rounded-full object-contain"
+                width={48}
+                height={48}
+                loading="lazy"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -166,22 +170,34 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-muted-foreground transition-colors hover:text-white">
+                <Link
+                  to="/about"
+                  className="text-muted-foreground transition-colors hover:text-white"
+                >
                   {language === 'th' ? 'เกี่ยวกับเรา' : 'About'}
                 </Link>
               </li>
               <li>
-                <Link to="/visit" className="text-muted-foreground transition-colors hover:text-white">
+                <Link
+                  to="/visit"
+                  className="text-muted-foreground transition-colors hover:text-white"
+                >
                   {language === 'th' ? 'มาเยี่ยมเรา' : 'Plan a Visit'}
                 </Link>
               </li>
               <li>
-                <Link to="/events" className="text-muted-foreground transition-colors hover:text-white">
+                <Link
+                  to="/events"
+                  className="text-muted-foreground transition-colors hover:text-white"
+                >
                   {language === 'th' ? 'กิจกรรม' : 'Events'}
                 </Link>
               </li>
               <li>
-                <Link to="/sermons" className="text-muted-foreground transition-colors hover:text-white">
+                <Link
+                  to="/sermons"
+                  className="text-muted-foreground transition-colors hover:text-white"
+                >
                   {language === 'th' ? 'คำเทศนา' : 'Sermons'}
                 </Link>
               </li>

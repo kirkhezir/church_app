@@ -132,7 +132,13 @@ export default function MFAEnrollmentPage() {
 
               {qrCodeUrl && (
                 <div className="mb-4 flex justify-center">
-                  <img src={qrCodeUrl} alt="MFA QR Code" className="h-48 w-48 rounded-lg border" />
+                  <img
+                    src={qrCodeUrl}
+                    alt="MFA QR Code"
+                    className="h-48 w-48 rounded-lg border"
+                    width={192}
+                    height={192}
+                  />
                 </div>
               )}
             </div>
@@ -177,7 +183,7 @@ export default function MFAEnrollmentPage() {
             disabled={loading || verificationCode.length !== 6}
             className="w-full"
           >
-            {loading ? 'Verifying...' : 'Verify and Enable MFA'}
+            {loading ? 'Verifying\u2026' : 'Verify and Enable MFA'}
           </Button>
 
           <Button variant="ghost" onClick={() => navigate('/app/dashboard')} className="w-full">

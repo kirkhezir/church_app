@@ -5,6 +5,7 @@
  */
 
 import { Link } from 'react-router';
+import { memo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 
@@ -20,7 +21,7 @@ interface ProfileSummaryProps {
   };
 }
 
-export function ProfileSummary({ profile }: ProfileSummaryProps) {
+export const ProfileSummary = memo(function ProfileSummary({ profile }: ProfileSummaryProps) {
   const memberSince = new Date(profile.membershipDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -66,4 +67,4 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
       </CardContent>
     </Card>
   );
-}
+});

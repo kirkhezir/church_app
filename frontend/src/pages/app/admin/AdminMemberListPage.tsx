@@ -95,7 +95,7 @@ export default function AdminMemberListPage() {
     <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Members' }]}>
       <div className="container mx-auto px-4 py-4">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-balance">Member Management</h1>
+          <h1 className="text-balance text-2xl font-bold">Member Management</h1>
           <Link to="/app/admin/members/create">
             <Button>+ Add Member</Button>
           </Link>
@@ -113,7 +113,7 @@ export default function AdminMemberListPage() {
             <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
               <div className="min-w-[200px] flex-1">
                 <Input
-                  placeholder="Search by name or email..."
+                  placeholder="Search by name or email\u2026"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />

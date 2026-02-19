@@ -153,7 +153,7 @@ export default function MFAVerificationPage() {
               disabled={loading || code.length < (useBackupCode ? 8 : 6)}
               className="w-full"
             >
-              {loading ? 'Verifying...' : 'Verify'}
+              {loading ? 'Verifying\u2026' : 'Verify'}
             </Button>
 
             <Button

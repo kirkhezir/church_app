@@ -203,6 +203,8 @@ export default function AdminCreateMemberPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  spellCheck={false}
+                  autoCapitalize="none"
                 />
               </div>
 
@@ -232,7 +234,7 @@ export default function AdminCreateMemberPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+66..."
+                  placeholder="+66\u2026"
                 />
               </div>
 
@@ -252,7 +254,7 @@ export default function AdminCreateMemberPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={loading} className="flex-1">
-                {loading ? 'Creating...' : 'Create Member'}
+                {loading ? 'Creating\u2026' : 'Create Member'}
               </Button>
             </CardFooter>
           </form>

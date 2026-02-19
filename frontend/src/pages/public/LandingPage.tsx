@@ -96,7 +96,7 @@ export function LandingPage() {
           <TestimonialsSection />
         </div>
 
-        <section id="events" className="reveal relative">
+        <section id="events" className="reveal content-auto relative">
           <UpcomingEventsSection />
         </section>
 
@@ -105,11 +105,11 @@ export function LandingPage() {
           <LatestSermonSection />
         </div>
 
-        <section id="ministries" className="reveal">
+        <section id="ministries" className="reveal content-auto">
           <MinistryCardsSection />
         </section>
 
-        <section id="gallery" className="reveal">
+        <section id="gallery" className="reveal content-auto">
           <PhotoGallerySection />
         </section>
 
@@ -123,7 +123,7 @@ export function LandingPage() {
         </div>
 
         {/* Contact Section */}
-        <section id="contact" className="reveal bg-slate-50">
+        <section id="contact" className="reveal content-auto bg-slate-50">
           <LocationMapSection />
         </section>
       </div>
@@ -191,6 +191,9 @@ function HeroSection() {
           alt=""
           role="presentation"
           className="h-full w-full object-cover"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/60 to-slate-900/80" />
@@ -203,6 +206,8 @@ function HeroSection() {
           <img
             src={CHURCH_LOGO}
             alt={t('common.churchName')}
+            width={128}
+            height={128}
             className="mx-auto h-24 w-24 rounded-full border-4 border-white/20 object-contain shadow-2xl sm:h-32 sm:w-32"
           />
         </div>
@@ -247,7 +252,7 @@ function HeroSection() {
           <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
           <span className="text-white/90">
             {t('hero.nextService')}{' '}
-            <span className="font-semibold text-amber-300">
+            <span className="font-semibold tabular-nums text-amber-300">
               {countdown.days}d {countdown.hours}h {countdown.minutes}m
             </span>
           </span>
@@ -284,7 +289,7 @@ function HeroSection() {
             { value: CHURCH_STATS.years, label: t('hero.stats.years') },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-2xl font-bold text-white sm:text-3xl">{stat.value}</p>
+              <p className="text-2xl font-bold tabular-nums text-white sm:text-3xl">{stat.value}</p>
               <p className="text-xs text-slate-300 sm:text-sm">{stat.label}</p>
             </div>
           ))}

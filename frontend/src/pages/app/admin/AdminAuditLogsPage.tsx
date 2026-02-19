@@ -87,7 +87,7 @@ export default function AdminAuditLogsPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Audit Logs' }]}>
       <div className="container mx-auto px-4 py-4">
-        <h1 className="mb-6 text-2xl font-bold text-balance">Audit Logs</h1>
+        <h1 className="mb-6 text-balance text-2xl font-bold">Audit Logs</h1>
 
         {error && (
           <Alert variant="destructive" className="mb-4">
@@ -190,7 +190,7 @@ export default function AdminAuditLogsPage() {
                         </td>
                         <td className="px-4 py-3">{log.entityType}</td>
                         <td className="px-4 py-3 font-mono text-sm">
-                          {log.entityId.substring(0, 8)}...
+                          {log.entityId.substring(0, 8)}\u2026
                         </td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{log.ipAddress}</td>
                       </tr>

@@ -7,8 +7,9 @@
 ---
 
 **Project:** Sing Buri Adventist Center
-**Generated:** 2026-02-19 09:21:36
-**Category:** Analytics Dashboard
+**Generated:** 2026-02-19
+**Updated:** 2026-02-19 (Typography override: Lexend + Source Sans 3)
+**Category:** Church Community Platform
 
 ---
 
@@ -16,47 +17,63 @@
 
 ### Color Palette
 
-| Role | Hex | CSS Variable |
-|------|-----|--------------|
-| Primary | `#1E40AF` | `--color-primary` |
-| Secondary | `#3B82F6` | `--color-secondary` |
-| CTA/Accent | `#F59E0B` | `--color-cta` |
+| Role       | Hex       | CSS Variable         |
+| ---------- | --------- | -------------------- |
+| Primary    | `#1E40AF` | `--color-primary`    |
+| Secondary  | `#3B82F6` | `--color-secondary`  |
+| CTA/Accent | `#F59E0B` | `--color-cta`        |
 | Background | `#F8FAFC` | `--color-background` |
-| Text | `#1E3A8A` | `--color-text` |
+| Text       | `#1E3A8A` | `--color-text`       |
+| Success    | `#16A34A` | `--color-success`    |
+| Warning    | `#D97706` | `--color-warning`    |
+| Error      | `#DC2626` | `--color-error`      |
+| Muted      | `#64748B` | `--color-muted`      |
 
-**Color Notes:** Blue data + amber highlights
+**Color Notes:** Blue trust + amber CTA highlights. Warm and welcoming for a church community app.
 
 ### Typography
 
-- **Heading Font:** Fira Code
-- **Body Font:** Fira Sans
-- **Mood:** dashboard, data, analytics, code, technical, precise
-- **Google Fonts:** [Fira Code + Fira Sans](https://fonts.google.com/share?selection.family=Fira+Code:wght@400;500;600;700|Fira+Sans:wght@300;400;500;600;700)
+- **Heading Font:** Lexend
+- **Body Font:** Source Sans 3
+- **Mono Font:** Fira Code (code blocks, tabular numbers)
+- **Mood:** warm, welcoming, community, spiritual, approachable, readable
+- **Google Fonts:** [Lexend + Source Sans 3](https://fonts.google.com/share?selection.family=Lexend:wght@300;400;500;600;700|Source+Sans+3:wght@300;400;500;600;700)
 
 **CSS Import:**
+
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap");
+```
+
+**Tailwind Config (already configured):**
+
+```js
+fontFamily: {
+  heading: ['Lexend', 'system-ui', 'sans-serif'],
+  body: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+  mono: ['Fira Code', 'ui-monospace', 'monospace'],
+}
 ```
 
 ### Spacing Variables
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
+| Token         | Value             | Usage                     |
+| ------------- | ----------------- | ------------------------- |
+| `--space-xs`  | `4px` / `0.25rem` | Tight gaps                |
+| `--space-sm`  | `8px` / `0.5rem`  | Icon gaps, inline spacing |
+| `--space-md`  | `16px` / `1rem`   | Standard padding          |
+| `--space-lg`  | `24px` / `1.5rem` | Section padding           |
+| `--space-xl`  | `32px` / `2rem`   | Large gaps                |
+| `--space-2xl` | `48px` / `3rem`   | Section margins           |
+| `--space-3xl` | `64px` / `4rem`   | Hero padding              |
 
 ### Shadow Depths
 
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
+| Level         | Value                          | Usage                       |
+| ------------- | ------------------------------ | --------------------------- |
+| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)`   | Subtle lift                 |
+| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)`    | Cards, buttons              |
+| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)`  | Modals, dropdowns           |
 | `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
 
 ---
@@ -68,30 +85,41 @@
 ```css
 /* Primary Button */
 .btn-primary {
-  background: #F59E0B;
+  background: #f59e0b;
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
-  transition: all 200ms ease;
+  transition:
+    background-color 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background: #d97706;
   transform: translateY(-1px);
 }
 
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #1E40AF;
-  border: 2px solid #1E40AF;
+  color: #1e40af;
+  border: 2px solid #1e40af;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
-  transition: all 200ms ease;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
   cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #1e40af;
+  color: white;
 }
 ```
 
@@ -99,11 +127,13 @@
 
 ```css
 .card {
-  background: #F8FAFC;
+  background: white;
   border-radius: 12px;
   padding: 24px;
   box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease;
   cursor: pointer;
 }
 
@@ -118,16 +148,18 @@
 ```css
 .input {
   padding: 12px 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 200ms ease;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .input:focus {
-  border-color: #1E40AF;
+  border-color: #1e40af;
   outline: none;
-  box-shadow: 0 0 0 3px #1E40AF20;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
 }
 ```
 
@@ -153,13 +185,13 @@
 
 ## Style Guidelines
 
-**Style:** Data-Dense Dashboard
+**Style:** Warm Community Platform with Data-Dense Admin
 
-**Keywords:** Multiple charts/widgets, data tables, KPI cards, minimal padding, grid layout, space-efficient, maximum data visibility
+**Keywords:** Welcoming, community-focused, spiritual, clean layout, accessible, warm colors with blue trust anchors, amber CTAs
 
-**Best For:** Business intelligence dashboards, financial analytics, enterprise reporting, operational dashboards, data warehousing
+**Best For:** Church management, community engagement, event coordination, member directory, spiritual content
 
-**Key Effects:** Hover tooltips, chart zoom on click, row highlighting on hover, smooth filter animations, data loading spinners
+**Key Effects:** Smooth scroll reveal, gentle fade-in animations, warm hover transitions, card lift effects, CTA glow pulse, loading spinners with brand colors
 
 ### Page Pattern
 
@@ -175,6 +207,7 @@
 
 - ❌ Ornate design
 - ❌ No filtering
+- ❌ `transition: all` — always list properties explicitly
 
 ### Additional Forbidden Patterns
 

@@ -273,6 +273,8 @@ export function PublicNavigationHeader({
                   src={CHURCH_LOGO}
                   alt={t('common.churchName')}
                   className="h-10 w-10 rounded-full object-contain"
+                  width={40}
+                  height={40}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -291,6 +293,8 @@ export function PublicNavigationHeader({
                   src={CHURCH_LOGO}
                   alt={t('common.churchName')}
                   className="h-10 w-10 rounded-full object-contain"
+                  width={40}
+                  height={40}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -444,10 +448,15 @@ export function PublicNavigationHeader({
           {isMobileMenuOpen && (
             <>
               {/* Backdrop */}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
               <div
                 className="fixed inset-0 z-40 bg-black/50 md:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setIsMobileMenuOpen(false);
+                }}
                 aria-hidden="true"
+                role="presentation"
               />
               {/* Panel */}
               <div className="relative z-50 max-h-[80vh] overflow-y-auto border-b border-border bg-card p-4 shadow-lg md:hidden">
