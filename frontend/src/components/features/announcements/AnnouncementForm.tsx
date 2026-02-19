@@ -201,7 +201,7 @@ export function AnnouncementForm({
       {/* Action Buttons */}
       <div className="flex gap-4">
         <Button type="submit" disabled={!isFormValid} className="flex-1">
-          {isLoading ? 'Saving...' : isDraft ? 'Save Draft' : submitLabel}
+          {isLoading ? 'Saving…' : isDraft ? 'Save Draft' : submitLabel}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>

@@ -68,7 +68,7 @@ export function WorshipTimesSection() {
         <div className="mb-10 text-center sm:mb-12">
           <h2
             id="worship-times-heading"
-            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl"
+            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance"
           >
             Worship Times
           </h2>

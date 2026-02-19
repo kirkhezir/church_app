@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
               <span className="text-xl font-bold text-white">SB</span>
             </div>
             <div className="hidden md:block">
-              <h1 className="text-xl font-bold text-foreground">Sing Buri Adventist Center</h1>
+              <h1 className="text-xl font-bold text-foreground text-balance">Sing Buri Adventist Center</h1>
               <p className="text-xs text-muted-foreground">ศูนย์แอดเวนตีสต์สิงห์บุรี</p>
             </div>
           </Link>

@@ -42,6 +42,7 @@ import {
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { SEO, DEFAULT_SEO } from '../../components/common/SEO';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 // =============================================================================
 // CONSTANTS
@@ -60,6 +61,7 @@ const CHURCH_STATS = {
 export function LandingPage() {
   const { language } = useI18n();
   useDocumentTitle('Home', 'หน้าแรก', language);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-900">
@@ -77,38 +79,54 @@ export function LandingPage() {
       {/* Shared Navigation Header (transparent mode for hero) */}
       <PublicNavigationHeader transparentHeader isHomePage topContent={<AnnouncementBanner />} />
       <HeroSection />
-      <AboutSection />
 
-      {/* Visit Us - Consolidated worship times + location (replaces separate sections) */}
-      <VisitUsSection />
+      {/* Scroll-reveal container for below-the-fold sections */}
+      <div ref={revealRef}>
+        <div className="reveal">
+          <AboutSection />
+        </div>
 
-      {/* Social proof */}
-      <TestimonialsSection />
+        {/* Visit Us - Consolidated worship times + location (replaces separate sections) */}
+        <div className="reveal">
+          <VisitUsSection />
+        </div>
 
-      <section id="events" className="relative">
-        <UpcomingEventsSection />
-      </section>
+        {/* Social proof */}
+        <div className="reveal">
+          <TestimonialsSection />
+        </div>
 
-      {/* Latest Sermon - Keep visitors engaged */}
-      <LatestSermonSection />
+        <section id="events" className="reveal relative">
+          <UpcomingEventsSection />
+        </section>
 
-      <section id="ministries">
-        <MinistryCardsSection />
-      </section>
+        {/* Latest Sermon - Keep visitors engaged */}
+        <div className="reveal">
+          <LatestSermonSection />
+        </div>
 
-      <section id="gallery">
-        <PhotoGallerySection />
-      </section>
+        <section id="ministries" className="reveal">
+          <MinistryCardsSection />
+        </section>
 
-      {/* Prayer & Give - Lightweight CTAs linking to dedicated pages */}
-      <PrayerGiveCTASection />
+        <section id="gallery" className="reveal">
+          <PhotoGallerySection />
+        </section>
 
-      <FAQSection />
+        {/* Prayer & Give - Lightweight CTAs linking to dedicated pages */}
+        <div className="reveal">
+          <PrayerGiveCTASection />
+        </div>
 
-      {/* Contact Section */}
-      <section id="contact" className="bg-slate-50">
-        <LocationMapSection />
-      </section>
+        <div className="reveal">
+          <FAQSection />
+        </div>
+
+        {/* Contact Section */}
+        <section id="contact" className="reveal bg-slate-50">
+          <LocationMapSection />
+        </section>
+      </div>
 
       <PublicFooter showNewsletter />
       <BackToTopButton />
@@ -189,7 +207,7 @@ function HeroSection() {
         </div>
 
         {/* Heading */}
-        <h1 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
           {t('common.churchName')}
         </h1>
 
@@ -239,7 +257,7 @@ function HeroSection() {
           <Button
             size="lg"
             onClick={scrollToServices}
-            className="bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 hover:bg-amber-400 sm:px-8"
+            className="animate-glow bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 [--glow-color:rgba(245,158,11,0.4)] hover:bg-amber-400 sm:px-8"
           >
             <Clock className="mr-2 h-5 w-5" />
             {t('hero.serviceTimes')}
@@ -315,7 +333,10 @@ function AboutSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
-          <h2 id="about-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2
+            id="about-heading"
+            className="mb-4 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             {t('about.title')}
           </h2>
           <p className="text-lg text-muted-foreground">{t('about.description')}</p>
@@ -401,7 +422,7 @@ function BackToTopButton() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       aria-label="Back to top"
     >
       <ArrowUp className="h-5 w-5" />

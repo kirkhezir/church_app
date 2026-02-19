@@ -151,7 +151,7 @@ export function LatestSermonSection() {
         {/* Section Header */}
         <div className="mb-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="text-center sm:text-left">
-            <h2 id="sermons-heading" className="mb-2 text-3xl font-bold text-white sm:text-4xl">
+            <h2 id="sermons-heading" className="mb-2 text-3xl font-bold text-white sm:text-4xl text-balance">
               Latest Message
             </h2>
             <p className="text-muted-foreground">Missed a Sabbath? Catch up on our recent sermons.</p>

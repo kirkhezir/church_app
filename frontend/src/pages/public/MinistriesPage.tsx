@@ -24,7 +24,7 @@ export function MinistriesPage() {
       <section className="bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 pb-16 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Users className="mx-auto mb-4 h-12 w-12 text-blue-300" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'แผนกพันธกิจ' : 'Our Ministries'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-blue-100">
@@ -42,7 +42,7 @@ export function MinistriesPage() {
             const Icon = ministryIconMap[ministry.id] || Users;
             return (
               <Link key={ministry.id} to={`/ministries/${ministry.id}`}>
-                <Card className="group h-full overflow-hidden transition-all hover:shadow-xl">
+                <Card className="group h-full overflow-hidden transition-shadow duration-200 hover:shadow-xl">
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={ministry.image}
@@ -56,7 +56,7 @@ export function MinistriesPage() {
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <h2 className="mb-2 text-lg font-bold text-foreground group-hover:text-primary">
+                    <h2 className="mb-2 text-balance text-lg font-bold text-foreground group-hover:text-primary">
                       {language === 'th' ? ministry.nameThai : ministry.name}
                     </h2>
                     <p className="mb-3 text-sm text-muted-foreground">
@@ -79,7 +79,7 @@ export function MinistriesPage() {
 
         {/* CTA Section */}
         <div className="mt-16 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
-          <h2 className="mb-2 text-2xl font-bold">
+          <h2 className="mb-2 text-balance text-2xl font-bold">
             {language === 'th' ? 'พร้อมที่จะมีส่วนร่วม?' : 'Ready to Get Involved?'}
           </h2>
           <p className="mb-6 text-blue-100">

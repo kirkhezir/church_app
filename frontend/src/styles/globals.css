@@ -130,6 +130,16 @@
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
+  /* Remove 300ms tap-delay on touch devices */
+  a,
+  button,
+  [role='button'],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
   /* Reduced motion — respect user preference */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -151,5 +161,110 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ===========================
+   Animation Keyframes
+   =========================== */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--glow-color, rgba(30, 64, 175, 0.45));
+  }
+  50% {
+    box-shadow: 0 0 18px 4px var(--glow-color, rgba(30, 64, 175, 0.25));
+  }
+}
+
+/* ===========================
+   Scroll-Reveal Utility Classes
+   Applied via className; IntersectionObserver toggles .is-visible
+   =========================== */
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.95);
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+
+  .reveal-scale.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Stagger delays for child elements */
+  .stagger-1 {
+    transition-delay: 0.1s;
+  }
+  .stagger-2 {
+    transition-delay: 0.2s;
+  }
+  .stagger-3 {
+    transition-delay: 0.3s;
+  }
+  .stagger-4 {
+    transition-delay: 0.4s;
+  }
+  .stagger-5 {
+    transition-delay: 0.5s;
+  }
+
+  /* CTA glow animation */
+  .animate-glow {
+    animation: glow-pulse 2.5s ease-in-out infinite;
+  }
+
+  /* Dashboard card entrance */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out both;
   }
 }

@@ -121,7 +121,7 @@ export function PrayerRequestSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-rose-100 p-3">
             <Heart className="h-8 w-8 text-rose-600" />
           </div>
-          <h2 id="prayer-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="prayer-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             Share Your Prayer Request
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -283,7 +283,7 @@ export function PrayerRequestSection() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      Submitting...
+                      Submitting…
                     </>
                   ) : (
                     <>

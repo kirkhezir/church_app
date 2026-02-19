@@ -136,7 +136,7 @@ export function ContactForm() {
     <section id="contact" className="bg-muted py-16 sm:py-24" aria-labelledby="contact-heading">
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         <div className="mb-10 text-center">
-          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             Get In Touch
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -312,7 +312,7 @@ export function ContactForm() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Sending...
+                    Sending…
                   </span>
                 ) : (
                   'Send Message'

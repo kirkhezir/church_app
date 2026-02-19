@@ -164,7 +164,7 @@ export default function NotificationSettingsPage() {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <Button type="submit" disabled={loading}>
-                  {loading ? 'Saving...' : 'Save Preferences'}
+                  {loading ? 'Saving…' : 'Save Preferences'}
                 </Button>
                 <Button
                   type="button"

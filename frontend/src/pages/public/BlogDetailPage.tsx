@@ -74,7 +74,7 @@ export function BlogDetailPage() {
       // Bold headers
       if (block.startsWith('**') && block.endsWith('**')) {
         return (
-          <h2 key={i} className="mb-3 mt-6 text-lg font-bold text-foreground">
+          <h2 key={i} className="mb-3 mt-6 text-lg font-bold text-foreground text-balance">
             {block.replace(/\*\*/g, '')}
           </h2>
         );
@@ -84,7 +84,7 @@ export function BlogDetailPage() {
         const parts = block.split('**');
         return (
           <div key={i} className="mb-4">
-            <h2 className="mb-2 text-lg font-bold text-foreground">
+            <h2 className="mb-2 text-lg font-bold text-foreground text-balance">
               {parts[1]}
             </h2>
             {parts[2] && <p className="text-muted-foreground">{parts[2]}</p>}
@@ -99,7 +99,7 @@ export function BlogDetailPage() {
         return (
           <div key={i} className="mb-4">
             {heading && !heading.startsWith('- ') && (
-              <h2 className="mb-2 text-lg font-bold text-foreground">
+              <h2 className="mb-2 text-lg font-bold text-foreground text-balance">
                 {heading.replace(/\*\*/g, '')}
               </h2>
             )}
@@ -164,7 +164,7 @@ export function BlogDetailPage() {
         </Link>
 
         {/* Title */}
-        <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
+        <h1 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl text-balance">
           {title}
         </h1>
 
@@ -212,7 +212,7 @@ export function BlogDetailPage() {
       {displayRelated.length > 0 && (
         <section className="border-t border-border bg-muted py-12">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-6 text-xl font-bold text-foreground">
+            <h2 className="mb-6 text-xl font-bold text-foreground text-balance">
               {language === 'th' ? 'บทความที่เกี่ยวข้อง' : 'Related Articles'}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

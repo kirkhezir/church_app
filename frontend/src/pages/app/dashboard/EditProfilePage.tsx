@@ -272,7 +272,7 @@ export default function EditProfilePage() {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <Button type="submit" disabled={loading}>
-                  {loading ? 'Saving...' : 'Save Changes'}
+                  {loading ? 'Saving…' : 'Save Changes'}
                 </Button>
                 <Button
                   type="button"

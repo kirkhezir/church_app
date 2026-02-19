@@ -136,7 +136,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <AlertTriangle className="h-10 w-10 text-red-600" />
             </div>
 
-            <h1 className="mb-2 text-2xl font-bold text-foreground">Something went wrong</h1>
+            <h1 className="mb-2 text-2xl font-bold text-foreground text-balance">Something went wrong</h1>
 
             <p className="mb-6 text-muted-foreground">
               We&apos;re sorry, but something unexpected happened. Our team has been notified and is

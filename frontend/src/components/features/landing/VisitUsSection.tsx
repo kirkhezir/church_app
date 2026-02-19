@@ -171,7 +171,7 @@ export function VisitUsSection() {
             <Calendar className="mr-2 h-4 w-4" />
             {language === 'th' ? 'ร่วมนมัสการกับเรา' : 'Join us this Sabbath'}
           </span>
-          <h2 id="visit-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="visit-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
           </h2>
           <p className="text-lg text-muted-foreground">

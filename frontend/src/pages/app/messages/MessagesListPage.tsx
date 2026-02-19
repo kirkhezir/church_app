@@ -90,7 +90,7 @@ export function MessagesListPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold">
+          <h1 className="flex items-center gap-2 text-3xl font-bold text-balance">
             <Mail className="h-8 w-8" />
             Messages
           </h1>

@@ -24,7 +24,7 @@ export function LocationMapSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             Find Us
           </h2>
           <p className="text-lg text-muted-foreground">

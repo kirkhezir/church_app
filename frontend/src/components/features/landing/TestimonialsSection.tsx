@@ -97,7 +97,7 @@ export function TestimonialsSection() {
         <div className="mb-10 text-center">
           <h2
             id="testimonials-heading"
-            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
           >
             What Our Members Say
           </h2>
@@ -169,7 +169,7 @@ export function TestimonialsSection() {
                   role="tab"
                   aria-selected={idx === currentIndex}
                   aria-label={`Go to testimonial ${idx + 1}`}
-                  className={`h-2 rounded-full transition-all ${
+                  className={`h-2 rounded-full transition-[width,background-color] duration-200 ${
                     idx === currentIndex ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
                   }`}
                 />

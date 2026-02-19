@@ -65,7 +65,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold">{weeklyEngagement}%</span>
+                <span className="text-4xl font-bold tabular-nums">{weeklyEngagement}%</span>
                 <span className="mb-1 text-muted-foreground">of members active</span>
               </div>
               <Progress value={weeklyEngagement} className="h-3" />
@@ -86,7 +86,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold">{monthlyEngagement}%</span>
+                <span className="text-4xl font-bold tabular-nums">{monthlyEngagement}%</span>
                 <span className="mb-1 text-muted-foreground">of members active</span>
               </div>
               <Progress value={monthlyEngagement} className="h-3" />
@@ -110,7 +110,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
                 <Calendar className="h-4 w-4" />
                 <span className="text-sm">Event RSVPs</span>
               </div>
-              <div className="text-2xl font-bold">{data.eventRsvps}</div>
+              <div className="text-2xl font-bold tabular-nums">{data.eventRsvps}</div>
             </div>
 
             <div className="space-y-2">
@@ -118,7 +118,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
                 <MessageSquare className="h-4 w-4" />
                 <span className="text-sm">Messages Sent</span>
               </div>
-              <div className="text-2xl font-bold">{data.messagesSent}</div>
+              <div className="text-2xl font-bold tabular-nums">{data.messagesSent}</div>
             </div>
 
             <div className="space-y-2">
@@ -126,7 +126,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
                 <Bell className="h-4 w-4" />
                 <span className="text-sm">Announcements Viewed</span>
               </div>
-              <div className="text-2xl font-bold">{data.announcementsViewed}</div>
+              <div className="text-2xl font-bold tabular-nums">{data.announcementsViewed}</div>
             </div>
 
             <div className="space-y-2">
@@ -134,7 +134,7 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
                 <Users className="h-4 w-4" />
                 <span className="text-sm">Profile Updates</span>
               </div>
-              <div className="text-2xl font-bold">{data.profileUpdates}</div>
+              <div className="text-2xl font-bold tabular-nums">{data.profileUpdates}</div>
             </div>
           </div>
         </CardContent>
@@ -149,7 +149,9 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Average Session Duration</div>
-              <div className="text-2xl font-bold">{data.averageSessionDuration} min</div>
+              <div className="text-2xl font-bold tabular-nums">
+                {data.averageSessionDuration} min
+              </div>
             </div>
 
             <div className="space-y-2">

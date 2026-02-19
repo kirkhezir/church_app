@@ -39,7 +39,7 @@ export function PrayerGiveCTASection() {
             <Sparkles className="h-4 w-4" />
             {isEn ? 'Be Part of Something Greater' : 'มาร่วมเป็นส่วนหนึ่ง'}
           </div>
-          <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+          <h2 className="text-balance text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
             {isEn ? 'How You Can Make a Difference' : 'คุณสามารถสร้างความแตกต่างได้'}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-purple-200/80">
@@ -54,7 +54,7 @@ export function PrayerGiveCTASection() {
           {/* Prayer Request Card */}
           <Link
             to="/prayer"
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-rose-500/10 sm:p-10"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-rose-500/10 sm:p-10"
           >
             {/* Decorative accent */}
             <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-rose-500/20 blur-2xl transition-transform duration-500 group-hover:scale-150" />
@@ -81,7 +81,7 @@ export function PrayerGiveCTASection() {
               </p>
 
               {/* CTA */}
-              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-rose-700 shadow-lg transition-all duration-300 group-hover:gap-3 group-hover:shadow-xl">
+              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-rose-700 shadow-lg transition-[gap,box-shadow] duration-300 group-hover:gap-3 group-hover:shadow-xl">
                 {isEn ? 'Submit Prayer Request' : 'ส่งคำขออธิษฐาน'}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
@@ -99,7 +99,7 @@ export function PrayerGiveCTASection() {
           {/* Give / Support Card */}
           <Link
             to="/give"
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-amber-500/10 sm:p-10"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-300 hover:border-white/20 hover:bg-white/[0.12] hover:shadow-2xl hover:shadow-amber-500/10 sm:p-10"
           >
             {/* Decorative accent */}
             <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-amber-500/20 blur-2xl transition-transform duration-500 group-hover:scale-150" />
@@ -126,7 +126,7 @@ export function PrayerGiveCTASection() {
               </p>
 
               {/* CTA */}
-              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-amber-700 shadow-lg transition-all duration-300 group-hover:gap-3 group-hover:shadow-xl">
+              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-amber-700 shadow-lg transition-[gap,box-shadow] duration-300 group-hover:gap-3 group-hover:shadow-xl">
                 {isEn ? 'Give Now' : 'ถวายตอนนี้'}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </span>

@@ -93,7 +93,7 @@ export function GalleryPage() {
       <section className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Camera className="mx-auto mb-4 h-12 w-12 text-purple-300" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'แกลเลอรี่' : 'Photo Gallery'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-purple-100">
@@ -157,7 +157,7 @@ export function GalleryPage() {
             {albums.map((album) => (
               <Card
                 key={album.id}
-                className="group cursor-pointer overflow-hidden transition-all hover:shadow-xl"
+                className="group cursor-pointer overflow-hidden transition-shadow duration-200 hover:shadow-xl"
                 onClick={() => {
                   setSelectedAlbum(album.id);
                   setViewMode('photos');
@@ -172,7 +172,7 @@ export function GalleryPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h2 className="text-lg font-bold">
+                    <h2 className="text-balance text-lg font-bold">
                       {language === 'th' ? album.titleThai : album.title}
                     </h2>
                     <p className="text-sm text-white/80">
@@ -201,7 +201,7 @@ export function GalleryPage() {
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/40">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-[background-color] duration-200 group-hover:bg-black/40">
                   <ZoomIn className="h-8 w-8 text-white opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-3 transition-transform group-hover:translate-y-0">
@@ -268,7 +268,7 @@ export function GalleryPage() {
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
             <div className="mx-auto flex max-w-4xl items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="text-balance text-lg font-semibold text-white">
                   {language === 'th' ? lightboxPhoto.titleThai : lightboxPhoto.title}
                 </h2>
                 <p className="flex items-center gap-2 text-sm text-white/70">

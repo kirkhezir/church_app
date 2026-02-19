@@ -93,7 +93,7 @@ export default function LoginPage() {
 
           {/* Welcome Message */}
           <div className="max-w-md">
-            <h1 className="mb-4 text-4xl font-bold leading-tight text-white">
+            <h1 className="mb-4 text-4xl font-bold leading-tight text-white text-balance">
               Welcome back to your church community
             </h1>
             <p className="mb-8 text-lg text-blue-100/80">

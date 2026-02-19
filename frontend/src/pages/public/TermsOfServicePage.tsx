@@ -38,7 +38,7 @@ export function TermsOfServicePage() {
             <ArrowLeft className="h-4 w-4" />
             {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold">
+          <h1 className="mt-4 text-3xl font-bold text-balance">
             {language === 'th' ? 'เงื่อนไขการใช้บริการ' : 'Terms of Service'}
           </h1>
           <p className="mt-2 text-blue-100">
@@ -61,7 +61,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Agreement to Terms</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Agreement to Terms</h2>
             </div>
             <p className="text-muted-foreground">
               By accessing or using the Sing Buri Adventist Center website and services, you agree
@@ -80,7 +80,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
                 <Globe className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Use of Services</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Use of Services</h2>
             </div>
             <p className="text-muted-foreground">
               Our website provides information about church activities, events, and services. We
@@ -110,7 +110,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Member Accounts</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Member Accounts</h2>
             </div>
             <p className="text-muted-foreground">
               When you create an account with us, you must provide accurate, complete, and current
@@ -134,7 +134,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
                 <ShieldCheck className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">
+              <h2 className="text-xl font-semibold text-foreground text-balance">
                 Content & Intellectual Property
               </h2>
             </div>
@@ -168,7 +168,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-900/30">
                 <Scale className="h-5 w-5 text-rose-600 dark:text-rose-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Donations & Giving</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Donations & Giving</h2>
             </div>
             <p className="text-muted-foreground">
               All donations made through our website are voluntary. By making a donation, you
@@ -191,7 +191,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30">
                 <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Limitation of Liability</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Limitation of Liability</h2>
             </div>
             <p className="text-muted-foreground">
               Our website and services are provided &quot;as is&quot; and &quot;as available&quot;
@@ -208,7 +208,7 @@ export function TermsOfServicePage() {
 
           {/* External Links */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground">External Links</h2>
+            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">External Links</h2>
             <p className="text-muted-foreground">
               Our website may contain links to third-party websites or services not owned or
               controlled by Sing Buri Adventist Center. We have no control over, and assume no
@@ -220,7 +220,7 @@ export function TermsOfServicePage() {
 
           {/* Governing Law */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground">Governing Law</h2>
+            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Governing Law</h2>
             <p className="text-muted-foreground">
               These Terms shall be governed by and construed in accordance with the laws of the
               Kingdom of Thailand, without regard to its conflict of law provisions. Any disputes
@@ -231,7 +231,7 @@ export function TermsOfServicePage() {
 
           {/* Changes to Terms */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground">Changes to These Terms</h2>
+            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Changes to These Terms</h2>
             <p className="text-muted-foreground">
               We reserve the right to modify or replace these Terms at any time. If we make material
               changes, we will notify users through a notice on our website. Your continued use of
@@ -245,7 +245,7 @@ export function TermsOfServicePage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Contact Us</h2>
+              <h2 className="text-xl font-semibold text-foreground text-balance">Contact Us</h2>
             </div>
             <p className="text-muted-foreground">
               If you have questions about these Terms of Service, please contact us:

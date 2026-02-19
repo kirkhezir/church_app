@@ -58,7 +58,7 @@ export function NotFoundPage() {
           </div>
 
           {/* Message */}
-          <h1 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl">
+          <h1 className="mb-3 text-balance text-2xl font-bold text-foreground sm:text-3xl">
             {language === 'th' ? 'ไม่พบหน้าที่คุณต้องการ' : 'Page Not Found'}
           </h1>
           <p className="mx-auto mb-8 max-w-md text-muted-foreground">
@@ -94,7 +94,7 @@ export function NotFoundPage() {
                 <Link
                   key={to}
                   to={to}
-                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-all hover:border-blue-300 hover:shadow-md dark:border-border dark:hover:border-blue-600"
+                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-[box-shadow,border-color] duration-200 hover:border-blue-300 hover:shadow-md dark:border-border dark:hover:border-blue-600"
                 >
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
                     <Icon className="h-5 w-5" />

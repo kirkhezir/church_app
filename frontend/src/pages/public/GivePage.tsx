@@ -184,7 +184,7 @@ export function GivePage() {
       <section className="bg-gradient-to-br from-amber-700 via-orange-700 to-red-700 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Heart className="mx-auto mb-4 h-12 w-12 text-amber-200" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'ถวายและบริจาค' : 'Give & Donate'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-amber-100">
@@ -210,7 +210,7 @@ export function GivePage() {
               {/* Step 1: Select Category */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-foreground">
+                  <h2 className="mb-4 text-balance text-lg font-bold text-foreground">
                     {language === 'th' ? '1. เลือกประเภทการถวาย' : '1. Select Giving Category'}
                   </h2>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -220,7 +220,7 @@ export function GivePage() {
                         <button
                           key={option.id}
                           onClick={() => setSelectedCategory(option.id)}
-                          className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                          className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                             selectedCategory === option.id
                               ? 'border-amber-500 bg-amber-50'
                               : 'border-border hover:border-border'
@@ -249,7 +249,7 @@ export function GivePage() {
               {/* Step 2: Enter Amount */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-foreground">
+                  <h2 className="mb-4 text-balance text-lg font-bold text-foreground">
                     {language === 'th' ? '2. จำนวนเงิน' : '2. Enter Amount'}
                   </h2>
                   <div className="mb-4 flex flex-wrap gap-2">
@@ -315,13 +315,13 @@ export function GivePage() {
               {/* Step 3: Payment Method */}
               <Card className="mb-6">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-bold text-foreground">
+                  <h2 className="mb-4 text-balance text-lg font-bold text-foreground">
                     {language === 'th' ? '3. วิธีการชำระเงิน' : '3. Payment Method'}
                   </h2>
                   <div className="grid gap-3 sm:grid-cols-3">
                     <button
                       onClick={() => setPaymentMethod('bank')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'bank'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -334,7 +334,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('promptpay')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'promptpay'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -345,7 +345,7 @@ export function GivePage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('cash')}
-                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 ${
+                      className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                         paymentMethod === 'cash'
                           ? 'border-amber-500 bg-amber-50'
                           : 'border-border hover:border-border'
@@ -538,7 +538,7 @@ export function GivePage() {
           /* Success State */
           <div className="mx-auto max-w-lg py-12 text-center" role="status" aria-live="polite">
             <CheckCircle className="mx-auto mb-6 h-20 w-20 text-green-500" />
-            <h2 className="mb-4 text-3xl font-bold text-foreground">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'ขอบคุณสำหรับการถวาย!' : 'Thank You for Your Gift!'}
             </h2>
             <p className="mb-8 text-lg text-muted-foreground">
@@ -608,7 +608,7 @@ export function GivePage() {
         {/* Giving Impact */}
         <div className="mt-16 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 p-8 text-white">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-6 text-2xl font-bold">
+            <h2 className="mb-6 text-balance text-2xl font-bold">
               {language === 'th' ? 'ผลกระทบของการถวาย' : 'Your Giving Impact'}
             </h2>
             <div className="grid gap-6 sm:grid-cols-3">

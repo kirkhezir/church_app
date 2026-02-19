@@ -28,7 +28,7 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-border border-t-blue-600"></div>
-          <p className="mt-4 text-sm text-muted-foreground">Loading...</p>
+          <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
         </div>
       </div>
     );

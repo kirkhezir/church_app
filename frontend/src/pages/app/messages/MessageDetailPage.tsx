@@ -170,7 +170,7 @@ export function MessageDetailPage() {
           <Separator />
 
           <CardContent className="pt-6">
-            <h2 className="mb-4 text-xl font-semibold">{message.subject}</h2>
+            <h2 className="mb-4 text-xl font-semibold text-balance">{message.subject}</h2>
             <div className="whitespace-pre-wrap text-foreground">{message.body}</div>
           </CardContent>
         </Card>

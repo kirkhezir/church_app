@@ -312,7 +312,7 @@ export function EventDetailPage() {
             <span className="mb-3 inline-block rounded-full bg-emerald-500 px-3 py-1 text-sm text-white">
               {language === 'th' ? event.categoryThai : event.category}
             </span>
-            <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl text-balance">
               {language === 'th' ? event.titleThai : event.title}
             </h1>
           </div>
@@ -327,7 +327,7 @@ export function EventDetailPage() {
             {/* Description */}
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="mb-4 text-xl font-bold text-foreground">
+                <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
                   {language === 'th' ? 'รายละเอียดกิจกรรม' : 'Event Details'}
                 </h2>
                 <div className="prose max-w-none text-muted-foreground">
@@ -346,7 +346,7 @@ export function EventDetailPage() {
             {event.schedule && event.schedule.length > 0 && (
               <Card className="mb-8">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-foreground">
+                  <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
                     {language === 'th' ? 'กำหนดการ' : 'Schedule'}
                   </h2>
                   <div className="space-y-3">
@@ -369,7 +369,7 @@ export function EventDetailPage() {
             {event.whatToBring && event.whatToBring.length > 0 && (
               <Card>
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-xl font-bold text-foreground">
+                  <h2 className="mb-4 text-xl font-bold text-foreground text-balance">
                     {language === 'th' ? 'สิ่งที่ควรนำมา' : 'What to Bring'}
                   </h2>
                   <ul className="space-y-2">

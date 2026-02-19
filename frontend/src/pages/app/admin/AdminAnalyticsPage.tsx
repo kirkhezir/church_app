@@ -172,7 +172,7 @@ export default function AdminAnalyticsPage() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold">
+          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <BarChart3 className="h-8 w-8" />
             Analytics Dashboard
           </h1>
@@ -235,7 +235,7 @@ export default function AdminAnalyticsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.totalMembers || 0}</div>
+              <div className="text-2xl font-bold tabular-nums">{dashboard?.totalMembers || 0}</div>
               <p className="text-xs text-muted-foreground">
                 <span className="text-green-500">+{dashboard?.newMembersThisMonth || 0}</span> from
                 last month
@@ -249,7 +249,7 @@ export default function AdminAnalyticsPage() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold tabular-nums">
                 {attendanceData.length > 0
                   ? Math.round(
                       attendanceData.reduce((sum, d) => sum + d.attendance, 0) /
@@ -269,7 +269,9 @@ export default function AdminAnalyticsPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.activeUsersPercentage || 0}%</div>
+              <div className="text-2xl font-bold tabular-nums">
+                {dashboard?.activeUsersPercentage || 0}%
+              </div>
               <p className="text-xs text-muted-foreground">
                 {dashboard?.activeUsers || 0} active in last 30 days
               </p>
@@ -282,7 +284,9 @@ export default function AdminAnalyticsPage() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.upcomingEvents || 0}</div>
+              <div className="text-2xl font-bold tabular-nums">
+                {dashboard?.upcomingEvents || 0}
+              </div>
               <p className="text-xs text-muted-foreground">
                 {dashboard?.totalRsvps || 0} total RSVPs
               </p>

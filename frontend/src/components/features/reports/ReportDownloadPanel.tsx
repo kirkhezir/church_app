@@ -152,7 +152,7 @@ export function ReportDownloadPanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-balance">Reports</h2>
         <p className="text-muted-foreground">Generate and download PDF reports for various data.</p>
       </div>
 

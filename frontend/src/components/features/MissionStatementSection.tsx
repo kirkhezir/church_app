@@ -7,40 +7,40 @@
 import { Heart, Users, BookOpen, Church, Sparkles, Globe } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 
-export function MissionStatementSection() {
-  const coreValues = [
-    {
-      icon: Church,
-      title: 'Worship',
-      description: 'Praising God together through song, prayer, and Scripture',
-    },
-    {
-      icon: Users,
-      title: 'Community',
-      description: 'Building lasting relationships and supporting one another in faith',
-    },
-    {
-      icon: Globe,
-      title: 'Service',
-      description: 'Reaching out to our community with love and compassion',
-    },
-    {
-      icon: BookOpen,
-      title: 'Growth',
-      description: "Deepening our understanding of God's Word through study and reflection",
-    },
-    {
-      icon: Heart,
-      title: 'Love',
-      description: "Demonstrating Christ's love in all we do and say",
-    },
-    {
-      icon: Sparkles,
-      title: 'Hope',
-      description: 'Sharing the hope of salvation and eternal life with all',
-    },
-  ];
+const CORE_VALUES = [
+  {
+    icon: Church,
+    title: 'Worship',
+    description: 'Praising God together through song, prayer, and Scripture',
+  },
+  {
+    icon: Users,
+    title: 'Community',
+    description: 'Building lasting relationships and supporting one another in faith',
+  },
+  {
+    icon: Globe,
+    title: 'Service',
+    description: 'Reaching out to our community with love and compassion',
+  },
+  {
+    icon: BookOpen,
+    title: 'Growth',
+    description: "Deepening our understanding of God's Word through study and reflection",
+  },
+  {
+    icon: Heart,
+    title: 'Love',
+    description: "Demonstrating Christ's love in all we do and say",
+  },
+  {
+    icon: Sparkles,
+    title: 'Hope',
+    description: 'Sharing the hope of salvation and eternal life with all',
+  },
+];
 
+export function MissionStatementSection() {
   return (
     <section
       id="mission"
@@ -49,7 +49,7 @@ export function MissionStatementSection() {
     >
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h2 id="mission-heading" className="mb-4 text-4xl font-bold text-foreground">
+          <h2 id="mission-heading" className="mb-4 text-balance text-4xl font-bold text-foreground">
             Our Mission
           </h2>
           <div className="mx-auto h-1 w-24 rounded bg-gradient-to-r from-blue-600 to-purple-600"></div>
@@ -80,10 +80,10 @@ export function MissionStatementSection() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {coreValues.map((value, index) => (
+          {CORE_VALUES.map((value, index) => (
             <Card
               key={index}
-              className="group overflow-hidden border-none shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+              className="group overflow-hidden border-none shadow-lg transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-xl"
             >
               <CardContent className="p-6">
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg transition-transform group-hover:scale-110">

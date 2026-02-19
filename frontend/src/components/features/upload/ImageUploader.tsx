@@ -234,7 +234,7 @@ export function ImageUploader({
             <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
               <div className="flex flex-col items-center text-white">
                 <Loader2 className="h-8 w-8 animate-spin" />
-                <span className="mt-2 text-sm">Uploading...</span>
+                <span className="mt-2 text-sm">Uploading…</span>
               </div>
             </div>
           )}
@@ -283,7 +283,7 @@ export function ImageUploader({
           {uploading ? (
             <>
               <Loader2 className="mb-3 h-12 w-12 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Uploading...</p>
+              <p className="text-sm text-muted-foreground">Uploading…</p>
             </>
           ) : (
             <>

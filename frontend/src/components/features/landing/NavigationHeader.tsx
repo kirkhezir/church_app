@@ -38,7 +38,7 @@ export function NavigationHeader() {
       setIsScrolled(window.scrollY > 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -54,7 +54,7 @@ export function NavigationHeader() {
     <>
       {/* Main Navigation */}
       <header
-        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
+        className={`fixed left-0 right-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300 ${
           isScrolled ? 'bg-background/95 shadow-lg backdrop-blur-md' : 'bg-transparent'
         }`}
       >

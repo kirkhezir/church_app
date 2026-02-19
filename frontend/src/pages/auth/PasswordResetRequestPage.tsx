@@ -99,7 +99,7 @@ export default function PasswordResetRequestPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Sending...' : 'Send Reset Link'}
+              {loading ? 'Sending…' : 'Send Reset Link'}
             </Button>
 
             <div className="text-center text-sm">

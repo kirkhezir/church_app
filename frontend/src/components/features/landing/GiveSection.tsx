@@ -87,7 +87,7 @@ export function GiveSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-amber-100 p-3">
             <Gift className="h-8 w-8 text-amber-600" />
           </div>
-          <h2 id="give-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="give-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             Support Our Ministry
           </h2>
           <p className="text-lg text-muted-foreground">

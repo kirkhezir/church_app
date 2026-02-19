@@ -152,14 +152,14 @@ export const RSVPListPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-2xl font-bold">{event.rsvpCount || 0}</p>
+                  <p className="text-2xl font-bold tabular-nums">{event.rsvpCount || 0}</p>
                   <p className="text-sm text-muted-foreground">Total RSVPs</p>
                 </div>
               </div>
               {event.maxCapacity && (
                 <div className="flex items-center gap-2">
                   <div>
-                    <p className="text-2xl font-bold">{event.maxCapacity}</p>
+                    <p className="text-2xl font-bold tabular-nums">{event.maxCapacity}</p>
                     <p className="text-sm text-muted-foreground">Capacity</p>
                   </div>
                 </div>

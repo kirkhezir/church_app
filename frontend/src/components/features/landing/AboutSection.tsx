@@ -39,7 +39,7 @@ export function AboutSection() {
       <div className="mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
+          <h2 className="mb-4 text-4xl font-bold text-foreground md:text-5xl text-balance">
             Welcome to Our Church Family
           </h2>
           <p className="mx-auto max-w-3xl text-xl leading-relaxed text-muted-foreground">

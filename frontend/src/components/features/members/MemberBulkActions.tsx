@@ -261,7 +261,7 @@ export function MemberBulkActions({
               onClick={handleBulkEmail}
               disabled={!emailSubject || !emailMessage || isLoading}
             >
-              {isLoading ? 'Sending...' : 'Send Email'}
+              {isLoading ? 'Sending…' : 'Send Email'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -305,7 +305,7 @@ export function MemberBulkActions({
               disabled={isLoading}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isLoading ? 'Deleting...' : 'Delete'}
+              {isLoading ? 'Deleting…' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

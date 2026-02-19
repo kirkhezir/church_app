@@ -236,9 +236,9 @@ export function AdminAnnouncementsPage() {
 
   const handleSelectOne = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedIds([...selectedIds, id]);
+      setSelectedIds((prev) => [...prev, id]);
     } else {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+      setSelectedIds((prev) => prev.filter((selectedId) => selectedId !== id));
     }
   };
 
@@ -252,7 +252,7 @@ export function AdminAnnouncementsPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1">
-          <h1 className="text-2xl font-bold sm:text-3xl">Manage Announcements</h1>
+          <h1 className="text-balance text-2xl font-bold sm:text-3xl">Manage Announcements</h1>
           <p className="mt-1 text-sm text-muted-foreground sm:mt-2 sm:text-base">
             Create, edit, and manage church announcements
           </p>

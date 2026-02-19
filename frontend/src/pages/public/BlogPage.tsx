@@ -68,7 +68,7 @@ export function BlogPage() {
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Newspaper className="mx-auto mb-4 h-12 w-12 text-blue-400" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-4xl font-bold sm:text-5xl text-balance">
             {language === 'th' ? 'ข่าวสารและบทความ' : 'News & Blog'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-blue-200">
@@ -83,7 +83,7 @@ export function BlogPage() {
       {featuredPosts.length > 0 && (
         <div className="bg-muted py-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-6 text-lg font-semibold text-foreground">
+            <h2 className="mb-6 text-lg font-semibold text-foreground text-balance">
               {language === 'th' ? 'บทความเด่น' : 'Featured Stories'}
             </h2>
             <div className="grid gap-6 md:grid-cols-2">
@@ -250,7 +250,7 @@ export function BlogPage() {
 
         {/* Newsletter CTA */}
         <div className="mt-16 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center text-white">
-          <h2 className="mb-2 text-2xl font-bold">
+          <h2 className="mb-2 text-2xl font-bold text-balance">
             {language === 'th' ? 'ไม่พลาดการอัปเดต!' : 'Stay Updated!'}
           </h2>
           <p className="mb-6 text-blue-100">

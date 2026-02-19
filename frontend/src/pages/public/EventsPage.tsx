@@ -66,7 +66,7 @@ export function EventsPage() {
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Calendar className="mx-auto mb-4 h-12 w-12 text-emerald-300" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-4xl font-bold sm:text-5xl text-balance">
             {language === 'th' ? 'กิจกรรมและปฏิทิน' : 'Events & Calendar'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-emerald-100">
@@ -81,7 +81,7 @@ export function EventsPage() {
       {featuredEvents.length > 0 && (
         <div className="bg-muted py-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">
+            <h2 className="mb-4 text-lg font-semibold text-foreground text-balance">
               {language === 'th' ? 'กิจกรรมเด่น' : 'Featured Events'}
             </h2>
             <div className="flex gap-4 overflow-x-auto pb-4">
@@ -299,7 +299,7 @@ export function EventsPage() {
             <CardContent className="p-6">
               {/* Calendar Header */}
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-foreground">
+                <h2 className="text-xl font-bold text-foreground text-balance">
                   {currentMonth.toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', {
                     month: 'long',
                     year: 'numeric',
@@ -414,7 +414,7 @@ export function EventsPage() {
 
         {/* Add to Calendar CTA */}
         <div className="mt-12 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 p-8 text-center text-white">
-          <h2 className="mb-2 text-2xl font-bold">
+          <h2 className="mb-2 text-2xl font-bold text-balance">
             {language === 'th' ? 'ไม่พลาดกิจกรรมใดๆ!' : "Don't Miss Any Events!"}
           </h2>
           <p className="mb-6 text-emerald-100">

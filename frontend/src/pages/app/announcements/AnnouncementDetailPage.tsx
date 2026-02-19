@@ -95,7 +95,7 @@ export function AnnouncementDetailPage() {
         </div>
 
         {/* Title */}
-        <h1 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl md:text-3xl">
+        <h1 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl md:text-3xl text-balance">
           {announcement.title}
         </h1>
 

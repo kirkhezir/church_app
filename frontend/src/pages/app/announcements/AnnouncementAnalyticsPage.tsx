@@ -116,7 +116,7 @@ export function AnnouncementAnalyticsPage() {
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
             Back to Announcements
           </Button>
-          <h1 className="text-3xl font-bold">Announcement Analytics</h1>
+          <h1 className="text-balance text-3xl font-bold">Announcement Analytics</h1>
           <p className="mt-2 text-muted-foreground">{announcementTitle}</p>
         </div>
 
@@ -129,7 +129,7 @@ export function AnnouncementAnalyticsPage() {
               <EyeIcon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{analytics.totalViews}</div>
+              <div className="text-2xl font-bold tabular-nums">{analytics.totalViews}</div>
               <p className="mt-1 text-xs text-muted-foreground">Unique member views</p>
             </CardContent>
           </Card>

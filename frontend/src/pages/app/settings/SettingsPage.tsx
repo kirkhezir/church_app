@@ -12,15 +12,15 @@ import { Separator } from '@/components/ui/separator';
 import { Settings, Palette, Globe, Bell } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 
-export default function SettingsPage() {
-  const breadcrumbs = [{ label: 'Settings' }];
+const breadcrumbs = [{ label: 'Settings' }];
 
+export default function SettingsPage() {
   return (
     <SidebarLayout breadcrumbs={breadcrumbs}>
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
+          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold tracking-tight">
             <Settings className="h-8 w-8" />
             Settings
           </h1>
@@ -31,7 +31,7 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Bell className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Notifications</h2>
+            <h2 className="text-balance text-lg font-semibold">Notifications</h2>
           </div>
           <div className="grid gap-4 lg:grid-cols-2">
             <PushNotificationSettings />
@@ -81,7 +81,7 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Palette className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Appearance</h2>
+            <h2 className="text-balance text-lg font-semibold">Appearance</h2>
           </div>
           <Card>
             <CardHeader>
@@ -116,7 +116,7 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Language & Region</h2>
+            <h2 className="text-balance text-lg font-semibold">Language & Region</h2>
           </div>
           <Card>
             <CardHeader>

@@ -117,7 +117,7 @@ export function FAQSection() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-8 text-center">
-          <h2 id="faq-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 id="faq-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-muted-foreground">Common questions about visiting our church</p>

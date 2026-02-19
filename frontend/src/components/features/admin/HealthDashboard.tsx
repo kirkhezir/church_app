@@ -215,7 +215,7 @@ export function HealthDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">System Health</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-balance">System Health</h2>
           <p className="text-muted-foreground">Monitor system status and performance metrics</p>
         </div>
         <div className="flex items-center gap-4">

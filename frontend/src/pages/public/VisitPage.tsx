@@ -158,7 +158,7 @@ export function VisitPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-bold sm:text-4xl">
+              <h1 className="text-3xl font-bold sm:text-4xl text-balance">
                 {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
               </h1>
               <p className="mt-2 text-lg text-blue-100">
@@ -183,7 +183,7 @@ export function VisitPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         {/* Service Times */}
         <section className="mb-12">
-          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-foreground">
+          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-foreground text-balance">
             <Clock className="h-6 w-6 text-blue-600" />
             {language === 'th' ? 'เวลานมัสการ' : 'Service Times'}
           </h2>
@@ -202,7 +202,7 @@ export function VisitPage() {
 
         {/* What to Know */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-foreground">What to Know Before You Come</h2>
+          <h2 className="mb-6 text-2xl font-bold text-foreground text-balance">What to Know Before You Come</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {visitInfoSections.map((section, index) => (
               <Card key={index} className="h-full">
@@ -414,7 +414,7 @@ export function VisitPage() {
                       {isSubmitting ? (
                         <>
                           <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          {language === 'th' ? 'กำลังส่ง...' : 'Sending...'}
+                          {language === 'th' ? 'กำลังส่ง...' : 'Sending…'}
                         </>
                       ) : (
                         <>
@@ -434,7 +434,7 @@ export function VisitPage() {
         <section className="text-center">
           <Card className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
             <CardContent className="p-8">
-              <h2 className="mb-2 text-2xl font-bold">
+              <h2 className="mb-2 text-2xl font-bold text-balance">
                 {language === 'th' ? 'พร้อมมาเยี่ยมชม?' : 'Ready to Visit?'}
               </h2>
               <p className="mb-6 text-blue-100">

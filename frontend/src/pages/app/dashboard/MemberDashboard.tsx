@@ -145,9 +145,11 @@ export default function MemberDashboard() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
       {/* Welcome Header */}
-      <Card className="border-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg dark:from-blue-700 dark:to-blue-900">
+      <Card className="animate-fade-in-up border-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg dark:from-blue-700 dark:to-blue-900">
         <CardContent className="p-6">
-          <h1 className="text-3xl font-bold">Welcome back, {dashboard.profile.firstName}!</h1>
+          <h1 className="text-balance text-3xl font-bold">
+            Welcome back, {dashboard.profile.firstName}!
+          </h1>
           <p className="mt-1 text-sm text-blue-100">
             Here&apos;s what&apos;s happening in your church community
           </p>
@@ -156,7 +158,7 @@ export default function MemberDashboard() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-1 transition-shadow duration-200 hover:shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Upcoming Events
@@ -164,13 +166,13 @@ export default function MemberDashboard() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tracking-tight">
+            <div className="text-3xl font-semibold tabular-nums tracking-tight">
               {dashboard.stats.upcomingEventsCount}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-2 transition-shadow duration-200 hover:shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Unread Announcements
@@ -178,19 +180,19 @@ export default function MemberDashboard() {
             <Bell className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tracking-tight">
+            <div className="text-3xl font-semibold tabular-nums tracking-tight">
               {dashboard.stats.unreadAnnouncementsCount}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-3 transition-shadow duration-200 hover:shadow-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tracking-tight">
+            <div className="text-3xl font-semibold tabular-nums tracking-tight">
               {dashboard.stats.myRsvpCount}
             </div>
           </CardContent>
@@ -198,7 +200,7 @@ export default function MemberDashboard() {
       </div>
 
       {/* Dashboard Widgets */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="animate-fade-in-up stagger-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Profile Summary - Left Column */}
         <div className="lg:col-span-1">
           <ProfileSummary profile={dashboard.profile} />

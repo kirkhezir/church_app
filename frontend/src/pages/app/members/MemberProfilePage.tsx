@@ -85,7 +85,7 @@ export function MemberProfilePage() {
                 </AvatarFallback>
               </Avatar>
               <div className="text-center sm:text-left">
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-2xl font-bold text-balance">
                   {member.firstName} {member.lastName}
                 </h1>
                 <p className="mt-1 text-muted-foreground">Church Member</p>
@@ -98,7 +98,7 @@ export function MemberProfilePage() {
 
             {/* Contact Information */}
             <div className="mt-8 border-t pt-8">
-              <h2 className="mb-4 text-lg font-semibold">Contact Information</h2>
+              <h2 className="mb-4 text-lg font-semibold text-balance">Contact Information</h2>
               <div className="space-y-4">
                 {member.email && (
                   <div className="flex items-center gap-3">

@@ -157,7 +157,7 @@ export function ComposeMessagePage() {
                     <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-md border bg-background shadow-lg">
                       {searchLoading ? (
                         <div className="p-4 text-center text-sm text-muted-foreground">
-                          Searching...
+                          Searching…
                         </div>
                       ) : searchResults.length > 0 ? (
                         <div className="max-h-60 overflow-y-auto">
@@ -226,7 +226,7 @@ export function ComposeMessagePage() {
                 disabled={sending || !recipientId || !subject.trim() || !body.trim()}
               >
                 {sending ? (
-                  <>Sending...</>
+                  <>Sending…</>
                 ) : (
                   <>
                     <Send className="mr-2 h-4 w-4" />

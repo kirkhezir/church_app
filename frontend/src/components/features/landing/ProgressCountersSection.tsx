@@ -104,7 +104,7 @@ function AnimatedCounter({ stat, isVisible }: { stat: Stat; isVisible: boolean }
       >
         <stat.icon className="h-10 w-10" />
       </div>
-      <div className="mb-2 text-5xl font-bold text-foreground md:text-6xl">
+      <div className="mb-2 text-5xl font-bold tabular-nums text-foreground md:text-6xl">
         {count}
         {stat.suffix}
       </div>
@@ -151,7 +151,7 @@ export function ProgressCountersSection() {
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-4xl font-bold md:text-5xl">Our Impact</h2>
+          <h2 className="mb-4 text-balance text-4xl font-bold md:text-5xl">Our Impact</h2>
           <p className="text-xl text-blue-100">Growing together in faith and service</p>
         </div>
 
@@ -160,7 +160,7 @@ export function ProgressCountersSection() {
           {stats.map((stat) => (
             <div
               key={stat.id}
-              className="rounded-2xl bg-white/10 p-8 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
+              className="rounded-2xl bg-white/10 p-8 backdrop-blur-sm transition-[background-color] duration-300 hover:bg-white/20"
             >
               <AnimatedCounter stat={stat} isVisible={isVisible} />
             </div>

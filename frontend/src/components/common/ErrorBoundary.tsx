@@ -140,14 +140,14 @@ export class PageErrorBoundary extends Component<
             </div>
             {this.state.isChunkError ? (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-foreground">Page Update Available</h1>
+                <h1 className="mb-2 text-2xl font-bold text-foreground text-balance">Page Update Available</h1>
                 <p className="mb-6 text-muted-foreground">
                   A new version of the app is available. Please reload to get the latest updates.
                 </p>
               </>
             ) : (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-foreground">
+                <h1 className="mb-2 text-2xl font-bold text-foreground text-balance">
                   Oops! Something went wrong
                 </h1>
                 <p className="mb-6 text-muted-foreground">
@@ -223,7 +223,7 @@ function DefaultLoadingUI() {
     <div className="flex items-center justify-center p-8">
       <div className="flex flex-col items-center gap-4">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-        <p className="text-muted-foreground">Loading...</p>
+        <p className="text-muted-foreground">Loading…</p>
       </div>
     </div>
   );

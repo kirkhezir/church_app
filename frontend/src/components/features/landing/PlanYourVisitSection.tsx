@@ -133,7 +133,7 @@ export function PlanYourVisitSection() {
           </span>
           <h2
             id="plan-visit-heading"
-            className="mb-4 text-3xl font-bold text-foreground sm:text-4xl"
+            className="mb-4 text-balance text-3xl font-bold text-foreground sm:text-4xl"
           >
             Plan Your Visit
           </h2>
@@ -164,7 +164,7 @@ export function PlanYourVisitSection() {
           {visitInfoItems.map((item) => (
             <Card
               key={item.id}
-              className={`overflow-hidden transition-all ${
+              className={`overflow-hidden transition-shadow duration-200 ${
                 expandedId === item.id ? 'ring-2 ring-blue-500' : ''
               }`}
             >
@@ -193,7 +193,7 @@ export function PlanYourVisitSection() {
               {/* Expanded Content */}
               <div
                 id={`content-${item.id}`}
-                className={`overflow-hidden transition-all duration-300 ${
+                className={`overflow-hidden transition-[max-height] duration-300 ${
                   expandedId === item.id ? 'max-h-96' : 'max-h-0'
                 }`}
               >

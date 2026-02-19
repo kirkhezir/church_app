@@ -138,7 +138,7 @@ export function SermonDetailPage() {
             {/* Left: Main Content */}
             <div className="lg:col-span-2">
               {/* Title & Meta */}
-              <h1 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl">
+              <h1 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl text-balance">
                 {sermon.title}
               </h1>
 
@@ -255,7 +255,7 @@ export function SermonDetailPage() {
               {sermon.series && (
                 <Card>
                   <CardContent className="p-5">
-                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
                       {language === 'th' ? 'ชุดเทศนา' : 'Sermon Series'}
                     </h2>
                     <p className="mb-4 text-lg font-bold text-foreground">
@@ -289,7 +289,7 @@ export function SermonDetailPage() {
               {/* Speaker Card */}
               <Card>
                 <CardContent className="p-5">
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
                     {language === 'th' ? 'ผู้เทศนา' : 'Speaker'}
                   </h2>
                   <div className="mb-4 flex items-center gap-3">
@@ -327,7 +327,7 @@ export function SermonDetailPage() {
               {/* Quick Actions */}
               <Card>
                 <CardContent className="space-y-3 p-5">
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
                     {language === 'th' ? 'ลิงก์ด่วน' : 'Quick Links'}
                   </h2>
                   <Link to="/sermons">

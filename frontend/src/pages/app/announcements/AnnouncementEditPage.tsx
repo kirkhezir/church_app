@@ -131,7 +131,7 @@ export function AnnouncementEditPage() {
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <h1 className="text-2xl font-bold sm:text-3xl">Edit Announcement</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl text-balance">Edit Announcement</h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">Update announcement details</p>
       </div>
 

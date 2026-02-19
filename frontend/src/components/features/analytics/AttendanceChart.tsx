@@ -153,25 +153,25 @@ export function AttendanceSummary({ data }: AttendanceSummaryProps) {
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       <Card>
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">{stats.average}</div>
+          <div className="text-2xl font-bold tabular-nums">{stats.average}</div>
           <div className="text-sm text-muted-foreground">Avg. Attendance</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">{stats.highest}</div>
+          <div className="text-2xl font-bold tabular-nums">{stats.highest}</div>
           <div className="text-sm text-muted-foreground">Highest</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">{stats.lowest}</div>
+          <div className="text-2xl font-bold tabular-nums">{stats.lowest}</div>
           <div className="text-sm text-muted-foreground">Lowest</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">{stats.total}</div>
+          <div className="text-2xl font-bold tabular-nums">{stats.total}</div>
           <div className="text-sm text-muted-foreground">Total Attendees</div>
         </CardContent>
       </Card>

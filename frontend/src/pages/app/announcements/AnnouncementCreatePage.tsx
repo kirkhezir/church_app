@@ -58,7 +58,7 @@ export function AnnouncementCreatePage() {
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <h1 className="text-2xl font-bold sm:text-3xl">Create New Announcement</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl text-balance">Create New Announcement</h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
           Share important information with the church community
         </p>

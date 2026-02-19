@@ -80,7 +80,7 @@ export function SermonsPage() {
       {/* Header */}
       <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 pb-12 pt-20 text-white">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h1 className="text-3xl font-bold sm:text-4xl">
+          <h1 className="text-3xl font-bold sm:text-4xl text-balance">
             {language === 'th' ? 'คำเทศนา' : 'Sermons'}
           </h1>
           <p className="mt-2 text-lg text-blue-100">
@@ -200,7 +200,7 @@ export function SermonsPage() {
                         <Clock className="h-3 w-3" />
                         {sermon.duration}
                       </div>
-                      <h2 className="mb-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary">
+                      <h2 className="mb-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary text-balance">
                         {sermon.title}
                       </h2>
                       <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>

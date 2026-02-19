@@ -241,7 +241,7 @@ export const EventDetailPage: React.FC = () => {
                     variant={event.hasUserRSVPd ? 'outline' : 'default'}
                   >
                     {rsvping ? (
-                      'Processing...'
+                      'Processing…'
                     ) : event.hasUserRSVPd ? (
                       <>
                         <UserMinus className="mr-2 h-4 w-4" />

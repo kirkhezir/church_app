@@ -29,6 +29,31 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 
+// Static navigation items — hoisted to avoid re-creation on every render
+const SETTINGS_ITEMS = [
+  { title: 'Profile', url: '/app/profile', icon: User },
+  { title: 'Notifications', url: '/app/notifications', icon: Bell },
+  { title: 'Settings', url: '/app/settings', icon: Settings },
+];
+
+const ADMIN_ITEMS = [
+  { title: 'Admin Panel', url: '/app/admin/members', icon: Shield },
+  { title: 'Analytics', url: '/app/admin/analytics', icon: BarChart3 },
+  { title: 'Reports', url: '/app/admin/reports', icon: FileText },
+  { title: 'System Health', url: '/app/admin/health', icon: Activity },
+  { title: 'Audit Logs', url: '/app/admin/audit-logs', icon: FileText },
+  { title: 'Data Export', url: '/app/admin/export', icon: Download },
+];
+
+const BASE_NAV = [
+  { title: 'Dashboard', url: '/app/dashboard', icon: Home, isActive: true },
+  { title: 'Events', url: '/app/events', icon: Calendar },
+  { title: 'Announcements', url: '/app/announcements', icon: Megaphone },
+  { title: 'Messages', url: '/app/messages', icon: Mail },
+];
+
+const MEMBERS_ITEM = { title: 'Members', url: '/app/members', icon: Users };
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isAuthenticated } = useAuth();
 
@@ -36,95 +61,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return null;
   }
 
-  // Main navigation items for all authenticated users
-  const navMain = [
-    {
-      title: 'Dashboard',
-      url: '/app/dashboard',
-      icon: Home,
-      isActive: true,
-    },
-    {
-      title: 'Events',
-      url: '/app/events',
-      icon: Calendar,
-    },
-    {
-      title: 'Announcements',
-      url: '/app/announcements',
-      icon: Megaphone,
-    },
-    {
-      title: 'Messages',
-      url: '/app/messages',
-      icon: Mail,
-    },
-  ];
-
-  // Add Members link for admin and staff
-  if (user.role === 'ADMIN' || user.role === 'STAFF') {
-    navMain.push({
-      title: 'Members',
-      url: '/app/members',
-      icon: Users,
-    });
-  }
-
-  // Admin-only navigation items
-  const adminItems =
-    user.role === 'ADMIN'
-      ? [
-          {
-            title: 'Admin Panel',
-            url: '/app/admin/members',
-            icon: Shield,
-          },
-          {
-            title: 'Analytics',
-            url: '/app/admin/analytics',
-            icon: BarChart3,
-          },
-          {
-            title: 'Reports',
-            url: '/app/admin/reports',
-            icon: FileText,
-          },
-          {
-            title: 'System Health',
-            url: '/app/admin/health',
-            icon: Activity,
-          },
-          {
-            title: 'Audit Logs',
-            url: '/app/admin/audit-logs',
-            icon: FileText,
-          },
-          {
-            title: 'Data Export',
-            url: '/app/admin/export',
-            icon: Download,
-          },
-        ]
-      : [];
-
-  // Profile and Settings items
-  const settingsItems = [
-    {
-      title: 'Profile',
-      url: '/app/profile',
-      icon: User,
-    },
-    {
-      title: 'Notifications',
-      url: '/app/notifications',
-      icon: Bell,
-    },
-    {
-      title: 'Settings',
-      url: '/app/settings',
-      icon: Settings,
-    },
-  ];
+  const isAdminOrStaff = user.role === 'ADMIN' || user.role === 'STAFF';
+  const navMain = isAdminOrStaff ? [...BASE_NAV, MEMBERS_ITEM] : [...BASE_NAV];
+  const adminItems = user.role === 'ADMIN' ? ADMIN_ITEMS : [];
 
   const userData = {
     name: `${user.firstName} ${user.lastName}`,
@@ -158,7 +97,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navMain} />
         {adminItems.length > 0 && <NavMain items={adminItems} label="Administration" />}
-        <NavMain items={settingsItems} />
+        <NavMain items={SETTINGS_ITEMS} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={userData} />

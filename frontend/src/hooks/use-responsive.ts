@@ -69,7 +69,7 @@ export function useCurrentBreakpoint(): Breakpoint | 'xs' {
     checkBreakpoint();
 
     // Listen for resize
-    window.addEventListener('resize', checkBreakpoint);
+    window.addEventListener('resize', checkBreakpoint, { passive: true });
     return () => window.removeEventListener('resize', checkBreakpoint);
   }, []);
 
@@ -150,8 +150,8 @@ export function useOrientation(): 'portrait' | 'landscape' {
 
     checkOrientation();
 
-    window.addEventListener('resize', checkOrientation);
-    window.addEventListener('orientationchange', checkOrientation);
+    window.addEventListener('resize', checkOrientation, { passive: true });
+    window.addEventListener('orientationchange', checkOrientation, { passive: true });
 
     return () => {
       window.removeEventListener('resize', checkOrientation);
@@ -199,7 +199,7 @@ export function useSafeAreaInsets(): {
 
     updateInsets();
 
-    window.addEventListener('resize', updateInsets);
+    window.addEventListener('resize', updateInsets, { passive: true });
     return () => window.removeEventListener('resize', updateInsets);
   }, []);
 

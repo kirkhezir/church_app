@@ -83,7 +83,7 @@ export function UpcomingEventsSection() {
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h2 id="events-heading" className="text-3xl font-bold text-foreground sm:text-4xl">
+            <h2 id="events-heading" className="text-3xl font-bold text-foreground sm:text-4xl text-balance">
               Upcoming Events
             </h2>
             <p className="mt-1 text-lg text-muted-foreground">See what's happening at our church</p>

@@ -101,7 +101,7 @@ export function PhotoGallerySection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h2 className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">Our Church Family</h2>
+          <h2 className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">Our Church Family</h2>
           <p className="text-lg text-muted-foreground">Moments of faith, fellowship, and community</p>
         </div>
 

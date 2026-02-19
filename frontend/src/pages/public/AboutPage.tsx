@@ -234,7 +234,7 @@ export function AboutPage() {
               <Church className="mr-2 h-5 w-5" />
               <span className="text-sm font-medium">Seventh-day Adventist Church</span>
             </div>
-            <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+            <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
               {language === 'th' ? 'เกี่ยวกับเรา' : 'About Us'}
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-blue-100">
@@ -251,7 +251,7 @@ export function AboutPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <h2 className="mb-6 text-3xl font-bold text-foreground">
+              <h2 className="mb-6 text-balance text-3xl font-bold text-foreground">
                 {language === 'th' ? 'เรื่องราวของเรา' : 'Our Story'}
               </h2>
               <div className="space-y-4 text-muted-foreground">
@@ -297,7 +297,7 @@ export function AboutPage() {
                 className="rounded-2xl shadow-xl"
               />
               <div className="absolute -bottom-6 -left-6 rounded-xl bg-blue-600 p-6 text-white shadow-lg">
-                <div className="text-4xl font-bold">10+</div>
+                <div className="text-4xl font-bold tabular-nums">10+</div>
                 <div className="text-blue-100">Years of Ministry</div>
               </div>
             </div>
@@ -309,7 +309,7 @@ export function AboutPage() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'หลักความเชื่อหลัก' : 'What We Believe'}
             </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground">
@@ -336,7 +336,7 @@ export function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'ศิษยาภิบาลของเรา' : 'Our Pastor'}
             </h2>
           </div>
@@ -381,7 +381,7 @@ export function AboutPage() {
       <section className="bg-slate-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'ผู้ปกครอง' : 'Church Elders'}
             </h2>
             <p className="text-muted-foreground">
@@ -396,7 +396,7 @@ export function AboutPage() {
                     <img
                       src={elder.photo}
                       alt={elder.name}
-                      className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-all group-hover:ring-4 group-hover:ring-blue-200"
+                      className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200"
                     />
                     <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
                       <Award className="h-3.5 w-3.5" />
@@ -416,7 +416,7 @@ export function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
               {language === 'th' ? 'เจ้าหน้าที่โบสถ์' : 'Church Officers'}
             </h2>
             <p className="text-muted-foreground">
@@ -477,7 +477,7 @@ export function AboutPage() {
       <section className="bg-gradient-to-br from-blue-900 to-indigo-900 py-16 text-white">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <Award className="mx-auto mb-6 h-12 w-12 text-blue-300" />
-          <h2 className="mb-4 text-3xl font-bold">
+          <h2 className="mb-4 text-balance text-3xl font-bold">
             {language === 'th' ? 'พันธกิจของเรา' : 'Our Mission'}
           </h2>
           <p className="mb-8 text-xl text-blue-100">
@@ -492,7 +492,7 @@ export function AboutPage() {
       {/* CTA Section */}
       <section className="py-16">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <h2 className="mb-4 text-3xl font-bold text-foreground">
+          <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
             {language === 'th' ? 'มาร่วมเป็นส่วนหนึ่งกับเรา' : 'Join Our Family'}
           </h2>
           <p className="mb-8 text-lg text-muted-foreground">

@@ -89,7 +89,7 @@ export default function AdminDataExportPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Data Export' }]}>
       <div className="container mx-auto max-w-2xl px-4 py-4">
-        <h1 className="mb-6 text-2xl font-bold">Data Export</h1>
+        <h1 className="mb-6 text-2xl font-bold text-balance">Data Export</h1>
 
         <Card>
           <CardHeader>

@@ -194,7 +194,7 @@ export function PublicNavigationHeader({
   // ---------------------------------------------------------------------------
   const desktopLinkCls = (link: NavLink) => {
     const base =
-      'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200';
+      'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200';
     switch (link.labelKey) {
       case 'nav.prayer':
         return `${base} ${showTransparent ? 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200' : 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'}`;
@@ -258,7 +258,9 @@ export function PublicNavigationHeader({
           Skip to main content
         </a>
 
-        <header className={`transition-all duration-300 ${headerBg}`}>
+        <header
+          className={`transition-[background-color,box-shadow,backdrop-filter] duration-300 ${headerBg}`}
+        >
           <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             {/* ---- Logo ---- */}
             {isHomePage ? (
@@ -404,7 +406,7 @@ export function PublicNavigationHeader({
               <Link to="/login" className="ml-2">
                 <Button
                   size="sm"
-                  className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
+                  className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-[transform,box-shadow,background-color,border-color,color] duration-300 hover:scale-105 ${
                     showTransparent
                       ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-primary hover:shadow-white/20'
                       : 'border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
@@ -515,7 +517,7 @@ export function PublicNavigationHeader({
                   <Link
                     to="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 py-3.5 text-base font-semibold tracking-wide text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40"
+                    className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 py-3.5 text-base font-semibold tracking-wide text-white shadow-lg shadow-blue-500/30 transition-shadow duration-300 hover:shadow-xl hover:shadow-blue-500/40"
                   >
                     <LogIn className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
                     {t('common.memberLogin')}

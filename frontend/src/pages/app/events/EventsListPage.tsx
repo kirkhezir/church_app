@@ -83,7 +83,7 @@ export function EventsListPage() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold">
+          <h1 className="flex items-center gap-2 text-3xl font-bold text-balance">
             <CalendarIcon className="h-8 w-8" />
             Church Events
           </h1>

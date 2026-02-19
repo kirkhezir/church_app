@@ -49,7 +49,7 @@ function KPICard({ title, value, change, icon, trend, subtitle }: KPICardProps) 
         <div className="h-8 w-8 rounded-lg bg-primary/10 p-2 text-primary">{icon}</div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-2xl font-bold tabular-nums">{value}</div>
         {(change !== undefined || subtitle) && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             {change !== undefined && (

@@ -68,7 +68,9 @@ export function UpcomingEventsWidget({ events }: UpcomingEventsWidgetProps) {
               >
                 <div className="flex-shrink-0">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{startDate.getDate()}</div>
+                    <div className="text-2xl font-bold tabular-nums text-blue-600">
+                      {startDate.getDate()}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       {startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}
                     </div>

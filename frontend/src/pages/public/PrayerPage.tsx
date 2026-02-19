@@ -113,9 +113,7 @@ export function PrayerPage() {
   };
 
   const handlePrayFor = (id: string) => {
-    if (!prayedFor.includes(id)) {
-      setPrayedFor([...prayedFor, id]);
-    }
+    setPrayedFor((prev) => (prev.includes(id) ? prev : [...prev, id]));
   };
 
   return (
@@ -124,7 +122,7 @@ export function PrayerPage() {
       <section className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <Heart className="mx-auto mb-4 h-12 w-12 text-pink-300" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
+          <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'คำอธิษฐาน' : 'Prayer Requests'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-purple-100">
@@ -150,7 +148,7 @@ export function PrayerPage() {
               <CardContent className="p-6">
                 {!isSubmitted ? (
                   <>
-                    <h2 className="mb-6 text-xl font-bold text-foreground">
+                    <h2 className="mb-6 text-balance text-xl font-bold text-foreground">
                       {language === 'th' ? 'ส่งคำอธิษฐาน' : 'Submit a Prayer Request'}
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -318,7 +316,7 @@ export function PrayerPage() {
 
           {/* Prayer Wall */}
           <div>
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-foreground">
+            <h2 className="mb-6 flex items-center gap-2 text-balance text-xl font-bold text-foreground">
               <Users className="h-5 w-5 text-purple-600" />
               {language === 'th' ? 'กำแพงอธิษฐาน' : 'Prayer Wall'}
             </h2>
@@ -382,7 +380,7 @@ export function PrayerPage() {
         {/* Contact CTA */}
         <div className="mt-12 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center text-white">
           <MessageCircle className="mx-auto mb-4 h-10 w-10" />
-          <h2 className="mb-2 text-2xl font-bold">
+          <h2 className="mb-2 text-balance text-2xl font-bold">
             {language === 'th' ? 'ต้องการพูดคุยกับใครสักคน?' : 'Need to Talk to Someone?'}
           </h2>
           <p className="mb-6 text-purple-100">

@@ -187,7 +187,7 @@ export function MinistryCardsSection() {
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <h2
             id="ministries-heading"
-            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
           >
             Our Ministries
           </h2>
@@ -218,7 +218,7 @@ export function MinistryCardsSection() {
           {filteredMinistries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border border-border bg-white transition-all hover:shadow-lg"
+              className="group overflow-hidden border border-border bg-white transition-shadow duration-200 hover:shadow-lg"
             >
               <CardContent className="flex h-full flex-col p-5">
                 {/* Icon + Title */}
@@ -386,7 +386,7 @@ export function MinistryCardsSection() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Submitting...
+                      Submitting…
                     </>
                   ) : (
                     <>
