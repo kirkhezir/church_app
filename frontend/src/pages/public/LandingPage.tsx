@@ -189,6 +189,7 @@ function HeroSection() {
         <img
           src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&h=1080&fit=crop&q=80"
           alt=""
+          role="presentation"
           className="h-full w-full object-cover"
           loading="eager"
         />

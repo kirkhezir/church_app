@@ -28,28 +28,33 @@ export interface IEventRepository {
   findMany(options: { where?: any; include?: any }): Promise<any[]>;
 }
 
-export class ExportEventData {
-  private readonly exportFields = [
-    'id',
-    'title',
-    'description',
-    'startDateTime',
-    'endDateTime',
-    'location',
-    'category',
-    'maxCapacity',
-    'rsvpCount',
-    'createdAt',
-    'cancelledAt',
-  ];
+/** Default CSV column order */
+const CSV_COLUMNS = [
+  'id',
+  'title',
+  'description',
+  'startDateTime',
+  'endDateTime',
+  'location',
+  'category',
+  'maxCapacity',
+  'rsvpCount',
+];
 
+function escapeCSVValue(value: any): string {
+  if (value === null || value === undefined) return '';
+  const str = value instanceof Date ? value.toISOString() : String(value);
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+export class ExportEventData {
   constructor(private eventRepository: IEventRepository) {}
 
   async execute(request: ExportEventDataRequest): Promise<ExportEventDataResponse> {
-    // Build filter conditions
-    const where: any = {
-      deletedAt: null,
-    };
+    const where: any = {};
 
     if (!request.includeCancelled) {
       where.cancelledAt = null;
@@ -61,45 +66,28 @@ export class ExportEventData {
 
     if (request.startDate || request.endDate) {
       where.startDateTime = {};
-      if (request.startDate) {
-        where.startDateTime.gte = request.startDate;
-      }
-      if (request.endDate) {
-        where.startDateTime.lte = request.endDate;
-      }
+      if (request.startDate) where.startDateTime.gte = request.startDate;
+      if (request.endDate) where.startDateTime.lte = request.endDate;
     }
 
-    // Get events with RSVP count
-    const events = await this.eventRepository.findMany({
-      where,
-      include: {
-        _count: {
-          select: { event_rsvps: true },
-        },
-      },
+    const events = await this.eventRepository.findMany({ where });
+
+    // Transform: map _count.rsvps → rsvpCount, keep all other fields
+    const transformed = events.map((event) => {
+      const { _count, ...rest } = event;
+      return {
+        ...rest,
+        rsvpCount: _count?.rsvps ?? 0,
+      };
     });
 
-    // Transform data
-    const transformedEvents = events.map((event) => {
-      const result: any = {};
-      for (const field of this.exportFields) {
-        if (field === 'rsvpCount') {
-          result.rsvpCount = event._count?.event_rsvps || 0;
-        } else if (event[field] !== undefined) {
-          result[field] = event[field];
-        }
-      }
-      return result;
-    });
-
-    // Generate filename with date
     const dateStr = new Date().toISOString().split('T')[0];
-    const extension = request.format === 'csv' ? 'csv' : 'json';
-    const filename = `events_${dateStr}.${extension}`;
+    const ext = request.format === 'csv' ? 'csv' : 'json';
+    const filename = `events_${dateStr}.${ext}`;
 
     if (request.format === 'csv') {
       return {
-        data: this.toCSV(transformedEvents),
+        data: this.toCSV(transformed),
         format: 'csv',
         contentType: 'text/csv',
         filename,
@@ -107,58 +95,24 @@ export class ExportEventData {
     }
 
     return {
-      data: transformedEvents,
+      data: transformed,
       format: 'json',
       contentType: 'application/json',
       filename,
     };
   }
 
-  private toCSV(data: any[]): string {
-    if (data.length === 0) {
-      return this.exportFields.join(',');
-    }
+  private toCSV(data: Record<string, any>[]): string {
+    const columns =
+      data.length > 0
+        ? CSV_COLUMNS.filter((c) => c in data[0]).concat(
+            Object.keys(data[0]).filter((k) => !CSV_COLUMNS.includes(k))
+          )
+        : CSV_COLUMNS;
 
-    // Header row
-    const headers = this.exportFields;
-    const rows = [headers.join(',')];
+    const header = columns.join(',');
+    const rows = data.map((item) => columns.map((col) => escapeCSVValue(item[col])).join(','));
 
-    // Data rows
-    for (const item of data) {
-      const row = headers.map((header) => {
-        const value = item[header];
-        return this.escapeCSVValue(value);
-      });
-      rows.push(row.join(','));
-    }
-
-    return rows.join('\n');
-  }
-
-  private escapeCSVValue(value: any): string {
-    if (value === null || value === undefined) {
-      return '';
-    }
-
-    // Convert dates to ISO string
-    if (value instanceof Date) {
-      return value.toISOString();
-    }
-
-    const stringValue = String(value);
-
-    // Check if escaping is needed
-    if (
-      stringValue.includes(',') ||
-      stringValue.includes('"') ||
-      stringValue.includes('\n') ||
-      stringValue.includes('\r')
-    ) {
-      // Escape double quotes by doubling them
-      const escaped = stringValue.replace(/"/g, '""');
-      return `"${escaped}"`;
-    }
-
-    return stringValue;
+    return [header, ...rows].join('\n');
   }
 }

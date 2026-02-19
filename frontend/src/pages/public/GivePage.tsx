@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 type GivingCategory = 'tithe' | 'offering' | 'missions' | 'building' | 'youth' | 'other';
 type PaymentMethod = 'bank' | 'promptpay' | 'cash';
@@ -121,6 +122,7 @@ export function GivePage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [amountError, setAmountError] = useState('');
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   const presetAmounts = [100, 500, 1000, 2000, 5000];
 
@@ -202,9 +204,9 @@ export function GivePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         {!isSubmitted ? (
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div className="reveal grid gap-8 lg:grid-cols-3">
             {/* Main Form */}
             <div className="lg:col-span-2">
               {/* Step 1: Select Category */}

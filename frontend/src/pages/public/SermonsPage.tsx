@@ -25,6 +25,7 @@ import { Button } from '../../components/ui/button';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { sermons as allSermons, seriesList, speakerList } from '@/data/sermons';
 
 export function SermonsPage() {
@@ -36,6 +37,7 @@ export function SermonsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   // selectedSermon state removed — sermon cards now navigate to /sermons/:id
   const sermonsPerPage = 6;
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   // Filter sermons (memoized to avoid extra re-renders)
   const sermons = useMemo(() => {
@@ -80,7 +82,7 @@ export function SermonsPage() {
       {/* Header */}
       <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 pb-12 pt-20 text-white">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h1 className="text-3xl font-bold sm:text-4xl text-balance">
+          <h1 className="text-balance text-3xl font-bold sm:text-4xl">
             {language === 'th' ? 'คำเทศนา' : 'Sermons'}
           </h1>
           <p className="mt-2 text-lg text-blue-100">
@@ -91,9 +93,9 @@ export function SermonsPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {/* Filters */}
-        <section className="mb-8">
+        <section className="reveal mb-8">
           <div className="flex flex-col gap-4 sm:flex-row">
             {/* Search */}
             <div className="relative flex-1">
@@ -149,7 +151,7 @@ export function SermonsPage() {
         </section>
 
         {/* Sermons Grid */}
-        <section className="mb-8">
+        <section className="reveal mb-8">
           {displayedSermons.length === 0 ? (
             <div className="rounded-lg bg-card p-12 text-center">
               <p className="text-muted-foreground">
@@ -200,7 +202,7 @@ export function SermonsPage() {
                         <Clock className="h-3 w-3" />
                         {sermon.duration}
                       </div>
-                      <h2 className="mb-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary text-balance">
+                      <h2 className="mb-1 line-clamp-2 text-balance font-semibold text-foreground group-hover:text-primary">
                         {sermon.title}
                       </h2>
                       <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>

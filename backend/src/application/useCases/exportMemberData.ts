@@ -2,7 +2,7 @@
  * Export Member Data Use Case
  *
  * Exports member data in CSV or JSON format:
- * - Excludes sensitive fields (passwordHash, mfaSecret, etc.)
+ * - Excludes sensitive fields (passwordHash, mfaSecret, backupCodes)
  * - Supports filtering by role and date range
  * - Generates proper CSV with escaping
  *
@@ -27,33 +27,34 @@ export interface IMemberRepository {
   findMany(options: { where?: any; select?: any }): Promise<any[]>;
 }
 
+/** Fields that must never appear in exports */
+const SENSITIVE_FIELDS = ['passwordHash', 'mfaSecret', 'backupCodes'];
+
+/** Default CSV column order when members have these fields */
+const CSV_COLUMNS = ['id', 'email', 'firstName', 'lastName', 'role', 'membershipDate', 'phone'];
+
+function stripSensitive(member: Record<string, any>): Record<string, any> {
+  const cleaned = { ...member };
+  for (const field of SENSITIVE_FIELDS) {
+    delete cleaned[field];
+  }
+  return cleaned;
+}
+
+function escapeCSVValue(value: any): string {
+  if (value === null || value === undefined) return '';
+  const str = value instanceof Date ? value.toISOString() : String(value);
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
 export class ExportMemberData {
-  // Fields that should not be exported (for documentation purposes)
-  // private readonly sensitiveFields = [
-  //   'passwordHash', 'mfaSecret', 'backupCodes',
-  //   'passwordResetToken', 'passwordResetExpires',
-  // ];
-
-  private readonly exportFields = [
-    'id',
-    'email',
-    'firstName',
-    'lastName',
-    'role',
-    'phone',
-    'address',
-    'membershipDate',
-    'emailNotifications',
-    'createdAt',
-  ];
-
   constructor(private memberRepository: IMemberRepository) {}
 
   async execute(request: ExportMemberDataRequest): Promise<ExportMemberDataResponse> {
-    // Build filter conditions
-    const where: any = {
-      deletedAt: null,
-    };
+    const where: any = {};
 
     if (request.role) {
       where.role = request.role;
@@ -61,36 +62,20 @@ export class ExportMemberData {
 
     if (request.startDate || request.endDate) {
       where.membershipDate = {};
-      if (request.startDate) {
-        where.membershipDate.gte = request.startDate;
-      }
-      if (request.endDate) {
-        where.membershipDate.lte = request.endDate;
-      }
+      if (request.startDate) where.membershipDate.gte = request.startDate;
+      if (request.endDate) where.membershipDate.lte = request.endDate;
     }
 
-    // Get members
     const members = await this.memberRepository.findMany({ where });
+    const sanitized = members.map(stripSensitive);
 
-    // Remove sensitive fields
-    const sanitizedMembers = members.map((member) => {
-      const sanitized: any = {};
-      for (const field of this.exportFields) {
-        if (member[field] !== undefined) {
-          sanitized[field] = member[field];
-        }
-      }
-      return sanitized;
-    });
-
-    // Generate filename with date
     const dateStr = new Date().toISOString().split('T')[0];
-    const extension = request.format === 'csv' ? 'csv' : 'json';
-    const filename = `members_${dateStr}.${extension}`;
+    const ext = request.format === 'csv' ? 'csv' : 'json';
+    const filename = `members_${dateStr}.${ext}`;
 
     if (request.format === 'csv') {
       return {
-        data: this.toCSV(sanitizedMembers),
+        data: this.toCSV(sanitized),
         format: 'csv',
         contentType: 'text/csv',
         filename,
@@ -98,58 +83,25 @@ export class ExportMemberData {
     }
 
     return {
-      data: sanitizedMembers,
+      data: sanitized,
       format: 'json',
       contentType: 'application/json',
       filename,
     };
   }
 
-  private toCSV(data: any[]): string {
-    if (data.length === 0) {
-      return this.exportFields.join(',');
-    }
+  private toCSV(data: Record<string, any>[]): string {
+    // Determine columns: use CSV_COLUMNS for known fields, then anything extra
+    const columns =
+      data.length > 0
+        ? CSV_COLUMNS.filter((c) => c in data[0]).concat(
+            Object.keys(data[0]).filter((k) => !CSV_COLUMNS.includes(k))
+          )
+        : CSV_COLUMNS;
 
-    // Header row
-    const headers = this.exportFields;
-    const rows = [headers.join(',')];
+    const header = columns.join(',');
+    const rows = data.map((item) => columns.map((col) => escapeCSVValue(item[col])).join(','));
 
-    // Data rows
-    for (const item of data) {
-      const row = headers.map((header) => {
-        const value = item[header];
-        return this.escapeCSVValue(value);
-      });
-      rows.push(row.join(','));
-    }
-
-    return rows.join('\n');
-  }
-
-  private escapeCSVValue(value: any): string {
-    if (value === null || value === undefined) {
-      return '';
-    }
-
-    // Convert dates to ISO string
-    if (value instanceof Date) {
-      return value.toISOString();
-    }
-
-    const stringValue = String(value);
-
-    // Check if escaping is needed
-    if (
-      stringValue.includes(',') ||
-      stringValue.includes('"') ||
-      stringValue.includes('\n') ||
-      stringValue.includes('\r')
-    ) {
-      // Escape double quotes by doubling them
-      const escaped = stringValue.replace(/"/g, '""');
-      return `"${escaped}"`;
-    }
-
-    return stringValue;
+    return [header, ...rows].join('\n');
   }
 }

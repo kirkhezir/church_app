@@ -30,6 +30,7 @@ import { Label } from '../../components/ui/label';
 import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 // Calculate next Saturday date
 function getNextSaturday(lang: string): string {
@@ -141,6 +142,7 @@ export function VisitPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,7 +160,7 @@ export function VisitPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-bold sm:text-4xl text-balance">
+              <h1 className="text-balance text-3xl font-bold sm:text-4xl">
                 {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
               </h1>
               <p className="mt-2 text-lg text-blue-100">
@@ -180,10 +182,10 @@ export function VisitPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         {/* Service Times */}
-        <section className="mb-12">
-          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-foreground text-balance">
+        <section className="reveal mb-12">
+          <h2 className="mb-6 flex items-center gap-3 text-balance text-2xl font-bold text-foreground">
             <Clock className="h-6 w-6 text-blue-600" />
             {language === 'th' ? 'เวลานมัสการ' : 'Service Times'}
           </h2>
@@ -201,8 +203,10 @@ export function VisitPage() {
         </section>
 
         {/* What to Know */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-foreground text-balance">What to Know Before You Come</h2>
+        <section className="reveal mb-12">
+          <h2 className="mb-6 text-balance text-2xl font-bold text-foreground">
+            What to Know Before You Come
+          </h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {visitInfoSections.map((section, index) => (
               <Card key={index} className="h-full">
@@ -215,7 +219,10 @@ export function VisitPage() {
                   </div>
                   <ul className="space-y-2">
                     {section.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <li
+                        key={idx}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
                         <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
                         {item}
                       </li>
@@ -228,7 +235,7 @@ export function VisitPage() {
         </section>
 
         {/* Location & Contact - Improved Layout */}
-        <section className="mb-12">
+        <section className="reveal mb-12">
           {/* Map - Full width at top */}
           <Card className="mb-6 overflow-hidden">
             <div className="aspect-[21/9] bg-muted">
@@ -249,7 +256,9 @@ export function VisitPage() {
                   <MapPin className="h-5 w-5 text-blue-600" />
                   <div>
                     <p className="font-medium text-foreground">Sing Buri Adventist Center</p>
-                    <p className="text-sm text-muted-foreground">Bang Phutsa, Sing Buri 16000, Thailand</p>
+                    <p className="text-sm text-muted-foreground">
+                      Bang Phutsa, Sing Buri 16000, Thailand
+                    </p>
                   </div>
                 </div>
                 <Button
@@ -431,10 +440,10 @@ export function VisitPage() {
         </section>
 
         {/* CTA */}
-        <section className="text-center">
+        <section className="reveal text-center">
           <Card className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
             <CardContent className="p-8">
-              <h2 className="mb-2 text-2xl font-bold text-balance">
+              <h2 className="mb-2 text-balance text-2xl font-bold">
                 {language === 'th' ? 'พร้อมมาเยี่ยมชม?' : 'Ready to Visit?'}
               </h2>
               <p className="mb-6 text-blue-100">

@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { type Photo, albums, photos } from '@/data/gallery';
 
 type ViewMode = 'albums' | 'photos';
@@ -35,6 +36,7 @@ export function GalleryPage() {
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   const filteredPhotos = useMemo(
     () => (selectedAlbum ? photos.filter((p) => p.albumId === selectedAlbum) : photos),
@@ -150,7 +152,7 @@ export function GalleryPage() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {viewMode === 'albums' && !selectedAlbum ? (
           /* Albums Grid */
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -61,7 +61,7 @@ export function ResourcesPage() {
       <section className="bg-gradient-to-br from-teal-900 via-cyan-900 to-blue-900 pb-12 pt-24">
         <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
           <BookOpen className="mx-auto mb-4 h-12 w-12 text-teal-300" />
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl text-balance">
+          <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'ทรัพยากร' : 'Resources'}
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-teal-100">
@@ -112,7 +112,7 @@ export function ResourcesPage() {
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Main Resources */}
           <div className="lg:col-span-2">
-            <h2 className="mb-6 text-lg font-semibold text-foreground text-balance">
+            <h2 className="mb-6 text-balance text-lg font-semibold text-foreground">
               {selectedCategory === 'all'
                 ? language === 'th'
                   ? 'ทรัพยากรทั้งหมด'
@@ -136,7 +136,7 @@ export function ResourcesPage() {
                           {resource.thumbnail ? (
                             <img
                               src={resource.thumbnail}
-                              alt=""
+                              alt={language === 'th' ? resource.titleThai : resource.title}
                               loading="lazy"
                               className="h-20 w-20 shrink-0 rounded-lg object-cover"
                             />

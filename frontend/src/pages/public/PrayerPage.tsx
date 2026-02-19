@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 interface PrayerRequest {
   id: string;
@@ -105,6 +106,7 @@ export function PrayerPage() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [prayedFor, setPrayedFor] = useState<string[]>([]);
+  const revealRef = useScrollReveal<HTMLDivElement>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,8 +142,8 @@ export function PrayerPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-8 lg:grid-cols-2">
+      <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="reveal grid gap-8 lg:grid-cols-2">
           {/* Prayer Request Form */}
           <div>
             <Card>
