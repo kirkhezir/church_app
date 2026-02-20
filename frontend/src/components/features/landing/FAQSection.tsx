@@ -113,7 +113,7 @@ export function FAQSection() {
   const hasMoreFAQs = !searchQuery && sortedFAQs.length > INITIAL_FAQ_COUNT;
 
   return (
-    <section className="bg-white py-16 sm:py-24" id="faq" aria-labelledby="faq-heading">
+    <section className="bg-background py-16 sm:py-24" id="faq" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-8 text-center">
@@ -136,7 +136,7 @@ export function FAQSection() {
             placeholder="Search questions…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-border bg-muted py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+            className="w-full rounded-lg border border-border bg-muted py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             aria-label="Search frequently asked questions"
           />
         </div>
@@ -148,7 +148,7 @@ export function FAQSection() {
               <AccordionItem
                 key={item.id}
                 value={item.id}
-                className="rounded-lg border border-border bg-white px-4 transition-colors data-[state=open]:bg-muted sm:px-5"
+                className="rounded-lg border border-border bg-card px-4 transition-colors data-[state=open]:bg-muted sm:px-5"
               >
                 <AccordionTrigger className="py-4 text-left font-medium text-foreground hover:no-underline sm:text-lg">
                   {item.question}

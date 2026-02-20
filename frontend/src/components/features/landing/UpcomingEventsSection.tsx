@@ -78,7 +78,7 @@ export function UpcomingEventsSection() {
   }
 
   return (
-    <section className="bg-white py-16 sm:py-24" aria-labelledby="events-heading">
+    <section className="bg-background py-16 sm:py-24" aria-labelledby="events-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">

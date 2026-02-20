@@ -80,7 +80,7 @@ export function SermonDetailPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-white dark:bg-slate-950">
+      <div className="bg-background">
         {/* Video / Thumbnail Hero */}
         <div className="bg-slate-900">
           <div className="mx-auto max-w-5xl">

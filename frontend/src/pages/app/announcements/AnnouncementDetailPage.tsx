@@ -78,7 +78,7 @@ export function AnnouncementDetailPage() {
       </Button>
 
       {/* Announcement Content */}
-      <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6 md:p-8">
+      <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-6 md:p-8">
         {/* Priority Badge */}
         <div className="mb-3 sm:mb-4">
           {isUrgent ? (

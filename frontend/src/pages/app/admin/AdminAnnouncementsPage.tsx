@@ -351,7 +351,7 @@ export function AdminAnnouncementsPage() {
             <>
               {/* Desktop Table View */}
               <div className="hidden md:block">
-                <div className="overflow-x-auto rounded-lg border bg-white shadow">
+                <div className="overflow-x-auto rounded-lg border bg-card shadow">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-background">
                       <tr>
@@ -384,7 +384,7 @@ export function AdminAnnouncementsPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
+                    <tbody className="divide-y divide-border bg-card">
                       {announcements.map((announcement) => (
                         <tr key={announcement.id} className="hover:bg-background">
                           <td className="px-4 py-4">
@@ -544,7 +544,7 @@ export function AdminAnnouncementsPage() {
               {/* Mobile Card View */}
               <div className="space-y-3 md:hidden">
                 {announcements.map((announcement) => (
-                  <div key={announcement.id} className="rounded-lg border bg-white p-4 shadow-sm">
+                  <div key={announcement.id} className="rounded-lg border bg-card p-4 shadow-sm">
                     <div className="mb-3 flex items-start justify-between">
                       <div className="flex-1">
                         <h3 className="mb-1 font-medium text-foreground">{announcement.title}</h3>

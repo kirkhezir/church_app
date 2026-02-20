@@ -94,7 +94,7 @@ export function NotFoundPage() {
                 <Link
                   key={to}
                   to={to}
-                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-[box-shadow,border-color] duration-200 hover:border-primary/30 hover:shadow-md dark:border-border dark:hover:border-primary/50"
+                  className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 text-left transition-[box-shadow,border-color] duration-200 hover:border-primary/30 hover:shadow-md"
                 >
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-accent text-primary transition-colors group-hover:bg-accent dark:bg-primary/20 dark:text-primary/70">
                     <Icon className="h-5 w-5" />

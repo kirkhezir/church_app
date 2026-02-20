@@ -91,7 +91,7 @@ export function TestimonialsSection() {
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="bg-white py-16 sm:py-24" aria-labelledby="testimonials-heading">
+    <section className="bg-background py-16 sm:py-24" aria-labelledby="testimonials-heading">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center">

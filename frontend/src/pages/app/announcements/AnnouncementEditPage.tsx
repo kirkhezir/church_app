@@ -131,8 +131,10 @@ export function AnnouncementEditPage() {
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
-        <h1 className="text-2xl font-bold sm:text-3xl text-balance">Edit Announcement</h1>
-        <p className="mt-2 text-sm text-muted-foreground sm:text-base">Update announcement details</p>
+        <h1 className="text-balance text-2xl font-bold sm:text-3xl">Edit Announcement</h1>
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+          Update announcement details
+        </p>
       </div>
 
       {/* Success Message */}
@@ -146,7 +148,7 @@ export function AnnouncementEditPage() {
       )}
 
       {/* Form */}
-      <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6">
+      <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-6">
         <AnnouncementForm
           initialData={{
             title: announcement.title,

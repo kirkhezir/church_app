@@ -310,7 +310,7 @@ export function AboutPage() {
         </section>
 
         {/* Core Beliefs */}
-        <section className="reveal bg-slate-50 py-16">
+        <section className="reveal bg-muted py-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mb-10 text-center">
               <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">
@@ -324,7 +324,7 @@ export function AboutPage() {
               {CORE_BELIEFS.map((belief, index) => (
                 <Card key={index} className="text-center">
                   <CardContent className="p-6">
-                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent">
                       <belief.icon className="h-7 w-7 text-primary" />
                     </div>
                     <h3 className="mb-2 font-semibold text-foreground">{belief.title}</h3>
@@ -383,7 +383,7 @@ export function AboutPage() {
         </section>
 
         {/* Elders */}
-        <section className="reveal bg-slate-50 py-16">
+        <section className="reveal bg-muted py-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mb-10 text-center">
               <h2 className="mb-4 text-balance text-3xl font-bold text-foreground">

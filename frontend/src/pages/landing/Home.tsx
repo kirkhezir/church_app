@@ -13,7 +13,7 @@
  * 7. Clean Typography - System fonts with proper scale
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { MapPin, Clock, ArrowUp, ChevronDown, Heart, Users, BookOpen } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
@@ -26,19 +26,17 @@ import { OfflineIndicator } from '../../components/features/pwa/OfflineIndicator
 import { PublicNavigationHeader } from '../../components/layout/PublicNavigationHeader';
 import { PublicFooter } from '../../components/layout/PublicFooter';
 
-// Landing Page Components
-import {
-  AnnouncementBanner,
-  TestimonialsSection,
-  FAQSection,
-  UpcomingEventsSection,
-  MinistryCardsSection,
-  PhotoGallerySection,
-  NewsletterPopup,
-  PrayerGiveCTASection,
-  LatestSermonSection,
-  VisitUsSection,
-} from '../../components/features/landing';
+// Landing Page Components — direct imports avoid barrel-import bundling overhead
+import { AnnouncementBanner } from '../../components/features/landing/AnnouncementBanner';
+import { TestimonialsSection } from '../../components/features/landing/TestimonialsSection';
+import { FAQSection } from '../../components/features/landing/FAQSection';
+import { UpcomingEventsSection } from '../../components/features/landing/UpcomingEventsSection';
+import { MinistryCardsSection } from '../../components/features/landing/MinistryCardsSection';
+import { PhotoGallerySection } from '../../components/features/landing/PhotoGallerySection';
+import { NewsletterPopup } from '../../components/features/landing/NewsletterPopup';
+import { PrayerGiveCTASection } from '../../components/features/landing/PrayerGiveCTASection';
+import { LatestSermonSection } from '../../components/features/landing/LatestSermonSection';
+import { VisitUsSection } from '../../components/features/landing/VisitUsSection';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { SEO, DEFAULT_SEO } from '../../components/common/SEO';
@@ -64,7 +62,7 @@ export function HomePage() {
   const revealRef = useScrollReveal<HTMLDivElement>();
 
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-900">
+    <main className="min-h-screen bg-background">
       {/* SEO Meta Tags */}
       <SEO {...DEFAULT_SEO.home} />
 
@@ -123,7 +121,7 @@ export function HomePage() {
         </div>
 
         {/* Contact Section */}
-        <section id="contact" className="reveal content-auto bg-slate-50">
+        <section id="contact" className="reveal content-auto bg-muted">
           <LocationMapSection />
         </section>
       </div>
@@ -311,7 +309,7 @@ function HeroSection() {
 // =============================================================================
 // ABOUT SECTION - Clean, Focused Design with Pastor Welcome
 // =============================================================================
-function AboutSection() {
+const AboutSection = memo(function AboutSection() {
   const { t } = useI18n();
   const values = [
     {
@@ -335,7 +333,7 @@ function AboutSection() {
   ];
 
   return (
-    <section id="about" className="bg-white py-16 sm:py-24" aria-labelledby="about-heading">
+    <section id="about" className="bg-background py-16 sm:py-24" aria-labelledby="about-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
@@ -409,12 +407,12 @@ function AboutSection() {
       </div>
     </section>
   );
-}
+});
 
 // =============================================================================
 // BACK TO TOP BUTTON
 // =============================================================================
-function BackToTopButton() {
+const BackToTopButton = memo(function BackToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -434,6 +432,6 @@ function BackToTopButton() {
       <ArrowUp className="h-5 w-5" />
     </button>
   );
-}
+});
 
 export default HomePage;

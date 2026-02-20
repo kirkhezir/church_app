@@ -146,7 +146,7 @@ export function PlanYourVisitSection() {
         {/* Service Times Quick Reference */}
         <div className="mb-12 grid gap-4 sm:grid-cols-3">
           {serviceTimes.map((service) => (
-            <Card key={service.name} className="border-2 border-blue-100 bg-white">
+            <Card key={service.name} className="border-2 border-accent bg-card">
               <CardContent className="p-4 text-center">
                 <div className="mb-2 flex items-center justify-center gap-2">
                   <Clock className="h-4 w-4 text-primary" />
