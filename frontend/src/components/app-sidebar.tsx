@@ -79,13 +79,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/app/dashboard">
-                <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-white">
-                  <img
-                    src="/church-logo.png"
-                    alt="Sing Buri Adventist Center"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
+                <img
+                  src="/church-logo.png"
+                  alt="Sing Buri Adventist Center"
+                  className="h-8 w-8 shrink-0 rounded-lg object-contain"
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Sing Buri Adventist</span>
                 </div>
