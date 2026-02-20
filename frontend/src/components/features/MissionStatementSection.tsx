@@ -52,11 +52,11 @@ export function MissionStatementSection() {
           <h2 id="mission-heading" className="mb-4 text-balance text-4xl font-bold text-foreground">
             Our Mission
           </h2>
-          <div className="mx-auto h-1 w-24 rounded bg-gradient-to-r from-blue-600 to-purple-600"></div>
+          <div className="mx-auto h-1 w-24 rounded bg-gradient-to-r from-primary to-purple-600"></div>
         </div>
 
         <div className="mx-auto mb-16 max-w-4xl">
-          <Card className="border-none bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-xl">
+          <Card className="border-none bg-gradient-to-br from-primary to-purple-600 text-white shadow-xl">
             <CardContent className="p-8 md:p-12">
               <p className="mb-6 text-xl leading-relaxed md:text-2xl">
                 The Sing Buri Adventist Center is a community of faith dedicated to sharing the love
@@ -86,7 +86,7 @@ export function MissionStatementSection() {
               className="group overflow-hidden border-none shadow-lg transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-xl"
             >
               <CardContent className="p-6">
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg transition-transform group-hover:scale-110">
+                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-purple-600 text-white shadow-lg transition-transform group-hover:scale-110">
                   <value.icon className="h-8 w-8" />
                 </div>
                 <h3 className="mb-2 text-xl font-bold text-foreground">{value.title}</h3>

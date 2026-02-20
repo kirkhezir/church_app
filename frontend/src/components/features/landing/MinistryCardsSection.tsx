@@ -203,7 +203,7 @@ export function MinistryCardsSection() {
               onClick={() => setActiveFilter(option.value)}
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeFilter === option.value
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-white text-muted-foreground hover:bg-muted'
               }`}
               aria-pressed={activeFilter === option.value}
@@ -290,7 +290,7 @@ export function MinistryCardsSection() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <HeartHandshake className="h-5 w-5 text-blue-600" />
+              <HeartHandshake className="h-5 w-5 text-primary" />
               {isSubmitted ? 'Thank You!' : `Join ${selectedMinistry?.name}`}
             </DialogTitle>
             <DialogDescription>

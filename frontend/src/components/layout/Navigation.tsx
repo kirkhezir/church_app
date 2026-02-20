@@ -156,7 +156,7 @@ export const Navigation: React.FC = () => {
                 flex items-center space-x-2 rounded-t-lg px-4 py-3 transition
                 ${
                   isActive(item.path)
-                    ? 'border-b-2 border-blue-600 bg-blue-50 text-blue-600'
+                    ? 'border-b-2 border-primary bg-accent text-primary'
                     : 'text-muted-foreground hover:bg-background hover:text-foreground'
                 }
               `}

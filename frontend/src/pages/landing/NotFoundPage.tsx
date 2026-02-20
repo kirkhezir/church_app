@@ -52,7 +52,7 @@ export function NotFoundPage() {
         <div className="text-center">
           {/* 404 Number */}
           <div className="mb-6">
-            <span className="text-8xl font-extrabold text-blue-600/20 dark:text-blue-400/20 sm:text-9xl">
+            <span className="text-8xl font-extrabold text-primary/20 dark:text-primary/20 sm:text-9xl">
               404
             </span>
           </div>
@@ -94,9 +94,9 @@ export function NotFoundPage() {
                 <Link
                   key={to}
                   to={to}
-                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-[box-shadow,border-color] duration-200 hover:border-blue-300 hover:shadow-md dark:border-border dark:hover:border-blue-600"
+                  className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 text-left transition-[box-shadow,border-color] duration-200 hover:border-primary/30 hover:shadow-md dark:border-border dark:hover:border-primary/50"
                 >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-accent text-primary transition-colors group-hover:bg-accent dark:bg-primary/20 dark:text-primary/70">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>

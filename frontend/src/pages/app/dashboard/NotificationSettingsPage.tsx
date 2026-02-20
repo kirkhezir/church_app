@@ -127,11 +127,11 @@ export default function NotificationSettingsPage() {
                   />
                 </div>
 
-                <div className="rounded-lg bg-blue-50 p-4">
-                  <h4 className="mb-2 text-sm font-semibold text-blue-900">
+                <div className="rounded-lg bg-accent p-4">
+                  <h4 className="mb-2 text-sm font-semibold text-primary">
                     What you&apos;ll receive:
                   </h4>
-                  <ul className="space-y-1 text-sm text-blue-800">
+                  <ul className="space-y-1 text-sm text-primary/80">
                     <li>• Urgent announcements from church leadership</li>
                     <li>• Event reminders and updates</li>
                     <li>• New message notifications</li>

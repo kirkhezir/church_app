@@ -112,7 +112,9 @@ export function AnnouncementForm({
           className={!isTitleValid && title.length > 0 ? 'border-red-500' : ''}
         />
         <div className="flex justify-between text-sm">
-          <span className={title.length < titleMinLength ? 'text-red-500' : 'text-muted-foreground'}>
+          <span
+            className={title.length < titleMinLength ? 'text-red-500' : 'text-muted-foreground'}
+          >
             {title.length < titleMinLength
               ? `Minimum ${titleMinLength} characters`
               : 'Title looks good'}
@@ -136,7 +138,7 @@ export function AnnouncementForm({
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="NORMAL" id="normal" />
             <Label htmlFor="normal" className="flex items-center gap-2 font-normal">
-              <BellIcon className="h-4 w-4 text-blue-600" />
+              <BellIcon className="h-4 w-4 text-primary" />
               Normal - Regular announcement
             </Label>
           </div>
@@ -170,7 +172,9 @@ export function AnnouncementForm({
           placeholder="Write your announcement here..."
           disabled={isLoading}
         />
-        <p className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-muted-foreground'}`}>
+        <p
+          className={`text-sm ${content.trim().length === 0 ? 'text-red-500' : 'text-muted-foreground'}`}
+        >
           {content.trim().length === 0
             ? 'Content is required'
             : 'Write your announcement in plain text'}

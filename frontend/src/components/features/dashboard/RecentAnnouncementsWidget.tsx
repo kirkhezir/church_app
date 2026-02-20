@@ -84,7 +84,7 @@ export const RecentAnnouncementsWidget = memo(function RecentAnnouncementsWidget
                     <div className="flex items-center space-x-2">
                       <h3 className="font-medium text-foreground">{announcement.title}</h3>
                       {!announcement.isRead && (
-                        <span className="flex h-2 w-2 rounded-full bg-blue-600" title="Unread" />
+                        <span className="flex h-2 w-2 rounded-full bg-primary" title="Unread" />
                       )}
                     </div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">

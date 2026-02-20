@@ -45,7 +45,7 @@ export function RichTextEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-600 underline',
+          class: 'text-primary underline',
         },
       }),
       Placeholder.configure({

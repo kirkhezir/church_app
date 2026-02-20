@@ -204,7 +204,7 @@ export function PublicNavigationHeader({
         return `${base} ${showTransparent ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200' : 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'}`;
       default:
         if (isActive(link.href)) {
-          return `${base} ${showTransparent ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`;
+          return `${base} ${showTransparent ? 'bg-white/20 text-white' : 'bg-accent text-primary'}`;
         }
         return `${base} ${showTransparent ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`;
     }
@@ -221,7 +221,7 @@ export function PublicNavigationHeader({
       case 'nav.contact':
         return `${base} text-emerald-600 hover:bg-emerald-50`;
       default:
-        return `${base} ${isActive(link.href) ? 'bg-blue-50 text-blue-600' : 'text-foreground/80 hover:bg-muted'}`;
+        return `${base} ${isActive(link.href) ? 'bg-accent text-primary' : 'text-foreground/80 hover:bg-muted'}`;
     }
   };
 
@@ -253,7 +253,7 @@ export function PublicNavigationHeader({
         {/* Skip to content link for keyboard users */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring"
         >
           Skip to main content
         </a>
@@ -357,7 +357,7 @@ export function PublicNavigationHeader({
                               }}
                               className={`block px-4 py-2 text-sm transition-colors ${
                                 isActive(child.href)
-                                  ? 'bg-blue-50 text-blue-600'
+                                  ? 'bg-accent text-primary'
                                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                               }`}
                             >
@@ -413,7 +413,7 @@ export function PublicNavigationHeader({
                   className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-[transform,box-shadow,background-color,border-color,color] duration-300 hover:scale-105 ${
                     showTransparent
                       ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-primary hover:shadow-white/20'
-                      : 'border-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
+                      : 'border-0 bg-gradient-to-r from-primary via-indigo-600 to-purple-600 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40'
                   }`}
                 >
                   <span className="relative z-10 flex items-center gap-2">
@@ -488,7 +488,7 @@ export function PublicNavigationHeader({
                                 }}
                                 className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                                   isActive(child.href)
-                                    ? 'bg-blue-50 text-blue-600'
+                                    ? 'bg-accent text-primary'
                                     : 'text-muted-foreground hover:bg-muted'
                                 }`}
                               >
@@ -526,7 +526,7 @@ export function PublicNavigationHeader({
                   <Link
                     to="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 py-3.5 text-base font-semibold tracking-wide text-white shadow-lg shadow-blue-500/30 transition-shadow duration-300 hover:shadow-xl hover:shadow-blue-500/40"
+                    className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary via-indigo-600 to-purple-600 px-4 py-3.5 text-base font-semibold tracking-wide text-primary-foreground shadow-lg shadow-primary/30 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/40"
                   >
                     <LogIn className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
                     {t('common.memberLogin')}

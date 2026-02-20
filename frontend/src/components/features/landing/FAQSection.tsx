@@ -168,7 +168,7 @@ export function FAQSection() {
               variant="ghost"
               size="sm"
               onClick={() => setSearchQuery('')}
-              className="mt-2 text-blue-600"
+              className="mt-2 text-primary"
             >
               Clear search
             </Button>

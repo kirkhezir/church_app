@@ -199,7 +199,7 @@ export function AnnouncementAnalyticsPage() {
                   >
                     <div className="flex items-center gap-3">
                       {/* Avatar Circle */}
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-medium text-primary">
                         {view.member.firstName.charAt(0)}
                         {view.member.lastName.charAt(0)}
                       </div>

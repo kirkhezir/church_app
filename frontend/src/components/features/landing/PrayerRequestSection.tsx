@@ -121,7 +121,10 @@ export function PrayerRequestSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-rose-100 p-3">
             <Heart className="h-8 w-8 text-rose-600" />
           </div>
-          <h2 id="prayer-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="prayer-heading"
+            className="mb-4 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Share Your Prayer Request
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -138,7 +141,7 @@ export function PrayerRequestSection() {
         <Card className="mx-auto max-w-2xl shadow-lg">
           <CardHeader className="border-b bg-muted">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-blue-600" />
+              <Shield className="h-5 w-5 text-primary" />
               We Pray for Every Request
             </CardTitle>
             <CardDescription>
@@ -152,7 +155,9 @@ export function PrayerRequestSection() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
                   <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-foreground">Thank You for Sharing</h3>
+                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                  Thank You for Sharing
+                </h3>
                 <p className="text-muted-foreground">
                   Your prayer request has been received. Our prayer team will be lifting you up in
                   prayer.
@@ -222,7 +227,7 @@ export function PrayerRequestSection() {
                       type="checkbox"
                       checked={formData.isPrivate}
                       onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-border text-blue-600 focus:ring-primary"
+                      className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
                     />
                     <label htmlFor="is-private" className="flex cursor-pointer items-start gap-2">
                       <Lock className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
@@ -241,7 +246,7 @@ export function PrayerRequestSection() {
                       type="checkbox"
                       checked={formData.wantFollowUp}
                       onChange={(e) => handleInputChange('wantFollowUp', e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-border text-blue-600 focus:ring-primary"
+                      className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
                     />
                     <label
                       htmlFor="want-follow-up"

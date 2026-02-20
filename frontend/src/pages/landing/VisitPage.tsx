@@ -186,15 +186,15 @@ export function VisitPage() {
         {/* Service Times */}
         <section className="reveal mb-12">
           <h2 className="mb-6 flex items-center gap-3 text-balance text-2xl font-bold text-foreground">
-            <Clock className="h-6 w-6 text-blue-600" />
+            <Clock className="h-6 w-6 text-primary" />
             {language === 'th' ? 'เวลานมัสการ' : 'Service Times'}
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {services.map((service, index) => (
-              <Card key={index} className="border-l-4 border-l-blue-600">
+              <Card key={index} className="border-l-4 border-l-primary">
                 <CardContent className="p-5">
                   <h3 className="text-lg font-semibold text-foreground">{service.name}</h3>
-                  <p className="mb-2 text-xl font-bold text-blue-600">{service.time}</p>
+                  <p className="mb-2 text-xl font-bold text-primary">{service.time}</p>
                   <p className="text-sm text-muted-foreground">{service.description}</p>
                 </CardContent>
               </Card>
@@ -212,8 +212,8 @@ export function VisitPage() {
               <Card key={index} className="h-full">
                 <CardContent className="p-6">
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                      <section.icon className="h-5 w-5 text-blue-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                      <section.icon className="h-5 w-5 text-primary" />
                     </div>
                     <h3 className="font-semibold text-foreground">{section.title}</h3>
                   </div>
@@ -253,7 +253,7 @@ export function VisitPage() {
             <CardContent className="p-4">
               <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <MapPin className="h-5 w-5 text-primary" />
                   <div>
                     <p className="font-medium text-foreground">Sing Buri Adventist Center</p>
                     <p className="text-sm text-muted-foreground">
@@ -379,6 +379,8 @@ export function VisitPage() {
                       <Label htmlFor="name">{language === 'th' ? 'ชื่อ' : 'Name'}</Label>
                       <Input
                         id="name"
+                        name="name"
+                        autoComplete="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder={language === 'th' ? 'ชื่อของคุณ' : 'Your name'}
@@ -390,6 +392,9 @@ export function VisitPage() {
                       <Input
                         id="email"
                         type="email"
+                        name="email"
+                        autoComplete="email"
+                        spellCheck={false}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder={language === 'th' ? 'อีเมลของคุณ' : 'your@email.com'}
@@ -403,6 +408,8 @@ export function VisitPage() {
                       <Input
                         id="phone"
                         type="tel"
+                        name="phone"
+                        autoComplete="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder={language === 'th' ? 'เบอร์โทรศัพท์' : 'Your phone number'}
@@ -455,7 +462,7 @@ export function VisitPage() {
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="bg-white text-blue-600 hover:bg-blue-50"
+                  className="bg-white text-primary hover:bg-accent"
                   onClick={() =>
                     window.open(
                       'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',

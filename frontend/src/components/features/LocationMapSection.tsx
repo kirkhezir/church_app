@@ -24,7 +24,10 @@ export function LocationMapSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h2 id="location-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="location-heading"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Find Us
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -50,7 +53,7 @@ export function LocationMapSection() {
               </div>
             </div>
             <Button
-              className="mt-4 w-full bg-blue-600 font-medium text-white hover:bg-blue-700"
+              className="mt-4 w-full bg-primary font-medium text-primary-foreground hover:bg-primary/90"
               onClick={() => window.open(directionsUrl, '_blank')}
             >
               <Navigation className="mr-2 h-4 w-4" />
@@ -63,7 +66,7 @@ export function LocationMapSection() {
             {/* Address */}
             <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-primary">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Address</h3>
@@ -83,7 +86,7 @@ export function LocationMapSection() {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Phone</h3>
               </div>
-              <a href="tel:+66876106926" className="font-medium text-blue-600 hover:underline">
+              <a href="tel:+66876106926" className="font-medium text-primary hover:underline">
                 +66 (0) 876-106-926
               </a>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -101,7 +104,7 @@ export function LocationMapSection() {
               </div>
               <a
                 href="mailto:singburiadventistcenter@gmail.com"
-                className="break-all font-medium text-blue-600 hover:underline"
+                className="break-all font-medium text-primary hover:underline"
               >
                 singburiadventistcenter@gmail.com
               </a>

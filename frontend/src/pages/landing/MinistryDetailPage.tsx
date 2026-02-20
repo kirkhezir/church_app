@@ -128,7 +128,7 @@ export function MinistryDetailPage() {
                   </div>
                   <Link
                     to="/gallery"
-                    className="mt-4 inline-flex items-center text-sm text-blue-600 hover:underline"
+                    className="mt-4 inline-flex items-center text-sm text-primary hover:underline"
                   >
                     {language === 'th' ? 'ดูแกลเลอรี่ทั้งหมด' : 'View Full Gallery'}
                     <ChevronRight className="ml-1 h-4 w-4" />
@@ -147,7 +147,7 @@ export function MinistryDetailPage() {
                   {(language === 'th' ? ministry.howToJoinThai : ministry.howToJoin).map(
                     (item, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-600">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-primary">
                           {i + 1}
                         </span>
                         <span className="text-muted-foreground">{item}</span>
@@ -287,7 +287,7 @@ export function MinistryDetailPage() {
                   </ul>
                   <Link
                     to="/events"
-                    className="mt-4 inline-flex items-center text-sm text-blue-600 hover:underline"
+                    className="mt-4 inline-flex items-center text-sm text-primary hover:underline"
                   >
                     {language === 'th' ? 'ดูกิจกรรมทั้งหมด' : 'View All Events'}
                     <ChevronRight className="ml-1 h-4 w-4" />

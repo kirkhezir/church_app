@@ -142,7 +142,7 @@ export function BlogDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
           <div className="mx-auto max-w-4xl">
-            <span className="inline-block rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white">
+            <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
               {category}
             </span>
           </div>
@@ -226,7 +226,7 @@ export function BlogDetailPage() {
                         />
                       </div>
                       <CardContent className="p-4">
-                        <span className="text-xs font-medium text-blue-600">
+                        <span className="text-xs font-medium text-primary">
                           {language === 'th' ? related.categoryThai : related.category}
                         </span>
                         <h3 className="mt-1 line-clamp-2 font-semibold text-foreground group-hover:text-primary">

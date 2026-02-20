@@ -104,12 +104,12 @@ export function BlogPage() {
                           loading="lazy"
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
-                        <div className="absolute left-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white">
+                        <div className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
                           {language === 'th' ? 'เด่น' : 'Featured'}
                         </div>
                       </div>
                       <div className="p-5">
-                        <span className="text-xs font-medium text-blue-600">
+                        <span className="text-xs font-medium text-primary">
                           {language === 'th' ? post.categoryThai : post.category}
                         </span>
                         <h3 className="mt-2 font-bold text-foreground group-hover:text-primary">
@@ -148,11 +148,13 @@ export function BlogPage() {
               <div className="relative flex-1 sm:max-w-xs">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
-                  type="text"
-                  placeholder={language === 'th' ? 'ค้นหาบทความ...' : 'Search articles...'}
+                  type="search"
+                  name="blog-search"
+                  aria-label={language === 'th' ? 'ค้นหาบทความ' : 'Search articles'}
+                  placeholder={language === 'th' ? 'ค้นหาบทความ…' : 'Search articles…'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
 
@@ -164,9 +166,9 @@ export function BlogPage() {
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 ${
+                      className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                         selectedCategory === cat.id
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-primary text-primary-foreground'
                           : 'bg-muted text-muted-foreground hover:bg-muted'
                       }`}
                     >
@@ -230,7 +232,7 @@ export function BlogPage() {
             </div>
           ) : (
             <div className="py-12 text-center">
-              <Newspaper className="mx-auto mb-4 h-12 w-12 text-blue-200" />
+              <Newspaper className="mx-auto mb-4 h-12 w-12 text-muted-foreground/30" />
               <h3 className="mb-2 text-lg font-medium text-foreground">
                 {language === 'th' ? 'ไม่พบบทความ' : 'No articles found'}
               </h3>
@@ -268,13 +270,16 @@ export function BlogPage() {
                   <input
                     type="email"
                     name="email"
+                    autoComplete="email"
+                    spellCheck={false}
+                    aria-label={language === 'th' ? 'อีเมลของคุณ' : 'Your email address'}
                     placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="flex-1 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="flex-1 rounded-lg px-4 py-3 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                   />
                   <Button
-                    className="bg-white text-blue-600 hover:bg-blue-50"
+                    className="bg-white text-primary hover:bg-accent"
                     onClick={() => {
                       if (newsletterEmail && newsletterEmail.includes('@')) {
                         setNewsletterSubmitted(true);

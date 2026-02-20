@@ -71,7 +71,7 @@ export const UpcomingEventsWidget = memo(function UpcomingEventsWidget({
               >
                 <div className="flex-shrink-0">
                   <div className="text-center">
-                    <div className="text-2xl font-bold tabular-nums text-blue-600">
+                    <div className="text-2xl font-bold tabular-nums text-primary">
                       {startDate.getDate()}
                     </div>
                     <div className="text-xs text-muted-foreground">

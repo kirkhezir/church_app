@@ -145,12 +145,12 @@ export default function MemberDashboard() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
       {/* Welcome Header */}
-      <Card className="animate-fade-in-up border-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg dark:from-blue-700 dark:to-blue-900">
+      <Card className="animate-fade-in-up border-0 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg">
         <CardContent className="p-6">
           <h1 className="text-balance text-3xl font-bold">
             Welcome back, {dashboard.profile.firstName}!
           </h1>
-          <p className="mt-1 text-sm text-blue-100">
+          <p className="mt-1 text-sm text-primary-foreground/70">
             Here&apos;s what&apos;s happening in your church community
           </p>
         </CardContent>

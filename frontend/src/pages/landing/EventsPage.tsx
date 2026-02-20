@@ -135,7 +135,7 @@ export function EventsPage() {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1 ${
+                    className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 ${
                       selectedCategory === cat.id
                         ? 'bg-emerald-600 text-white'
                         : 'bg-muted text-muted-foreground hover:bg-muted'
@@ -154,7 +154,7 @@ export function EventsPage() {
               >
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                   aria-label={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
                   role="tab"
                   aria-selected={viewMode === 'grid'}
@@ -163,7 +163,7 @@ export function EventsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                   aria-label={language === 'th' ? 'มุมมองรายการ' : 'List View'}
                   role="tab"
                   aria-selected={viewMode === 'list'}
@@ -172,7 +172,7 @@ export function EventsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode('calendar')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
                   aria-label={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
                   role="tab"
                   aria-selected={viewMode === 'calendar'}
@@ -317,6 +317,7 @@ export function EventsPage() {
                           new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
                         )
                       }
+                      aria-label={language === 'th' ? 'เดือนก่อนหน้า' : 'Previous month'}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
@@ -328,6 +329,7 @@ export function EventsPage() {
                           new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
                         )
                       }
+                      aria-label={language === 'th' ? 'เดือนถัดไป' : 'Next month'}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>

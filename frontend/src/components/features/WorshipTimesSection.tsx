@@ -36,7 +36,7 @@ const services = [
     time: '9:00 AM',
     timeValue: '09:00',
     description: 'Bible study and fellowship for all ages.',
-    color: 'bg-blue-600',
+    color: 'bg-primary',
   },
   {
     name: 'Divine Service',
@@ -68,7 +68,7 @@ export function WorshipTimesSection() {
         <div className="mb-10 text-center sm:mb-12">
           <h2
             id="worship-times-heading"
-            className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
           >
             Worship Times
           </h2>
@@ -76,7 +76,7 @@ export function WorshipTimesSection() {
             Join us every Sabbath (Saturday) for worship and fellowship
           </p>
           {/* Next Service Date */}
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary">
             <Calendar className="h-4 w-4" />
             Next: {nextSaturday}
           </div>
@@ -103,7 +103,7 @@ export function WorshipTimesSection() {
 
         {/* Welcome Message */}
         <div className="mt-8 flex items-center justify-center gap-3 rounded-lg bg-card p-5 text-center shadow-sm sm:mt-10">
-          <Users className="h-6 w-6 flex-shrink-0 text-blue-600" />
+          <Users className="h-6 w-6 flex-shrink-0 text-primary" />
           <p className="text-foreground/80">
             <span className="font-medium">All are welcome!</span>
             <span className="hidden sm:inline"> First-time visitors, we'd love to meet you.</span>

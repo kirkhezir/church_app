@@ -136,7 +136,10 @@ export function ContactForm() {
     <section id="contact" className="bg-muted py-16 sm:py-24" aria-labelledby="contact-heading">
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         <div className="mb-10 text-center">
-          <h2 id="contact-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="contact-heading"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Get In Touch
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -217,7 +220,10 @@ export function ContactForm() {
 
               {/* Email Field */}
               <div className="mb-4">
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground/80">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium text-foreground/80"
+                >
                   Email *
                 </label>
                 <input
@@ -241,7 +247,10 @@ export function ContactForm() {
 
               {/* Subject Field */}
               <div className="mb-4">
-                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-foreground/80">
+                <label
+                  htmlFor="subject"
+                  className="mb-2 block text-sm font-medium text-foreground/80"
+                >
                   Subject *
                 </label>
                 <input
@@ -265,7 +274,10 @@ export function ContactForm() {
 
               {/* Message Field */}
               <div className="mb-6">
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground/80">
+                <label
+                  htmlFor="message"
+                  className="mb-2 block text-sm font-medium text-foreground/80"
+                >
                   Message * (minimum 20 characters)
                 </label>
                 <textarea
@@ -291,7 +303,7 @@ export function ContactForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 ${
+                className={`w-full rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 ${
                   isSubmitting ? 'cursor-not-allowed opacity-60' : ''
                 }`}
               >

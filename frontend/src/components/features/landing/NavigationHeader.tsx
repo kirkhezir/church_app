@@ -100,7 +100,7 @@ export function NavigationHeader() {
                   size="sm"
                   className={
                     isScrolled
-                      ? 'border-blue-600 text-blue-600 hover:bg-blue-50'
+                      ? 'border-primary text-primary hover:bg-accent'
                       : 'bg-white/10 text-white backdrop-blur-sm hover:bg-white/20'
                   }
                 >
@@ -133,14 +133,14 @@ export function NavigationHeader() {
                   onClick={() => scrollToSection(link.href)}
                   className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-foreground/80 hover:bg-muted"
                 >
-                  <link.icon className="h-5 w-5 text-blue-600" />
+                  <link.icon className="h-5 w-5 text-primary" />
                   {link.label}
                 </button>
               ))}
               <hr className="my-2" />
               <Link
                 to="/login"
-                className="flex w-full items-center gap-3 rounded-lg bg-blue-600 px-4 py-3 text-white"
+                className="flex w-full items-center gap-3 rounded-lg bg-primary px-4 py-3 text-primary-foreground"
               >
                 <LogIn className="h-5 w-5" />
                 Member Login

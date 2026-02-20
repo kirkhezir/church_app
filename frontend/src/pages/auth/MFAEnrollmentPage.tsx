@@ -147,7 +147,7 @@ export default function MFAEnrollmentPage() {
               <button
                 type="button"
                 onClick={() => setShowSecret(!showSecret)}
-                className="text-sm text-blue-600 underline hover:text-blue-800"
+                className="text-sm text-primary underline hover:text-primary/80"
               >
                 {showSecret ? 'Hide' : "Can't scan? Show secret key"}
               </button>

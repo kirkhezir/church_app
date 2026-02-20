@@ -87,7 +87,10 @@ export function GiveSection() {
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-amber-100 p-3">
             <Gift className="h-8 w-8 text-amber-600" />
           </div>
-          <h2 id="give-heading" className="mb-4 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="give-heading"
+            className="mb-4 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Support Our Ministry
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -136,9 +139,7 @@ export function GiveSection() {
                       <div className="text-center">
                         <QrCode className="mx-auto h-16 w-16 text-muted-foreground" />
                         <p className="mt-2 text-xs text-muted-foreground">PromptPay QR Code</p>
-                        <p className="text-xs text-muted-foreground">
-                          Scan with banking app
-                        </p>
+                        <p className="text-xs text-muted-foreground">Scan with banking app</p>
                       </div>
                     </div>
 
@@ -181,7 +182,7 @@ export function GiveSection() {
                   <div className="rounded-xl border border-border bg-white p-4">
                     <div className="mb-4 flex items-center gap-3">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                        <Building2 className="h-6 w-6 text-blue-600" />
+                        <Building2 className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <p className="font-semibold text-foreground">{BANK_DETAILS.bankName}</p>

@@ -128,7 +128,7 @@ export function PlanYourVisitSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="mb-3 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700">
+          <span className="mb-3 inline-block rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary">
             First Time? Welcome!
           </span>
           <h2
@@ -149,8 +149,8 @@ export function PlanYourVisitSection() {
             <Card key={service.name} className="border-2 border-blue-100 bg-white">
               <CardContent className="p-4 text-center">
                 <div className="mb-2 flex items-center justify-center gap-2">
-                  <Clock className="h-4 w-4 text-blue-600" />
-                  <span className="text-lg font-bold text-blue-600">{service.time}</span>
+                  <Clock className="h-4 w-4 text-primary" />
+                  <span className="text-lg font-bold text-primary">{service.time}</span>
                 </div>
                 <h3 className="font-semibold text-foreground">{service.name}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{service.description}</p>
@@ -175,8 +175,8 @@ export function PlanYourVisitSection() {
                 aria-controls={`content-${item.id}`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                    <item.icon className="h-6 w-6 text-blue-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent">
+                    <item.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">{item.title}</h3>
@@ -233,7 +233,7 @@ export function PlanYourVisitSection() {
                     onClick={scrollToContact}
                     variant="secondary"
                     size="lg"
-                    className="bg-white text-blue-600 hover:bg-blue-50"
+                    className="bg-white text-primary hover:bg-accent"
                   >
                     <MapPin className="mr-2 h-4 w-4" />
                     Get Directions

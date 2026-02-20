@@ -365,7 +365,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                           : result.type === 'event'
                             ? 'bg-emerald-100 text-emerald-600'
                             : result.type === 'ministry'
-                              ? 'bg-blue-100 text-blue-600'
+                              ? 'bg-accent text-primary'
                               : result.type === 'blog'
                                 ? 'bg-amber-100 text-amber-600'
                                 : 'bg-muted text-muted-foreground'

@@ -160,9 +160,21 @@ export function GalleryPage() {
               <Card
                 key={album.id}
                 className="group cursor-pointer overflow-hidden transition-shadow duration-200 hover:shadow-xl"
+                role="button"
+                tabIndex={0}
+                aria-label={
+                  language === 'th' ? `ดูอัลบั้ม ${album.titleThai}` : `View album ${album.title}`
+                }
                 onClick={() => {
                   setSelectedAlbum(album.id);
                   setViewMode('photos');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedAlbum(album.id);
+                    setViewMode('photos');
+                  }
                 }}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -195,7 +207,18 @@ export function GalleryPage() {
               <div
                 key={photo.id}
                 className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg"
+                role="button"
+                tabIndex={0}
+                aria-label={
+                  language === 'th' ? `ดูรูป ${photo.titleThai}` : `View photo ${photo.title}`
+                }
                 onClick={() => openLightbox(photo, index)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(photo, index);
+                  }
+                }}
               >
                 <img
                   src={photo.thumbnail}
@@ -287,13 +310,28 @@ export function GalleryPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20"
+                  aria-label={language === 'th' ? 'ถูกใจ' : 'Like photo'}
+                >
                   <Heart className="mr-1 h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20"
+                  aria-label={language === 'th' ? 'แชร์' : 'Share photo'}
+                >
                   <Share2 className="mr-1 h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20"
+                  aria-label={language === 'th' ? 'ดาวน์โหลด' : 'Download photo'}
+                >
                   <Download className="mr-1 h-4 w-4" />
                 </Button>
               </div>

@@ -26,7 +26,7 @@ export function PrivacyPolicyPage() {
             <ArrowLeft className="h-4 w-4" />
             {language === 'th' ? 'กลับหน้าแรก' : 'Back to Home'}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold text-balance">
+          <h1 className="mt-4 text-balance text-3xl font-bold">
             {language === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'}
           </h1>
           <p className="mt-2 text-blue-200">
@@ -46,10 +46,10 @@ export function PrivacyPolicyPage() {
           {/* Introduction */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Shield className="h-5 w-5 text-blue-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                <Shield className="h-5 w-5 text-primary" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">Introduction</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">Introduction</h2>
             </div>
             <p className="text-muted-foreground">
               Sing Buri Adventist Center (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
@@ -69,7 +69,9 @@ export function PrivacyPolicyPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
                 <Eye className="h-5 w-5 text-emerald-600" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">Information We Collect</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">
+                Information We Collect
+              </h2>
             </div>
 
             <h3 className="mt-6 text-lg font-medium text-foreground">Personal Information</h3>
@@ -109,7 +111,9 @@ export function PrivacyPolicyPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
                 <FileText className="h-5 w-5 text-purple-600" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">How We Use Your Information</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">
+                How We Use Your Information
+              </h2>
             </div>
             <p className="text-muted-foreground">We use the information we collect to:</p>
             <ul className="mt-3 list-disc pl-6 text-muted-foreground">
@@ -128,7 +132,9 @@ export function PrivacyPolicyPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
                 <Lock className="h-5 w-5 text-amber-600" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">Data Protection</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">
+                Data Protection
+              </h2>
             </div>
             <p className="text-muted-foreground">
               We implement appropriate technical and organizational security measures to protect
@@ -154,7 +160,7 @@ export function PrivacyPolicyPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100">
                 <Trash2 className="h-5 w-5 text-rose-600" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">Your Rights</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">Your Rights</h2>
             </div>
             <p className="text-muted-foreground">You have the right to:</p>
             <ul className="mt-3 list-disc pl-6 text-muted-foreground">
@@ -171,7 +177,9 @@ export function PrivacyPolicyPage() {
 
           {/* Third-Party Services */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Third-Party Services</h2>
+            <h2 className="mb-4 text-balance text-xl font-semibold text-foreground">
+              Third-Party Services
+            </h2>
             <p className="text-muted-foreground">
               Our website may contain links to third-party websites or services. We are not
               responsible for the privacy practices of these external sites. We encourage you to
@@ -188,7 +196,9 @@ export function PrivacyPolicyPage() {
 
           {/* Cookies */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Cookies and Tracking</h2>
+            <h2 className="mb-4 text-balance text-xl font-semibold text-foreground">
+              Cookies and Tracking
+            </h2>
             <p className="text-muted-foreground">
               We use cookies and similar technologies to enhance your experience on our website.
               Cookies are small files stored on your device that help us remember your preferences
@@ -202,7 +212,9 @@ export function PrivacyPolicyPage() {
 
           {/* Children's Privacy */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Children&apos;s Privacy</h2>
+            <h2 className="mb-4 text-balance text-xl font-semibold text-foreground">
+              Children&apos;s Privacy
+            </h2>
             <p className="text-muted-foreground">
               Our website is not intended for children under 13 years of age. We do not knowingly
               collect personal information from children under 13. If you believe we have collected
@@ -212,7 +224,9 @@ export function PrivacyPolicyPage() {
 
           {/* Changes to Policy */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold text-foreground text-balance">Changes to This Policy</h2>
+            <h2 className="mb-4 text-balance text-xl font-semibold text-foreground">
+              Changes to This Policy
+            </h2>
             <p className="text-muted-foreground">
               We may update this Privacy Policy from time to time. We will notify you of any changes
               by posting the new Privacy Policy on this page and updating the &quot;Last
@@ -221,12 +235,12 @@ export function PrivacyPolicyPage() {
           </section>
 
           {/* Contact Information */}
-          <section className="rounded-xl bg-blue-50 p-6 dark:bg-blue-900/20 sm:p-8">
+          <section className="rounded-xl bg-accent p-6 dark:bg-primary/10 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Mail className="h-5 w-5 text-blue-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                <Mail className="h-5 w-5 text-primary" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground text-balance">Contact Us</h2>
+              <h2 className="text-balance text-xl font-semibold text-foreground">Contact Us</h2>
             </div>
             <p className="text-muted-foreground">
               If you have questions about this Privacy Policy or our data practices, please contact
@@ -241,7 +255,7 @@ export function PrivacyPolicyPage() {
                 Email:{' '}
                 <a
                   href="mailto:singburiadventistcenter@gmail.com"
-                  className="text-blue-600 hover:underline"
+                  className="text-primary hover:underline"
                 >
                   singburiadventistcenter@gmail.com
                 </a>

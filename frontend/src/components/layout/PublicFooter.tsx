@@ -54,6 +54,8 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
               <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-sm gap-2">
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('footer.emailPlaceholder')}
@@ -65,7 +67,7 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                 <button
                   type="submit"
                   disabled={subscribed}
-                  className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 disabled:bg-emerald-600"
+                  className="cursor-pointer rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 disabled:bg-emerald-600"
                 >
                   {subscribed ? `✓ ${t('common.subscribed')}` : t('common.subscribe')}
                 </button>
@@ -112,7 +114,7 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                 href={SOCIAL_LINKS.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-muted-foreground transition-colors hover:bg-blue-600 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
@@ -245,7 +247,7 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
                   href="mailto:singburiadventistcenter@gmail.com"
                   className="flex items-start gap-2 text-muted-foreground transition-colors hover:text-white"
                 >
-                  <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+                  <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                   <span className="break-all">singburiadventistcenter@gmail.com</span>
                 </a>
               </li>

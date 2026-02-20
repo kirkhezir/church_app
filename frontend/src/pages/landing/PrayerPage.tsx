@@ -160,6 +160,8 @@ export function PrayerPage() {
                         </label>
                         <input
                           type="text"
+                          name="name"
+                          autoComplete="name"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder={language === 'th' ? 'ไม่ระบุตัวตน' : 'Anonymous'}
@@ -172,6 +174,9 @@ export function PrayerPage() {
                         </label>
                         <input
                           type="email"
+                          name="email"
+                          autoComplete="email"
+                          spellCheck={false}
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
@@ -182,6 +187,7 @@ export function PrayerPage() {
                           {language === 'th' ? 'หมวดหมู่' : 'Category'} *
                         </label>
                         <select
+                          name="category"
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                           required
@@ -202,14 +208,15 @@ export function PrayerPage() {
                           {language === 'th' ? 'คำอธิษฐานของคุณ' : 'Your Prayer Request'} *
                         </label>
                         <textarea
+                          name="prayer-request"
                           value={formData.request}
                           onChange={(e) => setFormData({ ...formData, request: e.target.value })}
                           required
                           rows={5}
                           placeholder={
                             language === 'th'
-                              ? 'แบ่งปันคำอธิษฐานของคุณ...'
-                              : 'Share your prayer request...'
+                              ? 'แบ่งปันคำอธิษฐานของคุณ…'
+                              : 'Share your prayer request…'
                           }
                           className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         />

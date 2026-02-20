@@ -23,7 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EventCategory } from '@/types/api';
 
 const categoryColors: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-800',
+  [EventCategory.WORSHIP]: 'bg-accent text-primary',
   [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-800',
   [EventCategory.COMMUNITY]: 'bg-green-100 text-green-800',
   [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-800',

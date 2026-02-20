@@ -71,7 +71,7 @@ export function HomePage() {
       {/* Skip to Content - Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:outline-none"
       >
         Skip to main content
       </a>
@@ -263,7 +263,7 @@ function HeroSection() {
           <Button
             size="lg"
             onClick={scrollToServices}
-            className="animate-glow bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 [--glow-color:rgba(245,158,11,0.4)] hover:bg-amber-400 sm:px-8"
+            className="motion-safe:animate-glow bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 [--glow-color:rgba(245,158,11,0.4)] hover:bg-amber-400 sm:px-8"
           >
             <Clock className="mr-2 h-5 w-5" />
             {t('hero.serviceTimes')}
@@ -399,7 +399,7 @@ function AboutSection() {
             href="https://www.adventist.org/beliefs/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 hover:underline"
           >
             <BookOpen className="h-4 w-4" />
             {t('about.learnBeliefs')}
@@ -428,7 +428,7 @@ function BackToTopButton() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+      className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       aria-label="Back to top"
     >
       <ArrowUp className="h-5 w-5" />

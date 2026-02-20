@@ -80,7 +80,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     department: 'Church Administration',
     departmentThai: 'ฝ่ายบริหารโบสถ์',
     icon: ShieldCheck,
-    accent: 'text-blue-600',
+    accent: 'text-primary',
     iconBg: 'bg-blue-100',
     members: [
       {
@@ -300,7 +300,7 @@ export function AboutPage() {
                   fetchPriority="high"
                   className="rounded-2xl shadow-xl"
                 />
-                <div className="absolute -bottom-6 -left-6 rounded-xl bg-blue-600 p-6 text-white shadow-lg">
+                <div className="absolute -bottom-6 -left-6 rounded-xl bg-primary p-6 text-primary-foreground shadow-lg">
                   <div className="text-4xl font-bold tabular-nums">10+</div>
                   <div className="text-blue-100">Years of Ministry</div>
                 </div>
@@ -325,7 +325,7 @@ export function AboutPage() {
                 <Card key={index} className="text-center">
                   <CardContent className="p-6">
                     <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
-                      <belief.icon className="h-7 w-7 text-blue-600" />
+                      <belief.icon className="h-7 w-7 text-primary" />
                     </div>
                     <h3 className="mb-2 font-semibold text-foreground">{belief.title}</h3>
                     <p className="text-sm text-muted-foreground">{belief.description}</p>
@@ -404,13 +404,13 @@ export function AboutPage() {
                         loading="lazy"
                         className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200"
                       />
-                      <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white ring-2 ring-white">
+                      <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-white">
                         <Award className="h-3.5 w-3.5" />
                       </div>
                     </div>
                     <h3 className="font-semibold text-foreground">{elder.name}</h3>
                     <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
-                    <p className="mt-1 text-sm font-medium text-blue-600">{elder.title}</p>
+                    <p className="mt-1 text-sm font-medium text-primary">{elder.title}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -509,7 +509,7 @@ export function AboutPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/visit">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                <Button size="lg" className="bg-primary hover:bg-primary/90">
                   {language === 'th' ? 'วางแผนเยี่ยมชม' : 'Plan Your Visit'}
                 </Button>
               </Link>

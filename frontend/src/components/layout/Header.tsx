@@ -22,11 +22,13 @@ export const Header: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Name */}
           <Link to="/" className="flex items-center space-x-3 transition hover:opacity-80">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-              <span className="text-xl font-bold text-white">SB</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              <span className="text-xl font-bold text-primary-foreground">SB</span>
             </div>
             <div className="hidden md:block">
-              <h1 className="text-xl font-bold text-foreground text-balance">Sing Buri Adventist Center</h1>
+              <h1 className="text-balance text-xl font-bold text-foreground">
+                Sing Buri Adventist Center
+              </h1>
               <p className="text-xs text-muted-foreground">ศูนย์แอดเวนตีสต์สิงห์บุรี</p>
             </div>
           </Link>

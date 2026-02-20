@@ -91,7 +91,7 @@ export function MinistriesPage() {
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link to="/#contact">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+              <Button size="lg" className="bg-white text-primary hover:bg-accent">
                 {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
               </Button>
             </Link>

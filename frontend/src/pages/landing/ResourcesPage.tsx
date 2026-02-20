@@ -80,8 +80,10 @@ export function ResourcesPage() {
             <div className="relative flex-1 sm:max-w-xs">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
-                type="text"
-                placeholder={language === 'th' ? 'ค้นหาทรัพยากร...' : 'Search resources...'}
+                type="search"
+                name="resource-search"
+                aria-label={language === 'th' ? 'ค้นหาทรัพยากร' : 'Search resources'}
+                placeholder={language === 'th' ? 'ค้นหาทรัพยากร…' : 'Search resources…'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200"
@@ -147,7 +149,7 @@ export function ResourcesPage() {
                                   ? 'bg-red-100'
                                   : resource.type === 'video'
                                     ? 'bg-purple-100'
-                                    : 'bg-blue-100'
+                                    : 'bg-accent'
                               }`}
                             >
                               <Icon
@@ -156,7 +158,7 @@ export function ResourcesPage() {
                                     ? 'text-red-600'
                                     : resource.type === 'video'
                                       ? 'text-purple-600'
-                                      : 'text-blue-600'
+                                      : 'text-primary'
                                 }`}
                               />
                             </div>
@@ -233,7 +235,7 @@ export function ResourcesPage() {
               </div>
             ) : (
               <div className="py-12 text-center">
-                <BookOpen className="mx-auto mb-4 h-12 w-12 text-blue-200" />
+                <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground/30" />
                 <h3 className="mb-2 text-lg font-medium text-foreground">
                   {language === 'th' ? 'ไม่พบทรัพยากร' : 'No resources found'}
                 </h3>

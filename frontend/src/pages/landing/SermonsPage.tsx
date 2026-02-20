@@ -101,8 +101,10 @@ export function SermonsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
-                type="text"
-                placeholder={language === 'th' ? 'ค้นหาคำเทศนา...' : 'Search sermons...'}
+                type="search"
+                name="sermon-search"
+                aria-label={language === 'th' ? 'ค้นหาคำเทศนา' : 'Search sermons'}
+                placeholder={language === 'th' ? 'ค้นหาคำเทศนา…' : 'Search sermons…'}
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -115,6 +117,8 @@ export function SermonsPage() {
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <select
+                name="sermon-series"
+                aria-label={language === 'th' ? 'กรองตามซีรีส์' : 'Filter by series'}
                 value={selectedSeries}
                 onChange={(e) => {
                   setSelectedSeries(e.target.value);
@@ -133,6 +137,8 @@ export function SermonsPage() {
             <div className="relative">
               <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <select
+                name="sermon-speaker"
+                aria-label={language === 'th' ? 'กรองตามผู้พูด' : 'Filter by speaker'}
                 value={selectedSpeaker}
                 onChange={(e) => {
                   setSelectedSpeaker(e.target.value);
@@ -180,7 +186,7 @@ export function SermonsPage() {
                       )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-                          <Play className="h-6 w-6 text-blue-600" />
+                          <Play className="h-6 w-6 text-primary" />
                         </div>
                       </div>
                       {sermon.youtubeId && (
@@ -189,7 +195,7 @@ export function SermonsPage() {
                         </div>
                       )}
                       {!sermon.youtubeId && sermon.audioUrl && (
-                        <div className="absolute bottom-2 right-2 rounded bg-blue-600 px-2 py-0.5">
+                        <div className="absolute bottom-2 right-2 rounded bg-primary px-2 py-0.5">
                           <Headphones className="h-4 w-4 text-white" />
                         </div>
                       )}
@@ -226,6 +232,7 @@ export function SermonsPage() {
               size="sm"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
+              aria-label={language === 'th' ? 'หน้าก่อนหน้า' : 'Previous page'}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -238,6 +245,7 @@ export function SermonsPage() {
               size="sm"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
+              aria-label={language === 'th' ? 'หน้าถัดไป' : 'Next page'}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

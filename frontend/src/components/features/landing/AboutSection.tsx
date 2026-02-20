@@ -39,7 +39,7 @@ export function AboutSection() {
       <div className="mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-foreground md:text-5xl text-balance">
+          <h2 className="mb-4 text-balance text-4xl font-bold text-foreground md:text-5xl">
             Welcome to Our Church Family
           </h2>
           <p className="mx-auto max-w-3xl text-xl leading-relaxed text-muted-foreground">
@@ -88,7 +88,7 @@ export function AboutSection() {
           <p className="mb-4 text-lg text-muted-foreground">
             Whether you're seeking spiritual growth or simply a place to belong —
           </p>
-          <p className="text-2xl font-bold text-blue-600">You're welcome here.</p>
+          <p className="text-2xl font-bold text-primary">You're welcome here.</p>
         </div>
       </div>
     </section>

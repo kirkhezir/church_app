@@ -40,7 +40,7 @@ const defaultAnnouncements: Announcement[] = [
 ];
 
 const typeStyles = {
-  info: 'bg-blue-600',
+  info: 'bg-primary',
   success: 'bg-emerald-600',
   warning: 'bg-amber-500',
   urgent: 'bg-rose-600',

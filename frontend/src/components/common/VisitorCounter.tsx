@@ -91,7 +91,7 @@ export function SocialProofStats({ className = '' }: SocialProofStatsProps) {
       value: '150+',
       label: language === 'th' ? 'ครอบครัวที่เยี่ยมชมเดือนที่แล้ว' : 'families visited last month',
       icon: Users,
-      color: 'text-blue-600 bg-blue-100',
+      color: 'text-primary bg-accent',
     },
     {
       value: '25+',

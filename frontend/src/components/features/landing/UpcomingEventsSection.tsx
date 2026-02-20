@@ -15,7 +15,7 @@ import { eventService } from '../../../services/endpoints/eventService';
 import { Event, EventCategory } from '../../../types/api';
 
 const categoryColors: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'bg-blue-100 text-blue-700',
+  [EventCategory.WORSHIP]: 'bg-accent text-primary',
   [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-700',
   [EventCategory.COMMUNITY]: 'bg-green-100 text-green-700',
   [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-700',
@@ -83,13 +83,16 @@ export function UpcomingEventsSection() {
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h2 id="events-heading" className="text-3xl font-bold text-foreground sm:text-4xl text-balance">
+            <h2
+              id="events-heading"
+              className="text-balance text-3xl font-bold text-foreground sm:text-4xl"
+            >
               Upcoming Events
             </h2>
             <p className="mt-1 text-lg text-muted-foreground">See what's happening at our church</p>
           </div>
           <Link to="/events">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary hover:bg-primary/90">
               View All Events
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -125,7 +128,7 @@ export function UpcomingEventsSection() {
                     <CardContent className="p-5">
                       {/* Date + Category */}
                       <div className="mb-3 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                        <div className="flex items-center gap-2 text-sm font-medium text-primary">
                           <Calendar className="h-4 w-4" />
                           <span>
                             {dateInfo.month} {dateInfo.day}

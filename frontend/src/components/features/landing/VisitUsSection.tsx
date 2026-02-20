@@ -161,17 +161,20 @@ export function VisitUsSection() {
   return (
     <section
       id="visit"
-      className="bg-gradient-to-b from-blue-50 to-white py-16 sm:py-24"
+      className="bg-gradient-to-b from-accent to-white py-16 sm:py-24"
       aria-labelledby="visit-heading"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="mb-3 inline-flex items-center rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700">
+          <span className="mb-3 inline-flex items-center rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary">
             <Calendar className="mr-2 h-4 w-4" />
             {language === 'th' ? 'ร่วมนมัสการกับเรา' : 'Join us this Sabbath'}
           </span>
-          <h2 id="visit-heading" className="mb-3 text-3xl font-bold text-foreground sm:text-4xl text-balance">
+          <h2
+            id="visit-heading"
+            className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
+          >
             {language === 'th' ? 'วางแผนการมาเยี่ยมชม' : 'Plan Your Visit'}
           </h2>
           <p className="text-lg text-muted-foreground">
@@ -186,16 +189,16 @@ export function VisitUsSection() {
           {services.map((service) => (
             <Card
               key={service.name}
-              className="border-2 border-blue-100 bg-white text-center transition-shadow hover:shadow-lg"
+              className="border-2 border-accent bg-white text-center transition-shadow hover:shadow-lg"
             >
               <CardContent className="p-5">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                  <service.icon className="h-6 w-6 text-blue-600" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent">
+                  <service.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-semibold text-foreground">
                   {language === 'th' ? service.nameThai : service.name}
                 </h3>
-                <p className="my-1 text-2xl font-bold text-blue-600">{service.time}</p>
+                <p className="my-1 text-2xl font-bold text-primary">{service.time}</p>
                 <p className="text-sm text-muted-foreground">
                   {language === 'th' ? service.descriptionThai : service.description}
                 </p>
@@ -222,7 +225,7 @@ export function VisitUsSection() {
                 onClick={() => setActiveTab(item.id)}
                 className={`flex min-w-max flex-1 items-center justify-center gap-2 whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
                   activeTab === item.id
-                    ? 'border-b-2 border-blue-600 bg-white text-blue-600'
+                    ? 'border-b-2 border-primary bg-white text-primary'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
@@ -240,8 +243,8 @@ export function VisitUsSection() {
               <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-start">
                 {/* Icon and Title */}
                 <div className="flex items-center gap-3 sm:gap-4 md:w-1/3">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100 sm:h-14 sm:w-14">
-                    <activeItem.icon className="h-6 w-6 text-blue-600 sm:h-7 sm:w-7" />
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-accent sm:h-14 sm:w-14">
+                    <activeItem.icon className="h-6 w-6 text-primary sm:h-7 sm:w-7" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-foreground sm:text-xl">
@@ -272,7 +275,7 @@ export function VisitUsSection() {
         </Card>
 
         {/* Location CTA */}
-        <Card className="overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700">
+        <Card className="overflow-hidden bg-gradient-to-r from-primary to-indigo-700">
           <CardContent className="p-5 sm:p-6 md:p-8">
             <div className="flex flex-col items-center gap-4 text-center sm:gap-6 md:flex-row md:justify-between md:text-left">
               {/* Location Info */}
@@ -284,7 +287,7 @@ export function VisitUsSection() {
                   <h3 className="text-base font-semibold sm:text-lg">
                     {language === 'th' ? 'ศูนย์แอ๊ดเวนตีสสิงห์บุรี' : 'Sing Buri Adventist Center'}
                   </h3>
-                  <p className="text-sm text-blue-100">
+                  <p className="text-sm text-primary-foreground/70">
                     {language === 'th'
                       ? 'ต.บางพุทรา อ.เมือง จ.สิงห์บุรี 16000'
                       : 'Bang Phutsa, Sing Buri 16000, Thailand'}
@@ -299,7 +302,7 @@ export function VisitUsSection() {
                   }
                   variant="secondary"
                   size="default"
-                  className="w-full bg-white text-blue-600 hover:bg-blue-50 sm:w-auto sm:px-6"
+                  className="w-full bg-white text-primary hover:bg-accent sm:w-auto sm:px-6"
                 >
                   <MapPin className="mr-2 h-4 w-4" />
                   {language === 'th' ? 'เส้นทาง' : 'Get Directions'}

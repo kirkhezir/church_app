@@ -275,7 +275,9 @@ export function GivePage() {
                     </span>
                     <input
                       type="number"
+                      name="amount"
                       min="1"
+                      aria-label={language === 'th' ? 'ระบุจำนวนเงิน' : 'Donation amount'}
                       value={amount}
                       onChange={(e) => handleAmountChange(e.target.value)}
                       placeholder="0"
@@ -369,7 +371,7 @@ export function GivePage() {
                       {bankAccounts.map((account, i) => (
                         <div key={i} className="rounded-lg bg-muted p-4">
                           <div className="flex items-center gap-2">
-                            <Building2 className="h-6 w-6 text-blue-600" />
+                            <Building2 className="h-6 w-6 text-primary" />
                             <span className="font-medium">
                               {language === 'th' ? account.bankThai : account.bank}
                             </span>

@@ -105,7 +105,7 @@ export function SermonDetailPage() {
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                     <div className="flex flex-col items-center gap-3">
                       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90">
-                        <Play className="ml-1 h-8 w-8 text-blue-600" />
+                        <Play className="ml-1 h-8 w-8 text-primary" />
                       </div>
                       <span className="text-sm font-medium text-white">
                         {language === 'th' ? 'เล่นเสียง' : 'Play Audio'}
@@ -127,7 +127,7 @@ export function SermonDetailPage() {
           {/* Back Link */}
           <Link
             to="/sermons"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary dark:text-muted-foreground dark:hover:text-blue-400"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary dark:text-muted-foreground dark:hover:text-primary/70"
           >
             <ArrowLeft className="h-4 w-4" />
             {language === 'th' ? 'กลับไปคำเทศนา' : 'Back to Sermons'}
@@ -138,7 +138,7 @@ export function SermonDetailPage() {
             {/* Left: Main Content */}
             <div className="lg:col-span-2">
               {/* Title & Meta */}
-              <h1 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl text-balance">
+              <h1 className="mb-4 text-balance text-2xl font-bold text-foreground sm:text-3xl">
                 {sermon.title}
               </h1>
 
@@ -199,11 +199,8 @@ export function SermonDetailPage() {
                         )}
                         <ul className="space-y-2 pl-1">
                           {items.map((item, j) => (
-                            <li
-                              key={j}
-                              className="flex items-start gap-2 text-muted-foreground"
-                            >
-                              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
+                            <li key={j} className="flex items-start gap-2 text-muted-foreground">
+                              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                               {item.slice(2)}
                             </li>
                           ))}
@@ -255,12 +252,10 @@ export function SermonDetailPage() {
               {sermon.series && (
                 <Card>
                   <CardContent className="p-5">
-                    <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
+                    <h2 className="mb-3 text-balance text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                       {language === 'th' ? 'ชุดเทศนา' : 'Sermon Series'}
                     </h2>
-                    <p className="mb-4 text-lg font-bold text-foreground">
-                      {sermon.series}
-                    </p>
+                    <p className="mb-4 text-lg font-bold text-foreground">{sermon.series}</p>
                     {seriesSermons.length > 0 && (
                       <div className="space-y-3">
                         <p className="text-xs font-medium text-muted-foreground">
@@ -270,7 +265,7 @@ export function SermonDetailPage() {
                           <Link
                             key={s.id}
                             to={`/sermons/${s.id}`}
-                            className="group block rounded-lg border border-border p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
+                            className="group block rounded-lg border border-border p-3 transition-colors hover:border-primary/20 hover:bg-accent/50 dark:hover:border-primary/30 dark:hover:bg-primary/10"
                           >
                             <p className="text-sm font-medium text-foreground group-hover:text-primary">
                               {s.title}
@@ -289,16 +284,14 @@ export function SermonDetailPage() {
               {/* Speaker Card */}
               <Card>
                 <CardContent className="p-5">
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
+                  <h2 className="mb-3 text-balance text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {language === 'th' ? 'ผู้เทศนา' : 'Speaker'}
                   </h2>
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
-                      <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent dark:bg-primary/20">
+                      <User className="h-5 w-5 text-primary dark:text-primary/70" />
                     </div>
-                    <p className="font-semibold text-foreground">
-                      {sermon.speaker}
-                    </p>
+                    <p className="font-semibold text-foreground">{sermon.speaker}</p>
                   </div>
                   {speakerSermons.length > 0 && (
                     <div className="space-y-3">
@@ -309,7 +302,7 @@ export function SermonDetailPage() {
                         <Link
                           key={s.id}
                           to={`/sermons/${s.id}`}
-                          className="group block rounded-lg border border-border p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/50 dark:hover:border-blue-800 dark:hover:bg-blue-900/10"
+                          className="group block rounded-lg border border-border p-3 transition-colors hover:border-primary/20 hover:bg-accent/50 dark:hover:border-primary/30 dark:hover:bg-primary/10"
                         >
                           <p className="text-sm font-medium text-foreground group-hover:text-primary">
                             {s.title}
@@ -327,7 +320,7 @@ export function SermonDetailPage() {
               {/* Quick Actions */}
               <Card>
                 <CardContent className="space-y-3 p-5">
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground text-balance">
+                  <h2 className="text-balance text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {language === 'th' ? 'ลิงก์ด่วน' : 'Quick Links'}
                   </h2>
                   <Link to="/sermons">

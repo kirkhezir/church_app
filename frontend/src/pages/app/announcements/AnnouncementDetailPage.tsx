@@ -87,7 +87,7 @@ export function AnnouncementDetailPage() {
               Urgent Announcement
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 sm:px-3 sm:text-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-primary sm:px-3 sm:text-sm">
               <BellIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               Announcement
             </span>
@@ -95,7 +95,7 @@ export function AnnouncementDetailPage() {
         </div>
 
         {/* Title */}
-        <h1 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl md:text-3xl text-balance">
+        <h1 className="mb-4 text-balance text-xl font-bold sm:mb-6 sm:text-2xl md:text-3xl">
           {announcement.title}
         </h1>
 
