@@ -162,7 +162,7 @@ export default function MFAVerificationPage() {
               onClick={() => navigate('/login')}
               className="w-full"
             >
-              Back to Login
+              Back to Sign In
             </Button>
           </CardFooter>
         </form>

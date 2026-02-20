@@ -100,15 +100,15 @@ export default function PasswordResetPage() {
           <CardContent className="space-y-4">
             <Alert>
               <AlertDescription>
-                Your password has been reset successfully. You can now log in with your new
+                Your password has been reset successfully. You can now sign in with your new
                 password.
               </AlertDescription>
             </Alert>
             <p className="text-center text-sm text-muted-foreground">
-              You can now log in with your new password.
+              You can now sign in with your new password.
             </p>
             <Button asChild className="w-full">
-              <Link to="/login">Go to Login</Link>
+              <Link to="/login">Go to Sign In</Link>
             </Button>
           </CardContent>
         </Card>
@@ -190,7 +190,7 @@ export default function PasswordResetPage() {
 
             <div className="text-center text-sm">
               <Link to="/login" className="text-primary hover:underline">
-                Back to Login
+                Back to Sign In
               </Link>
             </div>
           </form>

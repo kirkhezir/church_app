@@ -24,7 +24,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LogIn, BookOpen, Users, Heart } from 'lucide-react';
+import { LogIn, BookOpen, Users, Heart, ChevronLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -85,8 +85,8 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-slate-900/80" />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
-          {/* Logo + Name */}
-          <div className="flex items-center gap-3">
+          {/* Logo + Name — links back to landing page */}
+          <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
             <img
               src="/church-logo.png"
               alt="Sing Buri Adventist Center"
@@ -95,7 +95,7 @@ export default function LoginPage() {
               height={40}
             />
             <span className="text-lg font-semibold text-white/90">Sing Buri Adventist Center</span>
-          </div>
+          </Link>
 
           {/* Welcome Message */}
           <div className="max-w-md">
@@ -133,6 +133,15 @@ export default function LoginPage() {
       {/* Right Panel — Login Form */}
       <div className="flex w-full items-center justify-center bg-background px-4 py-12 sm:px-6 lg:w-1/2 lg:px-8">
         <div className="w-full max-w-md">
+          {/* Back to home — always visible */}
+          <Link
+            to="/"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+
           {/* Mobile-only logo */}
           <div className="mb-8 flex items-center justify-center gap-3 lg:hidden">
             <img

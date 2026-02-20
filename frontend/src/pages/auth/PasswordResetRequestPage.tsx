@@ -61,7 +61,7 @@ export default function PasswordResetRequestPage() {
               <p className="mt-2">The reset link will expire in 1 hour.</p>
             </div>
             <Button asChild className="w-full">
-              <Link to="/login">Back to Login</Link>
+              <Link to="/login">Back to Sign In</Link>
             </Button>
           </CardContent>
         </Card>
@@ -106,7 +106,7 @@ export default function PasswordResetRequestPage() {
 
             <div className="text-center text-sm">
               <Link to="/login" className="text-primary hover:underline">
-                Back to Login
+                Back to Sign In
               </Link>
             </div>
           </form>

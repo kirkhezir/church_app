@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const timer = setTimeout(() => {
       logout();
-      alert('Your session has expired after 24 hours. Please login again.');
+      alert('Your session has expired after 24 hours. Please sign in again.');
     }, AUTO_LOGOUT_DURATION);
 
     setLogoutTimer(timer);
