@@ -12,6 +12,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
+import { Search } from 'lucide-react';
 import { TableSkeleton } from '@/components/ui/skeletons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { adminService, Member } from '@/services/endpoints/adminService';
+import { useDebounce } from '@/hooks/useDebounce';
 import { SidebarLayout } from '@/components/layout';
 
 export default function AdminMemberListPage() {
@@ -32,6 +34,7 @@ export default function AdminMemberListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -39,7 +42,12 @@ export default function AdminMemberListPage() {
 
   useEffect(() => {
     loadMembers();
-  }, [page, roleFilter]);
+  }, [page, roleFilter, debouncedSearch]);
+
+  // Reset to page 1 when search or role filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, roleFilter]);
 
   const loadMembers = async () => {
     try {
@@ -48,22 +56,17 @@ export default function AdminMemberListPage() {
       const response = await adminService.listMembers({
         page,
         limit: 20,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
         role: roleFilter === 'ALL' ? undefined : roleFilter,
       });
       setMembers(response.data);
       setTotalPages(response.pagination.totalPages);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load members');
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to load members');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPage(1);
-    loadMembers();
   };
 
   const handleDelete = async (memberId: string) => {
@@ -71,8 +74,9 @@ export default function AdminMemberListPage() {
       await adminService.deleteMember(memberId);
       setMembers(members.filter((m) => m.id !== memberId));
       setDeleteConfirm(null);
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete member');
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to delete member');
     }
   };
 
@@ -108,38 +112,35 @@ export default function AdminMemberListPage() {
         )}
 
         {/* Filters */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
-              <div className="min-w-[200px] flex-1">
-                <Input
-                  placeholder="Search by name or email..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Roles" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">All Roles</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
-                  <SelectItem value="STAFF">Staff</SelectItem>
-                  <SelectItem value="MEMBER">Member</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button type="submit">Search</Button>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="relative min-w-[200px] flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search by name or email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Roles" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Roles</SelectItem>
+              <SelectItem value="ADMIN">Admin</SelectItem>
+              <SelectItem value="STAFF">Staff</SelectItem>
+              <SelectItem value="MEMBER">Member</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         {/* Member Table */}
         <Card>
           <CardHeader>
             <CardTitle>Members</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-[400px]">
             {loading ? (
               <TableSkeleton rows={5} columns={6} />
             ) : members.length === 0 ? (

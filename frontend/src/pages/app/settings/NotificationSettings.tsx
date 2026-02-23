@@ -72,23 +72,37 @@ export default function NotificationSettings() {
 
   if (fetchLoading) {
     return (
-      <Card className="w-full max-w-2xl">
-        <CardContent className="py-8">
-          <p className="text-center text-muted-foreground">Loading preferences...</p>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold">Notifications</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage how you receive updates from the church
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-12">
+            <p className="text-sm text-muted-foreground">Loading preferences...</p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl space-y-6">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold">Notifications</h2>
+        <p className="text-sm text-muted-foreground">
+          Manage how you receive updates from the church
+        </p>
+      </div>
       {/* Push Notifications */}
       <PushNotificationSettings />
 
       {/* Email Notifications */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Email Notifications</CardTitle>
+          <CardTitle className="text-base">Email Notifications</CardTitle>
           <CardDescription>Manage how you receive email updates from the church</CardDescription>
         </CardHeader>
         <CardContent>

@@ -123,159 +123,160 @@ export default function ProfileSettings() {
 
   if (fetchLoading) {
     return (
-      <Card className="w-full max-w-2xl">
-        <CardContent className="py-8">
-          <p className="text-center text-muted-foreground">Loading profile...</p>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold">Profile</h2>
+          <p className="text-sm text-muted-foreground">
+            Update your personal information and privacy settings
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-12">
+            <p className="text-sm text-muted-foreground">Loading profile...</p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl">
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>Update your personal information and privacy settings</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold">Profile</h2>
+        <p className="text-sm text-muted-foreground">
+          Update your personal information and privacy settings
+        </p>
+      </div>
 
-            {success && (
-              <Alert>
-                <AlertDescription>Profile updated successfully!</AlertDescription>
-              </Alert>
-            )}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-            {/* Basic Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Basic Information</h3>
+        {success && (
+          <Alert>
+            <AlertDescription>Profile updated successfully!</AlertDescription>
+          </Alert>
+        )}
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name *</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    required
-                    disabled={loading}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name *</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    required
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
+        {/* Basic Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Basic Information</CardTitle>
+            <CardDescription>Your personal contact details</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={formData.email} disabled />
-                <p className="text-xs text-muted-foreground">
-                  Email cannot be changed. Contact admin to update.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="firstName">First Name *</Label>
                 <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+66812345678"
-                  value={formData.phone || ''}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  required
                   disabled={loading}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Use E.164 format (e.g., +66812345678)
-                </p>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="lastName">Last Name *</Label>
                 <Input
-                  id="address"
-                  placeholder="Your address"
-                  value={formData.address || ''}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  required
                   disabled={loading}
                 />
               </div>
             </div>
 
-            {/* Privacy Settings */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Privacy Settings</h3>
-              <p className="text-sm text-muted-foreground">
-                Control what other members can see about you
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={formData.email} disabled />
+              <p className="text-xs text-muted-foreground">
+                Email cannot be changed. Contact admin to update.
               </p>
-
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="showPhone"
-                    checked={formData.privacySettings.showPhone}
-                    onCheckedChange={(checked: boolean) =>
-                      handlePrivacyChange('showPhone', checked)
-                    }
-                    disabled={loading}
-                  />
-                  <Label htmlFor="showPhone" className="cursor-pointer font-normal">
-                    Show my phone number to other members
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="showEmail"
-                    checked={formData.privacySettings.showEmail}
-                    onCheckedChange={(checked: boolean) =>
-                      handlePrivacyChange('showEmail', checked)
-                    }
-                    disabled={loading}
-                  />
-                  <Label htmlFor="showEmail" className="cursor-pointer font-normal">
-                    Show my email address to other members
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="showAddress"
-                    checked={formData.privacySettings.showAddress}
-                    onCheckedChange={(checked: boolean) =>
-                      handlePrivacyChange('showAddress', checked)
-                    }
-                    disabled={loading}
-                  />
-                  <Label htmlFor="showAddress" className="cursor-pointer font-normal">
-                    Show my address to other members
-                  </Label>
-                </div>
-              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-4">
-              <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : 'Save Changes'}
-              </Button>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+66812345678"
+                value={formData.phone || ''}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                disabled={loading}
+              />
+              <p className="text-xs text-muted-foreground">Use E.164 format (e.g., +66812345678)</p>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                placeholder="Your address"
+                value={formData.address || ''}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Privacy Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Privacy</CardTitle>
+            <CardDescription>Control what other members can see about you</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="showPhone"
+                checked={formData.privacySettings.showPhone}
+                onCheckedChange={(checked: boolean) => handlePrivacyChange('showPhone', checked)}
+                disabled={loading}
+              />
+              <Label htmlFor="showPhone" className="cursor-pointer font-normal">
+                Show my phone number to other members
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="showEmail"
+                checked={formData.privacySettings.showEmail}
+                onCheckedChange={(checked: boolean) => handlePrivacyChange('showEmail', checked)}
+                disabled={loading}
+              />
+              <Label htmlFor="showEmail" className="cursor-pointer font-normal">
+                Show my email address to other members
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="showAddress"
+                checked={formData.privacySettings.showAddress}
+                onCheckedChange={(checked: boolean) => handlePrivacyChange('showAddress', checked)}
+                disabled={loading}
+              />
+              <Label htmlFor="showAddress" className="cursor-pointer font-normal">
+                Show my address to other members
+              </Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Save */}
+        <div className="flex">
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

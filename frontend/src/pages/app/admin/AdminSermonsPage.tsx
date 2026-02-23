@@ -8,17 +8,9 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import {
-  PlusIcon,
-  EditIcon,
-  TrashIcon,
-  SearchIcon,
-  Loader2,
-  Youtube,
-  Eye,
-  Music,
-} from 'lucide-react';
+import { PlusIcon, EditIcon, TrashIcon, Search, Loader2, Youtube, Eye, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
@@ -215,13 +207,12 @@ export function AdminSermonsPage() {
 
         {/* Search */}
         <div className="relative max-w-sm">
-          <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             placeholder="Search sermons..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border py-2 pl-9 pr-4 text-sm"
+            className="pl-10"
           />
         </div>
 
@@ -233,7 +224,7 @@ export function AdminSermonsPage() {
         ) : (
           /* Sermons Table */
           <Card>
-            <CardContent className="p-0">
+            <CardContent className="min-h-[400px] p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b bg-muted/50">

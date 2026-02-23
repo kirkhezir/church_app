@@ -12,11 +12,16 @@ import { Separator } from '@/components/ui/separator';
 
 export default function AppearanceSettings() {
   return (
-    <div className="w-full max-w-2xl space-y-6">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold">Appearance</h2>
+        <p className="text-sm text-muted-foreground">Customize how the app looks and feels</p>
+      </div>
+
       {/* Display Preferences */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Display Preferences</CardTitle>
+          <CardTitle className="text-base">Display Preferences</CardTitle>
           <CardDescription>Customize how the app appears to you</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -45,7 +50,7 @@ export default function AppearanceSettings() {
       {/* Language & Region */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Language & Region</CardTitle>
+          <CardTitle className="text-base">Language & Region</CardTitle>
           <CardDescription>Set your preferred language and date format</CardDescription>
         </CardHeader>
         <CardContent>
