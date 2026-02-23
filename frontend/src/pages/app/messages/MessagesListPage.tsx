@@ -270,5 +270,5 @@ export function MessagesListPage() {
     </div>
   );
 
-  return <SidebarLayout>{content}</SidebarLayout>;
+  return <SidebarLayout breadcrumbs={[{ label: 'Messages' }]}>{content}</SidebarLayout>;
 }

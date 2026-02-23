@@ -78,7 +78,7 @@ export default function AdminCreateMemberPage() {
     return (
       <SidebarLayout
         breadcrumbs={[
-          { label: 'Admin' },
+          { label: 'Administration' },
           { label: 'Members', href: '/app/admin/members' },
           { label: 'Create' },
         ]}
@@ -152,7 +152,7 @@ export default function AdminCreateMemberPage() {
   return (
     <SidebarLayout
       breadcrumbs={[
-        { label: 'Admin' },
+        { label: 'Administration' },
         { label: 'Members', href: '/app/admin/members' },
         { label: 'Create' },
       ]}

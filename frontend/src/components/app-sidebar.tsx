@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={navMain} label="Navigation" />
+        <NavMain items={navMain} />
 
         {showAdmin && (
           <>

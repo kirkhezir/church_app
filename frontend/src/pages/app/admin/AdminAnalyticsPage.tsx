@@ -367,7 +367,13 @@ export default function AdminAnalyticsPage() {
   );
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Admin', href: '/app/admin' }, { label: 'Analytics' }]}>
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Administration', href: '/app/admin/members' },
+        { label: 'Monitoring' },
+        { label: 'Analytics' },
+      ]}
+    >
       {content}
     </SidebarLayout>
   );

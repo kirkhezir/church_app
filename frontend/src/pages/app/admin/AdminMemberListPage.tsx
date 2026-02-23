@@ -92,7 +92,7 @@ export default function AdminMemberListPage() {
   };
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Members' }]}>
+    <SidebarLayout breadcrumbs={[{ label: 'Administration' }, { label: 'Members' }]}>
       <div className="container mx-auto px-4 py-4">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-balance text-2xl font-bold">Member Management</h1>

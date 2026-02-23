@@ -241,5 +241,11 @@ export function ComposeMessagePage() {
     </div>
   );
 
-  return <SidebarLayout>{content}</SidebarLayout>;
+  return (
+    <SidebarLayout
+      breadcrumbs={[{ label: 'Messages', href: '/app/messages' }, { label: 'Compose' }]}
+    >
+      {content}
+    </SidebarLayout>
+  );
 }

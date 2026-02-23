@@ -7,7 +7,11 @@
 import { HealthDashboard } from '@/components/features/admin/HealthDashboard';
 import { SidebarLayout } from '@/components/layout';
 
-const breadcrumbs = [{ label: 'Admin', href: '/app/admin/members' }, { label: 'System Health' }];
+const breadcrumbs = [
+  { label: 'Administration', href: '/app/admin/members' },
+  { label: 'Monitoring' },
+  { label: 'System Health' },
+];
 
 export default function AdminHealthPage() {
   return (

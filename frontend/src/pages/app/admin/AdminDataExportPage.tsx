@@ -87,7 +87,13 @@ export default function AdminDataExportPage() {
   };
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Admin' }, { label: 'Data Export' }]}>
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Administration', href: '/app/admin/members' },
+        { label: 'Monitoring' },
+        { label: 'Data Export' },
+      ]}
+    >
       <div className="container mx-auto max-w-2xl px-4 py-4">
         <h1 className="mb-6 text-balance text-2xl font-bold">Data Export</h1>
 

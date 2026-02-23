@@ -181,7 +181,13 @@ export function AdminSermonsPage() {
   };
 
   return (
-    <SidebarLayout>
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Administration', href: '/app/admin/members' },
+        { label: 'Content' },
+        { label: 'Sermons' },
+      ]}
+    >
       <div className="mx-auto max-w-6xl space-y-6 p-6">
         {/* Header */}
         <div className="flex items-center justify-between">

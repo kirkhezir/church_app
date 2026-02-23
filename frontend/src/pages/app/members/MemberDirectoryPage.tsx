@@ -360,5 +360,5 @@ export function MemberDirectoryPage() {
     </div>
   );
 
-  return <SidebarLayout>{content}</SidebarLayout>;
+  return <SidebarLayout breadcrumbs={[{ label: 'Members' }]}>{content}</SidebarLayout>;
 }

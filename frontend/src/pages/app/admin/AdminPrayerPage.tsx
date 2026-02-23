@@ -100,7 +100,13 @@ export function AdminPrayerPage() {
   };
 
   return (
-    <SidebarLayout>
+    <SidebarLayout
+      breadcrumbs={[
+        { label: 'Administration', href: '/app/admin/members' },
+        { label: 'Content' },
+        { label: 'Prayer' },
+      ]}
+    >
       <div className="mx-auto max-w-6xl space-y-6 p-6">
         {/* Header */}
         <div>

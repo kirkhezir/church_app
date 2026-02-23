@@ -7,7 +7,11 @@
 import { ReportDownloadPanel } from '@/components/features/reports/ReportDownloadPanel';
 import { SidebarLayout } from '@/components/layout';
 
-const breadcrumbs = [{ label: 'Admin', href: '/app/admin/members' }, { label: 'Reports' }];
+const breadcrumbs = [
+  { label: 'Administration', href: '/app/admin/members' },
+  { label: 'Monitoring' },
+  { label: 'Reports' },
+];
 
 export default function AdminReportsPage() {
   return (
