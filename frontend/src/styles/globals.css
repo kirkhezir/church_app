@@ -146,8 +146,23 @@
     @apply font-heading;
   }
 
-  /* Focus ring — 3px visible ring for WCAG AAA keyboard nav */
-  :focus-visible {
+  /* Focus ring — visible ring for WCAG AAA keyboard nav.
+     Scoped to interactive elements only so it doesn't bleed into
+     Radix popover / dropdown containers that receive programmatic focus. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role='button']:focus-visible,
+  [role='tab']:focus-visible,
+  [role='switch']:focus-visible,
+  [role='checkbox']:focus-visible,
+  [role='radio']:focus-visible,
+  [role='link']:focus-visible,
+  [tabindex]:not([tabindex='-1']):not([role='menu']):not([role='listbox']):not([role='dialog']):not(
+      [data-radix-popper-content-wrapper] *
+    ):focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
