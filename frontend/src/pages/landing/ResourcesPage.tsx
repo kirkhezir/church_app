@@ -83,7 +83,7 @@ export function ResourcesPage() {
                 type="search"
                 name="resource-search"
                 aria-label={language === 'th' ? 'ค้นหาทรัพยากร' : 'Search resources'}
-                placeholder={language === 'th' ? 'ค้นหาทรัพยากร…' : 'Search resources…'}
+                placeholder={language === 'th' ? 'ค้นหาทรัพยากร...' : 'Search resources...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200"

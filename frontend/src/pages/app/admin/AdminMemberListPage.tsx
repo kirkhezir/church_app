@@ -113,7 +113,7 @@ export default function AdminMemberListPage() {
             <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
               <div className="min-w-[200px] flex-1">
                 <Input
-                  placeholder="Search by name or email\u2026"
+                  placeholder="Search by name or email..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />

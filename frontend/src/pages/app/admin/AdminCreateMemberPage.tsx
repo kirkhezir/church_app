@@ -234,7 +234,7 @@ export default function AdminCreateMemberPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+66\u2026"
+                  placeholder="+66..."
                 />
               </div>
 

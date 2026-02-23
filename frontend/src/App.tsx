@@ -44,10 +44,6 @@ const MFAVerificationPage = lazy(() => import('./pages/auth/MFAVerificationPage'
 
 // Dashboard pages
 const MemberDashboard = lazy(() => import('./pages/app/dashboard/MemberDashboard'));
-const EditProfilePage = lazy(() => import('./pages/app/dashboard/EditProfilePage'));
-const NotificationSettingsPage = lazy(
-  () => import('./pages/app/dashboard/NotificationSettingsPage')
-);
 
 // Event management pages (private)
 const EventsListPage = lazy(() =>
@@ -129,8 +125,11 @@ const AdminPrayerPage = lazy(() =>
   }))
 );
 
-// Settings page (private)
-const SettingsPage = lazy(() => import('./pages/app/settings/SettingsPage'));
+// Settings pages (unified with sub-navigation)
+const SettingsLayout = lazy(() => import('./pages/app/settings/SettingsLayout'));
+const ProfileSettings = lazy(() => import('./pages/app/settings/ProfileSettings'));
+const NotificationSettings = lazy(() => import('./pages/app/settings/NotificationSettings'));
+const AppearanceSettings = lazy(() => import('./pages/app/settings/AppearanceSettings'));
 
 // Member and Message pages (private)
 const MemberDirectoryPage = lazy(() =>
@@ -369,30 +368,26 @@ const App: React.FC = () => {
               }
             />
 
-            {/* Profile & Settings */}
-            <Route
-              path="/app/profile"
-              element={
-                <PrivateRoute>
-                  <EditProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/app/notifications"
-              element={
-                <PrivateRoute>
-                  <NotificationSettingsPage />
-                </PrivateRoute>
-              }
-            />
+            {/* Settings (unified with sub-navigation) */}
             <Route
               path="/app/settings"
               element={
                 <PrivateRoute>
-                  <SettingsPage />
+                  <SettingsLayout />
                 </PrivateRoute>
               }
+            >
+              <Route index element={<Navigate to="profile" replace />} />
+              <Route path="profile" element={<ProfileSettings />} />
+              <Route path="notifications" element={<NotificationSettings />} />
+              <Route path="appearance" element={<AppearanceSettings />} />
+            </Route>
+
+            {/* Backward-compatible redirects for old URLs */}
+            <Route path="/app/profile" element={<Navigate to="/app/settings/profile" replace />} />
+            <Route
+              path="/app/notifications"
+              element={<Navigate to="/app/settings/notifications" replace />}
             />
 
             {/* ============================================================ */}

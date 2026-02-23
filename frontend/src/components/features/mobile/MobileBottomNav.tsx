@@ -5,7 +5,7 @@
  */
 
 import { useLocation, useNavigate } from 'react-router';
-import { Home, Calendar, Bell, MessageSquare, User } from 'lucide-react';
+import { Home, Calendar, Bell, MessageSquare, Settings } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import { Badge } from '../../../components/ui/badge';
 
@@ -43,7 +43,7 @@ export function MobileBottomNav({
       path: '/app/messages',
       badge: unreadMessages,
     },
-    { icon: <User className="h-5 w-5" />, label: 'Profile', path: '/app/profile' },
+    { icon: <Settings className="h-5 w-5" />, label: 'Settings', path: '/app/settings' },
   ];
 
   const isActive = (path: string) => {

@@ -5,9 +5,7 @@ import {
   Megaphone,
   Mail,
   Users,
-  User,
   Settings,
-  Bell,
   Shield,
   FileText,
   Download,
@@ -50,6 +48,7 @@ const BASE_NAV = [
 ];
 
 const MEMBERS_ITEM = { title: 'Members', url: '/app/members', icon: Users };
+const SETTINGS_ITEM = { title: 'Settings', url: '/app/settings', icon: Settings };
 
 /** Admin-only navigation with collapsible sub-groups. */
 const ADMIN_NAV: NavCollapsibleItem[] = [
@@ -77,13 +76,6 @@ const ADMIN_NAV: NavCollapsibleItem[] = [
       { title: 'Data Export', url: '/app/admin/export', icon: Download },
     ],
   },
-];
-
-/** User preference navigation at the bottom. */
-const SETTINGS_ITEMS = [
-  { title: 'Profile', url: '/app/profile', icon: User },
-  { title: 'Notifications', url: '/app/notifications', icon: Bell },
-  { title: 'Settings', url: '/app/settings', icon: Settings },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -147,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}
 
         <SidebarSeparator />
-        <NavMain items={SETTINGS_ITEMS} label="Preferences" />
+        <NavMain items={[SETTINGS_ITEM]} />
       </SidebarContent>
 
       <SidebarFooter>

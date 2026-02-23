@@ -178,7 +178,7 @@ export function BlogPage() {
                   type="search"
                   name="blog-search"
                   aria-label={language === 'th' ? 'ค้นหาบทความ' : 'Search articles'}
-                  placeholder={language === 'th' ? 'ค้นหาบทความ…' : 'Search articles…'}
+                  placeholder={language === 'th' ? 'ค้นหาบทความ...' : 'Search articles...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

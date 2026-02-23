@@ -142,7 +142,7 @@ export function SermonsPage() {
                     type="search"
                     name="sermon-search"
                     aria-label={language === 'th' ? 'ค้นหาคำเทศนา' : 'Search sermons'}
-                    placeholder={language === 'th' ? 'ค้นหาคำเทศนา…' : 'Search sermons…'}
+                    placeholder={language === 'th' ? 'ค้นหาคำเทศนา...' : 'Search sermons...'}
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);

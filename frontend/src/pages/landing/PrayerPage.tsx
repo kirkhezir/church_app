@@ -211,8 +211,8 @@ export function PrayerPage() {
                           rows={5}
                           placeholder={
                             language === 'th'
-                              ? 'แบ่งปันคำอธิษฐานของคุณ…'
-                              : 'Share your prayer request…'
+                              ? 'แบ่งปันคำอธิษฐานของคุณ...'
+                              : 'Share your prayer request...'
                           }
                           className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
                         />

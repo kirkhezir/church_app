@@ -1,4 +1,4 @@
-import { User, Settings, Bell, LogOut, ChevronsUpDown } from 'lucide-react';
+import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -94,14 +94,6 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate('/app/profile')}>
-                <User />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/app/notifications')}>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/app/settings')}>
                 <Settings />
                 Settings
