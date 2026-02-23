@@ -124,12 +124,6 @@ export default function ProfileSettings() {
   if (fetchLoading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold">Profile</h2>
-          <p className="text-sm text-muted-foreground">
-            Update your personal information and privacy settings
-          </p>
-        </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <p className="text-sm text-muted-foreground">Loading profile...</p>
@@ -141,13 +135,6 @@ export default function ProfileSettings() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">Profile</h2>
-        <p className="text-sm text-muted-foreground">
-          Update your personal information and privacy settings
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
           <Alert variant="destructive">

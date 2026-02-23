@@ -73,12 +73,6 @@ export default function NotificationSettings() {
   if (fetchLoading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold">Notifications</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage how you receive updates from the church
-          </p>
-        </div>
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <p className="text-sm text-muted-foreground">Loading preferences...</p>
@@ -90,12 +84,6 @@ export default function NotificationSettings() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">Notifications</h2>
-        <p className="text-sm text-muted-foreground">
-          Manage how you receive updates from the church
-        </p>
-      </div>
       {/* Push Notifications */}
       <PushNotificationSettings />
 

@@ -1,49 +1,37 @@
 /**
  * Settings Layout
  *
- * Unified settings page with side navigation for Profile, Notifications, and Appearance.
+ * Unified settings page with horizontal tabs for Profile, Notifications, and Appearance.
  * Uses React Router nested routes with <Outlet /> for tab content.
+ * Tab selection is synced with the URL path for deep-linking support.
  */
 
-import { Outlet, NavLink, useLocation } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { User, Bell, Palette } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
-import { cn } from '@/lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const SETTINGS_NAV = [
-  {
-    title: 'Profile',
-    href: '/app/settings/profile',
-    icon: User,
-    description: 'Personal info & privacy',
-  },
-  {
-    title: 'Notifications',
-    href: '/app/settings/notifications',
-    icon: Bell,
-    description: 'Email & push preferences',
-  },
-  {
-    title: 'Appearance',
-    href: '/app/settings/appearance',
-    icon: Palette,
-    description: 'Display & regional',
-  },
+const SETTINGS_TABS = [
+  { value: 'profile', label: 'Profile', icon: User },
+  { value: 'notifications', label: 'Notifications', icon: Bell },
+  { value: 'appearance', label: 'Appearance', icon: Palette },
 ] as const;
 
 export default function SettingsLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const activeTab = SETTINGS_NAV.find((item) => location.pathname === item.href);
+  // Derive active tab from URL path
+  const activeTab =
+    SETTINGS_TABS.find((tab) => location.pathname.endsWith(`/${tab.value}`))?.value ?? 'profile';
 
-  const breadcrumbs = [
-    { label: 'Settings', href: '/app/settings' },
-    ...(activeTab ? [{ label: activeTab.title }] : []),
-  ];
+  const activeLabel = SETTINGS_TABS.find((t) => t.value === activeTab)?.label ?? 'Settings';
+
+  const breadcrumbs = [{ label: 'Settings', href: '/app/settings' }, { label: activeLabel }];
 
   return (
     <SidebarLayout breadcrumbs={breadcrumbs}>
-      <div className="mx-auto max-w-5xl space-y-8 p-6">
+      <div className="mx-auto max-w-3xl space-y-6 p-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
@@ -52,36 +40,21 @@ export default function SettingsLayout() {
           </p>
         </div>
 
-        {/* Layout: side nav + content */}
-        <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Side navigation */}
-          <nav className="w-full shrink-0 lg:w-52">
-            {/* Horizontal scroll on mobile, vertical on desktop */}
-            <div className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-1">
-              {SETTINGS_NAV.map((item) => (
-                <NavLink
-                  key={item.href}
-                  to={item.href}
-                  className={({ isActive }) =>
-                    cn(
-                      'group flex items-center gap-3 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                      isActive
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                    )
-                  }
-                >
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  <span>{item.title}</span>
-                </NavLink>
-              ))}
-            </div>
-          </nav>
+        {/* Tabs navigation */}
+        <Tabs value={activeTab} onValueChange={(value) => navigate(`/app/settings/${value}`)}>
+          <TabsList className="w-full justify-start">
+            {SETTINGS_TABS.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value} className="gap-2">
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
-          {/* Content area */}
-          <div className="min-w-0 flex-1">
-            <Outlet />
-          </div>
+        {/* Tab content (rendered by React Router) */}
+        <div>
+          <Outlet />
         </div>
       </div>
     </SidebarLayout>

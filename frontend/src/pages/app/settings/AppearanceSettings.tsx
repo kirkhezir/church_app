@@ -13,11 +13,6 @@ import { Separator } from '@/components/ui/separator';
 export default function AppearanceSettings() {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">Appearance</h2>
-        <p className="text-sm text-muted-foreground">Customize how the app looks and feels</p>
-      </div>
-
       {/* Display Preferences */}
       <Card>
         <CardHeader>
