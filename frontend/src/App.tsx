@@ -107,6 +107,28 @@ const AdminHealthPage = lazy(() => import('./pages/app/admin/AdminHealthPage'));
 const AdminReportsPage = lazy(() => import('./pages/app/admin/AdminReportsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/app/admin/AdminAnalyticsPage'));
 
+// CMS Admin pages (private - admin only)
+const AdminSermonsPage = lazy(() =>
+  import('./pages/app/admin/AdminSermonsPage').then((m) => ({
+    default: m.AdminSermonsPage,
+  }))
+);
+const AdminBlogPage = lazy(() =>
+  import('./pages/app/admin/AdminBlogPage').then((m) => ({
+    default: m.AdminBlogPage,
+  }))
+);
+const AdminGalleryPage = lazy(() =>
+  import('./pages/app/admin/AdminGalleryPage').then((m) => ({
+    default: m.AdminGalleryPage,
+  }))
+);
+const AdminPrayerPage = lazy(() =>
+  import('./pages/app/admin/AdminPrayerPage').then((m) => ({
+    default: m.AdminPrayerPage,
+  }))
+);
+
 // Settings page (private)
 const SettingsPage = lazy(() => import('./pages/app/settings/SettingsPage'));
 
@@ -175,7 +197,7 @@ const App: React.FC = () => {
             <Route path="/prayer" element={<PrayerPage />} />
             <Route path="/give" element={<GivePage />} />
             <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<BlogDetailPage />} />
+            <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/news" element={<BlogPage />} />
             <Route path="/sermons/:id" element={<SermonDetailPage />} />
             <Route path="/terms" element={<TermsOfServicePage />} />
@@ -462,6 +484,40 @@ const App: React.FC = () => {
               element={
                 <AdminRoute>
                   <AdminAnalyticsPage />
+                </AdminRoute>
+              }
+            />
+
+            {/* CMS Admin Pages */}
+            <Route
+              path="/app/admin/sermons"
+              element={
+                <AdminRoute>
+                  <AdminSermonsPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/blog"
+              element={
+                <AdminRoute>
+                  <AdminBlogPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/gallery"
+              element={
+                <AdminRoute>
+                  <AdminGalleryPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/prayer"
+              element={
+                <AdminRoute>
+                  <AdminPrayerPage />
                 </AdminRoute>
               }
             />

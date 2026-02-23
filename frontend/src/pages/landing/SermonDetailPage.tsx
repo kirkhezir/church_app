@@ -20,27 +20,69 @@ import {
   Youtube,
   Headphones,
   Play,
+  Loader2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { sermons as allSermons } from '@/data/sermons';
+import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
+
+/** Extract YouTube video ID from a URL or return as-is if already an ID */
+function extractYoutubeId(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]+)/);
+  return match ? match[1] : url;
+}
 
 export function SermonDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { language } = useI18n();
   const [shareMessage, setShareMessage] = useState('');
+  const [sermon, setSermon] = useState<Sermon | null>(null);
+  const [allSermons, setAllSermons] = useState<Sermon[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const sermon = allSermons.find((s) => s.id === id);
+  useEffect(() => {
+    async function load() {
+      try {
+        const [sermonData, sermonsData] = await Promise.all([
+          sermonService.getSermonById(id!),
+          sermonService.getSermons(),
+        ]);
+        setSermon(sermonData);
+        setAllSermons(sermonsData);
+        // Track view
+        sermonService.incrementViews(id!).catch(() => {});
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (id) load();
+  }, [id]);
 
   useDocumentTitle(sermon?.title ?? 'Sermon', sermon?.title ?? 'คำเทศนา', language);
 
-  if (!sermon) {
+  if (loading) {
+    return (
+      <PublicLayout>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PublicLayout>
+    );
+  }
+
+  if (notFound || !sermon) {
     return <Navigate to="/sermons" replace />;
   }
+
+  const youtubeId = extractYoutubeId(sermon.youtubeUrl);
 
   // More from this series
   const seriesSermons = sermon.series
@@ -84,11 +126,11 @@ export function SermonDetailPage() {
         {/* Video / Thumbnail Hero */}
         <div className="bg-slate-900">
           <div className="mx-auto max-w-5xl">
-            {sermon.youtubeId ? (
+            {youtubeId ? (
               <div className="relative aspect-video w-full">
                 <iframe
                   className="absolute inset-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${sermon.youtubeId}?rel=0`}
+                  src={`https://www.youtube.com/embed/${youtubeId}?rel=0`}
                   title={sermon.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -233,9 +275,9 @@ export function SermonDetailPage() {
               )}
 
               {/* YouTube Link */}
-              {sermon.youtubeId && (
+              {youtubeId && (
                 <a
-                  href={`https://www.youtube.com/watch?v=${sermon.youtubeId}`}
+                  href={`https://www.youtube.com/watch?v=${youtubeId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"

@@ -10,43 +10,73 @@
  */
 
 import { useParams, Link, Navigate } from 'react-router';
-import { ArrowLeft, Calendar, Clock, User, Tag, Share2 } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Calendar, Clock, User, Tag, Share2, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { blogPosts } from '@/data/blog';
+import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 
 export function BlogDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const { language } = useI18n();
   const [shareMessage, setShareMessage] = useState('');
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const post = blogPosts.find((p) => p.id === id);
+  useEffect(() => {
+    async function load() {
+      try {
+        const [postData, postsData] = await Promise.all([
+          blogService.getBlogPostBySlug(slug!),
+          blogService.getBlogPosts(),
+        ]);
+        setPost(postData);
+        setAllPosts(postsData);
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (slug) load();
+  }, [slug]);
 
   useDocumentTitle(post?.title ?? 'Blog Post', post?.titleThai ?? 'บทความ', language);
 
+  if (loading) {
+    return (
+      <PublicLayout>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PublicLayout>
+    );
+  }
+
   // Redirect to blog list if post not found
-  if (!post) {
+  if (notFound || !post) {
     return <Navigate to="/blog" replace />;
   }
 
-  const title = language === 'th' ? post.titleThai : post.title;
-  const content = language === 'th' ? post.contentThai : post.content;
-  const excerpt = language === 'th' ? post.excerptThai : post.excerpt;
-  const category = language === 'th' ? post.categoryThai : post.category;
+  const title = language === 'th' ? (post.titleThai ?? post.title) : post.title;
+  const content = language === 'th' ? (post.contentThai ?? post.content) : post.content;
+  const excerpt = language === 'th' ? (post.excerptThai ?? post.excerpt) : post.excerpt;
+  const category = language === 'th' ? (post.categoryThai ?? post.category) : post.category;
 
   // Related posts: same category, different id
-  const relatedPosts = blogPosts
+  const relatedPosts = allPosts
     .filter((p) => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
   // If not enough related, fill with recent posts
   const displayRelated =
-    relatedPosts.length >= 2 ? relatedPosts : blogPosts.filter((p) => p.id !== post.id).slice(0, 3);
+    relatedPosts.length >= 2 ? relatedPosts : allPosts.filter((p) => p.id !== post.id).slice(0, 3);
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString(language === 'th' ? 'th-TH' : 'en-US', {
@@ -138,7 +168,12 @@ export function BlogDetailPage() {
     <PublicLayout>
       {/* Hero Image */}
       <div className="relative h-64 sm:h-80 md:h-96">
-        <img src={post.image} alt={title} className="h-full w-full object-cover" loading="eager" />
+        <img
+          src={post.thumbnailUrl ?? '/placeholder.jpg'}
+          alt={title}
+          className="h-full w-full object-cover"
+          loading="eager"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
           <div className="mx-auto max-w-4xl">
@@ -174,7 +209,7 @@ export function BlogDetailPage() {
             </span>
             <span className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {formatDate(post.date)}
+              {formatDate(post.publishedAt ?? post.createdAt)}
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="h-4 w-4" />
@@ -215,11 +250,11 @@ export function BlogDetailPage() {
               </h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {displayRelated.map((related) => (
-                  <Link key={related.id} to={`/blog/${related.id}`}>
+                  <Link key={related.id} to={`/blog/${related.slug}`}>
                     <Card className="group h-full cursor-pointer overflow-hidden transition-shadow hover:shadow-xl">
                       <div className="relative h-40 overflow-hidden">
                         <img
-                          src={related.image}
+                          src={related.thumbnailUrl ?? '/placeholder.jpg'}
                           alt={language === 'th' ? related.titleThai : related.title}
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                           loading="lazy"
@@ -233,8 +268,8 @@ export function BlogDetailPage() {
                           {language === 'th' ? related.titleThai : related.title}
                         </h3>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {formatDate(related.date)} &middot; {related.readTime}{' '}
-                          {language === 'th' ? 'นาที' : 'min'}
+                          {formatDate(related.publishedAt ?? related.createdAt)} &middot;{' '}
+                          {related.readTime} {language === 'th' ? 'นาที' : 'min'}
                         </p>
                       </CardContent>
                     </Card>

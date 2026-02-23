@@ -5,7 +5,7 @@
  * Links to YouTube or audio files
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Play,
   Search,
@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  Loader2,
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { Card, CardContent } from '../../components/ui/card';
@@ -26,18 +27,49 @@ import { PublicLayout } from '../../layouts';
 import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { sermons as allSermons, seriesList, speakerList, type Sermon } from '../../data/sermons';
+import { sermonService, type Sermon } from '../../services/endpoints/sermonService';
+
+/** Extract YouTube video ID from a URL or return as-is if already an ID */
+function extractYoutubeId(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]+)/);
+  return match ? match[1] : url; // fallback: treat raw value as ID
+}
 
 export function SermonsPage() {
   const { language } = useI18n();
   useDocumentTitle('Sermons', 'คำเทศนา', language);
+  const [allSermons, setAllSermons] = useState<Sermon[]>([]);
+  const [speakerList, setSpeakerList] = useState<string[]>(['All Speakers']);
+  const [seriesList, setSeriesList] = useState<string[]>(['All Series']);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('All Series');
   const [selectedSpeaker, setSelectedSpeaker] = useState('All Speakers');
   const [currentPage, setCurrentPage] = useState(1);
-  // selectedSermon state removed — sermon cards now navigate to /sermons/:id
   const sermonsPerPage = 6;
   const revealRef = useScrollReveal<HTMLDivElement>();
+
+  // Fetch data from API
+  useEffect(() => {
+    async function load() {
+      try {
+        const [sermonsData, speakers, series] = await Promise.all([
+          sermonService.getSermons(),
+          sermonService.getSpeakers(),
+          sermonService.getSeries(),
+        ]);
+        setAllSermons(sermonsData);
+        setSpeakerList(['All Speakers', ...speakers]);
+        setSeriesList(['All Series', ...series]);
+      } catch (err) {
+        console.error('Failed to load sermons:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   // Filter sermons (memoized to avoid extra re-renders)
   const sermons = useMemo(() => {
@@ -48,8 +80,8 @@ export function SermonsPage() {
       filtered = filtered.filter(
         (s) =>
           s.title.toLowerCase().includes(term) ||
-          s.description.toLowerCase().includes(term) ||
-          s.scripture.toLowerCase().includes(term)
+          (s.description ?? '').toLowerCase().includes(term) ||
+          (s.scripture ?? '').toLowerCase().includes(term)
       );
     }
 
@@ -62,7 +94,7 @@ export function SermonsPage() {
     }
 
     return filtered;
-  }, [searchTerm, selectedSeries, selectedSpeaker]);
+  }, [searchTerm, selectedSeries, selectedSpeaker, allSermons]);
 
   // Pagination
   const totalPages = Math.ceil(sermons.length / sermonsPerPage);
@@ -94,162 +126,170 @@ export function SermonsPage() {
       </section>
 
       <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        {/* Filters */}
-        <section className="reveal mb-8">
-          <div className="flex flex-col gap-4 sm:flex-row">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                name="sermon-search"
-                aria-label={language === 'th' ? 'ค้นหาคำเทศนา' : 'Search sermons'}
-                placeholder={language === 'th' ? 'ค้นหาคำเทศนา…' : 'Search sermons…'}
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-              />
-            </div>
-            {/* Series Filter */}
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <select
-                name="sermon-series"
-                aria-label={language === 'th' ? 'กรองตามซีรีส์' : 'Filter by series'}
-                value={selectedSeries}
-                onChange={(e) => {
-                  setSelectedSeries(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-              >
-                {seriesList.map((series) => (
-                  <option key={series} value={series}>
-                    {series}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Speaker Filter */}
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <select
-                name="sermon-speaker"
-                aria-label={language === 'th' ? 'กรองตามผู้พูด' : 'Filter by speaker'}
-                value={selectedSpeaker}
-                onChange={(e) => {
-                  setSelectedSpeaker(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-              >
-                {speakerList.map((speaker) => (
-                  <option key={speaker} value={speaker}>
-                    {speaker}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        </section>
+        ) : (
+          <>
+            {/* Filters */}
+            <section className="reveal mb-8">
+              <div className="flex flex-col gap-4 sm:flex-row">
+                {/* Search */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="search"
+                    name="sermon-search"
+                    aria-label={language === 'th' ? 'ค้นหาคำเทศนา' : 'Search sermons'}
+                    placeholder={language === 'th' ? 'ค้นหาคำเทศนา…' : 'Search sermons…'}
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  />
+                </div>
+                {/* Series Filter */}
+                <div className="relative">
+                  <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <select
+                    name="sermon-series"
+                    aria-label={language === 'th' ? 'กรองตามซีรีส์' : 'Filter by series'}
+                    value={selectedSeries}
+                    onChange={(e) => {
+                      setSelectedSeries(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  >
+                    {seriesList.map((series) => (
+                      <option key={series} value={series}>
+                        {series}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Speaker Filter */}
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <select
+                    name="sermon-speaker"
+                    aria-label={language === 'th' ? 'กรองตามผู้พูด' : 'Filter by speaker'}
+                    value={selectedSpeaker}
+                    onChange={(e) => {
+                      setSelectedSpeaker(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  >
+                    {speakerList.map((speaker) => (
+                      <option key={speaker} value={speaker}>
+                        {speaker}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </section>
 
-        {/* Sermons Grid */}
-        <section className="reveal mb-8">
-          {displayedSermons.length === 0 ? (
-            <div className="rounded-lg bg-card p-12 text-center">
-              <p className="text-muted-foreground">
-                {language === 'th'
-                  ? 'ไม่พบคำเทศนาที่ตรงกับเกณฑ์ของคุณ'
-                  : 'No sermons found matching your criteria.'}
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {displayedSermons.map((sermon: Sermon) => (
-                <Link key={sermon.id} to={`/sermons/${sermon.id}`}>
-                  <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
-                    <div className="relative aspect-video overflow-hidden bg-muted">
-                      {sermon.thumbnailUrl ? (
-                        <img
-                          src={sermon.thumbnailUrl}
-                          alt={sermon.title}
-                          loading="lazy"
-                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center bg-muted">
-                          <BookOpen className="h-12 w-12 text-muted-foreground/50" />
+            {/* Sermons Grid */}
+            <section className="reveal mb-8">
+              {displayedSermons.length === 0 ? (
+                <div className="rounded-lg bg-card p-12 text-center">
+                  <p className="text-muted-foreground">
+                    {language === 'th'
+                      ? 'ไม่พบคำเทศนาที่ตรงกับเกณฑ์ของคุณ'
+                      : 'No sermons found matching your criteria.'}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {displayedSermons.map((sermon: Sermon) => (
+                    <Link key={sermon.id} to={`/sermons/${sermon.id}`}>
+                      <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
+                        <div className="relative aspect-video overflow-hidden bg-muted">
+                          {sermon.thumbnailUrl ? (
+                            <img
+                              src={sermon.thumbnailUrl}
+                              alt={sermon.title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center bg-muted">
+                              <BookOpen className="h-12 w-12 text-muted-foreground/50" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+                              <Play className="h-6 w-6 text-primary" />
+                            </div>
+                          </div>
+                          {extractYoutubeId(sermon.youtubeUrl) && (
+                            <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
+                              <Youtube className="h-4 w-4 text-white" />
+                            </div>
+                          )}
+                          {!extractYoutubeId(sermon.youtubeUrl) && sermon.audioUrl && (
+                            <div className="absolute bottom-2 right-2 rounded bg-primary px-2 py-0.5">
+                              <Headphones className="h-4 w-4 text-white" />
+                            </div>
+                          )}
                         </div>
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-                          <Play className="h-6 w-6 text-primary" />
-                        </div>
-                      </div>
-                      {sermon.youtubeId && (
-                        <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
-                          <Youtube className="h-4 w-4 text-white" />
-                        </div>
-                      )}
-                      {!sermon.youtubeId && sermon.audioUrl && (
-                        <div className="absolute bottom-2 right-2 rounded bg-primary px-2 py-0.5">
-                          <Headphones className="h-4 w-4 text-white" />
-                        </div>
-                      )}
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
-                        {formatDate(sermon.date)}
-                        <span className="text-border">•</span>
-                        <Clock className="h-3 w-3" />
-                        {sermon.duration}
-                      </div>
-                      <h2 className="mb-1 line-clamp-2 text-balance font-semibold text-foreground group-hover:text-primary">
-                        {sermon.title}
-                      </h2>
-                      <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <BookOpen className="h-3 w-3" />
-                        {sermon.scripture}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          )}
-        </section>
+                        <CardContent className="p-4">
+                          <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                            <Calendar className="h-3 w-3" />
+                            {formatDate(sermon.date)}
+                            <span className="text-border">•</span>
+                            <Clock className="h-3 w-3" />
+                            {sermon.duration}
+                          </div>
+                          <h2 className="mb-1 line-clamp-2 text-balance font-semibold text-foreground group-hover:text-primary">
+                            {sermon.title}
+                          </h2>
+                          <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <BookOpen className="h-3 w-3" />
+                            {sermon.scripture}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              aria-label={language === 'th' ? 'หน้าก่อนหน้า' : 'Previous page'}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="px-4 text-sm text-muted-foreground">
-              {language === 'th' ? 'หน้า' : 'Page'} {currentPage} {language === 'th' ? 'จาก' : 'of'}{' '}
-              {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              aria-label={language === 'th' ? 'หน้าถัดไป' : 'Next page'}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  aria-label={language === 'th' ? 'หน้าก่อนหน้า' : 'Previous page'}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="px-4 text-sm text-muted-foreground">
+                  {language === 'th' ? 'หน้า' : 'Page'} {currentPage}{' '}
+                  {language === 'th' ? 'จาก' : 'of'} {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  aria-label={language === 'th' ? 'หน้าถัดไป' : 'Next page'}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </PublicLayout>

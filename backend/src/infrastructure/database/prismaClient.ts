@@ -11,6 +11,10 @@ type ExtendedPrismaClient = PrismaClient & {
   auditLog: PrismaClient['audit_logs'];
   pushSubscription: PrismaClient['push_subscriptions'];
   memberAnnouncementView: PrismaClient['member_announcement_views'];
+  sermon: PrismaClient['sermons'];
+  blogPost: PrismaClient['blog_posts'];
+  galleryItem: PrismaClient['gallery_items'];
+  prayerRequest: PrismaClient['prayer_requests'];
 };
 
 /**
@@ -46,6 +50,10 @@ class PrismaClientSingleton {
       client.auditLog = client.audit_logs;
       client.pushSubscription = client.push_subscriptions;
       client.memberAnnouncementView = client.member_announcement_views;
+      client.sermon = client.sermons;
+      client.blogPost = client.blog_posts;
+      client.galleryItem = client.gallery_items;
+      client.prayerRequest = client.prayer_requests;
 
       this.instance = client;
     }

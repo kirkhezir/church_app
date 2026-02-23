@@ -11,6 +11,10 @@ import pushRoutes from './pushRoutes';
 import reportRoutes from './reportRoutes';
 import analyticsRoutes from './analyticsRoutes';
 import uploadRoutes from './uploadRoutes';
+import sermonRoutes from './sermonRoutes';
+import blogRoutes from './blogRoutes';
+import galleryRoutes from './galleryRoutes';
+import prayerRoutes from './prayerRoutes';
 
 /**
  * Main API Router
@@ -36,6 +40,10 @@ router.get('/', (_req, res) => {
       reports: '/api/v1/reports',
       analytics: '/api/v1/analytics',
       upload: '/api/v1/upload',
+      sermons: '/api/v1/sermons',
+      blog: '/api/v1/blog',
+      gallery: '/api/v1/gallery',
+      prayer: '/api/v1/prayer',
     },
   });
 });
@@ -52,6 +60,10 @@ router.use('/push', pushRoutes);
 router.use('/reports', reportRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/analytics', analyticsRoutes);
+router.use('/sermons', sermonRoutes);
+router.use('/blog', blogRoutes);
+router.use('/gallery', galleryRoutes);
+router.use('/prayer', prayerRoutes);
 
 logger.info('API routes initialized');
 

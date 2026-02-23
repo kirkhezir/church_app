@@ -18,6 +18,7 @@ import {
   Calendar,
   Camera,
   Heart,
+  Loader2,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,7 @@ import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { type Photo, albums, photos } from '@/data/gallery';
+import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
 
 type ViewMode = 'albums' | 'photos';
 
@@ -34,16 +35,34 @@ export function GalleryPage() {
   useDocumentTitle('Photo Gallery', 'แกลเลอรี่', language);
   const [viewMode, setViewMode] = useState<ViewMode>('albums');
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
-  const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
+  const [lightboxPhoto, setLightboxPhoto] = useState<GalleryItem | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const [photos, setPhotos] = useState<GalleryItem[]>([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await galleryService.getGallery();
+        setPhotos(data.items);
+        setAlbums(data.albums);
+      } catch {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   const filteredPhotos = useMemo(
     () => (selectedAlbum ? photos.filter((p) => p.albumId === selectedAlbum) : photos),
-    [selectedAlbum]
+    [selectedAlbum, photos]
   );
 
-  const openLightbox = useCallback((photo: Photo, index: number) => {
+  const openLightbox = useCallback((photo: GalleryItem, index: number) => {
     setLightboxPhoto(photo);
     setLightboxIndex(index);
     document.body.style.overflow = 'hidden';
@@ -88,6 +107,16 @@ export function GalleryPage() {
       document.body.style.overflow = '';
     };
   }, []);
+
+  if (loading) {
+    return (
+      <PublicLayout>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PublicLayout>
+    );
+  }
 
   return (
     <PublicLayout>
@@ -163,7 +192,9 @@ export function GalleryPage() {
                 role="button"
                 tabIndex={0}
                 aria-label={
-                  language === 'th' ? `ดูอัลบั้ม ${album.titleThai}` : `View album ${album.title}`
+                  language === 'th'
+                    ? `ดูอัลบั้ม ${album.titleThai ?? album.title}`
+                    : `View album ${album.title}`
                 }
                 onClick={() => {
                   setSelectedAlbum(album.id);
@@ -180,17 +211,17 @@ export function GalleryPage() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={album.coverImage}
-                    alt={language === 'th' ? album.titleThai : album.title}
+                    alt={language === 'th' ? (album.titleThai ?? album.title) : album.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                     <h2 className="text-balance text-lg font-bold">
-                      {language === 'th' ? album.titleThai : album.title}
+                      {language === 'th' ? (album.titleThai ?? album.title) : album.title}
                     </h2>
                     <p className="text-sm text-white/80">
-                      {language === 'th' ? album.descriptionThai : album.description}
+                      {album.photoCount} {language === 'th' ? 'รูป' : 'photos'}
                     </p>
                   </div>
                   <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
@@ -210,7 +241,9 @@ export function GalleryPage() {
                 role="button"
                 tabIndex={0}
                 aria-label={
-                  language === 'th' ? `ดูรูป ${photo.titleThai}` : `View photo ${photo.title}`
+                  language === 'th'
+                    ? `ดูรูป ${photo.titleThai ?? photo.title}`
+                    : `View photo ${photo.title}`
                 }
                 onClick={() => openLightbox(photo, index)}
                 onKeyDown={(e) => {
@@ -221,8 +254,8 @@ export function GalleryPage() {
                 }}
               >
                 <img
-                  src={photo.thumbnail}
-                  alt={language === 'th' ? photo.titleThai : photo.title}
+                  src={photo.thumbnailUrl ?? photo.imageUrl}
+                  alt={language === 'th' ? (photo.titleThai ?? photo.title) : photo.title}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
                 />
@@ -231,7 +264,7 @@ export function GalleryPage() {
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-3 transition-transform group-hover:translate-y-0">
                   <p className="text-sm font-medium text-white">
-                    {language === 'th' ? photo.titleThai : photo.title}
+                    {language === 'th' ? (photo.titleThai ?? photo.title) : photo.title}
                   </p>
                 </div>
               </div>
@@ -283,8 +316,12 @@ export function GalleryPage() {
           {/* Image */}
           <div className="max-h-[85vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
             <img
-              src={lightboxPhoto.src}
-              alt={language === 'th' ? lightboxPhoto.titleThai : lightboxPhoto.title}
+              src={lightboxPhoto.imageUrl}
+              alt={
+                language === 'th'
+                  ? (lightboxPhoto.titleThai ?? lightboxPhoto.title)
+                  : lightboxPhoto.title
+              }
               className="max-h-[85vh] max-w-full object-contain"
             />
           </div>
@@ -294,11 +331,13 @@ export function GalleryPage() {
             <div className="mx-auto flex max-w-4xl items-center justify-between">
               <div>
                 <h2 className="text-balance text-lg font-semibold text-white">
-                  {language === 'th' ? lightboxPhoto.titleThai : lightboxPhoto.title}
+                  {language === 'th'
+                    ? (lightboxPhoto.titleThai ?? lightboxPhoto.title)
+                    : lightboxPhoto.title}
                 </h2>
                 <p className="flex items-center gap-2 text-sm text-white/70">
                   <Calendar className="h-4 w-4" />
-                  {new Date(lightboxPhoto.date).toLocaleDateString(
+                  {new Date(lightboxPhoto.eventDate ?? lightboxPhoto.createdAt).toLocaleDateString(
                     language === 'th' ? 'th-TH' : 'en-US'
                   )}
                   {lightboxPhoto.photographer && (

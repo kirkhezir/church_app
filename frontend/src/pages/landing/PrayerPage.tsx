@@ -4,7 +4,7 @@
  * Private prayer request form with prayer wall and prayer updates
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import {
   Heart,
@@ -16,6 +16,7 @@ import {
   EyeOff,
   MessageCircle,
   Calendar,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,63 +24,7 @@ import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-
-interface PrayerRequest {
-  id: string;
-  name: string;
-  category: string;
-  categoryThai: string;
-  request: string;
-  requestThai?: string;
-  date: string;
-  prayerCount: number;
-  isPublic: boolean;
-}
-
-// Sample public prayer requests (anonymous)
-const publicPrayers: PrayerRequest[] = [
-  {
-    id: '1',
-    name: 'Anonymous',
-    category: 'Health',
-    categoryThai: 'สุขภาพ',
-    request: "Please pray for my mother who is recovering from surgery. We trust in God's healing.",
-    date: '2026-01-28',
-    prayerCount: 15,
-    isPublic: true,
-  },
-  {
-    id: '2',
-    name: 'A Brother',
-    category: 'Family',
-    categoryThai: 'ครอบครัว',
-    request:
-      'Praying for unity and peace in my family. May God guide us through this difficult time.',
-    date: '2026-01-27',
-    prayerCount: 22,
-    isPublic: true,
-  },
-  {
-    id: '3',
-    name: 'Church Member',
-    category: 'Guidance',
-    categoryThai: 'การนำทาง',
-    request: "Seeking God's direction for an important career decision. Please pray for wisdom.",
-    date: '2026-01-26',
-    prayerCount: 18,
-    isPublic: true,
-  },
-  {
-    id: '4',
-    name: 'A Sister',
-    category: 'Thanksgiving',
-    categoryThai: 'ขอบพระคุณ',
-    request: 'Praising God for answered prayers! My son has accepted Jesus and been baptized.',
-    date: '2026-01-25',
-    prayerCount: 35,
-    isPublic: true,
-  },
-];
+import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
 
 const categories = [
   { id: 'health', name: 'Health', nameThai: 'สุขภาพ' },
@@ -107,16 +52,67 @@ export function PrayerPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [prayedFor, setPrayedFor] = useState<string[]>([]);
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    async function load() {
+      try {
+        const prayers = await prayerService.getPrayerRequests();
+        setPublicPrayers(prayers);
+      } catch {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this would submit to an API
-    setIsSubmitted(true);
+    setSubmitting(true);
+    try {
+      await prayerService.submitPrayerRequest({
+        name: formData.name || 'Anonymous',
+        email: formData.email || undefined,
+        request: formData.request,
+        category: formData.category || undefined,
+        categoryThai: categories.find((c) => c.id === formData.category)?.nameThai || undefined,
+        isAnonymous: !formData.name,
+      });
+      setIsSubmitted(true);
+      // Refresh prayer wall
+      const prayers = await prayerService.getPrayerRequests();
+      setPublicPrayers(prayers);
+    } catch {
+      // TODO: show error toast
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handlePrayFor = (id: string) => {
+  const handlePrayFor = async (id: string) => {
     setPrayedFor((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    try {
+      const updated = await prayerService.prayForRequest(id);
+      setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    } catch {
+      // revert optimistic update
+      setPrayedFor((prev) => prev.filter((pId) => pId !== id));
+    }
   };
+
+  if (loading) {
+    return (
+      <PublicLayout>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PublicLayout>
+    );
+  }
 
   return (
     <PublicLayout>
@@ -283,8 +279,16 @@ export function PrayerPage() {
                           : 'Your prayer request is kept confidential'}
                       </div>
 
-                      <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
-                        <Send className="mr-2 h-4 w-4" />
+                      <Button
+                        type="submit"
+                        className="w-full bg-purple-600 hover:bg-purple-700"
+                        disabled={submitting}
+                      >
+                        {submitting ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="mr-2 h-4 w-4" />
+                        )}
                         {language === 'th' ? 'ส่งคำอธิษฐาน' : 'Submit Prayer Request'}
                       </Button>
                     </form>
@@ -340,11 +344,13 @@ export function PrayerPage() {
                   <CardContent className="p-5">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
-                        {language === 'th' ? prayer.categoryThai : prayer.category}
+                        {language === 'th'
+                          ? (prayer.categoryThai ?? prayer.category)
+                          : prayer.category}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
-                        {new Date(prayer.date).toLocaleDateString(
+                        {new Date(prayer.createdAt).toLocaleDateString(
                           language === 'th' ? 'th-TH' : 'en-US',
                           { month: 'short', day: 'numeric' }
                         )}

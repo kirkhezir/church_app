@@ -4,7 +4,7 @@
  * Church blog with announcements, mission stories, and member testimonies
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import {
   Newspaper,
@@ -17,6 +17,7 @@ import {
   Heart,
   Globe,
   Bell,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { blogPosts } from '@/data/blog';
+import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 
 const categories = [
   { id: 'all', name: 'All', nameThai: 'ทั้งหมด', icon: Newspaper },
@@ -44,25 +45,51 @@ export function BlogPage() {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
   const revealRef = useScrollReveal<HTMLDivElement>();
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const posts = await blogService.getBlogPosts();
+        setAllPosts(posts);
+      } catch {
+        // Silently fail – page shows empty state
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   const filteredPosts = useMemo(
     () =>
-      blogPosts.filter((post) => {
+      allPosts.filter((post) => {
         const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
         const matchesSearch =
           searchQuery === '' ||
-          (language === 'th' ? post.titleThai : post.title)
+          (language === 'th' ? (post.titleThai ?? '') : post.title)
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          (language === 'th' ? post.excerptThai : post.excerpt)
+          (language === 'th' ? (post.excerptThai ?? '') : post.excerpt)
             .toLowerCase()
             .includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
       }),
-    [selectedCategory, searchQuery, language]
+    [allPosts, selectedCategory, searchQuery, language]
   );
 
-  const featuredPosts = blogPosts.filter((post) => post.featured);
+  const featuredPosts = allPosts.filter((post) => post.featured);
+
+  if (loading) {
+    return (
+      <PublicLayout>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </PublicLayout>
+    );
+  }
 
   return (
     <PublicLayout>
@@ -93,13 +120,13 @@ export function BlogPage() {
                 {featuredPosts.map((post) => (
                   <Link
                     key={post.id}
-                    to={`/blog/${post.id}`}
+                    to={`/blog/${post.slug}`}
                     className="group overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl"
                   >
                     <div className="grid sm:grid-cols-2">
                       <div className="relative h-48 sm:h-full">
                         <img
-                          src={post.image}
+                          src={post.thumbnailUrl ?? '/placeholder.jpg'}
                           alt={language === 'th' ? post.titleThai : post.title}
                           loading="lazy"
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -121,7 +148,7 @@ export function BlogPage() {
                         <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
-                            {new Date(post.date).toLocaleDateString(
+                            {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString(
                               language === 'th' ? 'th-TH' : 'en-US',
                               { month: 'short', day: 'numeric' }
                             )}
@@ -187,11 +214,11 @@ export function BlogPage() {
           {filteredPosts.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredPosts.slice(0, visibleCount).map((post) => (
-                <Link key={post.id} to={`/blog/${post.id}`}>
+                <Link key={post.id} to={`/blog/${post.slug}`}>
                   <Card className="group h-full overflow-hidden transition-shadow hover:shadow-xl">
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        src={post.image}
+                        src={post.thumbnailUrl ?? '/placeholder.jpg'}
                         alt={language === 'th' ? post.titleThai : post.title}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
@@ -218,7 +245,7 @@ export function BlogPage() {
                         <div className="flex items-center gap-2">
                           <Calendar className="h-3 w-3" />
                           <span>
-                            {new Date(post.date).toLocaleDateString(
+                            {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString(
                               language === 'th' ? 'th-TH' : 'en-US',
                               { month: 'short', day: 'numeric' }
                             )}

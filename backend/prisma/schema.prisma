@@ -199,3 +199,108 @@ enum Role {
   STAFF
   MEMBER
 }
+
+enum PrayerStatus {
+  PENDING
+  APPROVED
+  ARCHIVED
+}
+
+// ============================================================================
+// CMS Models (Phase 12)
+// ============================================================================
+
+model sermons {
+  id              String    @id
+  title           String
+  titleThai       String?
+  speaker         String
+  speakerThai     String?
+  series          String?
+  scripture       String?
+  date            DateTime
+  youtubeUrl      String?
+  audioUrl        String?
+  thumbnailUrl    String?
+  duration        String?
+  description     String
+  descriptionThai String?
+  views           Int       @default(0)
+  isPublished     Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+
+  @@index([date(sort: Desc)])
+  @@index([isPublished, date])
+  @@index([speaker])
+  @@index([series])
+}
+
+model blog_posts {
+  id              String    @id
+  title           String
+  titleThai       String?
+  slug            String    @unique
+  excerpt         String
+  excerptThai     String?
+  content         String
+  contentThai     String?
+  author          String
+  category        String
+  categoryThai    String?
+  tags            String[]  @default([])
+  thumbnailUrl    String?
+  readTime        Int       @default(5)
+  featured        Boolean   @default(false)
+  isPublished     Boolean   @default(true)
+  publishedAt     DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+
+  @@index([slug])
+  @@index([isPublished, publishedAt(sort: Desc)])
+  @@index([category])
+  @@index([featured])
+}
+
+model gallery_items {
+  id              String    @id
+  title           String
+  titleThai       String?
+  imageUrl        String
+  thumbnailUrl    String?
+  cloudinaryId    String?
+  albumId         String
+  albumTitle      String
+  albumTitleThai  String?
+  category        String?
+  eventDate       String?
+  photographer    String?
+  description     String?
+  sortOrder       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+
+  @@index([albumId])
+  @@index([category])
+  @@index([sortOrder])
+}
+
+model prayer_requests {
+  id              String        @id
+  name            String
+  email           String?
+  category        String
+  categoryThai    String?
+  request         String
+  requestThai     String?
+  isPublic        Boolean       @default(false)
+  isAnonymous     Boolean       @default(true)
+  prayerCount     Int           @default(0)
+  status          PrayerStatus  @default(PENDING)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([isPublic, status])
+}
