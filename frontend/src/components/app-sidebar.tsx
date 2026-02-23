@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useMemo } from 'react';
 import {
   Calendar,
   Home,
@@ -17,10 +17,15 @@ import {
   Newspaper,
   Image,
   Heart,
+  PenSquare,
+  Monitor,
+  ClipboardList,
 } from 'lucide-react';
+import { Link } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 
 import { NavMain } from '@/components/nav-main';
+import { NavMainCollapsible, type NavCollapsibleItem } from '@/components/nav-main-collapsible';
 import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
@@ -28,33 +33,17 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 
-// Static navigation items — hoisted to avoid re-creation on every render
-const SETTINGS_ITEMS = [
-  { title: 'Profile', url: '/app/profile', icon: User },
-  { title: 'Notifications', url: '/app/notifications', icon: Bell },
-  { title: 'Settings', url: '/app/settings', icon: Settings },
-];
+// ─── Static navigation items — hoisted outside render ──────────────────────
 
-const ADMIN_ITEMS = [
-  { title: 'Admin Panel', url: '/app/admin/members', icon: Shield },
-  { title: 'Sermons', url: '/app/admin/sermons', icon: BookOpen },
-  { title: 'Blog', url: '/app/admin/blog', icon: Newspaper },
-  { title: 'Gallery', url: '/app/admin/gallery', icon: Image },
-  { title: 'Prayer', url: '/app/admin/prayer', icon: Heart },
-  { title: 'Analytics', url: '/app/admin/analytics', icon: BarChart3 },
-  { title: 'Reports', url: '/app/admin/reports', icon: FileText },
-  { title: 'System Health', url: '/app/admin/health', icon: Activity },
-  { title: 'Audit Logs', url: '/app/admin/audit-logs', icon: FileText },
-  { title: 'Data Export', url: '/app/admin/export', icon: Download },
-];
-
+/** Core app navigation visible to all authenticated members. */
 const BASE_NAV = [
-  { title: 'Dashboard', url: '/app/dashboard', icon: Home, isActive: true },
+  { title: 'Dashboard', url: '/app/dashboard', icon: Home },
   { title: 'Events', url: '/app/events', icon: Calendar },
   { title: 'Announcements', url: '/app/announcements', icon: Megaphone },
   { title: 'Messages', url: '/app/messages', icon: Mail },
@@ -62,23 +51,69 @@ const BASE_NAV = [
 
 const MEMBERS_ITEM = { title: 'Members', url: '/app/members', icon: Users };
 
+/** Admin-only navigation with collapsible sub-groups. */
+const ADMIN_NAV: NavCollapsibleItem[] = [
+  { title: 'Members', url: '/app/admin/members', icon: Shield },
+  {
+    title: 'Content',
+    url: '#',
+    icon: PenSquare,
+    items: [
+      { title: 'Sermons', url: '/app/admin/sermons', icon: BookOpen },
+      { title: 'Blog', url: '/app/admin/blog', icon: Newspaper },
+      { title: 'Gallery', url: '/app/admin/gallery', icon: Image },
+      { title: 'Prayer', url: '/app/admin/prayer', icon: Heart },
+    ],
+  },
+  {
+    title: 'Monitoring',
+    url: '#',
+    icon: Monitor,
+    items: [
+      { title: 'Analytics', url: '/app/admin/analytics', icon: BarChart3 },
+      { title: 'Reports', url: '/app/admin/reports', icon: FileText },
+      { title: 'System Health', url: '/app/admin/health', icon: Activity },
+      { title: 'Audit Logs', url: '/app/admin/audit-logs', icon: ClipboardList },
+      { title: 'Data Export', url: '/app/admin/export', icon: Download },
+    ],
+  },
+];
+
+/** User preference navigation at the bottom. */
+const SETTINGS_ITEMS = [
+  { title: 'Profile', url: '/app/profile', icon: User },
+  { title: 'Notifications', url: '/app/notifications', icon: Bell },
+  { title: 'Settings', url: '/app/settings', icon: Settings },
+];
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isAuthenticated } = useAuth();
 
-  if (!isAuthenticated || !user) {
+  // Memoize computed nav arrays to avoid re-creation on every render
+  const navMain = useMemo(() => {
+    if (!user) return BASE_NAV;
+    const isAdminOrStaff = user.role === 'ADMIN' || user.role === 'STAFF';
+    return isAdminOrStaff ? [...BASE_NAV, MEMBERS_ITEM] : BASE_NAV;
+  }, [user]);
+
+  const showAdmin = user?.role === 'ADMIN';
+
+  const userData = useMemo(
+    () =>
+      user
+        ? {
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+            avatar: '',
+            role: user.role,
+          }
+        : null,
+    [user]
+  );
+
+  if (!isAuthenticated || !userData) {
     return null;
   }
-
-  const isAdminOrStaff = user.role === 'ADMIN' || user.role === 'STAFF';
-  const navMain = isAdminOrStaff ? [...BASE_NAV, MEMBERS_ITEM] : [...BASE_NAV];
-  const adminItems = user.role === 'ADMIN' ? ADMIN_ITEMS : [];
-
-  const userData = {
-    name: `${user.firstName} ${user.lastName}`,
-    email: user.email,
-    avatar: '', // Can be added later
-    role: user.role,
-  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -86,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/app/dashboard">
+              <Link to="/app/dashboard">
                 <img
                   src="/church-logo.png"
                   alt="Sing Buri Adventist Center"
@@ -95,16 +130,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Sing Buri Adventist</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
-        <NavMain items={navMain} />
-        {adminItems.length > 0 && <NavMain items={adminItems} label="Administration" />}
-        <NavMain items={SETTINGS_ITEMS} />
+        <NavMain items={navMain} label="Navigation" />
+
+        {showAdmin && (
+          <>
+            <SidebarSeparator />
+            <NavMainCollapsible items={ADMIN_NAV} label="Administration" />
+          </>
+        )}
+
+        <SidebarSeparator />
+        <NavMain items={SETTINGS_ITEMS} label="Preferences" />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser user={userData} />
       </SidebarFooter>
