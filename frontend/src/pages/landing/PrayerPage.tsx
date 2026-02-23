@@ -139,7 +139,7 @@ export function PrayerPage() {
       </section>
 
       <div ref={revealRef} className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="reveal grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-2">
           {/* Prayer Request Form */}
           <div>
             <Card>

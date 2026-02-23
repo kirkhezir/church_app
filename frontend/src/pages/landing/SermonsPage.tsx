@@ -133,7 +133,7 @@ export function SermonsPage() {
         ) : (
           <>
             {/* Filters */}
-            <section className="reveal mb-8">
+            <section className="mb-8">
               <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Search */}
                 <div className="relative flex-1">
@@ -195,7 +195,7 @@ export function SermonsPage() {
             </section>
 
             {/* Sermons Grid */}
-            <section className="reveal mb-8">
+            <section className="mb-8">
               {displayedSermons.length === 0 ? (
                 <div className="rounded-lg bg-card p-12 text-center">
                   <p className="text-muted-foreground">

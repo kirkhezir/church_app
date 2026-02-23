@@ -13,6 +13,10 @@ import {
   Download,
   Activity,
   BarChart3,
+  BookOpen,
+  Newspaper,
+  Image,
+  Heart,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -38,6 +42,10 @@ const SETTINGS_ITEMS = [
 
 const ADMIN_ITEMS = [
   { title: 'Admin Panel', url: '/app/admin/members', icon: Shield },
+  { title: 'Sermons', url: '/app/admin/sermons', icon: BookOpen },
+  { title: 'Blog', url: '/app/admin/blog', icon: Newspaper },
+  { title: 'Gallery', url: '/app/admin/gallery', icon: Image },
+  { title: 'Prayer', url: '/app/admin/prayer', icon: Heart },
   { title: 'Analytics', url: '/app/admin/analytics', icon: BarChart3 },
   { title: 'Reports', url: '/app/admin/reports', icon: FileText },
   { title: 'System Health', url: '/app/admin/health', icon: Activity },

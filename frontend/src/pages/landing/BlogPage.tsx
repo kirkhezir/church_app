@@ -111,7 +111,7 @@ export function BlogPage() {
       <div ref={revealRef}>
         {/* Featured Posts */}
         {featuredPosts.length > 0 && (
-          <div className="reveal bg-muted py-8">
+          <div className="bg-muted py-8">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <h2 className="mb-6 text-balance text-lg font-semibold text-foreground">
                 {language === 'th' ? 'บทความเด่น' : 'Featured Stories'}
@@ -210,7 +210,7 @@ export function BlogPage() {
         </div>
 
         {/* Blog Posts Grid */}
-        <div className="reveal mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
           {filteredPosts.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredPosts.slice(0, visibleCount).map((post) => (
