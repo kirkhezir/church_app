@@ -209,7 +209,7 @@ export default function AdminAuditLogsPage() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-4 flex justify-center gap-2">
-                <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
+                <Button variant="outline" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
                   Previous
                 </Button>
                 <span className="px-4 py-2">
@@ -218,7 +218,7 @@ export default function AdminAuditLogsPage() {
                 <Button
                   variant="outline"
                   disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
+                  onClick={() => setPage((p) => p + 1)}
                 >
                   Next
                 </Button>

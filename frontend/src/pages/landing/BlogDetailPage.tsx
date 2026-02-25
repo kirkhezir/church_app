@@ -19,6 +19,69 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 
+function BlogContent({ text }: { text: string }) {
+  return (
+    <>
+      {text.split('\n\n').map((block) => {
+        const key = block.slice(0, 60);
+        if (block.startsWith('**') && block.endsWith('**')) {
+          return (
+            <h2 key={key} className="mb-3 mt-6 text-balance text-lg font-bold text-foreground">
+              {block.replace(/\*\*/g, '')}
+            </h2>
+          );
+        }
+        if (block.startsWith('**')) {
+          const parts = block.split('**');
+          return (
+            <div key={key} className="mb-4">
+              <h2 className="mb-2 text-balance text-lg font-bold text-foreground">{parts[1]}</h2>
+              {parts[2] && <p className="text-muted-foreground">{parts[2]}</p>}
+            </div>
+          );
+        }
+        if (block.includes('\n- ')) {
+          const lines = block.split('\n');
+          const heading = lines[0];
+          const items = lines.filter((l) => l.startsWith('- '));
+          return (
+            <div key={key} className="mb-4">
+              {heading && !heading.startsWith('- ') && (
+                <h2 className="mb-2 text-balance text-lg font-bold text-foreground">
+                  {heading.replace(/\*\*/g, '')}
+                </h2>
+              )}
+              <ul className="space-y-1 pl-4">
+                {items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-muted-foreground">
+                    <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
+                    {item.slice(2)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+        if (/^\d+\.\s/.test(block.split('\n')[0])) {
+          const lines = block.split('\n').filter((l) => /^\d+\.\s/.test(l));
+          return (
+            <ol key={key} className="mb-4 list-decimal space-y-1 pl-6 text-muted-foreground">
+              {lines.map((line) => (
+                <li key={line}>{line.replace(/^\d+\.\s/, '')}</li>
+              ))}
+            </ol>
+          );
+        }
+        return (
+          <p key={key} className="mb-4 leading-relaxed text-muted-foreground">
+            {block}
+          </p>
+        );
+      })}
+    </>
+  );
+}
+
 export function BlogDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { language } = useI18n();
@@ -100,70 +163,6 @@ export function BlogDetailPage() {
     }
   };
 
-  // Render markdown-like content (bold, lists, paragraphs)
-  const renderContent = (text: string) => {
-    return text.split('\n\n').map((block, i) => {
-      // Bold headers
-      if (block.startsWith('**') && block.endsWith('**')) {
-        return (
-          <h2 key={i} className="mb-3 mt-6 text-balance text-lg font-bold text-foreground">
-            {block.replace(/\*\*/g, '')}
-          </h2>
-        );
-      }
-      // Bold header with content after
-      if (block.startsWith('**')) {
-        const parts = block.split('**');
-        return (
-          <div key={i} className="mb-4">
-            <h2 className="mb-2 text-balance text-lg font-bold text-foreground">{parts[1]}</h2>
-            {parts[2] && <p className="text-muted-foreground">{parts[2]}</p>}
-          </div>
-        );
-      }
-      // List items
-      if (block.includes('\n- ')) {
-        const lines = block.split('\n');
-        const heading = lines[0];
-        const items = lines.filter((l) => l.startsWith('- '));
-        return (
-          <div key={i} className="mb-4">
-            {heading && !heading.startsWith('- ') && (
-              <h2 className="mb-2 text-balance text-lg font-bold text-foreground">
-                {heading.replace(/\*\*/g, '')}
-              </h2>
-            )}
-            <ul className="space-y-1 pl-4">
-              {items.map((item, j) => (
-                <li key={j} className="flex items-start gap-2 text-muted-foreground">
-                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
-                  {item.slice(2)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      }
-      // Numbered list
-      if (/^\d+\.\s/.test(block.split('\n')[0])) {
-        const lines = block.split('\n').filter((l) => /^\d+\.\s/.test(l));
-        return (
-          <ol key={i} className="mb-4 list-decimal space-y-1 pl-6 text-muted-foreground">
-            {lines.map((line, j) => (
-              <li key={j}>{line.replace(/^\d+\.\s/, '')}</li>
-            ))}
-          </ol>
-        );
-      }
-      // Regular paragraph
-      return (
-        <p key={i} className="mb-4 leading-relaxed text-muted-foreground">
-          {block}
-        </p>
-      );
-    });
-  };
-
   return (
     <PublicLayout>
       {/* Hero Image */}
@@ -230,7 +229,7 @@ export function BlogDetailPage() {
           </div>
 
           {/* Content */}
-          <div className="prose-like max-w-none">{renderContent(content)}</div>
+          <div className="prose-like max-w-none"><BlogContent text={content} /></div>
 
           {/* Tags / Category */}
           <div className="mt-8 flex items-center gap-2 border-t border-border pt-6 dark:border-border">

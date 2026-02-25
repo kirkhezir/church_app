@@ -55,11 +55,6 @@ export default function AdminMemberListPage() {
     loadMembers();
   }, [page, roleFilter, debouncedSearch]);
 
-  // Reset to page 1 when search or role filter changes
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, roleFilter]);
-
   const loadMembers = async () => {
     try {
       setLoading(true);
@@ -150,11 +145,11 @@ export default function AdminMemberListPage() {
                   <Input
                     placeholder="Search members..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                     className="w-[220px] pl-9"
                   />
                 </div>
-                <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <Select value={roleFilter} onValueChange={(val) => { setRoleFilter(val); setPage(1); }}>
                   <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
@@ -264,7 +259,7 @@ export default function AdminMemberListPage() {
                     variant="outline"
                     size="sm"
                     disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => setPage((p) => p - 1)}
                   >
                     <ChevronLeft className="mr-1 h-4 w-4" />
                     Previous
@@ -273,7 +268,7 @@ export default function AdminMemberListPage() {
                     variant="outline"
                     size="sm"
                     disabled={page === totalPages}
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => setPage((p) => p + 1)}
                   >
                     Next
                     <ChevronRight className="ml-1 h-4 w-4" />

@@ -122,7 +122,7 @@ export function useIsTouchDevice(): boolean {
       setIsTouch(
         'ontouchstart' in window ||
           navigator.maxTouchPoints > 0 ||
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint_disable-next-line @typescript-eslint/no-explicit-any
           (navigator as any).msMaxTouchPoints > 0
       );
     };

@@ -278,6 +278,7 @@ export function GalleryPage() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
           onClick={closeLightbox}
+          onKeyDown={(e) => { if (e.key === 'Escape') closeLightbox(); }}
           role="dialog"
           aria-modal="true"
           aria-label={language === 'th' ? 'ดูรูปภาพขนาดใหญ่' : 'Photo lightbox viewer'}
@@ -314,7 +315,12 @@ export function GalleryPage() {
           </button>
 
           {/* Image */}
-          <div className="max-h-[85vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
+          <div
+            role="presentation"
+            className="max-h-[85vh] max-w-[90vw]"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
             <img
               src={lightboxPhoto.imageUrl}
               alt={

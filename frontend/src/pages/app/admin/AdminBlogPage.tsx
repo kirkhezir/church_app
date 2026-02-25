@@ -297,8 +297,9 @@ export function AdminBlogPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Title (EN) *</label>
+                  <label htmlFor="blog-title-en" className="mb-1 block text-sm font-medium">Title (EN) *</label>
                   <input
+                    id="blog-title-en"
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -306,16 +307,18 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Title (TH)</label>
+                  <label htmlFor="blog-title-th" className="mb-1 block text-sm font-medium">Title (TH)</label>
                   <input
+                    id="blog-title-th"
                     value={formData.titleThai}
                     onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Author *</label>
+                  <label htmlFor="blog-author" className="mb-1 block text-sm font-medium">Author *</label>
                   <input
+                    id="blog-author"
                     required
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
@@ -323,8 +326,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Category *</label>
+                  <label htmlFor="blog-category" className="mb-1 block text-sm font-medium">Category *</label>
                   <input
+                    id="blog-category"
                     required
                     placeholder="e.g. Announcement, Testimony"
                     value={formData.category}
@@ -333,16 +337,18 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Category (TH)</label>
+                  <label htmlFor="blog-category-th" className="mb-1 block text-sm font-medium">Category (TH)</label>
                   <input
+                    id="blog-category-th"
                     value={formData.categoryThai}
                     onChange={(e) => setFormData({ ...formData, categoryThai: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Tags (comma-separated)</label>
+                  <label htmlFor="blog-tags" className="mb-1 block text-sm font-medium">Tags (comma-separated)</label>
                   <input
+                    id="blog-tags"
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
@@ -350,8 +356,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Thumbnail URL</label>
+                  <label htmlFor="blog-thumbnail" className="mb-1 block text-sm font-medium">Thumbnail URL</label>
                   <input
+                    id="blog-thumbnail"
                     value={formData.thumbnailUrl}
                     onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
@@ -370,8 +377,9 @@ export function AdminBlogPage() {
                 </div>
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium">Excerpt (EN) *</label>
+                <label htmlFor="blog-excerpt-en" className="mb-1 block text-sm font-medium">Excerpt (EN) *</label>
                 <textarea
+                  id="blog-excerpt-en"
                   required
                   rows={2}
                   value={formData.excerpt}
@@ -380,8 +388,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium">Excerpt (TH)</label>
+                <label htmlFor="blog-excerpt-th" className="mb-1 block text-sm font-medium">Excerpt (TH)</label>
                 <textarea
+                  id="blog-excerpt-th"
                   rows={2}
                   value={formData.excerptThai}
                   onChange={(e) => setFormData({ ...formData, excerptThai: e.target.value })}
@@ -389,8 +398,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium">Content (EN) *</label>
+                <label htmlFor="blog-content-en" className="mb-1 block text-sm font-medium">Content (EN) *</label>
                 <textarea
+                  id="blog-content-en"
                   required
                   rows={8}
                   value={formData.content}
@@ -399,8 +409,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium">Content (TH)</label>
+                <label htmlFor="blog-content-th" className="mb-1 block text-sm font-medium">Content (TH)</label>
                 <textarea
+                  id="blog-content-th"
                   rows={8}
                   value={formData.contentThai}
                   onChange={(e) => setFormData({ ...formData, contentThai: e.target.value })}

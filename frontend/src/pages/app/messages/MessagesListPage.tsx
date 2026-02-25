@@ -17,6 +17,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+const MSG_SKELETON_KEYS = ['msg-0', 'msg-1', 'msg-2', 'msg-3', 'msg-4'];
+
 export function MessagesListPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -127,8 +129,8 @@ export function MessagesListPage() {
           {loading && (
             <Card>
               <CardContent className="p-0">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-4 border-b p-4 last:border-b-0">
+                {MSG_SKELETON_KEYS.map((key) => (
+                  <div key={key} className="flex items-center gap-4 border-b p-4 last:border-b-0">
                     <Skeleton className="h-10 w-10 rounded-full" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-4 w-32" />

@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+/* eslint_disable react-refresh/only-export-components */
 /**
  * SEO Component
  *

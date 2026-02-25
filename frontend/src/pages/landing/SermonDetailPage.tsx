@@ -226,22 +226,23 @@ export function SermonDetailPage() {
 
               {/* Description */}
               <div className="prose-like space-y-4">
-                {sermon.description.split('\n\n').map((paragraph, i) => {
+                {sermon.description.split('\n\n').map((paragraph) => {
+                  const key = paragraph.slice(0, 60);
                   // Handle key takeaways list
                   if (paragraph.includes('\n- ')) {
                     const lines = paragraph.split('\n');
                     const heading = lines[0];
                     const items = lines.filter((l) => l.startsWith('- '));
                     return (
-                      <div key={i}>
+                      <div key={key}>
                         {heading && !heading.startsWith('- ') && (
                           <p className="mb-2 font-semibold text-foreground">
                             {heading.replace(/^- /, '')}
                           </p>
                         )}
                         <ul className="space-y-2 pl-1">
-                          {items.map((item, j) => (
-                            <li key={j} className="flex items-start gap-2 text-muted-foreground">
+                          {items.map((item) => (
+                            <li key={item} className="flex items-start gap-2 text-muted-foreground">
                               <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                               {item.slice(2)}
                             </li>
@@ -251,7 +252,7 @@ export function SermonDetailPage() {
                     );
                   }
                   return (
-                    <p key={i} className="leading-relaxed text-muted-foreground">
+                    <p key={key} className="leading-relaxed text-muted-foreground">
                       {paragraph}
                     </p>
                   );

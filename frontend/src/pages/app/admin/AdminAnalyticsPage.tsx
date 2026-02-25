@@ -44,6 +44,8 @@ import {
 // Fallback heatmap data used only when the backend returns no activity data
 const fallbackHeatMapData: HeatMapEntry[] = [{ day: 'Sun', hour: 10, count: 0 }];
 
+const STAT_SKELETON_KEYS = ['stat-0', 'stat-1', 'stat-2', 'stat-3'];
+
 // Mock demographics since backend doesn't have age data
 const mockDemographics = [
   { label: 'Age 0-17', value: 52, color: '#3b82f6' },
@@ -216,8 +218,8 @@ export default function AdminAnalyticsPage() {
       {/* Quick Stats */}
       {loading ? (
         <div className="mb-8 grid gap-4 md:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i}>
+          {STAT_SKELETON_KEYS.map((key) => (
+            <Card key={key}>
               <CardHeader className="pb-2">
                 <Skeleton className="h-4 w-24" />
               </CardHeader>

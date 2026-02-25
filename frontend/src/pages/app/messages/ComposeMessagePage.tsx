@@ -56,7 +56,7 @@ export function ComposeMessagePage() {
       setSelectedRecipient(prefilledMember);
       setRecipientId(prefilledMember.id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint_disable-next-line react-hooks/exhaustive-deps
   }, [prefilledMember]);
 
   // Send message hook

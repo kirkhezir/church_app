@@ -231,8 +231,9 @@ export function AdminGalleryPage() {
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm font-medium">Image URL *</label>
+                <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">Image URL *</label>
                 <input
+                  id="gallery-image-url"
                   required
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
@@ -242,16 +243,18 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Title (EN)</label>
+                  <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">Title (EN)</label>
                   <input
+                    id="gallery-title-en"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Title (TH)</label>
+                  <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">Title (TH)</label>
                   <input
+                    id="gallery-title-th"
                     value={formData.titleThai}
                     onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"
@@ -260,8 +263,9 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Album ID *</label>
+                  <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">Album ID *</label>
                   <input
+                    id="gallery-album-id"
                     required
                     value={formData.albumId}
                     onChange={(e) => setFormData({ ...formData, albumId: e.target.value })}
@@ -270,8 +274,9 @@ export function AdminGalleryPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Album Title *</label>
+                  <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">Album Title *</label>
                   <input
+                    id="gallery-album-title"
                     required
                     value={formData.albumTitle}
                     onChange={(e) => setFormData({ ...formData, albumTitle: e.target.value })}
@@ -281,8 +286,9 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Event Date</label>
+                  <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">Event Date</label>
                   <input
+                    id="gallery-event-date"
                     type="date"
                     value={formData.eventDate}
                     onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
@@ -290,8 +296,9 @@ export function AdminGalleryPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Photographer</label>
+                  <label htmlFor="gallery-photographer" className="mb-1 block text-sm font-medium">Photographer</label>
                   <input
+                    id="gallery-photographer"
                     value={formData.photographer}
                     onChange={(e) => setFormData({ ...formData, photographer: e.target.value })}
                     className="w-full rounded-lg border px-3 py-2 text-sm"

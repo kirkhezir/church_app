@@ -59,7 +59,7 @@ export function AnnouncementFilters({ onFiltersChange, authors, loading = false 
       ...filters,
       search: debouncedSearch,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint_disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, filters.priority, filters.authorId, filters.sortBy, filters.sortOrder]);
 
   const handleClearFilters = () => {

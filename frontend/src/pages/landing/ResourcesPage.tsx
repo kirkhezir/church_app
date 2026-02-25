@@ -272,7 +272,7 @@ export function ResourcesPage() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/sermons"
                       className="flex items-center gap-2 rounded-lg p-2 text-sm text-muted-foreground transition-colors hover:bg-muted"
                     >
                       <FileText className="h-4 w-4 text-teal-600" />
@@ -302,8 +302,8 @@ export function ResourcesPage() {
                   {language === 'th' ? 'ลิงก์ที่มีประโยชน์' : 'Helpful Links'}
                 </h3>
                 <ul className="space-y-3">
-                  {externalLinks.map((link, i) => (
-                    <li key={i}>
+                  {externalLinks.map((link) => (
+                    <li key={link.url}>
                       <a
                         href={link.url}
                         target="_blank"

@@ -28,6 +28,8 @@ import { DataExportDialog } from '@/components/features/export/DataExportDialog'
 import { adminService } from '@/services/endpoints/adminService';
 import { useToast } from '@/hooks/use-toast';
 
+const MEMBER_SKELETON_KEYS = ['mem-0', 'mem-1', 'mem-2', 'mem-3', 'mem-4', 'mem-5'];
+
 export function MemberDirectoryPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -219,8 +221,8 @@ export function MemberDirectoryPage() {
       {/* Loading State */}
       {loading && (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i}>
+          {MEMBER_SKELETON_KEYS.map((key) => (
+            <Card key={key}>
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
                   <Skeleton className="h-12 w-12 rounded-full" />
