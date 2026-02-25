@@ -129,7 +129,7 @@ export function AdminGalleryPage() {
         { label: 'Gallery' },
       ]}
     >
-      <div className="mx-auto max-w-6xl space-y-6 p-6">
+      <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -185,11 +185,11 @@ export function AdminGalleryPage() {
 
         {/* Gallery Grid */}
         {loading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid flex-1 content-start gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredItems.map((item) => (
               <Card key={item.id} className="group relative overflow-hidden">
                 <div className="aspect-square overflow-hidden">
@@ -231,7 +231,9 @@ export function AdminGalleryPage() {
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">Image URL *</label>
+                <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">
+                  Image URL *
+                </label>
                 <input
                   id="gallery-image-url"
                   required
@@ -243,7 +245,9 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">Title (EN)</label>
+                  <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">
+                    Title (EN)
+                  </label>
                   <input
                     id="gallery-title-en"
                     value={formData.title}
@@ -252,7 +256,9 @@ export function AdminGalleryPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">Title (TH)</label>
+                  <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">
+                    Title (TH)
+                  </label>
                   <input
                     id="gallery-title-th"
                     value={formData.titleThai}
@@ -263,7 +269,9 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">Album ID *</label>
+                  <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">
+                    Album ID *
+                  </label>
                   <input
                     id="gallery-album-id"
                     required
@@ -274,7 +282,9 @@ export function AdminGalleryPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">Album Title *</label>
+                  <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">
+                    Album Title *
+                  </label>
                   <input
                     id="gallery-album-title"
                     required
@@ -286,7 +296,9 @@ export function AdminGalleryPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">Event Date</label>
+                  <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">
+                    Event Date
+                  </label>
                   <input
                     id="gallery-event-date"
                     type="date"
@@ -296,7 +308,9 @@ export function AdminGalleryPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="gallery-photographer" className="mb-1 block text-sm font-medium">Photographer</label>
+                  <label htmlFor="gallery-photographer" className="mb-1 block text-sm font-medium">
+                    Photographer
+                  </label>
                   <input
                     id="gallery-photographer"
                     value={formData.photographer}

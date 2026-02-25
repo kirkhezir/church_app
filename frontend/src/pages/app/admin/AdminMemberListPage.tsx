@@ -103,7 +103,7 @@ export default function AdminMemberListPage() {
 
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Administration' }, { label: 'Members' }]}>
-      <div className="container mx-auto space-y-6 px-4 py-6">
+      <div className="container mx-auto flex flex-1 flex-col gap-6 px-4 py-6">
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
@@ -145,11 +145,20 @@ export default function AdminMemberListPage() {
                   <Input
                     placeholder="Search members..."
                     value={search}
-                    onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
                     className="w-[220px] pl-9"
                   />
                 </div>
-                <Select value={roleFilter} onValueChange={(val) => { setRoleFilter(val); setPage(1); }}>
+                <Select
+                  value={roleFilter}
+                  onValueChange={(val) => {
+                    setRoleFilter(val);
+                    setPage(1);
+                  }}
+                >
                   <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
@@ -163,7 +172,7 @@ export default function AdminMemberListPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="px-0">
+          <CardContent className="min-h-[540px] px-0">
             {loading ? (
               <div className="px-6">
                 <TableSkeleton rows={5} columns={6} />
@@ -177,15 +186,15 @@ export default function AdminMemberListPage() {
                 </p>
               </div>
             ) : (
-              <Table>
+              <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="pl-6">Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Member Since</TableHead>
-                    <TableHead>MFA</TableHead>
-                    <TableHead className="pr-6 text-right">Actions</TableHead>
+                    <TableHead className="w-[20%] pl-6">Name</TableHead>
+                    <TableHead className="w-[28%]">Email</TableHead>
+                    <TableHead className="w-[12%]">Role</TableHead>
+                    <TableHead className="w-[15%]">Member Since</TableHead>
+                    <TableHead className="w-[10%]">MFA</TableHead>
+                    <TableHead className="w-[15%] pr-6 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -194,7 +203,9 @@ export default function AdminMemberListPage() {
                       <TableCell className="pl-6 font-medium">
                         {member.firstName} {member.lastName}
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{member.email}</TableCell>
+                      <TableCell className="truncate text-muted-foreground">
+                        {member.email}
+                      </TableCell>
                       <TableCell>
                         <Badge variant={getRoleBadgeVariant(member.role)}>{member.role}</Badge>
                       </TableCell>

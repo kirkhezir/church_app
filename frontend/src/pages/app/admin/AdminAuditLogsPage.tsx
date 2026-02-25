@@ -92,7 +92,7 @@ export default function AdminAuditLogsPage() {
         { label: 'Audit Logs' },
       ]}
     >
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto flex flex-1 flex-col px-4 py-4">
         <h1 className="mb-6 text-balance text-2xl font-bold">Audit Logs</h1>
 
         {error && (
@@ -154,22 +154,34 @@ export default function AdminAuditLogsPage() {
           <CardHeader>
             <CardTitle>Activity Log</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-[540px]">
             {loading ? (
               <TableSkeleton rows={5} columns={6} />
             ) : logs.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">No audit logs found</div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full table-fixed">
                   <thead>
                     <tr className="border-b">
-                      <th className="px-4 py-3 text-left">Timestamp</th>
-                      <th className="px-4 py-3 text-left">User</th>
-                      <th className="px-4 py-3 text-left">Action</th>
-                      <th className="px-4 py-3 text-left">Type</th>
-                      <th className="px-4 py-3 text-left">Entity ID</th>
-                      <th className="px-4 py-3 text-left">IP Address</th>
+                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        Timestamp
+                      </th>
+                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        User
+                      </th>
+                      <th className="w-[12%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        Action
+                      </th>
+                      <th className="w-[14%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        Type
+                      </th>
+                      <th className="w-[20%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        Entity ID
+                      </th>
+                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        IP Address
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -209,7 +221,11 @@ export default function AdminAuditLogsPage() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-4 flex justify-center gap-2">
-                <Button variant="outline" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+                <Button
+                  variant="outline"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => p - 1)}
+                >
                   Previous
                 </Button>
                 <span className="px-4 py-2">

@@ -172,7 +172,7 @@ export function AdminBlogPage() {
         { label: 'Blog' },
       ]}
     >
-      <div className="mx-auto max-w-6xl space-y-6 p-6">
+      <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -208,22 +208,22 @@ export function AdminBlogPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
           <Card>
-            <CardContent className="min-h-[400px] p-0">
+            <CardContent className="min-h-[480px] p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
-                      <th className="px-4 py-3 text-left font-medium">Title</th>
-                      <th className="px-4 py-3 text-left font-medium">Author</th>
-                      <th className="px-4 py-3 text-left font-medium">Category</th>
-                      <th className="px-4 py-3 text-left font-medium">Date</th>
-                      <th className="px-4 py-3 text-center font-medium">Featured</th>
-                      <th className="px-4 py-3 text-right font-medium">Actions</th>
+                      <th className="w-[28%] px-4 py-3 text-left font-medium">Title</th>
+                      <th className="w-[16%] px-4 py-3 text-left font-medium">Author</th>
+                      <th className="w-[14%] px-4 py-3 text-left font-medium">Category</th>
+                      <th className="w-[14%] px-4 py-3 text-left font-medium">Date</th>
+                      <th className="w-[12%] px-4 py-3 text-center font-medium">Featured</th>
+                      <th className="w-[16%] px-4 py-3 text-right font-medium">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -297,7 +297,9 @@ export function AdminBlogPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="blog-title-en" className="mb-1 block text-sm font-medium">Title (EN) *</label>
+                  <label htmlFor="blog-title-en" className="mb-1 block text-sm font-medium">
+                    Title (EN) *
+                  </label>
                   <input
                     id="blog-title-en"
                     required
@@ -307,7 +309,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-title-th" className="mb-1 block text-sm font-medium">Title (TH)</label>
+                  <label htmlFor="blog-title-th" className="mb-1 block text-sm font-medium">
+                    Title (TH)
+                  </label>
                   <input
                     id="blog-title-th"
                     value={formData.titleThai}
@@ -316,7 +320,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-author" className="mb-1 block text-sm font-medium">Author *</label>
+                  <label htmlFor="blog-author" className="mb-1 block text-sm font-medium">
+                    Author *
+                  </label>
                   <input
                     id="blog-author"
                     required
@@ -326,7 +332,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-category" className="mb-1 block text-sm font-medium">Category *</label>
+                  <label htmlFor="blog-category" className="mb-1 block text-sm font-medium">
+                    Category *
+                  </label>
                   <input
                     id="blog-category"
                     required
@@ -337,7 +345,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-category-th" className="mb-1 block text-sm font-medium">Category (TH)</label>
+                  <label htmlFor="blog-category-th" className="mb-1 block text-sm font-medium">
+                    Category (TH)
+                  </label>
                   <input
                     id="blog-category-th"
                     value={formData.categoryThai}
@@ -346,7 +356,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-tags" className="mb-1 block text-sm font-medium">Tags (comma-separated)</label>
+                  <label htmlFor="blog-tags" className="mb-1 block text-sm font-medium">
+                    Tags (comma-separated)
+                  </label>
                   <input
                     id="blog-tags"
                     value={formData.tags}
@@ -356,7 +368,9 @@ export function AdminBlogPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="blog-thumbnail" className="mb-1 block text-sm font-medium">Thumbnail URL</label>
+                  <label htmlFor="blog-thumbnail" className="mb-1 block text-sm font-medium">
+                    Thumbnail URL
+                  </label>
                   <input
                     id="blog-thumbnail"
                     value={formData.thumbnailUrl}
@@ -377,7 +391,9 @@ export function AdminBlogPage() {
                 </div>
               </div>
               <div>
-                <label htmlFor="blog-excerpt-en" className="mb-1 block text-sm font-medium">Excerpt (EN) *</label>
+                <label htmlFor="blog-excerpt-en" className="mb-1 block text-sm font-medium">
+                  Excerpt (EN) *
+                </label>
                 <textarea
                   id="blog-excerpt-en"
                   required
@@ -388,7 +404,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label htmlFor="blog-excerpt-th" className="mb-1 block text-sm font-medium">Excerpt (TH)</label>
+                <label htmlFor="blog-excerpt-th" className="mb-1 block text-sm font-medium">
+                  Excerpt (TH)
+                </label>
                 <textarea
                   id="blog-excerpt-th"
                   rows={2}
@@ -398,7 +416,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label htmlFor="blog-content-en" className="mb-1 block text-sm font-medium">Content (EN) *</label>
+                <label htmlFor="blog-content-en" className="mb-1 block text-sm font-medium">
+                  Content (EN) *
+                </label>
                 <textarea
                   id="blog-content-en"
                   required
@@ -409,7 +429,9 @@ export function AdminBlogPage() {
                 />
               </div>
               <div>
-                <label htmlFor="blog-content-th" className="mb-1 block text-sm font-medium">Content (TH)</label>
+                <label htmlFor="blog-content-th" className="mb-1 block text-sm font-medium">
+                  Content (TH)
+                </label>
                 <textarea
                   id="blog-content-th"
                   rows={8}

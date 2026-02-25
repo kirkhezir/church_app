@@ -3,6 +3,14 @@ import { Link, useLocation } from 'react-router';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -11,6 +19,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 export interface NavCollapsibleSubItem {
@@ -66,7 +75,7 @@ function DirectNavItem({ item, pathname }: { item: NavCollapsibleItem; pathname:
     <SidebarMenuItem>
       <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
         <Link to={item.url}>
-          {item.icon && <item.icon />}
+          {item.icon ? <item.icon /> : null}
           <span>{item.title}</span>
         </Link>
       </SidebarMenuButton>
@@ -76,16 +85,53 @@ function DirectNavItem({ item, pathname }: { item: NavCollapsibleItem; pathname:
 
 /** A collapsible sidebar group with nested sub-items. */
 function CollapsibleNavItem({ item, pathname }: { item: NavCollapsibleItem; pathname: string }) {
+  const { isMobile, state } = useSidebar();
   const hasActiveChild = item.items!.some(
     (sub) => pathname === sub.url || pathname.startsWith(sub.url + '/')
   );
 
+  // When sidebar is collapsed to icon-only, render a DropdownMenu so
+  // sub-items are accessible via a popover instead of being hidden.
+  if (!isMobile && state === 'collapsed') {
+    return (
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton tooltip={item.title} isActive={hasActiveChild}>
+              {item.icon ? <item.icon /> : null}
+              <span>{item.title}</span>
+              <ChevronRight className="ml-auto transition-transform duration-200" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="start" className="min-w-56 rounded-lg">
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              {item.title}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {item.items!.map((sub) => {
+              const isActive = pathname === sub.url || pathname.startsWith(sub.url + '/');
+              return (
+                <DropdownMenuItem key={sub.title} asChild>
+                  <Link to={sub.url} className={isActive ? 'bg-accent font-medium' : ''}>
+                    {sub.icon ? <sub.icon className="mr-2 h-4 w-4" /> : null}
+                    <span>{sub.title}</span>
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    );
+  }
+
+  // Default: expanded sidebar uses Collapsible with sub-items
   return (
     <Collapsible asChild defaultOpen={hasActiveChild} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton tooltip={item.title}>
-            {item.icon && <item.icon />}
+            {item.icon ? <item.icon /> : null}
             <span>{item.title}</span>
             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
@@ -98,7 +144,7 @@ function CollapsibleNavItem({ item, pathname }: { item: NavCollapsibleItem; path
                 <SidebarMenuSubItem key={sub.title}>
                   <SidebarMenuSubButton asChild isActive={isActive}>
                     <Link to={sub.url}>
-                      {sub.icon && <sub.icon />}
+                      {sub.icon ? <sub.icon /> : null}
                       <span>{sub.title}</span>
                     </Link>
                   </SidebarMenuSubButton>

@@ -83,7 +83,7 @@ export const RSVPListPage: React.FC = () => {
   if (eventLoading) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'RSVPs' }]}>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto flex flex-1 flex-col px-4 py-8">
           <Skeleton className="mb-6 h-8 w-32" />
           <Card>
             <CardHeader>
@@ -101,7 +101,7 @@ export const RSVPListPage: React.FC = () => {
   if (eventError || !event) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'RSVPs' }]}>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto flex flex-1 flex-col px-4 py-8">
           <Button variant="ghost" onClick={() => navigate('/app/events')}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Events
@@ -128,7 +128,7 @@ export const RSVPListPage: React.FC = () => {
         { label: 'RSVPs' },
       ]}
     >
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto flex flex-1 flex-col px-4 py-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <Button variant="ghost" onClick={() => navigate(`/app/events/${id}`)}>
@@ -185,7 +185,7 @@ export const RSVPListPage: React.FC = () => {
                 <TabsTrigger value={RSVPStatus.CANCELLED}>Cancelled ({cancelledCount})</TabsTrigger>
               </TabsList>
 
-              <TabsContent value={activeTab} className="mt-6">
+              <TabsContent value={activeTab} className="mt-6 min-h-[400px]">
                 {loading ? (
                   <div className="space-y-2">
                     <Skeleton className="h-12 w-full" />
@@ -204,14 +204,14 @@ export const RSVPListPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="rounded-lg border">
-                    <Table>
+                    <Table className="table-fixed">
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>RSVP Date</TableHead>
-                          <TableHead>Last Updated</TableHead>
+                          <TableHead className="w-[22%]">Name</TableHead>
+                          <TableHead className="w-[28%]">Email</TableHead>
+                          <TableHead className="w-[16%]">Status</TableHead>
+                          <TableHead className="w-[17%]">RSVP Date</TableHead>
+                          <TableHead className="w-[17%]">Last Updated</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>

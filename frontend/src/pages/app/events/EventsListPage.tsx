@@ -85,7 +85,7 @@ export function EventsListPage() {
 
   // Event list content — always rendered inside SidebarLayout (behind PrivateRoute)
   const eventListContent = (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
+    <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
@@ -148,7 +148,7 @@ export function EventsListPage() {
         />
       ) : (
         /* List View */
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <div className="grid flex-1 grid-cols-1 gap-6 lg:grid-cols-4">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
             <EventFilters
@@ -163,7 +163,7 @@ export function EventsListPage() {
           </div>
 
           {/* Events List */}
-          <div className="lg:col-span-3">
+          <div className="flex-1 lg:col-span-3">
             {loading ? (
               // Loading skeletons
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

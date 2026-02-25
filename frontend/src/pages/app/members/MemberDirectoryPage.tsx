@@ -148,7 +148,7 @@ export function MemberDirectoryPage() {
   };
 
   const content = (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
+    <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
@@ -239,7 +239,7 @@ export function MemberDirectoryPage() {
 
       {/* Members Grid */}
       {!loading && members.length > 0 && (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid flex-1 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <Card
               key={member.id}

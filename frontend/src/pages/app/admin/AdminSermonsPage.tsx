@@ -180,7 +180,7 @@ export function AdminSermonsPage() {
         { label: 'Sermons' },
       ]}
     >
-      <div className="mx-auto max-w-6xl space-y-6 p-6">
+      <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -218,24 +218,24 @@ export function AdminSermonsPage() {
 
         {/* Loading */}
         {loading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
           /* Sermons Table */
           <Card>
-            <CardContent className="min-h-[400px] p-0">
+            <CardContent className="min-h-[480px] p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
-                      <th className="px-4 py-3 text-left font-medium">Title</th>
-                      <th className="px-4 py-3 text-left font-medium">Speaker</th>
-                      <th className="px-4 py-3 text-left font-medium">Date</th>
-                      <th className="px-4 py-3 text-left font-medium">Series</th>
-                      <th className="px-4 py-3 text-center font-medium">Media</th>
-                      <th className="px-4 py-3 text-center font-medium">Views</th>
-                      <th className="px-4 py-3 text-right font-medium">Actions</th>
+                      <th className="w-[22%] px-4 py-3 text-left font-medium">Title</th>
+                      <th className="w-[16%] px-4 py-3 text-left font-medium">Speaker</th>
+                      <th className="w-[12%] px-4 py-3 text-left font-medium">Date</th>
+                      <th className="w-[16%] px-4 py-3 text-left font-medium">Series</th>
+                      <th className="w-[10%] px-4 py-3 text-center font-medium">Media</th>
+                      <th className="w-[10%] px-4 py-3 text-center font-medium">Views</th>
+                      <th className="w-[14%] px-4 py-3 text-right font-medium">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -296,7 +296,9 @@ export function AdminSermonsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">Title (EN) *</label>
+                  <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">
+                    Title (EN) *
+                  </label>
                   <input
                     id="sermon-title-en"
                     required
@@ -306,7 +308,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">Title (TH)</label>
+                  <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">
+                    Title (TH)
+                  </label>
                   <input
                     id="sermon-title-th"
                     value={formData.titleThai}
@@ -315,7 +319,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">Speaker (EN) *</label>
+                  <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">
+                    Speaker (EN) *
+                  </label>
                   <input
                     id="sermon-speaker-en"
                     required
@@ -325,7 +331,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">Speaker (TH)</label>
+                  <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">
+                    Speaker (TH)
+                  </label>
                   <input
                     id="sermon-speaker-th"
                     value={formData.speakerThai}
@@ -334,7 +342,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">Date *</label>
+                  <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">
+                    Date *
+                  </label>
                   <input
                     id="sermon-date"
                     type="date"
@@ -345,7 +355,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">Duration</label>
+                  <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">
+                    Duration
+                  </label>
                   <input
                     id="sermon-duration"
                     placeholder="e.g. 45:00"
@@ -355,7 +367,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">Series (EN)</label>
+                  <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">
+                    Series (EN)
+                  </label>
                   <input
                     id="sermon-series-en"
                     value={formData.series}
@@ -364,7 +378,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">Series (TH)</label>
+                  <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">
+                    Series (TH)
+                  </label>
                   <input
                     id="sermon-series-th"
                     value={formData.seriesThai}
@@ -373,7 +389,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">Scripture</label>
+                  <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">
+                    Scripture
+                  </label>
                   <input
                     id="sermon-scripture"
                     placeholder="e.g. John 3:16"
@@ -383,7 +401,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">YouTube URL</label>
+                  <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">
+                    YouTube URL
+                  </label>
                   <input
                     id="sermon-youtube-url"
                     placeholder="https://www.youtube.com/watch?v=..."
@@ -393,7 +413,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">Audio URL</label>
+                  <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">
+                    Audio URL
+                  </label>
                   <input
                     id="sermon-audio-url"
                     value={formData.audioUrl}
@@ -402,7 +424,9 @@ export function AdminSermonsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-thumbnail-url" className="mb-1 block text-sm font-medium">Thumbnail URL</label>
+                  <label htmlFor="sermon-thumbnail-url" className="mb-1 block text-sm font-medium">
+                    Thumbnail URL
+                  </label>
                   <input
                     id="sermon-thumbnail-url"
                     value={formData.thumbnailUrl}
@@ -412,7 +436,9 @@ export function AdminSermonsPage() {
                 </div>
               </div>
               <div>
-                <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">Description (EN)</label>
+                <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">
+                  Description (EN)
+                </label>
                 <textarea
                   id="sermon-description-en"
                   rows={3}
@@ -422,7 +448,9 @@ export function AdminSermonsPage() {
                 />
               </div>
               <div>
-                <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">Description (TH)</label>
+                <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">
+                  Description (TH)
+                </label>
                 <textarea
                   id="sermon-description-th"
                   rows={3}

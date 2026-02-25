@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import { SidebarLayout } from '@/components/layout';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
 
@@ -107,7 +108,7 @@ export function AdminPrayerPage() {
         { label: 'Prayer' },
       ]}
     >
-      <div className="mx-auto max-w-6xl space-y-6 p-6">
+      <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold">Moderate Prayer Requests</h1>
@@ -140,25 +141,25 @@ export function AdminPrayerPage() {
               </Button>
             ))}
           </div>
-          <div className="relative max-w-xs">
+          <div className="relative w-full max-w-xs">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
+            <Input
               type="search"
               placeholder="Search requests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border py-2 pl-9 pr-4 text-sm"
+              className="pl-9"
             />
           </div>
         </div>
 
         {/* Requests List */}
         {loading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="flex-1 space-y-4">
             {filteredRequests.map((prayer) => (
               <Card key={prayer.id}>
                 <CardContent className="p-5">

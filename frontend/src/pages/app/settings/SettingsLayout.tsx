@@ -31,7 +31,7 @@ export default function SettingsLayout() {
 
   return (
     <SidebarLayout breadcrumbs={breadcrumbs}>
-      <div className="mx-auto max-w-3xl space-y-6 p-6">
+      <div className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6 sm:px-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
@@ -42,9 +42,9 @@ export default function SettingsLayout() {
 
         {/* Tabs navigation */}
         <Tabs value={activeTab} onValueChange={(value) => navigate(`/app/settings/${value}`)}>
-          <TabsList className="w-full justify-start">
+          <TabsList className="w-full">
             {SETTINGS_TABS.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value} className="gap-2">
+              <TabsTrigger key={tab.value} value={tab.value} className="flex-1 gap-2">
                 <tab.icon className="h-4 w-4" />
                 {tab.label}
               </TabsTrigger>
@@ -52,8 +52,8 @@ export default function SettingsLayout() {
           </TabsList>
         </Tabs>
 
-        {/* Tab content (rendered by React Router) */}
-        <div>
+        {/* Tab content (rendered by React Router) — stable height avoids layout shifts */}
+        <div className="min-h-[520px]">
           <Outlet />
         </div>
       </div>

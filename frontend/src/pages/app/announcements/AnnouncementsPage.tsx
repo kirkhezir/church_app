@@ -58,11 +58,11 @@ export function AnnouncementsPage() {
   };
 
   const announcementContent = (
-    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-4xl sm:px-6 sm:py-8">
+    <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
-          <h1 className="mb-2 text-2xl font-bold sm:text-3xl text-balance">Church Announcements</h1>
+          <h1 className="mb-2 text-balance text-2xl font-bold sm:text-3xl">Church Announcements</h1>
           <p className="text-sm text-muted-foreground sm:text-base">
             Stay updated with the latest news and information
           </p>
@@ -120,7 +120,7 @@ export function AnnouncementsPage() {
 
       {/* Announcements List */}
       {!loading && !error && (
-        <>
+        <div className="flex-1">
           {!announcements || announcements.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border bg-background p-8 text-center sm:p-12">
               <BellIcon className="mx-auto mb-3 h-10 w-10 text-muted-foreground sm:mb-4 sm:h-12 sm:w-12" />
@@ -165,7 +165,7 @@ export function AnnouncementsPage() {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

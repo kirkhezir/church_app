@@ -248,7 +248,7 @@ export function AdminAnnouncementsPage() {
   };
 
   const adminContent = (
-    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-6xl sm:px-6 sm:py-8">
+    <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1">
@@ -351,8 +351,8 @@ export function AdminAnnouncementsPage() {
             <>
               {/* Desktop Table View */}
               <div className="hidden md:block">
-                <div className="overflow-x-auto rounded-lg border bg-card shadow">
-                  <table className="min-w-full divide-y divide-gray-200">
+                <div className="min-h-[480px] overflow-x-auto rounded-lg border bg-card shadow">
+                  <table className="min-w-full table-fixed divide-y divide-gray-200">
                     <thead className="bg-background">
                       <tr>
                         <th className="w-12 px-4 py-3">

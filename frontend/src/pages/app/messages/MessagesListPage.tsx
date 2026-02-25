@@ -88,7 +88,7 @@ export function MessagesListPage() {
   };
 
   const content = (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
@@ -112,8 +112,12 @@ export function MessagesListPage() {
       )}
 
       {/* Tabs for Inbox/Sent */}
-      <Tabs value={activeFolder} onValueChange={handleFolderChange} className="w-full">
-        <TabsList className="mb-4">
+      <Tabs
+        value={activeFolder}
+        onValueChange={handleFolderChange}
+        className="flex flex-1 flex-col"
+      >
+        <TabsList className="mb-4 w-fit">
           <TabsTrigger value="inbox" className="flex items-center gap-2">
             <Inbox className="h-4 w-4" />
             Inbox
@@ -124,7 +128,7 @@ export function MessagesListPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeFolder}>
+        <TabsContent value={activeFolder} className="flex-1">
           {/* Loading State */}
           {loading && (
             <Card>
@@ -204,6 +208,7 @@ export function MessagesListPage() {
                         <Button
                           variant="ghost"
                           size="icon"
+                          aria-label="Delete message"
                           className="h-8 w-8 text-muted-foreground hover:text-destructive"
                           onClick={(e) => handleDelete(message.id, e)}
                           disabled={deleteLoading}
