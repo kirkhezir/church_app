@@ -43,8 +43,10 @@ interface MessageListResponse {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface MessageDetailResponse extends Message {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SendMessageResponse extends Message {}
 
 interface MarkAsReadResponse {

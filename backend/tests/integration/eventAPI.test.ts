@@ -17,9 +17,7 @@ const passwordService = new PasswordService();
 const jwtService = new JWTService();
 
 describe('Event API Integration Tests', () => {
-  let adminId: string;
   let adminToken: string;
-  let memberId: string;
   let memberToken: string;
 
   /**
@@ -53,11 +51,9 @@ describe('Event API Integration Tests', () => {
 
     // Seed an admin and a regular member
     const admin = await seedMember('ADMIN');
-    adminId = admin.id;
     adminToken = admin.token;
 
     const member = await seedMember('MEMBER');
-    memberId = member.id;
     memberToken = member.token;
   });
 

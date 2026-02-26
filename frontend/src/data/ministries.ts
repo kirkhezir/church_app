@@ -163,7 +163,6 @@ export const ministries: Ministry[] = [
 
 // --- Ministry Detail Data (for MinistryDetailPage) ---
 
-
 export interface MinistryDetail {
   name: string;
   nameThai: string;
@@ -275,7 +274,8 @@ export const ministriesData: Record<string, MinistryDetail> = {
   children: {
     name: "Children's Ministry",
     nameThai: 'แผนกเด็ก',
-    description: "Teaching children about God's love through creative storytelling, crafts, and activities.",
+    description:
+      "Teaching children about God's love through creative storytelling, crafts, and activities.",
     descriptionThai:
       'สอนเด็กๆ เกี่ยวกับความรักของพระเจ้าผ่านการเล่าเรื่องอย่างสร้างสรรค์ งานฝีมือ และกิจกรรม',
     fullDescription:
@@ -321,7 +321,7 @@ export const ministriesData: Record<string, MinistryDetail> = {
       },
     ],
     howToJoin: [
-      "Bring your children to our Saturday morning program — all ages welcome!",
+      'Bring your children to our Saturday morning program — all ages welcome!',
       'Speak with Sister Malee to learn about volunteer opportunities.',
       'Register for Vacation Bible School when enrollment opens.',
       'Join our parent communication group for updates.',

@@ -121,7 +121,6 @@ export class SermonController {
         speaker: req.body.speaker,
         speakerThai: req.body.speakerThai,
         series: req.body.series,
-        seriesThai: req.body.seriesThai,
         scripture: req.body.scripture,
         date: new Date(req.body.date),
         youtubeUrl: req.body.youtubeUrl,
@@ -148,8 +147,7 @@ export class SermonController {
   async updateSermon(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const useCase = new UpdateSermon(this.sermonRepository);
-      const result = await useCase.execute({
-        id: req.params.id,
+      const result = await useCase.execute(req.params.id, {
         ...req.body,
         date: req.body.date ? new Date(req.body.date) : undefined,
       });

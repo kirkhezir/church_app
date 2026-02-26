@@ -151,7 +151,10 @@ export function PrayerPage() {
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
-                        <label htmlFor="prayer-name" className="mb-1 block text-sm font-medium text-foreground/80">
+                        <label
+                          htmlFor="prayer-name"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
                           {language === 'th' ? 'ชื่อของคุณ (ไม่จำเป็น)' : 'Your Name (optional)'}
                         </label>
                         <input
@@ -166,7 +169,10 @@ export function PrayerPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="prayer-email" className="mb-1 block text-sm font-medium text-foreground/80">
+                        <label
+                          htmlFor="prayer-email"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
                           {language === 'th' ? 'อีเมล (ไม่จำเป็น)' : 'Email (optional)'}
                         </label>
                         <input
@@ -181,7 +187,10 @@ export function PrayerPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="prayer-category" className="mb-1 block text-sm font-medium text-foreground/80">
+                        <label
+                          htmlFor="prayer-category"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
                           {language === 'th' ? 'หมวดหมู่' : 'Category'} *
                         </label>
                         <select
@@ -203,7 +212,10 @@ export function PrayerPage() {
                         </select>
                       </div>
                       <div>
-                        <label htmlFor="prayer-request" className="mb-1 block text-sm font-medium text-foreground/80">
+                        <label
+                          htmlFor="prayer-request"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
                           {language === 'th' ? 'คำอธิษฐานของคุณ' : 'Your Prayer Request'} *
                         </label>
                         <textarea

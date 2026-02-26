@@ -13,10 +13,10 @@ export class MemberFactory {
   /**
    * Create a member in the database
    */
-  static async create(overrides?: Partial<Prisma.MemberCreateInput>): Promise<any> {
+  static async create(overrides?: Partial<Prisma.membersCreateInput>): Promise<any> {
     const counter = ++MemberFactory.counter;
 
-    const defaultData: Prisma.MemberCreateInput = {
+    const defaultData: Prisma.membersCreateInput = {
       id: randomUUID(),
       email: `member${counter}@test.com`,
       passwordHash: await bcrypt.hash('Test123!', 10),
@@ -45,7 +45,7 @@ export class MemberFactory {
    */
   static async createMany(
     count: number,
-    overrides?: Partial<Prisma.MemberCreateInput>
+    overrides?: Partial<Prisma.membersCreateInput>
   ): Promise<any[]> {
     const members = [];
     for (let i = 0; i < count; i++) {
@@ -57,7 +57,7 @@ export class MemberFactory {
   /**
    * Create admin member
    */
-  static async createAdmin(overrides?: Partial<Prisma.MemberCreateInput>): Promise<any> {
+  static async createAdmin(overrides?: Partial<Prisma.membersCreateInput>): Promise<any> {
     return await this.create({
       ...overrides,
       role: Role.ADMIN,
@@ -68,7 +68,7 @@ export class MemberFactory {
   /**
    * Create staff member
    */
-  static async createStaff(overrides?: Partial<Prisma.MemberCreateInput>): Promise<any> {
+  static async createStaff(overrides?: Partial<Prisma.membersCreateInput>): Promise<any> {
     return await this.create({
       ...overrides,
       role: Role.STAFF,
@@ -79,10 +79,10 @@ export class MemberFactory {
   /**
    * Build member data without saving to database
    */
-  static build(overrides?: Partial<Prisma.MemberCreateInput>): Prisma.MemberCreateInput {
+  static build(overrides?: Partial<Prisma.membersCreateInput>): Prisma.membersCreateInput {
     const counter = ++MemberFactory.counter;
 
-    const defaultData: Prisma.MemberCreateInput = {
+    const defaultData: Prisma.membersCreateInput = {
       id: randomUUID(),
       email: `member${counter}@test.com`,
       passwordHash: '$2b$10$hashedpassword',
@@ -125,7 +125,7 @@ export class EventFactory {
    */
   static async create(
     creatorId: string,
-    overrides?: Partial<Prisma.EventCreateInput>
+    overrides?: Partial<Prisma.eventsCreateInput>
   ): Promise<any> {
     const counter = ++EventFactory.counter;
 
@@ -135,7 +135,7 @@ export class EventFactory {
     const endDateTime = new Date(startDateTime);
     endDateTime.setHours(endDateTime.getHours() + 2);
 
-    const defaultData: Prisma.EventCreateInput = {
+    const defaultData: Prisma.eventsCreateInput = {
       id: randomUUID(),
       title: `Test Event ${counter}`,
       description: `Description for test event ${counter}`,
@@ -145,15 +145,15 @@ export class EventFactory {
       location: `Test Location ${counter}`,
       maxCapacity: 50,
       updatedAt: new Date(),
-      creator: { connect: { id: creatorId } },
+      members: { connect: { id: creatorId } },
     };
 
     const data = { ...defaultData, ...overrides };
     return await testPrisma.events.create({
       data,
       include: {
-        creator: true,
-        rsvps: true,
+        members: true,
+        event_rsvps: true,
       },
     });
   }
@@ -164,7 +164,7 @@ export class EventFactory {
   static async createMany(
     creatorId: string,
     count: number,
-    overrides?: Partial<Prisma.EventCreateInput>
+    overrides?: Partial<Prisma.eventsCreateInput>
   ): Promise<any[]> {
     const events = [];
     for (let i = 0; i < count; i++) {
@@ -178,7 +178,7 @@ export class EventFactory {
    */
   static async createWorship(
     creatorId: string,
-    overrides?: Partial<Prisma.EventCreateInput>
+    overrides?: Partial<Prisma.eventsCreateInput>
   ): Promise<any> {
     return await this.create(creatorId, {
       ...overrides,
@@ -192,7 +192,7 @@ export class EventFactory {
    */
   static async createBibleStudy(
     creatorId: string,
-    overrides?: Partial<Prisma.EventCreateInput>
+    overrides?: Partial<Prisma.eventsCreateInput>
   ): Promise<any> {
     return await this.create(creatorId, {
       ...overrides,
@@ -206,8 +206,8 @@ export class EventFactory {
    */
   static build(
     creatorId: string,
-    overrides?: Partial<Prisma.EventCreateInput>
-  ): Prisma.EventCreateInput {
+    overrides?: Partial<Prisma.eventsCreateInput>
+  ): Prisma.eventsCreateInput {
     const counter = ++EventFactory.counter;
 
     const startDateTime = new Date();
@@ -216,7 +216,7 @@ export class EventFactory {
     const endDateTime = new Date(startDateTime);
     endDateTime.setHours(endDateTime.getHours() + 2);
 
-    const defaultData: Prisma.EventCreateInput = {
+    const defaultData: Prisma.eventsCreateInput = {
       id: randomUUID(),
       title: `Test Event ${counter}`,
       description: `Description for test event ${counter}`,
@@ -226,7 +226,7 @@ export class EventFactory {
       location: `Test Location ${counter}`,
       maxCapacity: 50,
       updatedAt: new Date(),
-      creator: { connect: { id: creatorId } },
+      members: { connect: { id: creatorId } },
     };
 
     return { ...defaultData, ...overrides };
@@ -252,26 +252,26 @@ export class AnnouncementFactory {
    */
   static async create(
     authorId: string,
-    overrides?: Partial<Prisma.AnnouncementCreateInput>
+    overrides?: Partial<Prisma.announcementsCreateInput>
   ): Promise<any> {
     const counter = ++AnnouncementFactory.counter;
 
-    const defaultData: Prisma.AnnouncementCreateInput = {
+    const defaultData: Prisma.announcementsCreateInput = {
       id: randomUUID(),
       title: `Test Announcement ${counter}`,
       content: `Content for test announcement ${counter}`,
       priority: Priority.NORMAL,
       publishedAt: new Date(),
       updatedAt: new Date(),
-      author: { connect: { id: authorId } },
+      members: { connect: { id: authorId } },
     };
 
     const data = { ...defaultData, ...overrides };
     return await testPrisma.announcements.create({
       data,
       include: {
-        author: true,
-        views: true,
+        members: true,
+        member_announcement_views: true,
       },
     });
   }
@@ -282,7 +282,7 @@ export class AnnouncementFactory {
   static async createMany(
     authorId: string,
     count: number,
-    overrides?: Partial<Prisma.AnnouncementCreateInput>
+    overrides?: Partial<Prisma.announcementsCreateInput>
   ): Promise<any[]> {
     const announcements = [];
     for (let i = 0; i < count; i++) {
@@ -296,7 +296,7 @@ export class AnnouncementFactory {
    */
   static async createUrgent(
     authorId: string,
-    overrides?: Partial<Prisma.AnnouncementCreateInput>
+    overrides?: Partial<Prisma.announcementsCreateInput>
   ): Promise<any> {
     return await this.create(authorId, {
       ...overrides,
@@ -310,7 +310,7 @@ export class AnnouncementFactory {
    */
   static async createArchived(
     authorId: string,
-    overrides?: Partial<Prisma.AnnouncementCreateInput>
+    overrides?: Partial<Prisma.announcementsCreateInput>
   ): Promise<any> {
     return await this.create(authorId, {
       ...overrides,
@@ -323,18 +323,18 @@ export class AnnouncementFactory {
    */
   static build(
     authorId: string,
-    overrides?: Partial<Prisma.AnnouncementCreateInput>
-  ): Prisma.AnnouncementCreateInput {
+    overrides?: Partial<Prisma.announcementsCreateInput>
+  ): Prisma.announcementsCreateInput {
     const counter = ++AnnouncementFactory.counter;
 
-    const defaultData: Prisma.AnnouncementCreateInput = {
+    const defaultData: Prisma.announcementsCreateInput = {
       id: randomUUID(),
       title: `Test Announcement ${counter}`,
       content: `Content for test announcement ${counter}`,
       priority: Priority.NORMAL,
       publishedAt: new Date(),
       updatedAt: new Date(),
-      author: { connect: { id: authorId } },
+      members: { connect: { id: authorId } },
     };
 
     return { ...defaultData, ...overrides };
@@ -359,22 +359,22 @@ export class EventRSVPFactory {
   static async create(
     eventId: string,
     memberId: string,
-    overrides?: Partial<Prisma.EventRSVPCreateInput>
+    overrides?: Partial<Prisma.event_rsvpsCreateInput>
   ): Promise<any> {
-    const defaultData: Prisma.EventRSVPCreateInput = {
+    const defaultData: Prisma.event_rsvpsCreateInput = {
       id: randomUUID(),
       status: RSVPStatus.CONFIRMED,
       updatedAt: new Date(),
-      event: { connect: { id: eventId } },
-      member: { connect: { id: memberId } },
+      events: { connect: { id: eventId } },
+      members: { connect: { id: memberId } },
     };
 
     const data = { ...defaultData, ...overrides };
     return await testPrisma.event_rsvps.create({
       data,
       include: {
-        event: true,
-        member: true,
+        events: true,
+        members: true,
       },
     });
   }

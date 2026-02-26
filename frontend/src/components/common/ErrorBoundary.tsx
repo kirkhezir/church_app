@@ -140,14 +140,16 @@ export class PageErrorBoundary extends Component<
             </div>
             {this.state.isChunkError ? (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-foreground text-balance">Page Update Available</h1>
+                <h1 className="mb-2 text-balance text-2xl font-bold text-foreground">
+                  Page Update Available
+                </h1>
                 <p className="mb-6 text-muted-foreground">
                   A new version of the app is available. Please reload to get the latest updates.
                 </p>
               </>
             ) : (
               <>
-                <h1 className="mb-2 text-2xl font-bold text-foreground text-balance">
+                <h1 className="mb-2 text-balance text-2xl font-bold text-foreground">
                   Oops! Something went wrong
                 </h1>
                 <p className="mb-6 text-muted-foreground">

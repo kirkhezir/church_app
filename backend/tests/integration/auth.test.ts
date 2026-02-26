@@ -12,14 +12,11 @@
 import { randomUUID } from 'crypto';
 import { testPrisma, request, cleanDatabase } from './setup';
 import { PasswordService } from '../../src/infrastructure/auth/passwordService';
-import { JWTService } from '../../src/infrastructure/auth/jwtService';
 
 const passwordService = new PasswordService();
-const jwtService = new JWTService();
 
 describe('Auth API Integration Tests', () => {
   const testPassword = 'TestPass123!';
-  let testMemberId: string;
 
   beforeAll(async () => {
     await cleanDatabase();
@@ -69,7 +66,6 @@ describe('Auth API Integration Tests', () => {
 
     beforeAll(async () => {
       const member = await createMemberInDB({ email: 'login-test@example.com' });
-      testMemberId = member.id;
       memberEmail = member.email;
     });
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 import { PasswordService } from '../src/infrastructure/auth/passwordService';
 
 const prisma = new PrismaClient();
@@ -8,7 +9,7 @@ async function seedTestMembers() {
   console.log('🌱 Seeding test members...');
 
   // Clean up existing test members
-  await prisma.member.deleteMany({
+  await prisma.members.deleteMany({
     where: {
       email: {
         in: ['event-admin@example.com', 'event-member@example.com'],
@@ -18,8 +19,9 @@ async function seedTestMembers() {
 
   // Create admin member
   const adminPassword = await passwordService.hash('AdminPass123!');
-  const admin = await prisma.member.create({
+  const admin = await prisma.members.create({
     data: {
+      id: crypto.randomUUID(),
       email: 'event-admin@example.com',
       passwordHash: adminPassword,
       firstName: 'Event',
@@ -27,6 +29,7 @@ async function seedTestMembers() {
       role: 'ADMIN',
       phone: '+1234567890',
       membershipDate: new Date(),
+      updatedAt: new Date(),
       privacySettings: { showPhone: true, showEmail: true, showAddress: true },
       failedLoginAttempts: 0,
     },
@@ -34,8 +37,9 @@ async function seedTestMembers() {
 
   // Create regular member
   const memberPassword = await passwordService.hash('MemberPass123!');
-  const member = await prisma.member.create({
+  const member = await prisma.members.create({
     data: {
+      id: crypto.randomUUID(),
       email: 'event-member@example.com',
       passwordHash: memberPassword,
       firstName: 'Event',
@@ -43,6 +47,7 @@ async function seedTestMembers() {
       role: 'MEMBER',
       phone: '+1234567891',
       membershipDate: new Date(),
+      updatedAt: new Date(),
       privacySettings: { showPhone: true, showEmail: true, showAddress: true },
       failedLoginAttempts: 0,
     },

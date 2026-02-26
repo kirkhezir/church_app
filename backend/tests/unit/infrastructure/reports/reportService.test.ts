@@ -71,8 +71,6 @@ describe('ReportService', () => {
 
   describe('generateEventsReport', () => {
     it('should accept date range parameters', async () => {
-      const startDate = new Date('2024-01-01');
-      const endDate = new Date('2024-12-31');
 
       expect(service.generateEventsReport).toBeDefined();
       // Method signature verification

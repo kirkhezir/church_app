@@ -176,7 +176,9 @@ export default function AdminCreateMemberPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label htmlFor="member-first-name" className="text-sm font-medium">First Name *</label>
+                  <label htmlFor="member-first-name" className="text-sm font-medium">
+                    First Name *
+                  </label>
                   <Input
                     id="member-first-name"
                     name="firstName"
@@ -186,7 +188,9 @@ export default function AdminCreateMemberPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="member-last-name" className="text-sm font-medium">Last Name *</label>
+                  <label htmlFor="member-last-name" className="text-sm font-medium">
+                    Last Name *
+                  </label>
                   <Input
                     id="member-last-name"
                     name="lastName"
@@ -198,7 +202,9 @@ export default function AdminCreateMemberPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="member-email" className="text-sm font-medium">Email *</label>
+                <label htmlFor="member-email" className="text-sm font-medium">
+                  Email *
+                </label>
                 <Input
                   id="member-email"
                   type="email"
@@ -212,7 +218,9 @@ export default function AdminCreateMemberPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="member-role" className="text-sm font-medium">Role *</label>
+                <label htmlFor="member-role" className="text-sm font-medium">
+                  Role *
+                </label>
                 <Select
                   value={formData.role}
                   onValueChange={(value: 'MEMBER' | 'STAFF' | 'ADMIN') =>
@@ -231,7 +239,9 @@ export default function AdminCreateMemberPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="member-phone" className="text-sm font-medium">Phone (optional)</label>
+                <label htmlFor="member-phone" className="text-sm font-medium">
+                  Phone (optional)
+                </label>
                 <Input
                   id="member-phone"
                   type="tel"
@@ -243,8 +253,15 @@ export default function AdminCreateMemberPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="member-address" className="text-sm font-medium">Address (optional)</label>
-                <Input id="member-address" name="address" value={formData.address} onChange={handleChange} />
+                <label htmlFor="member-address" className="text-sm font-medium">
+                  Address (optional)
+                </label>
+                <Input
+                  id="member-address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
               </div>
             </CardContent>
 

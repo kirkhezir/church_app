@@ -202,7 +202,7 @@ export function measureWebVitals(onMetric: (metric: WebVitalsMetric) => void): v
         });
       });
       clsObserver.observe({ entryTypes: ['layout-shift'] });
-    } catch (e) {
+    } catch {
       console.warn('Performance Observer not supported');
     }
   }

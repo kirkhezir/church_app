@@ -89,7 +89,7 @@ export class BlogController {
         excerptThai: req.body.excerptThai,
         category: req.body.category,
         tags: req.body.tags,
-        coverImageUrl: req.body.coverImageUrl,
+        thumbnailUrl: req.body.coverImageUrl || req.body.thumbnailUrl,
         author: req.body.author,
         categoryThai: req.body.categoryThai,
         featured: req.body.featured,
@@ -111,10 +111,7 @@ export class BlogController {
   async updateBlogPost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const useCase = new UpdateBlogPost(this.blogRepository);
-      const result = await useCase.execute({
-        id: req.params.id,
-        ...req.body,
-      });
+      const result = await useCase.execute(req.params.id, req.body);
 
       res.status(200).json({
         success: true,

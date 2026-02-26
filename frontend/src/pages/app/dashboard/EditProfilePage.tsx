@@ -202,7 +202,9 @@ export default function EditProfilePage() {
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     disabled={loading}
                   />
-                  <p className="text-xs text-muted-foreground">Use E.164 format (e.g., +66812345678)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Use E.164 format (e.g., +66812345678)
+                  </p>
                 </div>
 
                 <div className="space-y-2">

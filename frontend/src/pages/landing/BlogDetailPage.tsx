@@ -229,7 +229,9 @@ export function BlogDetailPage() {
           </div>
 
           {/* Content */}
-          <div className="prose-like max-w-none"><BlogContent text={content} /></div>
+          <div className="prose-like max-w-none">
+            <BlogContent text={content} />
+          </div>
 
           {/* Tags / Category */}
           <div className="mt-8 flex items-center gap-2 border-t border-border pt-6 dark:border-border">
