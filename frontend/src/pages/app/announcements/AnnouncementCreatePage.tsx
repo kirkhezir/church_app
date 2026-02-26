@@ -13,15 +13,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { announcementService } from '@/services/endpoints/announcementService';
 import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
-import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export function AnnouncementCreatePage() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (data: {
     title: string;
@@ -30,11 +30,10 @@ export function AnnouncementCreatePage() {
     isDraft: boolean;
   }) => {
     setIsLoading(true);
-    setSuccess(false);
 
     try {
       await announcementService.createAnnouncement(data);
-      setSuccess(true);
+      toast({ title: 'Announcement created successfully!' });
 
       // Redirect to admin announcements page after short delay
       setTimeout(() => {
@@ -63,16 +62,6 @@ export function AnnouncementCreatePage() {
           Share important information with the church community
         </p>
       </div>
-
-      {/* Success Message */}
-      {success && (
-        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
-          <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-sm text-green-800 sm:text-base">
-            Announcement created successfully! Redirecting...
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Form */}
       <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-6">

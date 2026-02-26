@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { getErrorMessage } from '@/lib/errorReporting';
 import {
   Card,
   CardHeader,
@@ -48,12 +49,12 @@ export default function MFAEnrollmentPage() {
       setQrCodeUrl(response.qrCodeUrl);
       setSecret(response.secret);
       setStep('scan');
-    } catch (err: any) {
-      if (err.message?.includes('already enabled')) {
+    } catch (err: unknown) {
+      if (getErrorMessage(err).includes('already enabled')) {
         setError('MFA is already enabled on your account.');
         setStep('scan');
       } else {
-        setError(err.message || 'Failed to initialize MFA enrollment');
+        setError(getErrorMessage(err, 'Failed to initialize MFA enrollment'));
       }
     } finally {
       setLoading(false);
@@ -73,8 +74,8 @@ export default function MFAEnrollmentPage() {
       const response = await mfaService.verify(verificationCode, secret);
       setBackupCodes(response.backupCodes);
       setStep('backup');
-    } catch (err: any) {
-      setError(err.message || 'Invalid verification code. Please try again.');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Invalid verification code. Please try again.'));
     } finally {
       setLoading(false);
     }

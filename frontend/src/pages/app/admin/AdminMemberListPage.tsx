@@ -216,7 +216,7 @@ export default function AdminMemberListPage() {
                         {member.mfaEnabled ? (
                           <Badge
                             variant="outline"
-                            className="border-green-200 bg-green-50 text-green-700"
+                            className="border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
                           >
                             Enabled
                           </Badge>

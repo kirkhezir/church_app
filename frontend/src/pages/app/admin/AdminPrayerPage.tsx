@@ -24,14 +24,15 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { SidebarLayout } from '@/components/layout';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
+import { useToast } from '@/hooks/use-toast';
 
 type StatusFilter = 'all' | 'PENDING' | 'APPROVED' | 'ARCHIVED';
 
 export function AdminPrayerPage() {
+  const { toast } = useToast();
   const [requests, setRequests] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -78,7 +79,7 @@ export function AdminPrayerPage() {
     setActionLoading(id);
     try {
       await prayerService.moderatePrayerRequest(id, status);
-      setSuccess(`Prayer request ${status.toLowerCase()}`);
+      toast({ title: `Prayer request ${status.toLowerCase()}` });
       await fetchRequests();
     } catch {
       setError('Failed to moderate prayer request');
@@ -89,9 +90,9 @@ export function AdminPrayerPage() {
 
   const statusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      PENDING: 'bg-yellow-100 text-yellow-800',
-      APPROVED: 'bg-green-100 text-green-800',
-      ARCHIVED: 'bg-gray-100 text-gray-600',
+      PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+      APPROVED: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      ARCHIVED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
     };
     return (
       <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles[status] ?? ''}`}>
@@ -120,12 +121,6 @@ export function AdminPrayerPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {success && (
-          <Alert>
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
         {/* Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">

@@ -132,8 +132,8 @@ export default function MemberDashboard() {
   if (error) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
-        <Alert className="border-red-200 bg-red-50">
-          <AlertDescription className="text-red-800">{error}</AlertDescription>
+        <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
+          <AlertDescription className="text-red-800 dark:text-red-300">{error}</AlertDescription>
         </Alert>
       </SidebarLayout>
     );

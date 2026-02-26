@@ -13,6 +13,7 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -56,11 +57,11 @@ export default function LoginPage() {
 
       // Redirect to dashboard after successful login
       navigate('/app/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Use generic message to prevent user enumeration
-      const message = err.message?.toLowerCase();
-      if (message?.includes('locked') || message?.includes('too many')) {
-        setError(err.message);
+      const message = getErrorMessage(err).toLowerCase();
+      if (message.includes('locked') || message.includes('too many')) {
+        setError(getErrorMessage(err));
       } else {
         setError('Invalid email or password. Please try again.');
       }

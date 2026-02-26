@@ -12,21 +12,23 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { announcementService } from '@/services/endpoints/announcementService';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { AnnouncementForm } from '@/components/features/announcements/AnnouncementForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarLayout } from '@/components/layout';
-import { ArrowLeftIcon, CheckCircleIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export function AnnouncementEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [announcement, setAnnouncement] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -36,8 +38,8 @@ export function AnnouncementEditPage() {
         const data = await announcementService.getAnnouncementById(id);
         setAnnouncement(data);
         setError(null);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load announcement');
+      } catch (err: unknown) {
+        setError(getErrorMessage(err, 'Failed to load announcement'));
       } finally {
         setIsLoading(false);
       }
@@ -55,11 +57,10 @@ export function AnnouncementEditPage() {
     if (!id) return;
 
     setIsSaving(true);
-    setSuccess(false);
 
     try {
       await announcementService.updateAnnouncement(id, data);
-      setSuccess(true);
+      toast({ title: 'Announcement updated successfully!' });
 
       // Redirect to admin announcements page after short delay
       setTimeout(() => {
@@ -136,16 +137,6 @@ export function AnnouncementEditPage() {
           Update announcement details
         </p>
       </div>
-
-      {/* Success Message */}
-      {success && (
-        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
-          <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-sm text-green-800 sm:text-base">
-            Announcement updated successfully! Redirecting...
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Form */}
       <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-6">

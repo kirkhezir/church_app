@@ -12,6 +12,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { MobileBottomNav } from '@/components/features/mobile/MobileBottomNav';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Sun, Moon } from 'lucide-react';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -23,6 +25,8 @@ interface SidebarLayoutProps {
  * Main layout with collapsible sidebar navigation and mobile bottom nav
  */
 export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcrumbs }) => {
+  const { resolvedTheme, setTheme } = useTheme();
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -50,6 +54,14 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
               </BreadcrumbList>
             </Breadcrumb>
           )}
+          {/* Theme toggle pushed to end */}
+          <button
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+            className="ml-auto rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 pb-20 md:pb-4">{children}</main>
 

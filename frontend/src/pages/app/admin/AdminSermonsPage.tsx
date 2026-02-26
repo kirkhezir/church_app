@@ -11,6 +11,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { PlusIcon, EditIcon, TrashIcon, Search, Loader2, Youtube, Eye, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
@@ -23,12 +24,13 @@ import {
 } from '@/components/ui/dialog';
 import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export function AdminSermonsPage() {
+  const { toast } = useToast();
   const [sermons, setSermons] = useState<Sermon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingSermon, setEditingSermon] = useState<Sermon | null>(null);
@@ -149,10 +151,10 @@ export function AdminSermonsPage() {
 
       if (editingSermon) {
         await sermonService.updateSermon(editingSermon.id, payload);
-        setSuccess('Sermon updated successfully');
+        toast({ title: 'Sermon updated successfully' });
       } else {
         await sermonService.createSermon(payload);
-        setSuccess('Sermon created successfully');
+        toast({ title: 'Sermon created successfully' });
       }
       setShowForm(false);
       resetForm();
@@ -168,7 +170,7 @@ export function AdminSermonsPage() {
     try {
       setDeleting(true);
       await sermonService.deleteSermon(id);
-      setSuccess('Sermon deleted');
+      toast({ title: 'Sermon deleted' });
       await fetchSermons();
     } catch {
       setError('Failed to delete sermon');
@@ -205,12 +207,6 @@ export function AdminSermonsPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {success && (
-          <Alert>
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
         {/* Search */}
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -231,7 +227,8 @@ export function AdminSermonsPage() {
           /* Sermons Table */
           <Card>
             <CardContent className="min-h-[480px] p-0">
-              <div className="overflow-x-auto">
+              {/* Desktop table */}
+              <div className="hidden overflow-x-auto md:block">
                 <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
@@ -299,6 +296,64 @@ export function AdminSermonsPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile cards */}
+              <div className="divide-y md:hidden">
+                {filteredSermons.map((sermon) => (
+                  <div key={sermon.id} className="flex items-start justify-between gap-3 p-4">
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <p className="font-medium leading-tight">{sermon.title}</p>
+                      <p className="text-sm text-muted-foreground">{sermon.speaker}</p>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span>
+                          {sermon.date ? new Date(sermon.date).toLocaleDateString() : '-'}
+                        </span>
+                        {sermon.series && (
+                          <>
+                            <span>·</span>
+                            <span>{sermon.series}</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        {sermon.youtubeUrl && <Youtube className="h-3.5 w-3.5 text-red-500" />}
+                        {sermon.audioUrl && <Music className="h-3.5 w-3.5 text-blue-500" />}
+                        <span className="flex items-center gap-0.5">
+                          <Eye className="h-3 w-3" /> {sermon.views}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEdit(sermon)}
+                        aria-label={`Edit ${sermon.title}`}
+                      >
+                        <EditIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive"
+                        onClick={() => setDeleteTarget(sermon.id)}
+                        aria-label={`Delete ${sermon.title}`}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {filteredSermons.length === 0 && (
+                  <div className="px-4 py-12 text-center">
+                    <Music className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
+                    <p className="text-muted-foreground">No sermons found</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">
+                      Try adjusting your search or add a new sermon.
+                    </p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
@@ -315,139 +370,127 @@ export function AdminSermonsPage() {
                   <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">
                     Title (EN) *
                   </label>
-                  <input
+                  <Input
                     id="sermon-title-en"
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">
                     Title (TH)
                   </label>
-                  <input
+                  <Input
                     id="sermon-title-th"
                     value={formData.titleThai}
                     onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">
                     Speaker (EN) *
                   </label>
-                  <input
+                  <Input
                     id="sermon-speaker-en"
                     required
                     value={formData.speaker}
                     onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">
                     Speaker (TH)
                   </label>
-                  <input
+                  <Input
                     id="sermon-speaker-th"
                     value={formData.speakerThai}
                     onChange={(e) => setFormData({ ...formData, speakerThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">
                     Date *
                   </label>
-                  <input
+                  <Input
                     id="sermon-date"
                     type="date"
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">
                     Duration
                   </label>
-                  <input
+                  <Input
                     id="sermon-duration"
                     placeholder="e.g. 45:00"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">
                     Series (EN)
                   </label>
-                  <input
+                  <Input
                     id="sermon-series-en"
                     value={formData.series}
                     onChange={(e) => setFormData({ ...formData, series: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">
                     Series (TH)
                   </label>
-                  <input
+                  <Input
                     id="sermon-series-th"
                     value={formData.seriesThai}
                     onChange={(e) => setFormData({ ...formData, seriesThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">
                     Scripture
                   </label>
-                  <input
+                  <Input
                     id="sermon-scripture"
                     placeholder="e.g. John 3:16"
                     value={formData.scripture}
                     onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">
                     YouTube URL
                   </label>
-                  <input
+                  <Input
                     id="sermon-youtube-url"
                     placeholder="https://www.youtube.com/watch?v=..."
                     value={formData.youtubeUrl}
                     onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">
                     Audio URL
                   </label>
-                  <input
+                  <Input
                     id="sermon-audio-url"
                     value={formData.audioUrl}
                     onChange={(e) => setFormData({ ...formData, audioUrl: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="sermon-thumbnail-url" className="mb-1 block text-sm font-medium">
                     Thumbnail URL
                   </label>
-                  <input
+                  <Input
                     id="sermon-thumbnail-url"
                     value={formData.thumbnailUrl}
                     onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -455,24 +498,22 @@ export function AdminSermonsPage() {
                 <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">
                   Description (EN)
                 </label>
-                <textarea
+                <Textarea
                   id="sermon-description-en"
                   rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <div>
                 <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">
                   Description (TH)
                 </label>
-                <textarea
+                <Textarea
                   id="sermon-description-th"
                   rows={3}
                   value={formData.descriptionThai}
                   onChange={(e) => setFormData({ ...formData, descriptionThai: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <DialogFooter>

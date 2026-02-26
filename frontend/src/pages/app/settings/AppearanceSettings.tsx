@@ -10,11 +10,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { useTheme, type Theme } from '@/contexts/ThemeContext';
+import { Sun, Moon, Monitor } from 'lucide-react';
 
 const COMPACT_KEY = 'settings:compactMode';
 const REDUCE_MOTION_KEY = 'settings:reduceMotion';
 
+const themeOptions: { value: Theme; label: string; icon: React.ReactNode }[] = [
+  { value: 'light', label: 'Light', icon: <Sun className="h-4 w-4" /> },
+  { value: 'dark', label: 'Dark', icon: <Moon className="h-4 w-4" /> },
+  { value: 'system', label: 'System', icon: <Monitor className="h-4 w-4" /> },
+];
+
 export default function AppearanceSettings() {
+  const { theme, setTheme } = useTheme();
   const [compactMode, setCompactMode] = useState(
     () => localStorage.getItem(COMPACT_KEY) === 'true'
   );
@@ -34,6 +43,32 @@ export default function AppearanceSettings() {
 
   return (
     <div className="space-y-6">
+      {/* Theme */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Theme</CardTitle>
+          <CardDescription>Choose your preferred color scheme</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-2">
+            {themeOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setTheme(opt.value)}
+                className={`flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-sm transition-colors ${
+                  theme === opt.value
+                    ? 'border-primary bg-primary/5 text-primary'
+                    : 'border-transparent bg-muted/50 text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                {opt.icon}
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Display Preferences */}
       <Card>
         <CardHeader>

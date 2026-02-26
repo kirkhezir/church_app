@@ -82,7 +82,7 @@ export function AnnouncementDetailPage() {
         {/* Priority Badge */}
         <div className="mb-3 sm:mb-4">
           {isUrgent ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800 sm:px-3 sm:text-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300 sm:px-3 sm:text-sm">
               <AlertCircleIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               Urgent Announcement
             </span>

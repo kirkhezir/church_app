@@ -18,6 +18,7 @@ import { Label } from '../../ui/label';
 import { Switch } from '../../ui/switch';
 import { Alert, AlertDescription } from '../../ui/alert';
 import { RadioGroup, RadioGroupItem } from '../../ui/radio-group';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { AlertCircleIcon, BellIcon, SaveIcon } from 'lucide-react';
 import { SimpleTextEditor } from '../../editor/SimpleTextEditor';
 
@@ -83,8 +84,8 @@ export function AnnouncementForm({
         priority,
         isDraft,
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to save announcement');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to save announcement'));
     }
   };
 

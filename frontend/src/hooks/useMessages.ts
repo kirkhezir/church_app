@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import messageService from '../services/endpoints/messageService';
 import { Message } from '../types/api';
+import { getErrorMessage } from '@/lib/errorReporting';
 
 interface UseMessagesOptions {
   folder?: 'inbox' | 'sent';
@@ -70,9 +71,8 @@ export function useMessages(options: UseMessagesOptions = {}): UseMessagesReturn
 
       setMessages(response.data);
       setPagination(response.pagination);
-    } catch (err: any) {
-      const errorMessage =
-        err?.message || (typeof err === 'string' ? err : 'Failed to fetch messages');
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err, 'Failed to fetch messages');
       setError(errorMessage);
       console.error('Error fetching messages:', err);
     } finally {
@@ -131,9 +131,8 @@ export function useMessageDetail(options: UseMessageDetailOptions): UseMessageDe
 
       const response = await messageService.getMessageById(messageId);
       setMessage(response);
-    } catch (err: any) {
-      const errorMessage =
-        err?.message || (typeof err === 'string' ? err : 'Failed to fetch message');
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err, 'Failed to fetch message');
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -175,8 +174,8 @@ export function useSendMessage(): UseSendMessageReturn {
 
         const response = await messageService.sendMessage(input);
         return response;
-      } catch (err: any) {
-        const errorMsg = err?.message || (typeof err === 'string' ? err : 'Failed to send message');
+      } catch (err: unknown) {
+        const errorMsg = getErrorMessage(err, 'Failed to send message');
         setError(errorMsg);
         throw err;
       } finally {
@@ -212,9 +211,8 @@ export function useDeleteMessage(): UseDeleteMessageReturn {
       setError(null);
 
       await messageService.deleteMessage(messageId);
-    } catch (err: any) {
-      const errorMessage =
-        err?.message || (typeof err === 'string' ? err : 'Failed to delete message');
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err, 'Failed to delete message');
       setError(errorMessage);
       throw err;
     } finally {
@@ -251,9 +249,8 @@ export function useUnreadCount(autoFetch: boolean = true): UseUnreadCountReturn 
 
       const count = await messageService.getUnreadCount();
       setUnreadCount(count);
-    } catch (err: any) {
-      const errorMessage =
-        err?.message || (typeof err === 'string' ? err : 'Failed to fetch unread count');
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err, 'Failed to fetch unread count');
       setError(errorMessage);
     } finally {
       setLoading(false);

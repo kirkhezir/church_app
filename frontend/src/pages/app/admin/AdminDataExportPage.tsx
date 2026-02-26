@@ -22,9 +22,12 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { adminService } from '@/services/endpoints/adminService';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { SidebarLayout } from '@/components/layout';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminDataExportPage() {
+  const { toast } = useToast();
   const [exportType, setExportType] = useState<'members' | 'events'>('members');
   const [format, setFormat] = useState<'json' | 'csv'>('csv');
   const [roleFilter, setRoleFilter] = useState('ALL');
@@ -33,11 +36,9 @@ export default function AdminDataExportPage() {
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const handleExport = async () => {
     setError('');
-    setSuccess('');
     setLoading(true);
 
     try {
@@ -60,7 +61,7 @@ export default function AdminDataExportPage() {
           });
           adminService.downloadFile(blob, `members_${dateStr}.json`);
         }
-        setSuccess('Member data exported successfully!');
+        toast({ title: 'Member data exported successfully!' });
       } else {
         const data = await adminService.exportEvents({
           format,
@@ -77,10 +78,10 @@ export default function AdminDataExportPage() {
           });
           adminService.downloadFile(blob, `events_${dateStr}.json`);
         }
-        setSuccess('Event data exported successfully!');
+        toast({ title: 'Event data exported successfully!' });
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to export data');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to export data'));
     } finally {
       setLoading(false);
     }
@@ -109,12 +110,6 @@ export default function AdminDataExportPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {success && (
-              <Alert className="border-green-500 bg-green-50">
-                <AlertDescription className="text-green-700">{success}</AlertDescription>
               </Alert>
             )}
 

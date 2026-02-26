@@ -35,9 +35,10 @@ const statusLabels = {
 };
 
 const statusColors = {
-  [RSVPStatus.CONFIRMED]: 'bg-green-100 text-green-800',
-  [RSVPStatus.WAITLISTED]: 'bg-yellow-100 text-yellow-800',
-  [RSVPStatus.CANCELLED]: 'bg-red-100 text-red-800',
+  [RSVPStatus.CONFIRMED]: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  [RSVPStatus.WAITLISTED]:
+    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  [RSVPStatus.CANCELLED]: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
 };
 
 export const RSVPListPage: React.FC = () => {

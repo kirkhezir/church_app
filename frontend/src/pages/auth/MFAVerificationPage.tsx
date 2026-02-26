@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { getErrorMessage } from '@/lib/errorReporting';
 import {
   Card,
   CardHeader,
@@ -78,8 +79,8 @@ export default function MFAVerificationPage() {
       // Complete the login process
       completeMFALogin(response);
       navigate('/app/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Invalid code. Please try again.');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Invalid code. Please try again.'));
     } finally {
       setLoading(false);
     }

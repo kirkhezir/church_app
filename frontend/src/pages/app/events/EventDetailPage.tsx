@@ -24,9 +24,11 @@ import { EventCategory } from '@/types/api';
 
 const categoryColors: Record<EventCategory, string> = {
   [EventCategory.WORSHIP]: 'bg-accent text-primary',
-  [EventCategory.BIBLE_STUDY]: 'bg-purple-100 text-purple-800',
-  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-800',
-  [EventCategory.FELLOWSHIP]: 'bg-orange-100 text-orange-800',
+  [EventCategory.BIBLE_STUDY]:
+    'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  [EventCategory.FELLOWSHIP]:
+    'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
 };
 
 const categoryLabels: Record<EventCategory, string> = {

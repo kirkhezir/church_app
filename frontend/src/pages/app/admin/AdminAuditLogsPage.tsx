@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { adminService, AuditLog } from '@/services/endpoints/adminService';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { SidebarLayout } from '@/components/layout';
 import { ClipboardList } from 'lucide-react';
 
@@ -56,8 +57,8 @@ export default function AdminAuditLogsPage() {
       });
       setLogs(response.data);
       setTotalPages(response.pagination.totalPages);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load audit logs');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to load audit logs'));
     } finally {
       setLoading(false);
     }
@@ -75,11 +76,11 @@ export default function AdminAuditLogsPage() {
   const getActionBadgeClass = (action: string) => {
     switch (action) {
       case 'CREATE':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
       case 'UPDATE':
         return 'bg-accent text-primary';
       case 'DELETE':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
       default:
         return 'bg-muted text-foreground';
     }
@@ -165,62 +166,90 @@ export default function AdminAuditLogsPage() {
                 <p className="mt-1 text-xs opacity-70">Try adjusting your filters or date range.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        Timestamp
-                      </th>
-                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        User
-                      </th>
-                      <th className="w-[12%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        Action
-                      </th>
-                      <th className="w-[14%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        Type
-                      </th>
-                      <th className="w-[20%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        Entity ID
-                      </th>
-                      <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                        IP Address
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {logs.map((log) => (
-                      <tr key={log.id} className="border-b hover:bg-background">
-                        <td className="px-4 py-3 text-sm">{formatDateTime(log.timestamp)}</td>
-                        <td className="px-4 py-3">
-                          {log.user ? (
-                            <span>
-                              {log.user.firstName} {log.user.lastName}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">System</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`rounded px-2 py-1 text-xs font-medium ${getActionBadgeClass(
-                              log.action
-                            )}`}
-                          >
-                            {log.action}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">{log.entityType}</td>
-                        <td className="px-4 py-3 font-mono text-sm">
-                          {log.entityId.substring(0, 8)}\u2026
-                        </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{log.ipAddress}</td>
+              <>
+                {/* Desktop table */}
+                <div className="hidden overflow-x-auto md:block">
+                  <table className="w-full table-fixed">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Timestamp
+                        </th>
+                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          User
+                        </th>
+                        <th className="w-[12%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Action
+                        </th>
+                        <th className="w-[14%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Type
+                        </th>
+                        <th className="w-[20%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          Entity ID
+                        </th>
+                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                          IP Address
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {logs.map((log) => (
+                        <tr key={log.id} className="border-b hover:bg-background">
+                          <td className="px-4 py-3 text-sm">{formatDateTime(log.timestamp)}</td>
+                          <td className="px-4 py-3">
+                            {log.user ? (
+                              <span>
+                                {log.user.firstName} {log.user.lastName}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">System</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`rounded px-2 py-1 text-xs font-medium ${getActionBadgeClass(
+                                log.action
+                              )}`}
+                            >
+                              {log.action}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">{log.entityType}</td>
+                          <td className="px-4 py-3 font-mono text-sm">
+                            {log.entityId.substring(0, 8)}&hellip;
+                          </td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
+                            {log.ipAddress}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile cards */}
+                <div className="divide-y md:hidden">
+                  {logs.map((log) => (
+                    <div key={log.id} className="space-y-1.5 p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={`rounded px-2 py-0.5 text-xs font-medium ${getActionBadgeClass(log.action)}`}
+                        >
+                          {log.action}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{log.entityType}</span>
+                      </div>
+                      <p className="text-sm">
+                        {log.user ? `${log.user.firstName} ${log.user.lastName}` : 'System'}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{formatDateTime(log.timestamp)}</span>
+                        <span className="font-mono">{log.entityId.substring(0, 8)}&hellip;</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
 
             {/* Pagination */}

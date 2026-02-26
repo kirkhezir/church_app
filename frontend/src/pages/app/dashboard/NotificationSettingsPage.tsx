@@ -13,13 +13,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { apiClient } from '@/services/api/apiClient';
+import { getErrorMessage } from '@/lib/errorReporting';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NotificationSettingsPage() {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const [emailNotifications, setEmailNotifications] = useState(true);
 
@@ -33,8 +35,8 @@ export default function NotificationSettingsPage() {
         emailNotifications: boolean;
       };
       setEmailNotifications(response.emailNotifications);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load notification preferences');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to load notification preferences'));
     } finally {
       setFetchLoading(false);
     }
@@ -43,7 +45,6 @@ export default function NotificationSettingsPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
     setLoading(true);
 
     try {
@@ -52,16 +53,12 @@ export default function NotificationSettingsPage() {
       })) as { success: boolean; message: string };
 
       if (response.success) {
-        setSuccess(true);
+        toast({ title: 'Notification preferences updated successfully!' });
       } else {
         setError(response.message || 'Failed to update notification preferences');
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          'An error occurred. Please try again.'
-      );
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'An error occurred. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -92,14 +89,6 @@ export default function NotificationSettingsPage() {
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              {success && (
-                <Alert>
-                  <AlertDescription>
-                    Notification preferences updated successfully!
-                  </AlertDescription>
                 </Alert>
               )}
 

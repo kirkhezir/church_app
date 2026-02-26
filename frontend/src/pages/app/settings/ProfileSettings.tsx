@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { apiClient } from '@/services/api/apiClient';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProfileData {
   firstName: string;
@@ -30,10 +31,10 @@ interface ProfileData {
 }
 
 export default function ProfileSettings() {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState<ProfileData>({
     firstName: '',
@@ -69,7 +70,6 @@ export default function ProfileSettings() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
     setLoading(true);
 
     try {
@@ -82,7 +82,7 @@ export default function ProfileSettings() {
       })) as { success: boolean; message: string; profile: ProfileData };
 
       if (response.success) {
-        setSuccess(true);
+        toast({ title: 'Profile updated successfully!' });
         if (response.profile) {
           setFormData((prev) => ({
             ...prev,
@@ -139,12 +139,6 @@ export default function ProfileSettings() {
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {success && (
-          <Alert>
-            <AlertDescription>Profile updated successfully!</AlertDescription>
           </Alert>
         )}
 

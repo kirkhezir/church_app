@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { adminService, CreateMemberResponse } from '@/services/endpoints/adminService';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { SidebarLayout } from '@/components/layout';
 
 export default function AdminCreateMemberPage() {
@@ -67,8 +68,8 @@ export default function AdminCreateMemberPage() {
         address: formData.address || undefined,
       });
       setSuccess(response);
-    } catch (err: any) {
-      setError(err.message || 'Failed to create member');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to create member'));
     } finally {
       setLoading(false);
     }

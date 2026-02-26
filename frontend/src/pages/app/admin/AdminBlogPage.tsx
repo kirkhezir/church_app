@@ -11,6 +11,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { PlusIcon, EditIcon, TrashIcon, Search, Loader2, Star, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
@@ -23,12 +25,13 @@ import {
 } from '@/components/ui/dialog';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export function AdminBlogPage() {
+  const { toast } = useToast();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
@@ -141,10 +144,10 @@ export function AdminBlogPage() {
 
       if (editingPost) {
         await blogService.updateBlogPost(editingPost.id, payload);
-        setSuccess('Blog post updated');
+        toast({ title: 'Blog post updated' });
       } else {
         await blogService.createBlogPost(payload);
-        setSuccess('Blog post created');
+        toast({ title: 'Blog post created' });
       }
       setShowForm(false);
       resetForm();
@@ -160,7 +163,7 @@ export function AdminBlogPage() {
     try {
       setDeleting(true);
       await blogService.deleteBlogPost(id);
-      setSuccess('Blog post deleted');
+      toast({ title: 'Blog post deleted' });
       await fetchPosts();
     } catch {
       setError('Failed to delete blog post');
@@ -196,12 +199,6 @@ export function AdminBlogPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {success && (
-          <Alert>
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
         {/* Search */}
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -220,7 +217,8 @@ export function AdminBlogPage() {
         ) : (
           <Card>
             <CardContent className="min-h-[480px] p-0">
-              <div className="overflow-x-auto">
+              {/* Desktop table */}
+              <div className="hidden overflow-x-auto md:block">
                 <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
@@ -300,6 +298,57 @@ export function AdminBlogPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile cards */}
+              <div className="divide-y md:hidden">
+                {filteredPosts.map((post) => (
+                  <div key={post.id} className="flex items-start justify-between gap-3 p-4">
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium leading-tight">{post.title}</p>
+                        {post.featured && (
+                          <Star className="h-3.5 w-3.5 shrink-0 fill-yellow-400 text-yellow-400" />
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{post.author}</p>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span className="rounded-full bg-muted px-2 py-0.5">{post.category}</span>
+                        <span>
+                          {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEdit(post)}
+                        aria-label={`Edit ${post.title}`}
+                      >
+                        <EditIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive"
+                        onClick={() => setDeleteTarget(post.id)}
+                        aria-label={`Delete ${post.title}`}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {filteredPosts.length === 0 && (
+                  <div className="px-4 py-12 text-center">
+                    <ExternalLink className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
+                    <p className="text-muted-foreground">No blog posts found</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">
+                      Try adjusting your search or create a new post.
+                    </p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
@@ -316,70 +365,64 @@ export function AdminBlogPage() {
                   <label htmlFor="blog-title-en" className="mb-1 block text-sm font-medium">
                     Title (EN) *
                   </label>
-                  <input
+                  <Input
                     id="blog-title-en"
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="blog-title-th" className="mb-1 block text-sm font-medium">
                     Title (TH)
                   </label>
-                  <input
+                  <Input
                     id="blog-title-th"
                     value={formData.titleThai}
                     onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="blog-author" className="mb-1 block text-sm font-medium">
                     Author *
                   </label>
-                  <input
+                  <Input
                     id="blog-author"
                     required
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="blog-category" className="mb-1 block text-sm font-medium">
                     Category *
                   </label>
-                  <input
+                  <Input
                     id="blog-category"
                     required
                     placeholder="e.g. Announcement, Testimony"
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="blog-category-th" className="mb-1 block text-sm font-medium">
                     Category (TH)
                   </label>
-                  <input
+                  <Input
                     id="blog-category-th"
                     value={formData.categoryThai}
                     onChange={(e) => setFormData({ ...formData, categoryThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="blog-tags" className="mb-1 block text-sm font-medium">
                     Tags (comma-separated)
                   </label>
-                  <input
+                  <Input
                     id="blog-tags"
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                     placeholder="faith, worship, community"
                   />
                 </div>
@@ -387,20 +430,19 @@ export function AdminBlogPage() {
                   <label htmlFor="blog-thumbnail" className="mb-1 block text-sm font-medium">
                     Thumbnail URL
                   </label>
-                  <input
+                  <Input
                     id="blog-thumbnail"
                     value={formData.thumbnailUrl}
                     onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="flex items-end gap-2">
                   <label className="flex items-center gap-2 text-sm font-medium">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={formData.featured}
-                      onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      className="h-4 w-4 rounded border"
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, featured: checked === true })
+                      }
                     />
                     Featured Post
                   </label>
@@ -410,50 +452,46 @@ export function AdminBlogPage() {
                 <label htmlFor="blog-excerpt-en" className="mb-1 block text-sm font-medium">
                   Excerpt (EN) *
                 </label>
-                <textarea
+                <Textarea
                   id="blog-excerpt-en"
                   required
                   rows={2}
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <div>
                 <label htmlFor="blog-excerpt-th" className="mb-1 block text-sm font-medium">
                   Excerpt (TH)
                 </label>
-                <textarea
+                <Textarea
                   id="blog-excerpt-th"
                   rows={2}
                   value={formData.excerptThai}
                   onChange={(e) => setFormData({ ...formData, excerptThai: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <div>
                 <label htmlFor="blog-content-en" className="mb-1 block text-sm font-medium">
                   Content (EN) *
                 </label>
-                <textarea
+                <Textarea
                   id="blog-content-en"
                   required
                   rows={8}
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <div>
                 <label htmlFor="blog-content-th" className="mb-1 block text-sm font-medium">
                   Content (TH)
                 </label>
-                <textarea
+                <Textarea
                   id="blog-content-th"
                   rows={8}
                   value={formData.contentThai}
                   onChange={(e) => setFormData({ ...formData, contentThai: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <DialogFooter>

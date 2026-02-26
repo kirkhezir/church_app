@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { apiClient } from '@/services/api/apiClient';
+import { getErrorMessage } from '@/lib/errorReporting';
 
 export default function PasswordResetPage() {
   const [searchParams] = useSearchParams();
@@ -78,12 +79,8 @@ export default function PasswordResetPage() {
       } else {
         setError(response.data.message || 'Failed to reset password');
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.error ||
-          err.response?.data?.message ||
-          'An error occurred. Please try again.'
-      );
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'An error occurred. Please try again.'));
     } finally {
       setLoading(false);
     }

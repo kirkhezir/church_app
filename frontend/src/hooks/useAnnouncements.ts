@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { announcementService, Announcement } from '../services/endpoints/announcementService';
+import { getErrorMessage } from '@/lib/errorReporting';
 
 export interface AnnouncementFilters {
   search?: string;
@@ -37,8 +38,8 @@ export function useAnnouncements(
         const response = await announcementService.getAnnouncements(archived, page, limit, filters);
         setAnnouncements(response.data);
         setPagination(response.pagination);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load announcements');
+      } catch (err: unknown) {
+        setError(getErrorMessage(err, 'Failed to load announcements'));
       } finally {
         setLoading(false);
       }
@@ -77,8 +78,8 @@ export function useAnnouncement(id: string | undefined) {
         announcementService.trackView(id).catch(() => {
           // Silently fail - tracking is not critical
         });
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load announcement');
+      } catch (err: unknown) {
+        setError(getErrorMessage(err, 'Failed to load announcement'));
       } finally {
         setLoading(false);
       }

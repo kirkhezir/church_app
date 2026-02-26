@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { announcementService, ViewAnalytics } from '@/services/endpoints/announcementService';
+import { getErrorMessage } from '@/lib/errorReporting';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -42,8 +43,8 @@ export function AnnouncementAnalyticsPage() {
 
         setAnalytics(analyticsData);
         setAnnouncementTitle(announcement.title);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load analytics');
+      } catch (err: unknown) {
+        setError(getErrorMessage(err, 'Failed to load analytics'));
       } finally {
         setLoading(false);
       }

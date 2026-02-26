@@ -15,12 +15,13 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { apiClient } from '@/services/api/apiClient';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NotificationSettings() {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const [emailNotifications, setEmailNotifications] = useState(true);
 
@@ -45,7 +46,6 @@ export default function NotificationSettings() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
     setLoading(true);
 
     try {
@@ -54,7 +54,7 @@ export default function NotificationSettings() {
       })) as { success: boolean; message: string };
 
       if (response.success) {
-        setSuccess(true);
+        toast({ title: 'Notification preferences updated successfully!' });
       } else {
         setError(response.message || 'Failed to update notification preferences');
       }
@@ -98,12 +98,6 @@ export default function NotificationSettings() {
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {success && (
-              <Alert>
-                <AlertDescription>Notification preferences updated successfully!</AlertDescription>
               </Alert>
             )}
 

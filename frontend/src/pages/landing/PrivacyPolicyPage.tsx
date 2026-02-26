@@ -66,8 +66,8 @@ export function PrivacyPolicyPage() {
           {/* Information We Collect */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
-                <Eye className="h-5 w-5 text-emerald-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                <Eye className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h2 className="text-balance text-xl font-semibold text-foreground">
                 Information We Collect
@@ -108,7 +108,7 @@ export function PrivacyPolicyPage() {
           {/* How We Use Your Information */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 <FileText className="h-5 w-5 text-purple-600" />
               </div>
               <h2 className="text-balance text-xl font-semibold text-foreground">
@@ -129,7 +129,7 @@ export function PrivacyPolicyPage() {
           {/* Data Protection */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
                 <Lock className="h-5 w-5 text-amber-600" />
               </div>
               <h2 className="text-balance text-xl font-semibold text-foreground">

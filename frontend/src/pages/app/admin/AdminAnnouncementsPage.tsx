@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
-import { reportError } from '@/lib/errorReporting';
+import { reportError, getErrorMessage } from '@/lib/errorReporting';
 
 type ConfirmAction =
   | { type: 'archive'; id: string }
@@ -135,8 +135,8 @@ export function AdminAnnouncementsPage() {
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to archive announcement');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to archive announcement'));
     } finally {
       setActionLoading(null);
       setConfirmAction(null);
@@ -156,8 +156,8 @@ export function AdminAnnouncementsPage() {
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to delete announcement');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to delete announcement'));
     } finally {
       setActionLoading(null);
       setConfirmAction(null);
@@ -177,8 +177,8 @@ export function AdminAnnouncementsPage() {
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to restore announcement');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to restore announcement'));
     } finally {
       setActionLoading(null);
       setConfirmAction(null);
@@ -209,8 +209,8 @@ export function AdminAnnouncementsPage() {
       setSuccessMessage(result.message);
       setSelectedIds([]);
       setRefreshKey((prev) => prev + 1);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Bulk archive failed');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Bulk archive failed'));
     } finally {
       setConfirmAction(null);
       setConfirmLoading(false);
@@ -227,8 +227,8 @@ export function AdminAnnouncementsPage() {
       setSuccessMessage(result.message);
       setSelectedIds([]);
       setRefreshKey((prev) => prev + 1);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Bulk delete failed');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Bulk delete failed'));
     }
   };
 
@@ -307,8 +307,8 @@ export function AdminAnnouncementsPage() {
 
       {/* Success Message */}
       {successMessage && (
-        <Alert className="mb-4 border-green-500 bg-green-50 sm:mb-6">
-          <AlertDescription className="text-sm text-green-800 sm:text-base">
+        <Alert className="mb-4 border-green-500 bg-green-50 dark:border-green-700 dark:bg-green-900/20 sm:mb-6">
+          <AlertDescription className="text-sm text-green-800 dark:text-green-300 sm:text-base">
             {successMessage}
           </AlertDescription>
         </Alert>
@@ -408,7 +408,7 @@ export function AdminAnnouncementsPage() {
                           </td>
                           <td className="px-4 py-3">
                             {announcement.priority === 'URGENT' ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
                                 <AlertCircleIcon className="h-3 w-3" />
                                 Urgent
                               </span>
@@ -426,12 +426,12 @@ export function AdminAnnouncementsPage() {
                           </td>
                           <td className="px-4 py-3">
                             {announcement.isDraft ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
                                 <SaveIcon className="h-3 w-3" />
                                 Draft
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
                                 ✓ Published
                               </span>
                             )}

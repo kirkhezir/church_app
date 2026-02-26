@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { apiClient } from '@/services/api/apiClient';
+import { getErrorMessage } from '@/lib/errorReporting';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProfileData {
   firstName: string;
@@ -31,11 +33,11 @@ interface ProfileData {
 }
 
 export default function EditProfilePage() {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState<ProfileData>({
     firstName: '',
@@ -60,8 +62,8 @@ export default function EditProfilePage() {
     try {
       const response = (await apiClient.get('/members/me')) as ProfileData;
       setFormData(response);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load profile');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to load profile'));
     } finally {
       setFetchLoading(false);
     }
@@ -70,7 +72,6 @@ export default function EditProfilePage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
     setLoading(true);
 
     try {
@@ -83,7 +84,7 @@ export default function EditProfilePage() {
       })) as { success: boolean; message: string; profile: ProfileData };
 
       if (response.success) {
-        setSuccess(true);
+        toast({ title: 'Profile updated successfully!' });
         // Update form with returned data
         if (response.profile) {
           setFormData((prev) => ({
@@ -94,12 +95,8 @@ export default function EditProfilePage() {
       } else {
         setError(response.message || 'Failed to update profile');
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          'An error occurred. Please try again.'
-      );
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'An error occurred. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -147,12 +144,6 @@ export default function EditProfilePage() {
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              {success && (
-                <Alert>
-                  <AlertDescription>Profile updated successfully!</AlertDescription>
                 </Alert>
               )}
 

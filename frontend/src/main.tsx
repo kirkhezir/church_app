@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { I18nProvider } from './i18n';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { Toaster } from './components/ui/toaster';
@@ -77,12 +78,14 @@ ReactDOM.createRoot(root).render(
       }
     >
       <BrowserRouter>
-        <I18nProvider>
-          <AuthProvider>
-            <App />
-            <Toaster />
-          </AuthProvider>
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <AuthProvider>
+              <App />
+              <Toaster />
+            </AuthProvider>
+          </I18nProvider>
+        </ThemeProvider>
       </BrowserRouter>
     </SentryErrorBoundary>
   </React.StrictMode>

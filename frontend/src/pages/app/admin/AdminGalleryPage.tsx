@@ -11,6 +11,7 @@
 import { useState, useEffect } from 'react';
 import { PlusIcon, TrashIcon, Loader2, ImageIcon, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
@@ -23,13 +24,14 @@ import {
 } from '@/components/ui/dialog';
 import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export function AdminGalleryPage() {
+  const { toast } = useToast();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
@@ -102,7 +104,7 @@ export function AdminGalleryPage() {
         photographer: formData.photographer || undefined,
         eventDate: formData.eventDate || undefined,
       });
-      setSuccess('Photo added');
+      toast({ title: 'Photo added' });
       setShowForm(false);
       resetForm();
       await fetchGallery();
@@ -117,7 +119,7 @@ export function AdminGalleryPage() {
     try {
       setDeleting(true);
       await galleryService.deleteGalleryItem(id);
-      setSuccess('Photo deleted');
+      toast({ title: 'Photo deleted' });
       await fetchGallery();
     } catch {
       setError('Failed to delete photo');
@@ -160,12 +162,6 @@ export function AdminGalleryPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {success && (
-          <Alert>
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
         {/* Album Filter */}
         <div className="flex flex-wrap gap-2">
           <Button
@@ -242,12 +238,11 @@ export function AdminGalleryPage() {
                 <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">
                   Image URL *
                 </label>
-                <input
+                <Input
                   id="gallery-image-url"
                   required
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
                   placeholder="https://..."
                 />
               </div>
@@ -256,22 +251,20 @@ export function AdminGalleryPage() {
                   <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">
                     Title (EN)
                   </label>
-                  <input
+                  <Input
                     id="gallery-title-en"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">
                     Title (TH)
                   </label>
-                  <input
+                  <Input
                     id="gallery-title-th"
                     value={formData.titleThai}
                     onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -280,12 +273,11 @@ export function AdminGalleryPage() {
                   <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">
                     Album ID *
                   </label>
-                  <input
+                  <Input
                     id="gallery-album-id"
                     required
                     value={formData.albumId}
                     onChange={(e) => setFormData({ ...formData, albumId: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                     placeholder="sabbath-worship"
                   />
                 </div>
@@ -293,12 +285,11 @@ export function AdminGalleryPage() {
                   <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">
                     Album Title *
                   </label>
-                  <input
+                  <Input
                     id="gallery-album-title"
                     required
                     value={formData.albumTitle}
                     onChange={(e) => setFormData({ ...formData, albumTitle: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -307,23 +298,21 @@ export function AdminGalleryPage() {
                   <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">
                     Event Date
                   </label>
-                  <input
+                  <Input
                     id="gallery-event-date"
                     type="date"
                     value={formData.eventDate}
                     onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
                   <label htmlFor="gallery-photographer" className="mb-1 block text-sm font-medium">
                     Photographer
                   </label>
-                  <input
+                  <Input
                     id="gallery-photographer"
                     value={formData.photographer}
                     onChange={(e) => setFormData({ ...formData, photographer: e.target.value })}
-                    className="w-full rounded-lg border px-3 py-2 text-sm"
                   />
                 </div>
               </div>
