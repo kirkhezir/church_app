@@ -51,7 +51,7 @@ export function AnnouncementCreatePage() {
   };
 
   const createContent = (
-    <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-8">
+    <div className="mx-auto w-full max-w-3xl">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <Button variant="ghost" onClick={handleCancel} className="mb-4">

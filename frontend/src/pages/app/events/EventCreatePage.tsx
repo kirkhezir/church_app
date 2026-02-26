@@ -7,6 +7,7 @@ import { EventForm } from '@/components/features/events/EventForm';
 import { SidebarLayout } from '@/components/layout';
 import { eventService } from '@/services/endpoints/eventService';
 import { EventCategory } from '@/types/api';
+import { reportError } from '@/lib/errorReporting';
 
 interface EventFormData {
   title: string;
@@ -30,7 +31,7 @@ export const EventCreatePage: React.FC = () => {
       // Navigate to the new event detail page
       navigate(`/app/events/${newEvent.id}`);
     } catch (error) {
-      console.error('Failed to create event:', error);
+      reportError('Failed to create event', error);
       setIsSubmitting(false);
       throw error; // Re-throw to let EventForm handle the error display
     }
@@ -44,7 +45,7 @@ export const EventCreatePage: React.FC = () => {
     <SidebarLayout
       breadcrumbs={[{ label: 'Events', href: '/app/events' }, { label: 'Create Event' }]}
     >
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto w-full max-w-3xl">
         {/* Header */}
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate('/app/events')}>

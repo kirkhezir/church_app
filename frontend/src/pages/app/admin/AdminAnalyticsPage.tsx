@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BarChart3, Users, Calendar, TrendingUp, RefreshCw, Download } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
+import { reportError } from '@/lib/errorReporting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -100,7 +101,7 @@ export default function AdminAnalyticsPage() {
       setAttendanceData(attendanceRes.attendance);
       setEngagementData(engagementRes);
     } catch (err: unknown) {
-      console.error('Failed to fetch analytics:', err);
+      reportError('Failed to fetch analytics', err);
       setError('Failed to load analytics data. Please try again.');
     } finally {
       setLoading(false);

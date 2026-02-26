@@ -323,3 +323,32 @@
     animation: fade-in-up 0.5s ease-out both;
   }
 }
+
+/* ===========================
+   Appearance Settings: Compact Mode & Reduce Motion
+   Toggled via <html> class from AppearanceSettings
+   =========================== */
+
+html.compact {
+  font-size: 14px;
+}
+
+html.compact .gap-4 {
+  gap: 0.75rem;
+}
+
+html.compact .gap-6 {
+  gap: 1rem;
+}
+
+html.compact .p-4 {
+  padding: 0.75rem;
+}
+
+html.reduce-motion,
+html.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

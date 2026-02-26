@@ -16,6 +16,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { reportError } from '@/lib/errorReporting';
 
 const MSG_SKELETON_KEYS = ['msg-0', 'msg-1', 'msg-2', 'msg-3', 'msg-4'];
 
@@ -32,6 +34,7 @@ export function MessagesListPage() {
 
   const { deleteMessage, loading: deleteLoading } = useDeleteMessage();
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent'>(initialFolder);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string } | null>(null);
 
   const handleFolderChange = (folder: string) => {
     const newFolder = folder as 'inbox' | 'sent';
@@ -47,16 +50,20 @@ export function MessagesListPage() {
     navigate('/app/messages/compose');
   };
 
-  const handleDelete = async (messageId: string, e: React.MouseEvent) => {
+  const handleDeleteClick = (messageId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm('Are you sure you want to delete this message?')) {
-      try {
-        await deleteMessage(messageId);
-        // Refresh the list
-        setFolder(activeFolder);
-      } catch (err) {
-        console.error('Failed to delete message:', err);
-      }
+    setDeleteTarget({ id: messageId });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    try {
+      await deleteMessage(deleteTarget.id);
+      setFolder(activeFolder);
+    } catch (err) {
+      reportError('Failed to delete message', err);
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -210,7 +217,7 @@ export function MessagesListPage() {
                           size="icon"
                           aria-label="Delete message"
                           className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          onClick={(e) => handleDelete(message.id, e)}
+                          onClick={(e) => handleDeleteClick(message.id, e)}
                           disabled={deleteLoading}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -277,5 +284,19 @@ export function MessagesListPage() {
     </div>
   );
 
-  return <SidebarLayout breadcrumbs={[{ label: 'Messages' }]}>{content}</SidebarLayout>;
+  return (
+    <SidebarLayout breadcrumbs={[{ label: 'Messages' }]}>
+      {content}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteTarget(null)}
+        title="Delete Message"
+        description="Are you sure you want to delete this message? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleteLoading}
+      />
+    </SidebarLayout>
+  );
 }

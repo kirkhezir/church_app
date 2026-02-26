@@ -13,6 +13,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Bell, CheckCircle } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
+import { reportError } from '@/lib/errorReporting';
 import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
@@ -70,7 +71,7 @@ export default function MemberDashboard() {
         const response = await apiClient.get('/members/dashboard');
         setDashboard(response as unknown as DashboardData);
       } catch (err) {
-        console.error('Failed to fetch dashboard:', err);
+        reportError('Failed to fetch dashboard', err);
         setError('Failed to load dashboard data. Please try again.');
       } finally {
         setLoading(false);

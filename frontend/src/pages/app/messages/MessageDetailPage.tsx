@@ -4,6 +4,7 @@
  * Displays a single message with full content and reply options
  */
 
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft, Reply, Trash2, Clock, Mail } from 'lucide-react';
 import { useMessageDetail, useDeleteMessage } from '@/hooks/useMessages';
@@ -16,6 +17,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { reportError } from '@/lib/errorReporting';
 
 export function MessageDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +30,7 @@ export function MessageDetailPage() {
   });
 
   const { deleteMessage, loading: deleteLoading } = useDeleteMessage();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleReply = () => {
     if (message && message.sender) {
@@ -35,13 +39,13 @@ export function MessageDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this message?')) {
-      try {
-        await deleteMessage(id || '');
-        navigate('/app/messages');
-      } catch (err) {
-        console.error('Failed to delete message:', err);
-      }
+    try {
+      await deleteMessage(id || '');
+      navigate('/app/messages');
+    } catch (err) {
+      reportError('Failed to delete message', err);
+    } finally {
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -143,7 +147,7 @@ export function MessageDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteConfirm(true)}
                   disabled={deleteLoading}
                   className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
                 >
@@ -197,6 +201,16 @@ export function MessageDetailPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Messages', href: '/app/messages' }, { label: 'View' }]}>
       {content}
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+        title="Delete Message"
+        description="Are you sure you want to delete this message? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleteLoading}
+      />
     </SidebarLayout>
   );
 }

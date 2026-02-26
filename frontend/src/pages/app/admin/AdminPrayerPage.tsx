@@ -237,6 +237,9 @@ export function AdminPrayerPage() {
               <div className="py-12 text-center text-muted-foreground">
                 <Heart className="mx-auto mb-2 h-8 w-8 opacity-30" />
                 <p>No prayer requests found</p>
+                <p className="mt-1 text-xs opacity-70">
+                  Prayer requests from members will appear here.
+                </p>
               </div>
             )}
           </div>

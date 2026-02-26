@@ -13,6 +13,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { SidebarLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { reportError } from '@/lib/errorReporting';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -90,7 +91,7 @@ export function ComposeMessagePage() {
       });
       navigate('/app/messages?folder=sent');
     } catch (err) {
-      console.error('Failed to send message:', err);
+      reportError('Failed to send message', err);
     }
   };
 
@@ -99,7 +100,7 @@ export function ComposeMessagePage() {
   };
 
   const content = (
-    <div className="container mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto w-full max-w-3xl">
       {/* Back Button */}
       <Button variant="ghost" onClick={() => navigate('/app/messages')} className="mb-6">
         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -133,7 +134,13 @@ export function ComposeMessagePage() {
                   <span className="flex-1 font-medium">
                     {selectedRecipient.firstName} {selectedRecipient.lastName}
                   </span>
-                  <Button type="button" variant="ghost" size="sm" onClick={handleClearRecipient}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleClearRecipient}
+                    aria-label="Clear recipient"
+                  >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>

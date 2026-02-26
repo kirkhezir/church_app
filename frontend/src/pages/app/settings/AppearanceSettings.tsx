@@ -5,12 +5,33 @@
  * Rendered inside SettingsLayout as a nested route.
  */
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 
+const COMPACT_KEY = 'settings:compactMode';
+const REDUCE_MOTION_KEY = 'settings:reduceMotion';
+
 export default function AppearanceSettings() {
+  const [compactMode, setCompactMode] = useState(
+    () => localStorage.getItem(COMPACT_KEY) === 'true'
+  );
+  const [reduceMotion, setReduceMotion] = useState(
+    () => localStorage.getItem(REDUCE_MOTION_KEY) === 'true'
+  );
+
+  useEffect(() => {
+    localStorage.setItem(COMPACT_KEY, String(compactMode));
+    document.documentElement.classList.toggle('compact', compactMode);
+  }, [compactMode]);
+
+  useEffect(() => {
+    localStorage.setItem(REDUCE_MOTION_KEY, String(reduceMotion));
+    document.documentElement.classList.toggle('reduce-motion', reduceMotion);
+  }, [reduceMotion]);
+
   return (
     <div className="space-y-6">
       {/* Display Preferences */}
@@ -27,7 +48,7 @@ export default function AppearanceSettings() {
                 Use a more condensed layout with smaller elements
               </p>
             </div>
-            <Switch id="compact-mode" />
+            <Switch id="compact-mode" checked={compactMode} onCheckedChange={setCompactMode} />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
@@ -37,7 +58,7 @@ export default function AppearanceSettings() {
                 Minimize animations throughout the app
               </p>
             </div>
-            <Switch id="reduce-motion" />
+            <Switch id="reduce-motion" checked={reduceMotion} onCheckedChange={setReduceMotion} />
           </div>
         </CardContent>
       </Card>

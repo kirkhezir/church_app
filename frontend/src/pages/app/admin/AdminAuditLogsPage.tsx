@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { adminService, AuditLog } from '@/services/endpoints/adminService';
 import { SidebarLayout } from '@/components/layout';
+import { ClipboardList } from 'lucide-react';
 
 export default function AdminAuditLogsPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -158,7 +159,11 @@ export default function AdminAuditLogsPage() {
             {loading ? (
               <TableSkeleton rows={5} columns={6} />
             ) : logs.length === 0 ? (
-              <div className="py-8 text-center text-muted-foreground">No audit logs found</div>
+              <div className="py-12 text-center text-muted-foreground">
+                <ClipboardList className="mx-auto mb-2 h-8 w-8 opacity-30" />
+                <p>No audit logs found</p>
+                <p className="mt-1 text-xs opacity-70">Try adjusting your filters or date range.</p>
+              </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">

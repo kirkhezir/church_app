@@ -22,6 +22,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 
 export function AdminSermonsPage() {
   const [sermons, setSermons] = useState<Sermon[]>([]);
@@ -32,6 +33,8 @@ export function AdminSermonsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingSermon, setEditingSermon] = useState<Sermon | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     titleThai: '',
@@ -162,13 +165,16 @@ export function AdminSermonsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this sermon?')) return;
     try {
+      setDeleting(true);
       await sermonService.deleteSermon(id);
       setSuccess('Sermon deleted');
       await fetchSermons();
     } catch {
       setError('Failed to delete sermon');
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -258,14 +264,20 @@ export function AdminSermonsPage() {
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
-                            <Button size="sm" variant="ghost" onClick={() => openEdit(sermon)}>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEdit(sermon)}
+                              aria-label={`Edit ${sermon.title}`}
+                            >
                               <EditIcon className="h-4 w-4" />
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
                               className="text-destructive"
-                              onClick={() => handleDelete(sermon.id)}
+                              onClick={() => setDeleteTarget(sermon.id)}
+                              aria-label={`Delete ${sermon.title}`}
                             >
                               <TrashIcon className="h-4 w-4" />
                             </Button>
@@ -275,8 +287,12 @@ export function AdminSermonsPage() {
                     ))}
                     {filteredSermons.length === 0 && (
                       <tr>
-                        <td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">
-                          No sermons found
+                        <td colSpan={7} className="px-4 py-12 text-center">
+                          <Music className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
+                          <p className="text-muted-foreground">No sermons found</p>
+                          <p className="mt-1 text-xs text-muted-foreground/70">
+                            Try adjusting your search or add a new sermon.
+                          </p>
                         </td>
                       </tr>
                     )}
@@ -472,6 +488,16 @@ export function AdminSermonsPage() {
           </DialogContent>
         </Dialog>
       </div>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+        title="Delete Sermon"
+        description="Are you sure you want to delete this sermon? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+      />
     </SidebarLayout>
   );
 }

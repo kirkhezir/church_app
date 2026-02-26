@@ -136,7 +136,7 @@ export default function EditProfilePage() {
 
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Profile' }]}>
-      <div className="mx-auto w-full max-w-2xl">
+      <div className="mx-auto w-full max-w-3xl">
         <Card>
           <CardHeader>
             <CardTitle>Edit Profile</CardTitle>

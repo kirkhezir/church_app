@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { SidebarLayout } from '@/components/layout';
 import { EventCard } from '@/components/features/events/EventCard';
 import { EventFilters } from '@/components/features/events/EventFilters';
+import { reportError } from '@/lib/errorReporting';
 import { EventCalendarView } from '@/components/features/events/EventCalendarView';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -71,7 +72,7 @@ export function EventsListPage() {
         navigate(`/app/events/${eventId}`);
       } catch (err) {
         // Error is already handled by the hook
-        console.error('RSVP failed:', err);
+        reportError('RSVP failed', err);
       }
     },
     [user, navigate, rsvpToEvent]

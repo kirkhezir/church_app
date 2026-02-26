@@ -22,6 +22,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 
 export function AdminGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -31,6 +32,8 @@ export function AdminGalleryPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState<string>('all');
   const [formData, setFormData] = useState({
     imageUrl: '',
@@ -111,13 +114,16 @@ export function AdminGalleryPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this photo?')) return;
     try {
+      setDeleting(true);
       await galleryService.deleteGalleryItem(id);
       setSuccess('Photo deleted');
       await fetchGallery();
     } catch {
       setError('Failed to delete photo');
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -208,7 +214,8 @@ export function AdminGalleryPage() {
                   size="sm"
                   variant="destructive"
                   className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100"
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => setDeleteTarget(item.id)}
+                  aria-label={`Delete ${item.title}`}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </Button>
@@ -218,6 +225,7 @@ export function AdminGalleryPage() {
               <div className="col-span-full py-12 text-center text-muted-foreground">
                 <ImageIcon className="mx-auto mb-2 h-8 w-8 opacity-30" />
                 <p>No photos found</p>
+                <p className="mt-1 text-xs opacity-70">Upload photos to populate your gallery.</p>
               </div>
             )}
           </div>
@@ -332,6 +340,16 @@ export function AdminGalleryPage() {
           </DialogContent>
         </Dialog>
       </div>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+        title="Delete Photo"
+        description="Are you sure you want to delete this photo? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+      />
     </SidebarLayout>
   );
 }

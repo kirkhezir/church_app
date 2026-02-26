@@ -22,6 +22,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 
 export function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -32,6 +33,8 @@ export function AdminBlogPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     titleThai: '',
@@ -154,13 +157,16 @@ export function AdminBlogPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this blog post?')) return;
     try {
+      setDeleting(true);
       await blogService.deleteBlogPost(id);
       setSuccess('Blog post deleted');
       await fetchPosts();
     } catch {
       setError('Failed to delete blog post');
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -259,14 +265,20 @@ export function AdminBlogPage() {
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
-                            <Button size="sm" variant="ghost" onClick={() => openEdit(post)}>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEdit(post)}
+                              aria-label={`Edit ${post.title}`}
+                            >
                               <EditIcon className="h-4 w-4" />
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
                               className="text-destructive"
-                              onClick={() => handleDelete(post.id)}
+                              onClick={() => setDeleteTarget(post.id)}
+                              aria-label={`Delete ${post.title}`}
                             >
                               <TrashIcon className="h-4 w-4" />
                             </Button>
@@ -276,8 +288,12 @@ export function AdminBlogPage() {
                     ))}
                     {filteredPosts.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
-                          No blog posts found
+                        <td colSpan={6} className="px-4 py-12 text-center">
+                          <ExternalLink className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
+                          <p className="text-muted-foreground">No blog posts found</p>
+                          <p className="mt-1 text-xs text-muted-foreground/70">
+                            Try adjusting your search or create a new post.
+                          </p>
                         </td>
                       </tr>
                     )}
@@ -453,6 +469,16 @@ export function AdminBlogPage() {
           </DialogContent>
         </Dialog>
       </div>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+        title="Delete Blog Post"
+        description="Are you sure you want to delete this blog post? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+      />
     </SidebarLayout>
   );
 }

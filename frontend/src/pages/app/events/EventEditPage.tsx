@@ -10,6 +10,7 @@ import { SidebarLayout } from '@/components/layout';
 import { useEventDetail } from '@/hooks/useEvents';
 import { eventService } from '@/services/endpoints/eventService';
 import { EventCategory } from '@/types/api';
+import { reportError } from '@/lib/errorReporting';
 
 interface EventFormData {
   title: string;
@@ -48,7 +49,7 @@ export const EventEditPage: React.FC = () => {
       // Navigate back to event detail page
       navigate(`/app/events/${id}`);
     } catch (error) {
-      console.error('Failed to update event:', error);
+      reportError('Failed to update event', error);
       setIsSubmitting(false);
       throw error; // Re-throw to let EventForm handle the error display
     }
@@ -110,7 +111,7 @@ export const EventEditPage: React.FC = () => {
         { label: 'Edit' },
       ]}
     >
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto w-full max-w-3xl">
         {/* Header */}
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate(`/app/events/${id}`)}>

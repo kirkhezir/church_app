@@ -34,12 +34,23 @@ import {
   SaveIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
+import { reportError } from '@/lib/errorReporting';
+
+type ConfirmAction =
+  | { type: 'archive'; id: string }
+  | { type: 'delete'; id: string }
+  | { type: 'unarchive'; id: string }
+  | { type: 'bulkArchive' }
+  | { type: 'bulkDelete' };
 
 export function AdminAnnouncementsPage() {
   const navigate = useNavigate();
   const [showArchived, setShowArchived] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeCount, setActiveCount] = useState(0);
@@ -72,7 +83,7 @@ export function AdminAnnouncementsPage() {
         setActiveCount(activeData.pagination.total);
         setArchivedCount(archivedData.pagination.total);
       } catch (err) {
-        console.error('Failed to fetch counts:', err);
+        reportError('Failed to fetch counts', err);
       }
     };
     fetchCounts();
@@ -93,7 +104,7 @@ export function AdminAnnouncementsPage() {
         const authorList = await announcementService.getAuthors();
         setAuthors(authorList);
       } catch (err) {
-        console.error('Failed to fetch authors:', err);
+        reportError('Failed to fetch authors', err);
       }
     };
     fetchAuthors();
@@ -113,8 +124,6 @@ export function AdminAnnouncementsPage() {
   };
 
   const handleArchive = async (id: string) => {
-    if (!confirm('Are you sure you want to archive this announcement?')) return;
-
     setActionLoading(id);
     setError(null);
     setSuccessMessage(null);
@@ -122,9 +131,7 @@ export function AdminAnnouncementsPage() {
     try {
       await announcementService.archiveAnnouncement(id);
       setSuccessMessage('Announcement archived successfully');
-      // Trigger refetch by incrementing refreshKey
       setRefreshKey((prev) => prev + 1);
-      // If we're on a page that becomes empty, go to previous page
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
@@ -132,13 +139,12 @@ export function AdminAnnouncementsPage() {
       setError(err.response?.data?.message || 'Failed to archive announcement');
     } finally {
       setActionLoading(null);
+      setConfirmAction(null);
+      setConfirmLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this announcement? This cannot be undone.'))
-      return;
-
     setActionLoading(id);
     setError(null);
     setSuccessMessage(null);
@@ -146,9 +152,7 @@ export function AdminAnnouncementsPage() {
     try {
       await announcementService.deleteAnnouncement(id);
       setSuccessMessage('Announcement deleted successfully');
-      // Trigger refetch by incrementing refreshKey
       setRefreshKey((prev) => prev + 1);
-      // If we're on a page that becomes empty, go to previous page
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
@@ -156,12 +160,12 @@ export function AdminAnnouncementsPage() {
       setError(err.response?.data?.message || 'Failed to delete announcement');
     } finally {
       setActionLoading(null);
+      setConfirmAction(null);
+      setConfirmLoading(false);
     }
   };
 
   const handleUnarchive = async (id: string) => {
-    if (!confirm('Restore this announcement from archive?')) return;
-
     setActionLoading(id);
     setError(null);
     setSuccessMessage(null);
@@ -170,7 +174,6 @@ export function AdminAnnouncementsPage() {
       await announcementService.unarchiveAnnouncement(id);
       setSuccessMessage('Announcement restored successfully');
       setRefreshKey((prev) => prev + 1);
-      // If we're on a page that becomes empty, go to previous page
       if (announcements.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
@@ -178,6 +181,8 @@ export function AdminAnnouncementsPage() {
       setError(err.response?.data?.message || 'Failed to restore announcement');
     } finally {
       setActionLoading(null);
+      setConfirmAction(null);
+      setConfirmLoading(false);
     }
   };
 
@@ -195,28 +200,29 @@ export function AdminAnnouncementsPage() {
 
   // Bulk action handlers
   const handleBulkArchive = async () => {
-    if (!confirm(`Archive ${selectedIds.length} announcement(s)?`)) return;
-
     setError(null);
     setSuccessMessage(null);
 
     try {
+      setConfirmLoading(true);
       const result = await announcementService.bulkArchive(selectedIds);
       setSuccessMessage(result.message);
       setSelectedIds([]);
       setRefreshKey((prev) => prev + 1);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Bulk archive failed');
+    } finally {
+      setConfirmAction(null);
+      setConfirmLoading(false);
     }
   };
 
   const handleBulkDelete = async () => {
-    if (!confirm(`Delete ${selectedIds.length} announcement(s)? This cannot be undone.`)) return;
-
     setError(null);
     setSuccessMessage(null);
 
     try {
+      setConfirmLoading(true);
       const result = await announcementService.bulkDelete(selectedIds);
       setSuccessMessage(result.message);
       setSelectedIds([]);
@@ -447,6 +453,7 @@ export function AdminAnnouncementsPage() {
                                           `/app/admin/announcements/${announcement.id}/analytics`
                                         )
                                       }
+                                      aria-label="View analytics"
                                     >
                                       <BarChart3Icon className="h-4 w-4" />
                                     </Button>
@@ -465,6 +472,7 @@ export function AdminAnnouncementsPage() {
                                       className="h-8 w-8"
                                       onClick={() => handleEdit(announcement.id)}
                                       disabled={actionLoading === announcement.id}
+                                      aria-label="Edit announcement"
                                     >
                                       <EditIcon className="h-4 w-4" />
                                     </Button>
@@ -482,8 +490,11 @@ export function AdminAnnouncementsPage() {
                                         variant="ghost"
                                         size="icon"
                                         className="h-8 w-8"
-                                        onClick={() => handleArchive(announcement.id)}
+                                        onClick={() =>
+                                          setConfirmAction({ type: 'archive', id: announcement.id })
+                                        }
                                         disabled={actionLoading === announcement.id}
+                                        aria-label="Archive announcement"
                                       >
                                         <ArchiveIcon className="h-4 w-4" />
                                       </Button>
@@ -502,8 +513,14 @@ export function AdminAnnouncementsPage() {
                                         variant="ghost"
                                         size="icon"
                                         className="h-8 w-8 text-green-600 hover:text-green-700"
-                                        onClick={() => handleUnarchive(announcement.id)}
+                                        onClick={() =>
+                                          setConfirmAction({
+                                            type: 'unarchive',
+                                            id: announcement.id,
+                                          })
+                                        }
                                         disabled={actionLoading === announcement.id}
+                                        aria-label="Restore from archive"
                                       >
                                         <ArchiveRestoreIcon className="h-4 w-4" />
                                       </Button>
@@ -521,8 +538,11 @@ export function AdminAnnouncementsPage() {
                                       variant="ghost"
                                       size="icon"
                                       className="h-8 w-8 text-red-600 hover:text-red-700"
-                                      onClick={() => handleDelete(announcement.id)}
+                                      onClick={() =>
+                                        setConfirmAction({ type: 'delete', id: announcement.id })
+                                      }
                                       disabled={actionLoading === announcement.id}
+                                      aria-label="Delete announcement"
                                     >
                                       <TrashIcon className="h-4 w-4" />
                                     </Button>
@@ -582,7 +602,7 @@ export function AdminAnnouncementsPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleArchive(announcement.id)}
+                          onClick={() => setConfirmAction({ type: 'archive', id: announcement.id })}
                           disabled={actionLoading === announcement.id}
                           className="flex-1"
                         >
@@ -593,7 +613,7 @@ export function AdminAnnouncementsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(announcement.id)}
+                        onClick={() => setConfirmAction({ type: 'delete', id: announcement.id })}
                         disabled={actionLoading === announcement.id}
                         className="text-red-600 hover:text-red-700"
                       >
@@ -645,11 +665,70 @@ export function AdminAnnouncementsPage() {
     >
       {adminContent}
 
+      {/* Confirm dialog for destructive actions */}
+      <ConfirmDialog
+        open={!!confirmAction}
+        onConfirm={() => {
+          if (!confirmAction) return;
+          switch (confirmAction.type) {
+            case 'archive':
+              handleArchive(confirmAction.id);
+              break;
+            case 'delete':
+              handleDelete(confirmAction.id);
+              break;
+            case 'unarchive':
+              handleUnarchive(confirmAction.id);
+              break;
+            case 'bulkArchive':
+              handleBulkArchive();
+              break;
+            case 'bulkDelete':
+              handleBulkDelete();
+              break;
+          }
+        }}
+        onCancel={() => setConfirmAction(null)}
+        title={
+          confirmAction?.type === 'archive'
+            ? 'Archive Announcement'
+            : confirmAction?.type === 'delete' || confirmAction?.type === 'bulkDelete'
+              ? 'Delete Announcement'
+              : confirmAction?.type === 'unarchive'
+                ? 'Restore Announcement'
+                : 'Archive Announcements'
+        }
+        description={
+          confirmAction?.type === 'archive'
+            ? 'Are you sure you want to archive this announcement?'
+            : confirmAction?.type === 'delete'
+              ? 'Are you sure you want to delete this announcement? This action cannot be undone.'
+              : confirmAction?.type === 'unarchive'
+                ? 'Restore this announcement from the archive?'
+                : confirmAction?.type === 'bulkArchive'
+                  ? `Archive ${selectedIds.length} announcement(s)?`
+                  : `Delete ${selectedIds.length} announcement(s)? This action cannot be undone.`
+        }
+        confirmLabel={
+          confirmAction?.type === 'unarchive'
+            ? 'Restore'
+            : confirmAction?.type === 'archive' || confirmAction?.type === 'bulkArchive'
+              ? 'Archive'
+              : 'Delete'
+        }
+        variant={
+          confirmAction?.type === 'delete' || confirmAction?.type === 'bulkDelete'
+            ? 'destructive'
+            : 'default'
+        }
+        loading={confirmLoading}
+      />
+
       {/* Bulk Action Bar - Floats at bottom when items are selected */}
       <BulkActionBar
         selectedCount={selectedIds.length}
-        onArchive={handleBulkArchive}
-        onDelete={handleBulkDelete}
+        onArchive={() => setConfirmAction({ type: 'bulkArchive' })}
+        onDelete={() => setConfirmAction({ type: 'bulkDelete' })}
         onClearSelection={() => setSelectedIds([])}
         isArchived={showArchived}
       />

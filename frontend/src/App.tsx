@@ -2,15 +2,15 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
 import { PageErrorBoundary } from './components/common/ErrorBoundary';
 
-// Eagerly loaded - critical path (landing pages)
+// Eagerly loaded - critical path
 import HomePage from './pages/landing/Home';
-import PrivacyPolicyPage from './pages/landing/PrivacyPolicyPage';
-import VisitPage from './pages/landing/VisitPage';
-import SermonsPage from './pages/landing/SermonsPage';
-import AboutPage from './pages/landing/AboutPage';
 import LoginPage from './pages/auth/LoginPage';
 
 // Lazy-loaded landing pages
+const PrivacyPolicyPage = lazy(() => import('./pages/landing/PrivacyPolicyPage'));
+const VisitPage = lazy(() => import('./pages/landing/VisitPage'));
+const SermonsPage = lazy(() => import('./pages/landing/SermonsPage'));
+const AboutPage = lazy(() => import('./pages/landing/AboutPage'));
 const GalleryPage = lazy(() => import('./pages/landing/GalleryPage'));
 const MinistriesPage = lazy(() => import('./pages/landing/MinistriesPage'));
 const MinistryDetailPage = lazy(() => import('./pages/landing/MinistryDetailPage'));

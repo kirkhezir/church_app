@@ -157,7 +157,7 @@ export default function AdminCreateMemberPage() {
         { label: 'Create' },
       ]}
     >
-      <div className="container mx-auto max-w-lg px-4 py-4">
+      <div className="mx-auto w-full max-w-3xl">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Create New Member</CardTitle>

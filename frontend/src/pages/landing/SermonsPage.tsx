@@ -28,6 +28,7 @@ import { useI18n } from '../../i18n';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { sermonService, type Sermon } from '../../services/endpoints/sermonService';
+import { reportError } from '../../lib/errorReporting';
 
 /** Extract YouTube video ID from a URL or return as-is if already an ID */
 function extractYoutubeId(url?: string | null): string | undefined {
@@ -63,7 +64,7 @@ export function SermonsPage() {
         setSpeakerList(['All Speakers', ...speakers]);
         setSeriesList(['All Series', ...series]);
       } catch (err) {
-        console.error('Failed to load sermons:', err);
+        reportError('Failed to load sermons', err);
       } finally {
         setLoading(false);
       }

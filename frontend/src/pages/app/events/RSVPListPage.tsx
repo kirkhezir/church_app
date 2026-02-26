@@ -5,6 +5,7 @@ import { ArrowLeft, Users, Mail, CheckCircle, Clock, XCircle, AlertTriangle } fr
 import { useEventDetail } from '@/hooks/useEvents';
 import { eventService } from '@/services/endpoints/eventService';
 import { SidebarLayout } from '@/components/layout';
+import { reportError } from '@/lib/errorReporting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -70,7 +71,7 @@ export const RSVPListPage: React.FC = () => {
         const response = await eventService.getEventRSVPs(id, status);
         setRsvps(response.rsvps);
       } catch (err) {
-        console.error('Failed to fetch RSVPs:', err);
+        reportError('Failed to fetch RSVPs', err);
         setError(err instanceof Error ? err.message : 'Failed to load RSVPs');
       } finally {
         setLoading(false);
@@ -201,6 +202,9 @@ export const RSVPListPage: React.FC = () => {
                   <div className="py-8 text-center text-muted-foreground">
                     <Users className="mx-auto mb-2 h-12 w-12 opacity-50" />
                     <p>No RSVPs found for this filter.</p>
+                    <p className="mt-1 text-xs opacity-70">
+                      Try selecting a different status filter.
+                    </p>
                   </div>
                 ) : (
                   <div className="rounded-lg border">
