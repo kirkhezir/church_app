@@ -50,10 +50,18 @@ export interface RoleDistribution {
   color: string;
 }
 
+export interface AgeDemographic {
+  label: string;
+  value: number;
+  color: string;
+}
+
 export interface DemographicsData {
   roleDistribution: RoleDistribution[];
   securityStats: RoleDistribution[];
+  ageDistribution: AgeDemographic[];
   totalMembers: number;
+  membersWithDobCount: number;
 }
 
 export interface HeatMapEntry {

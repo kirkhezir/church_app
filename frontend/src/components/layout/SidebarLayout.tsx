@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { MobileBottomNav } from '@/components/features/mobile/MobileBottomNav';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import { Sun, Moon } from 'lucide-react';
 
 interface SidebarLayoutProps {

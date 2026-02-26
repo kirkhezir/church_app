@@ -40,6 +40,7 @@ import {
   AttendanceData,
   EngagementData,
   HeatMapEntry,
+  AgeDemographic,
 } from '@/services/endpoints/analyticsService';
 
 // Fallback heatmap data used only when the backend returns no activity data
@@ -47,13 +48,13 @@ const fallbackHeatMapData: HeatMapEntry[] = [{ day: 'Sun', hour: 10, count: 0 }]
 
 const STAT_SKELETON_KEYS = ['stat-0', 'stat-1', 'stat-2', 'stat-3'];
 
-// Mock demographics since backend doesn't have age data
-const mockDemographics = [
-  { label: 'Age 0-17', value: 52, color: '#3b82f6' },
-  { label: 'Age 18-30', value: 78, color: '#22c55e' },
-  { label: 'Age 31-45', value: 112, color: '#eab308' },
-  { label: 'Age 46-60', value: 89, color: '#f97316' },
-  { label: 'Age 61+', value: 54, color: '#a855f7' },
+// Fallback demographics shown while real data loads
+const fallbackDemographics: AgeDemographic[] = [
+  { label: 'Age 0-17', value: 0, color: '#3b82f6' },
+  { label: 'Age 18-30', value: 0, color: '#22c55e' },
+  { label: 'Age 31-45', value: 0, color: '#eab308' },
+  { label: 'Age 46-60', value: 0, color: '#f97316' },
+  { label: 'Age 61+', value: 0, color: '#a855f7' },
 ];
 
 export default function AdminAnalyticsPage() {
@@ -67,6 +68,7 @@ export default function AdminAnalyticsPage() {
   const [growthData, setGrowthData] = useState<MemberGrowthData[]>([]);
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
   const [engagementData, setEngagementData] = useState<EngagementData | null>(null);
+  const [demographicsData, setDemographicsData] = useState<AgeDemographic[]>(fallbackDemographics);
 
   const getMonthsFromRange = (range: string): number => {
     switch (range) {
@@ -89,17 +91,22 @@ export default function AdminAnalyticsPage() {
     try {
       const months = getMonthsFromRange(timeRange);
 
-      const [dashboardRes, growthRes, attendanceRes, engagementRes] = await Promise.all([
-        analyticsService.getDashboard(),
-        analyticsService.getMemberGrowth(months),
-        analyticsService.getAttendance(8),
-        analyticsService.getEngagement(),
-      ]);
+      const [dashboardRes, growthRes, attendanceRes, engagementRes, demographicsRes] =
+        await Promise.all([
+          analyticsService.getDashboard(),
+          analyticsService.getMemberGrowth(months),
+          analyticsService.getAttendance(8),
+          analyticsService.getEngagement(),
+          analyticsService.getDemographics(),
+        ]);
 
       setDashboard(dashboardRes);
       setGrowthData(growthRes);
       setAttendanceData(attendanceRes.attendance);
       setEngagementData(engagementRes);
+      if (demographicsRes.ageDistribution?.length) {
+        setDemographicsData(demographicsRes.ageDistribution);
+      }
     } catch (err: unknown) {
       reportError('Failed to fetch analytics', err);
       setError('Failed to load analytics data. Please try again.');
@@ -155,7 +162,7 @@ export default function AdminAnalyticsPage() {
   const chartEngagementData = engagementData
     ? {
         ...engagementData,
-        profileUpdates: 0, // Not tracked in backend yet
+        profileUpdates: 0,
       }
     : {
         activeUsersLast7Days: 0,
@@ -321,7 +328,7 @@ export default function AdminAnalyticsPage() {
               </div>
               <div className="grid gap-6 lg:grid-cols-2">
                 <AttendanceSummary data={chartAttendanceData} />
-                <MemberDemographics data={mockDemographics} />
+                <MemberDemographics data={demographicsData} />
               </div>
             </>
           )}
@@ -344,7 +351,7 @@ export default function AdminAnalyticsPage() {
           ) : (
             <>
               <MemberGrowthChart data={chartGrowthData} />
-              <MemberDemographics data={mockDemographics} />
+              <MemberDemographics data={demographicsData} />
             </>
           )}
         </TabsContent>

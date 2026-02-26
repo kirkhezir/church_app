@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { useTheme, type Theme } from '@/contexts/ThemeContext';
+import { useTheme, type Theme } from '@/hooks/useTheme';
 import { Sun, Moon, Monitor } from 'lucide-react';
 
 const COMPACT_KEY = 'settings:compactMode';

@@ -1,24 +1,14 @@
 /**
- * Theme Context
+ * Theme Provider Component
  *
  * Manages light/dark/system theme with localStorage persistence.
  * Applies `.dark` class to <html> element for Tailwind dark mode.
+ *
+ * Types and context are in themeTypes.ts to satisfy fast-refresh.
  */
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-
-export type Theme = 'light' | 'dark' | 'system';
-
-interface ThemeContextValue {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  /** The resolved theme after applying system preference */
-  resolvedTheme: 'light' | 'dark';
-}
-
-const STORAGE_KEY = 'settings:theme';
-
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+import { useEffect, useState, type ReactNode } from 'react';
+import { ThemeContext, THEME_STORAGE_KEY, type Theme } from './themeTypes';
 
 function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -32,17 +22,17 @@ function applyTheme(theme: Theme) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
     return (stored as Theme) || 'system';
   });
 
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
+    const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     return applyTheme(stored || 'system');
   });
 
   const setTheme = (newTheme: Theme) => {
-    localStorage.setItem(STORAGE_KEY, newTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
     setThemeState(newTheme);
   };
 
@@ -66,10 +56,4 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       {children}
     </ThemeContext.Provider>
   );
-}
-
-export function useTheme() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within <ThemeProvider>');
-  return ctx;
 }
