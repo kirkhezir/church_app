@@ -107,7 +107,7 @@ export function SermonDetailPage() {
       try {
         await navigator.share({
           title: sermon.title,
-          text: sermon.description.split('\n')[0],
+          text: (sermon.description ?? '').split('\n')[0],
           url,
         });
       } catch {
@@ -226,7 +226,7 @@ export function SermonDetailPage() {
 
               {/* Description */}
               <div className="prose-like space-y-4">
-                {sermon.description.split('\n\n').map((paragraph) => {
+                {(sermon.description ?? '').split('\n\n').map((paragraph) => {
                   const key = paragraph.slice(0, 60);
                   // Handle key takeaways list
                   if (paragraph.includes('\n- ')) {
