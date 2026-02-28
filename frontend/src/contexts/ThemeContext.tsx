@@ -1,59 +1,145 @@
 /**
  * Theme Provider Component
  *
- * Manages light/dark/system theme with localStorage persistence.
- * Applies `.dark` class to <html> element for Tailwind dark mode.
+ * Manages independent light/dark/system themes for landing pages vs. the app.
+ * Detects current URL scope and applies the correct theme's `.dark` class
+ * to <html>. Each scope persists its own preference in localStorage.
  *
  * Types and context are in themeTypes.ts to satisfy fast-refresh.
  */
 
-import { useEffect, useState, type ReactNode } from 'react';
-import { ThemeContext, THEME_STORAGE_KEY, type Theme } from './themeTypes';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useLocation } from 'react-router';
+import {
+  ThemeContext,
+  LANDING_THEME_KEY,
+  APP_THEME_KEY,
+  THEME_STORAGE_KEY,
+  type Theme,
+  type ThemeScope,
+} from './themeTypes';
+
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
 
 function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-function applyTheme(theme: Theme) {
-  const resolved = theme === 'system' ? getSystemTheme() : theme;
-  document.documentElement.classList.toggle('dark', resolved === 'dark');
-  return resolved;
+function resolve(theme: Theme): 'light' | 'dark' {
+  return theme === 'system' ? getSystemTheme() : theme;
 }
 
+function applyToHtml(resolved: 'light' | 'dark') {
+  document.documentElement.classList.toggle('dark', resolved === 'dark');
+}
+
+/** Read persisted theme, migrating from legacy single-key if needed. */
+function readStored(key: string): Theme {
+  const val = localStorage.getItem(key) as Theme | null;
+  if (val) return val;
+
+  // One-time migration: copy old 'settings:theme' into both scope keys
+  if (key === APP_THEME_KEY || key === LANDING_THEME_KEY) {
+    const legacy = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+    if (legacy) {
+      localStorage.setItem(APP_THEME_KEY, legacy);
+      localStorage.setItem(LANDING_THEME_KEY, legacy);
+      return legacy;
+    }
+  }
+  return 'system';
+}
+
+/** Determine scope from a pathname. */
+function scopeFromPath(pathname: string): ThemeScope {
+  return pathname.startsWith('/app') ? 'app' : 'landing';
+}
+
+/* ------------------------------------------------------------------ */
+/* Provider                                                            */
+/* ------------------------------------------------------------------ */
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    return (stored as Theme) || 'system';
-  });
+  const { pathname } = useLocation();
+  const scope = scopeFromPath(pathname);
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    return applyTheme(stored || 'system');
-  });
+  // Independent theme state per scope
+  const [landingTheme, setLandingThemeState] = useState<Theme>(() => readStored(LANDING_THEME_KEY));
+  const [appTheme, setAppThemeState] = useState<Theme>(() => readStored(APP_THEME_KEY));
 
-  const setTheme = (newTheme: Theme) => {
-    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
-    setThemeState(newTheme);
-  };
+  // Derive which theme is active right now
+  const activeTheme = scope === 'app' ? appTheme : landingTheme;
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => resolve(activeTheme));
 
-  // Apply theme changes
+  // Setters
+  const setLandingTheme = useCallback((t: Theme) => {
+    localStorage.setItem(LANDING_THEME_KEY, t);
+    setLandingThemeState(t);
+  }, []);
+
+  const setAppTheme = useCallback((t: Theme) => {
+    localStorage.setItem(APP_THEME_KEY, t);
+    setAppThemeState(t);
+  }, []);
+
+  /** Set theme for the current scope (used by the generic `setTheme`). */
+  const setTheme = useCallback(
+    (t: Theme) => {
+      if (scope === 'app') setAppTheme(t);
+      else setLandingTheme(t);
+    },
+    [scope, setAppTheme, setLandingTheme]
+  );
+
+  /** Set theme for a named scope (useful from AppearanceSettings). */
+  const setScopedTheme = useCallback(
+    (s: ThemeScope, t: Theme) => {
+      if (s === 'app') setAppTheme(t);
+      else setLandingTheme(t);
+    },
+    [setAppTheme, setLandingTheme]
+  );
+
+  /** Read theme for a named scope. */
+  const getScopedTheme = useCallback(
+    (s: ThemeScope): Theme => (s === 'app' ? appTheme : landingTheme),
+    [appTheme, landingTheme]
+  );
+
+  // Apply theme whenever active theme or scope changes
   useEffect(() => {
-    setResolvedTheme(applyTheme(theme));
-  }, [theme]);
+    const r = resolve(activeTheme);
+    setResolvedTheme(r);
+    applyToHtml(r);
+  }, [activeTheme, scope]);
 
-  // Listen for system preference changes when set to "system"
+  // Listen for system preference changes when active theme is "system"
   useEffect(() => {
-    if (theme !== 'system') return;
+    if (activeTheme !== 'system') return;
 
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => setResolvedTheme(applyTheme('system'));
+    const handler = () => {
+      const r = resolve('system');
+      setResolvedTheme(r);
+      applyToHtml(r);
+    };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
-  }, [theme]);
+  }, [activeTheme]);
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({
+      theme: activeTheme,
+      setTheme,
+      resolvedTheme,
+      scope,
+      setScopedTheme,
+      getScopedTheme,
+    }),
+    [activeTheme, setTheme, resolvedTheme, scope, setScopedTheme, getScopedTheme]
   );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

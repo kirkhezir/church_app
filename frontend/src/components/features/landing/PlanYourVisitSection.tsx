@@ -122,7 +122,7 @@ export function PlanYourVisitSection() {
   return (
     <section
       id="plan-visit"
-      className="bg-gradient-to-b from-blue-50 to-white py-16 sm:py-24"
+      className="bg-gradient-to-b from-blue-50 to-white py-16 dark:from-blue-950/20 dark:to-background sm:py-24"
       aria-labelledby="plan-visit-heading"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -165,7 +165,7 @@ export function PlanYourVisitSection() {
             <Card
               key={item.id}
               className={`overflow-hidden transition-shadow duration-200 ${
-                expandedId === item.id ? 'ring-2 ring-blue-500' : ''
+                expandedId === item.id ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''
               }`}
             >
               <button

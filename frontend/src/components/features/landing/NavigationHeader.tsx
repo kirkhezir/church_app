@@ -125,7 +125,7 @@ export function NavigationHeader() {
 
         {/* Mobile Menu */}
         <div className={`lg:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="border-t border-border bg-white px-4 py-4 shadow-lg">
+          <div className="border-t border-border bg-background px-4 py-4 shadow-lg">
             <div className="space-y-1">
               {navLinks.map((link) => (
                 <button

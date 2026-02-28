@@ -148,7 +148,7 @@ export function ContactForm() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl bg-card shadow-sm">
           <div className="border-b border-border bg-muted px-6 py-4">
             <h3 className="text-lg font-semibold text-foreground">Send Us A Message</h3>
             <p className="text-sm text-muted-foreground">
@@ -159,7 +159,7 @@ export function ContactForm() {
           <div className="p-6">
             {submitStatus === 'success' && (
               <div
-                className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 shadow-sm"
+                className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-950/30 dark:text-green-300"
                 role="alert"
               >
                 <div className="flex items-start gap-3">
@@ -177,7 +177,7 @@ export function ContactForm() {
 
             {submitStatus === 'error' && (
               <div
-                className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 shadow-sm"
+                className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 shadow-sm dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
                 role="alert"
               >
                 <div className="flex items-start gap-3">

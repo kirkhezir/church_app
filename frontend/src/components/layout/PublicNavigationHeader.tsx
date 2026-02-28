@@ -197,11 +197,11 @@ export function PublicNavigationHeader({
       'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200';
     switch (link.labelKey) {
       case 'nav.prayer':
-        return `${base} ${showTransparent ? 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200' : 'text-purple-600 hover:bg-purple-50 hover:text-purple-700'}`;
+        return `${base} ${showTransparent ? 'text-purple-300 hover:bg-purple-500/20 hover:text-purple-200' : 'text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30 hover:text-purple-700'}`;
       case 'nav.give':
-        return `${base} ${showTransparent ? 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200' : 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'}`;
+        return `${base} ${showTransparent ? 'text-amber-300 hover:bg-amber-500/20 hover:text-amber-200' : 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:text-amber-700'}`;
       case 'nav.contact':
-        return `${base} ${showTransparent ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200' : 'text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'}`;
+        return `${base} ${showTransparent ? 'text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200' : 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-700'}`;
       default:
         if (isActive(link.href)) {
           return `${base} ${showTransparent ? 'bg-white/20 text-white' : 'bg-accent text-primary'}`;
@@ -215,11 +215,11 @@ export function PublicNavigationHeader({
       'flex items-center gap-2 rounded-lg px-4 py-3 text-base font-medium transition-colors';
     switch (link.labelKey) {
       case 'nav.prayer':
-        return `${base} text-purple-600 hover:bg-purple-50`;
+        return `${base} text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30`;
       case 'nav.give':
-        return `${base} text-amber-600 hover:bg-amber-50`;
+        return `${base} text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30`;
       case 'nav.contact':
-        return `${base} text-emerald-600 hover:bg-emerald-50`;
+        return `${base} text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30`;
       default:
         return `${base} ${isActive(link.href) ? 'bg-accent text-primary' : 'text-foreground/80 hover:bg-muted'}`;
     }
@@ -344,7 +344,7 @@ export function PublicNavigationHeader({
                       {openDropdown === link.labelKey && (
                         <div
                           role="menu"
-                          className="absolute left-0 top-full z-50 w-48 rounded-lg border border-border bg-white py-2 shadow-lg"
+                          className="absolute left-0 top-full z-50 w-48 rounded-lg border border-border bg-background py-2 shadow-lg"
                         >
                           {link.children.map((child) => (
                             <Link

@@ -78,13 +78,13 @@ export function GiveSection() {
   return (
     <section
       id="give"
-      className="bg-gradient-to-b from-amber-50 to-white py-16 sm:py-24"
+      className="bg-gradient-to-b from-amber-50 to-white py-16 dark:from-amber-950/20 dark:to-background sm:py-24"
       aria-labelledby="give-heading"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-amber-100 p-3">
+          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-amber-100 p-3 dark:bg-amber-900/30">
             <Gift className="h-8 w-8 text-amber-600" />
           </div>
           <h2
@@ -163,9 +163,11 @@ export function GiveSection() {
                     </div>
                   </div>
 
-                  <div className="rounded-lg bg-blue-50 p-4">
-                    <h4 className="mb-2 font-medium text-blue-900">How to use PromptPay:</h4>
-                    <ol className="list-inside list-decimal space-y-1 text-sm text-blue-800">
+                  <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/30">
+                    <h4 className="mb-2 font-medium text-blue-900 dark:text-blue-200">
+                      How to use PromptPay:
+                    </h4>
+                    <ol className="list-inside list-decimal space-y-1 text-sm text-blue-800 dark:text-blue-300">
                       <li>Open your Thai banking app</li>
                       <li>Select &quot;Scan QR&quot; or &quot;PromptPay&quot;</li>
                       <li>Scan the QR code above or enter the ID</li>
@@ -179,9 +181,9 @@ export function GiveSection() {
               {/* Bank Transfer Option */}
               {selectedOption === 'bank' && (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-border bg-white p-4">
+                  <div className="rounded-xl border border-border bg-card p-4">
                     <div className="mb-4 flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                         <Building2 className="h-6 w-6 text-primary" />
                       </div>
                       <div>
@@ -233,8 +235,8 @@ export function GiveSection() {
                     </div>
                   </div>
 
-                  <div className="rounded-lg bg-amber-50 p-4">
-                    <p className="text-sm text-amber-800">
+                  <div className="rounded-lg bg-amber-50 p-4 dark:bg-amber-950/30">
+                    <p className="text-sm text-amber-800 dark:text-amber-300">
                       <strong>Note:</strong> Please include your name in the transfer reference so
                       we can acknowledge your gift. For tax receipts, contact us with your transfer
                       details.
@@ -277,7 +279,7 @@ export function GiveSection() {
             </Card>
 
             {/* Special Giving */}
-            <Card className="border-2 border-amber-200 bg-amber-50">
+            <Card className="border-2 border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20">
               <CardContent className="p-6">
                 <h3 className="mb-3 font-semibold text-foreground">Special Giving Options</h3>
                 <ul className="space-y-2 text-sm text-foreground/80">

@@ -61,7 +61,7 @@ export function VisitorCounter({ className = '', variant = 'inline' }: VisitorCo
 
   return (
     <div
-      className={`inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-sm text-emerald-700 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 ${className}`}
     >
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -97,13 +97,13 @@ export function SocialProofStats({ className = '' }: SocialProofStatsProps) {
       value: '25+',
       label: language === 'th' ? 'ปีแห่งการรับใช้' : 'years of ministry',
       icon: Heart,
-      color: 'text-rose-600 bg-rose-100',
+      color: 'text-rose-600 bg-rose-100 dark:bg-rose-900/30',
     },
     {
       value: '500+',
       label: language === 'th' ? 'การรับชมเทศนาเดือนนี้' : 'sermon views this month',
       icon: TrendingUp,
-      color: 'text-emerald-600 bg-emerald-100',
+      color: 'text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30',
     },
   ];
 

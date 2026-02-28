@@ -59,7 +59,7 @@ export function LanguageToggle({
     ? 'text-white hover:bg-white/10'
     : 'text-muted-foreground hover:bg-muted';
 
-  const dropdownClasses = lightMode ? 'bg-slate-800 border-border' : 'bg-white border-border';
+  const dropdownClasses = lightMode ? 'bg-slate-800 border-border' : 'bg-background border-border';
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>

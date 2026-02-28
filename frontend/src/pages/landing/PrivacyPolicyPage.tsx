@@ -157,7 +157,7 @@ export function PrivacyPolicyPage() {
           {/* Your Rights */}
           <section className="mb-12 rounded-xl bg-card p-6 shadow-sm sm:p-8">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-900/30">
                 <Trash2 className="h-5 w-5 text-rose-600" />
               </div>
               <h2 className="text-balance text-xl font-semibold text-foreground">Your Rights</h2>

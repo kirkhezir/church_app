@@ -121,7 +121,7 @@ export function BlogPage() {
                   <Link
                     key={post.id}
                     to={`/blog/${post.slug}`}
-                    className="group overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl"
+                    className="group overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl dark:bg-card"
                   >
                     <div className="grid sm:grid-cols-2">
                       <div className="relative h-48 sm:h-full">
@@ -224,7 +224,7 @@ export function BlogPage() {
                         loading="lazy"
                       />
                       <div className="absolute left-3 top-3">
-                        <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-foreground/80">
+                        <span className="rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-foreground/80 dark:bg-slate-800/90">
                           <Tag className="mr-1 inline h-3 w-3" />
                           {language === 'th' ? post.categoryThai : post.category}
                         </span>
@@ -303,7 +303,7 @@ export function BlogPage() {
                     placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="flex-1 rounded-lg px-4 py-3 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                    className="flex-1 rounded-lg bg-white px-4 py-3 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 dark:bg-slate-800"
                   />
                   <Button
                     className="bg-white text-primary hover:bg-accent"

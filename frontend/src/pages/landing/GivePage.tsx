@@ -224,7 +224,7 @@ export function GivePage() {
                           onClick={() => setSelectedCategory(option.id)}
                           className={`cursor-pointer rounded-lg border-2 p-4 text-left transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                             selectedCategory === option.id
-                              ? 'border-amber-500 bg-amber-50'
+                              ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/50'
                               : 'border-border hover:border-border'
                           }`}
                         >
@@ -284,7 +284,7 @@ export function GivePage() {
                       className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus-visible:outline-none focus-visible:ring-2 ${
                         amountError
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                          : 'border-border focus:border-amber-500 focus:ring-amber-200'
+                          : 'border-border focus:border-amber-500 focus:ring-amber-200 dark:focus:ring-amber-800'
                       }`}
                       aria-invalid={!!amountError}
                       aria-describedby={amountError ? 'amount-error' : undefined}
@@ -327,7 +327,7 @@ export function GivePage() {
                       onClick={() => setPaymentMethod('bank')}
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'bank'
-                          ? 'border-amber-500 bg-amber-50'
+                          ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/50'
                           : 'border-border hover:border-border'
                       }`}
                     >
@@ -340,7 +340,7 @@ export function GivePage() {
                       onClick={() => setPaymentMethod('promptpay')}
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'promptpay'
-                          ? 'border-amber-500 bg-amber-50'
+                          ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/50'
                           : 'border-border hover:border-border'
                       }`}
                     >
@@ -351,7 +351,7 @@ export function GivePage() {
                       onClick={() => setPaymentMethod('cash')}
                       className={`cursor-pointer rounded-lg border-2 p-4 text-center transition-[border-color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                         paymentMethod === 'cash'
-                          ? 'border-amber-500 bg-amber-50'
+                          ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/50'
                           : 'border-border hover:border-border'
                       }`}
                     >
@@ -436,7 +436,7 @@ export function GivePage() {
               <Button
                 onClick={handleSubmit}
                 disabled={!selectedCategory || !amount || !paymentMethod}
-                className="w-full bg-amber-600 py-6 text-lg hover:bg-amber-700 disabled:bg-slate-300"
+                className="w-full bg-amber-600 py-6 text-lg hover:bg-amber-700 disabled:bg-slate-300 dark:disabled:bg-slate-700"
               >
                 {paymentMethod === 'cash'
                   ? language === 'th'
@@ -451,15 +451,15 @@ export function GivePage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Security Notice */}
-              <Card className="border-green-200 bg-green-50">
+              <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/50">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-3">
-                    <Shield className="h-5 w-5 text-green-600" />
+                    <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
                     <div>
-                      <h3 className="font-medium text-green-900">
+                      <h3 className="font-medium text-green-900 dark:text-green-200">
                         {language === 'th' ? 'การถวายที่ปลอดภัย' : 'Secure Giving'}
                       </h3>
-                      <p className="mt-1 text-sm text-green-700">
+                      <p className="mt-1 text-sm text-green-700 dark:text-green-300">
                         {language === 'th'
                           ? 'ข้อมูลของคุณได้รับการปกป้องและเป็นความลับ'
                           : 'Your information is protected and confidential'}

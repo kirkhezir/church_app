@@ -112,13 +112,13 @@ export function PrayerRequestSection() {
   return (
     <section
       id="prayer-request"
-      className="bg-gradient-to-b from-rose-50 to-white py-16 sm:py-24"
+      className="bg-gradient-to-b from-rose-50 to-white py-16 dark:from-rose-950/20 dark:to-background sm:py-24"
       aria-labelledby="prayer-heading"
     >
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-rose-100 p-3">
+          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-rose-100 p-3 dark:bg-rose-900/30">
             <Heart className="h-8 w-8 text-rose-600" />
           </div>
           <h2
@@ -152,7 +152,7 @@ export function PrayerRequestSection() {
           <CardContent className="p-6">
             {isSubmitted ? (
               <div className="py-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
                   <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
                 <h3 className="mb-2 text-xl font-semibold text-foreground">
@@ -275,7 +275,9 @@ export function PrayerRequestSection() {
 
                 {/* Error Message */}
                 {error && (
-                  <div className="rounded-lg bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+                  <div className="rounded-lg bg-rose-50 p-4 text-sm text-rose-700 dark:bg-rose-950/30 dark:text-rose-300">
+                    {error}
+                  </div>
                 )}
 
                 {/* Submit Button */}

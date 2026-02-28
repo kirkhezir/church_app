@@ -23,7 +23,8 @@ const themeOptions: { value: Theme; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function AppearanceSettings() {
-  const { theme, setTheme } = useTheme();
+  const { setScopedTheme, getScopedTheme } = useTheme();
+  const appTheme = getScopedTheme('app');
   const [compactMode, setCompactMode] = useState(
     () => localStorage.getItem(COMPACT_KEY) === 'true'
   );
@@ -54,9 +55,9 @@ export default function AppearanceSettings() {
             {themeOptions.map((opt) => (
               <button
                 key={opt.value}
-                onClick={() => setTheme(opt.value)}
+                onClick={() => setScopedTheme('app', opt.value)}
                 className={`flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-sm transition-colors ${
-                  theme === opt.value
+                  appTheme === opt.value
                     ? 'border-primary bg-primary/5 text-primary'
                     : 'border-transparent bg-muted/50 text-muted-foreground hover:bg-muted'
                 }`}

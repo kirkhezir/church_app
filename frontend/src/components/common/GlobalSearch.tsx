@@ -307,7 +307,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
       {/* Search Modal */}
-      <div className="relative z-10 mx-4 w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-2xl">
+      <div className="relative z-10 mx-4 w-full max-w-2xl overflow-hidden rounded-xl bg-background shadow-2xl">
         {/* Search Input */}
         <div className="flex items-center border-b border-border px-4">
           <Search className="h-5 w-5 text-muted-foreground" />
@@ -361,13 +361,13 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                     <div
                       className={`rounded-lg p-2 ${
                         result.type === 'sermon'
-                          ? 'bg-purple-100 text-purple-600'
+                          ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'
                           : result.type === 'event'
-                            ? 'bg-emerald-100 text-emerald-600'
+                            ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'
                             : result.type === 'ministry'
                               ? 'bg-accent text-primary'
                               : result.type === 'blog'
-                                ? 'bg-amber-100 text-amber-600'
+                                ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
                                 : 'bg-muted text-muted-foreground'
                       }`}
                     >
@@ -405,16 +405,16 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
         <div className="flex items-center justify-between border-t border-border bg-muted px-4 py-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
-              <kbd className="rounded border bg-white px-1.5 py-0.5 text-[10px]">↵</kbd>
+              <kbd className="rounded border bg-muted px-1.5 py-0.5 text-[10px]">↵</kbd>
               {language === 'th' ? 'เพื่อเลือก' : 'to select'}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="rounded border bg-white px-1.5 py-0.5 text-[10px]">ESC</kbd>
+              <kbd className="rounded border bg-muted px-1.5 py-0.5 text-[10px]">ESC</kbd>
               {language === 'th' ? 'เพื่อปิด' : 'to close'}
             </span>
           </div>
           <span className="flex items-center gap-1">
-            <kbd className="rounded border bg-white px-1.5 py-0.5 text-[10px]">⌘K</kbd>
+            <kbd className="rounded border bg-muted px-1.5 py-0.5 text-[10px]">⌘K</kbd>
             {language === 'th' ? 'เปิดค้นหา' : 'to search'}
           </span>
         </div>

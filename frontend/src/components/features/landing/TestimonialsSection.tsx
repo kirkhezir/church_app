@@ -170,7 +170,9 @@ export function TestimonialsSection() {
                   aria-selected={idx === currentIndex}
                   aria-label={`Go to testimonial ${idx + 1}`}
                   className={`h-2 rounded-full transition-[width,background-color] duration-200 ${
-                    idx === currentIndex ? 'w-6 bg-primary' : 'w-2 bg-slate-300 hover:bg-slate-400'
+                    idx === currentIndex
+                      ? 'w-6 bg-primary'
+                      : 'w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500'
                   }`}
                 />
               ))}

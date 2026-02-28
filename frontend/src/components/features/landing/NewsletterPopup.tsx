@@ -229,7 +229,7 @@ export function NewsletterPopup({
           </>
         ) : (
           <div className="py-6 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <DialogTitle className="mb-2 text-2xl">Thank You!</DialogTitle>

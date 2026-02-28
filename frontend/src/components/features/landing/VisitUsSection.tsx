@@ -161,7 +161,7 @@ export function VisitUsSection() {
   return (
     <section
       id="visit"
-      className="bg-gradient-to-b from-accent to-white py-16 sm:py-24"
+      className="bg-gradient-to-b from-accent to-background py-16 sm:py-24"
       aria-labelledby="visit-heading"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -189,7 +189,7 @@ export function VisitUsSection() {
           {services.map((service) => (
             <Card
               key={service.name}
-              className="border-2 border-accent bg-white text-center transition-shadow hover:shadow-lg"
+              className="border-2 border-accent bg-card text-center transition-shadow hover:shadow-lg"
             >
               <CardContent className="p-5">
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent">
@@ -209,7 +209,7 @@ export function VisitUsSection() {
 
         {/* Next Sabbath Badge */}
         <div className="mb-8 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
             <Clock className="h-4 w-4" />
             {language === 'th' ? 'วันสะบาโตถัดไป:' : 'Next Sabbath:'} {nextSaturday}
           </span>
@@ -225,7 +225,7 @@ export function VisitUsSection() {
                 onClick={() => setActiveTab(item.id)}
                 className={`flex min-w-max flex-1 items-center justify-center gap-2 whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
                   activeTab === item.id
-                    ? 'border-b-2 border-primary bg-white text-primary'
+                    ? 'border-b-2 border-primary bg-background text-primary'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >

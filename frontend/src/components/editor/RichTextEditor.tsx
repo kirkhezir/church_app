@@ -85,7 +85,7 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="rounded-lg border border-border focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+    <div className="rounded-lg border border-border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
       {/* Toolbar */}
       {!disabled && (
         <div className="flex flex-wrap gap-1 border-b border-border bg-background p-2">

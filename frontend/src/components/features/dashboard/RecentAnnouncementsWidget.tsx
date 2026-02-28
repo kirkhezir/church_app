@@ -41,11 +41,11 @@ export const RecentAnnouncementsWidget = memo(function RecentAnnouncementsWidget
   const getPriorityColor = (priority: string) => {
     switch (priority.toUpperCase()) {
       case 'URGENT':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
       case 'HIGH':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
       case 'NORMAL':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
       case 'LOW':
         return 'bg-muted text-foreground';
       default:
@@ -76,7 +76,9 @@ export const RecentAnnouncementsWidget = memo(function RecentAnnouncementsWidget
               <div
                 key={announcement.id}
                 className={`rounded-lg border p-4 transition-colors hover:bg-background ${
-                  !announcement.isRead ? 'border-blue-300 bg-blue-50/50' : ''
+                  !announcement.isRead
+                    ? 'border-blue-300 bg-blue-50/50 dark:border-blue-700 dark:bg-blue-950/30'
+                    : ''
                 }`}
               >
                 <div className="flex items-start justify-between">

@@ -35,7 +35,7 @@ const coreValues = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="bg-white px-4 py-20">
+    <section id="about" className="bg-background px-4 py-20">
       <div className="mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-16 text-center">

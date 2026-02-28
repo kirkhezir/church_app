@@ -28,10 +28,10 @@ const categoryLabels: Record<EventCategory, string> = {
 };
 
 const categoryColors: Record<EventCategory, string> = {
-  WORSHIP: 'bg-blue-100 text-blue-800',
-  BIBLE_STUDY: 'bg-purple-100 text-purple-800',
-  COMMUNITY: 'bg-green-100 text-green-800',
-  FELLOWSHIP: 'bg-orange-100 text-orange-800',
+  WORSHIP: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  BIBLE_STUDY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  COMMUNITY: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  FELLOWSHIP: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
 };
 
 export const EventCard = memo(function EventCard({
@@ -69,12 +69,12 @@ export const EventCard = memo(function EventCard({
                 {categoryLabels[event.category]}
               </span>
               {isCancelled && (
-                <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
+                <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
                   Cancelled
                 </span>
               )}
               {isFull && !isCancelled && (
-                <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
+                <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
                   Full
                 </span>
               )}

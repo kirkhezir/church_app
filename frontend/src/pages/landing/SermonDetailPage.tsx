@@ -204,7 +204,7 @@ export function SermonDetailPage() {
                   <Share2 className="h-4 w-4" />
                   {language === 'th' ? 'แชร์' : 'Share'}
                   {shareMessage && (
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-muted dark:text-slate-800">
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white dark:bg-slate-700 dark:text-white">
                       {shareMessage}
                     </span>
                   )}

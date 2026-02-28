@@ -20,7 +20,11 @@ export function LocationMapSection() {
     'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center';
 
   return (
-    <section id="location" className="bg-white py-16 sm:py-24" aria-labelledby="location-heading">
+    <section
+      id="location"
+      className="bg-background py-16 sm:py-24"
+      aria-labelledby="location-heading"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center sm:mb-12">
@@ -81,7 +85,7 @@ export function LocationMapSection() {
             {/* Phone */}
             <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
                   <Phone className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Phone</h3>
@@ -97,7 +101,7 @@ export function LocationMapSection() {
             {/* Email */}
             <div className="rounded-xl bg-muted p-5">
               <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
                   <Mail className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Email</h3>

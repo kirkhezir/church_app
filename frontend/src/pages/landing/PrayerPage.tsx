@@ -167,7 +167,7 @@ export function PrayerPage() {
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder={language === 'th' ? 'ไม่ระบุตัวตน' : 'Anonymous'}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
                       <div>
@@ -185,7 +185,7 @@ export function PrayerPage() {
                           spellCheck={false}
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
                       <div>
@@ -201,7 +201,7 @@ export function PrayerPage() {
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                           required
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         >
                           <option value="">
                             {language === 'th' ? 'เลือกหมวดหมู่' : 'Select a category'}
@@ -232,7 +232,7 @@ export function PrayerPage() {
                               ? 'แบ่งปันคำอธิษฐานของคุณ...'
                               : 'Share your prayer request...'
                           }
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200"
+                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
 
@@ -331,12 +331,12 @@ export function PrayerPage() {
             </Card>
 
             {/* Prayer Promise */}
-            <Card className="mt-6 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+            <Card className="mt-6 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 dark:border-purple-800 dark:from-purple-950/50 dark:to-pink-950/50">
               <CardContent className="p-6 text-center">
-                <h3 className="mb-3 font-bold text-purple-900">
+                <h3 className="mb-3 font-bold text-purple-900 dark:text-purple-200">
                   {language === 'th' ? 'พันธสัญญาการอธิษฐาน' : 'Our Prayer Promise'}
                 </h3>
-                <p className="text-sm text-purple-700">
+                <p className="text-sm text-purple-700 dark:text-purple-300">
                   {language === 'th'
                     ? 'ศิษยาภิบาลและทีมอธิษฐานของเราอธิษฐานเผื่อทุกคำอธิษฐานที่ได้รับ เราเชื่อในพลังแห่งการอธิษฐานและยืนเคียงข้างคุณในความเชื่อ'
                     : 'Our pastor and prayer team pray over every request received. We believe in the power of prayer and stand with you in faith.'}
@@ -361,7 +361,7 @@ export function PrayerPage() {
                 <Card key={prayer.id} className="transition-shadow hover:shadow-md">
                   <CardContent className="p-5">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                      <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
                         {language === 'th'
                           ? (prayer.categoryThai ?? prayer.category)
                           : prayer.category}
@@ -383,7 +383,7 @@ export function PrayerPage() {
                         className={
                           prayedFor.includes(prayer.id)
                             ? 'bg-purple-600'
-                            : 'border-purple-300 text-purple-600'
+                            : 'border-purple-300 text-purple-600 dark:border-purple-700 dark:text-purple-400'
                         }
                         onClick={() => handlePrayFor(prayer.id)}
                         disabled={prayedFor.includes(prayer.id)}

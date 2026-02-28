@@ -279,11 +279,11 @@ export function VisitPage() {
           {/* Contact Info and Form - Side by side with equal height */}
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Have Questions? - Link to Contact */}
-            <Card className="flex flex-col border-emerald-100 bg-gradient-to-br from-emerald-50 to-white">
+            <Card className="flex flex-col border-emerald-100 bg-gradient-to-br from-emerald-50 to-white dark:border-emerald-800 dark:from-emerald-950/50 dark:to-slate-900">
               <CardContent className="flex flex-1 flex-col p-6">
                 {/* Header with icon */}
                 <div className="mb-auto">
-                  <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm">
+                  <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 shadow-sm dark:bg-emerald-900/30">
                     <MessageSquare className="h-7 w-7 text-emerald-600" />
                   </div>
                   <h3 className="mb-2 text-2xl font-bold text-foreground">
@@ -324,7 +324,7 @@ export function VisitPage() {
                     <a href="tel:+66876106926" className="flex-1">
                       <Button
                         variant="outline"
-                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50"
+                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-700 dark:hover:bg-emerald-900/30"
                       >
                         <Phone className="h-4 w-4" />
                         {language === 'th' ? 'โทร' : 'Call'}
@@ -338,7 +338,7 @@ export function VisitPage() {
                     >
                       <Button
                         variant="outline"
-                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50"
+                        className="w-full gap-2 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-700 dark:hover:bg-emerald-900/30"
                       >
                         <MessageSquare className="h-4 w-4" />
                         LINE
@@ -359,15 +359,15 @@ export function VisitPage() {
 
                 {submitted ? (
                   <div
-                    className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center"
+                    className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg bg-emerald-50 p-8 text-center dark:bg-emerald-950/50"
                     role="status"
                     aria-live="polite"
                   >
                     <CheckCircle2 className="mx-auto mb-3 h-12 w-12 text-emerald-500" />
-                    <p className="text-lg font-medium text-emerald-700">
+                    <p className="text-lg font-medium text-emerald-700 dark:text-emerald-300">
                       {language === 'th' ? 'ส่งข้อความสำเร็จ!' : 'Message sent successfully!'}
                     </p>
-                    <p className="mt-2 text-sm text-emerald-600">
+                    <p className="mt-2 text-sm text-emerald-600 dark:text-emerald-400">
                       {language === 'th'
                         ? 'เราจะติดต่อกลับโดยเร็วที่สุด'
                         : "We'll get back to you soon."}

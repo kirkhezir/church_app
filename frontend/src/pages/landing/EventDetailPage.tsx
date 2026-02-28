@@ -352,7 +352,7 @@ export function EventDetailPage() {
                   <div className="space-y-3">
                     {event.schedule.map((item, i) => (
                       <div key={i} className="flex gap-4 border-l-2 border-emerald-500 pl-4">
-                        <span className="w-24 shrink-0 font-medium text-emerald-600">
+                        <span className="w-24 shrink-0 font-medium text-emerald-600 dark:text-emerald-400">
                           {item.time}
                         </span>
                         <span className="text-muted-foreground">
@@ -512,7 +512,7 @@ export function EventDetailPage() {
 
             {/* RSVP Card */}
             {event.rsvpRequired && (
-              <Card className="border-emerald-200 bg-emerald-50">
+              <Card className="border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/50">
                 <CardContent className="p-6">
                   <h3 className="mb-3 font-bold text-foreground">
                     {language === 'th' ? 'ลงทะเบียน' : 'RSVP'}
@@ -522,7 +522,9 @@ export function EventDetailPage() {
                       {spotsRemaining !== null && (
                         <p className="mb-3 text-sm text-muted-foreground">
                           <Users className="mr-1 inline h-4 w-4" />
-                          {spotsRemaining} {language === 'th' ? 'ที่นั่งว่าง' : 'spots remaining'}
+                          <span className="text-emerald-700 dark:text-emerald-300">
+                            {spotsRemaining} {language === 'th' ? 'ที่นั่งว่าง' : 'spots remaining'}
+                          </span>
                         </p>
                       )}
                       {event.rsvpDeadline && (
@@ -543,7 +545,7 @@ export function EventDetailPage() {
                   ) : (
                     <div className="text-center">
                       <CheckCircle className="mx-auto mb-2 h-10 w-10 text-emerald-600" />
-                      <p className="font-medium text-emerald-700">
+                      <p className="font-medium text-emerald-700 dark:text-emerald-300">
                         {language === 'th' ? 'ลงทะเบียนสำเร็จ!' : 'Successfully Registered!'}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">

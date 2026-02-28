@@ -136,7 +136,7 @@ export class PageErrorBoundary extends Component<
       return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
           <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
             {this.state.isChunkError ? (
@@ -160,7 +160,9 @@ export class PageErrorBoundary extends Component<
             )}
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mb-6 rounded-lg bg-muted p-4 text-left">
-                <p className="font-mono text-sm text-red-600">{this.state.error.message}</p>
+                <p className="font-mono text-sm text-red-600 dark:text-red-400">
+                  {this.state.error.message}
+                </p>
                 {this.state.errorInfo && (
                   <pre className="mt-2 overflow-auto text-xs text-muted-foreground">
                     {this.state.errorInfo.componentStack}

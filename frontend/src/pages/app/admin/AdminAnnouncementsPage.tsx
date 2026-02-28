@@ -358,7 +358,7 @@ export function AdminAnnouncementsPage() {
               {/* Desktop Table View */}
               <div className="hidden md:block">
                 <div className="min-h-[480px] overflow-x-auto rounded-lg border bg-card shadow">
-                  <table className="min-w-full table-fixed divide-y divide-gray-200">
+                  <table className="min-w-full table-fixed divide-y divide-border">
                     <thead className="bg-background">
                       <tr>
                         <th className="w-12 px-4 py-3">
@@ -573,7 +573,7 @@ export function AdminAnnouncementsPage() {
                         </p>
                       </div>
                       {announcement.priority === 'URGENT' ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
                           <AlertCircleIcon className="h-3 w-3" />
                           Urgent
                         </span>

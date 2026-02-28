@@ -44,7 +44,7 @@ export function MissionStatementSection() {
   return (
     <section
       id="mission"
-      className="bg-gradient-to-b from-white to-gray-50 px-4 py-16"
+      className="bg-gradient-to-b from-white to-gray-50 px-4 py-16 dark:from-gray-900 dark:to-gray-950"
       aria-labelledby="mission-heading"
     >
       <div className="mx-auto max-w-7xl">

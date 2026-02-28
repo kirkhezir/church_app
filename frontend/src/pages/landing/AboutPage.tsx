@@ -81,7 +81,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     departmentThai: 'ฝ่ายบริหารโบสถ์',
     icon: ShieldCheck,
     accent: 'text-primary',
-    iconBg: 'bg-blue-100',
+    iconBg: 'bg-blue-100 dark:bg-blue-900/30',
     members: [
       {
         name: 'Gladys Jane Santos',
@@ -102,7 +102,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     departmentThai: 'แผนกโรงเรียนวันสะบาโต',
     icon: GraduationCap,
     accent: 'text-emerald-600',
-    iconBg: 'bg-emerald-100',
+    iconBg: 'bg-emerald-100 dark:bg-emerald-900/30',
     members: [
       {
         name: 'Mary June Cabunoc',
@@ -124,7 +124,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     departmentThai: 'มัคนายก / มัคนายิกา',
     icon: HeartHandshake,
     accent: 'text-violet-600',
-    iconBg: 'bg-violet-100',
+    iconBg: 'bg-violet-100 dark:bg-violet-900/30',
     members: [
       {
         name: 'Kirk Hezir Cabunoc',
@@ -151,7 +151,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     departmentThai: 'แผนกเยาวชน',
     icon: Sparkles,
     accent: 'text-amber-600',
-    iconBg: 'bg-amber-100',
+    iconBg: 'bg-amber-100 dark:bg-amber-900/30',
     members: [
       {
         name: 'Ronela Mifranum',
@@ -172,7 +172,7 @@ const CHURCH_OFFICERS_BY_DEPT: {
     departmentThai: 'แผนกดนตรีและนมัสการ',
     icon: Music,
     accent: 'text-rose-600',
-    iconBg: 'bg-rose-100',
+    iconBg: 'bg-rose-100 dark:bg-rose-900/30',
     members: [
       {
         name: 'Supachai Musikphan',
@@ -402,7 +402,7 @@ export function AboutPage() {
                         src={elder.photo}
                         alt={elder.name}
                         loading="lazy"
-                        className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200"
+                        className="h-24 w-24 rounded-full object-cover ring-2 ring-blue-100 transition-[box-shadow] duration-200 group-hover:ring-4 group-hover:ring-blue-200 dark:ring-blue-800 dark:group-hover:ring-blue-700"
                       />
                       <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-white">
                         <Award className="h-3.5 w-3.5" />
@@ -440,7 +440,7 @@ export function AboutPage() {
                     {/* Department header bar */}
                     <div className={`${dept.iconBg} px-6 py-4`}>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-sm dark:bg-white/20">
                           <DeptIcon className={`h-4.5 w-4.5 ${dept.accent}`} />
                         </div>
                         <div>
@@ -454,14 +454,14 @@ export function AboutPage() {
                       </div>
                     </div>
                     {/* Members list */}
-                    <CardContent className="divide-y divide-slate-100 p-0">
+                    <CardContent className="divide-y divide-slate-100 p-0 dark:divide-slate-800">
                       {dept.members.map((officer, idx) => (
                         <div key={idx} className="flex items-center gap-4 px-6 py-4">
                           <img
                             src={getAvatarUrl(officer.name)}
                             alt={officer.name}
                             loading="lazy"
-                            className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100"
+                            className="h-12 w-12 shrink-0 rounded-full ring-2 ring-slate-100 dark:ring-slate-700"
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium text-foreground">{officer.name}</p>

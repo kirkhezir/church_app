@@ -92,7 +92,7 @@ export function EventsPage() {
                   <Link
                     key={event.id}
                     to={`/events/${event.id}`}
-                    className="group min-w-[300px] overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl"
+                    className="group min-w-[300px] overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-xl dark:bg-card"
                   >
                     <div className="relative h-40">
                       <img
@@ -154,7 +154,7 @@ export function EventsPage() {
               >
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'grid' ? 'bg-white shadow-sm dark:bg-slate-700' : 'hover:bg-white/50 dark:hover:bg-slate-600/50'}`}
                   aria-label={language === 'th' ? 'มุมมองกริด' : 'Grid View'}
                   role="tab"
                   aria-selected={viewMode === 'grid'}
@@ -163,7 +163,7 @@ export function EventsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'list' ? 'bg-white shadow-sm dark:bg-slate-700' : 'hover:bg-white/50 dark:hover:bg-slate-600/50'}`}
                   aria-label={language === 'th' ? 'มุมมองรายการ' : 'List View'}
                   role="tab"
                   aria-selected={viewMode === 'list'}
@@ -172,7 +172,7 @@ export function EventsPage() {
                 </button>
                 <button
                   onClick={() => setViewMode('calendar')}
-                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : 'hover:bg-white/50'}`}
+                  className={`cursor-pointer rounded p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${viewMode === 'calendar' ? 'bg-white shadow-sm dark:bg-slate-700' : 'hover:bg-white/50 dark:hover:bg-slate-600/50'}`}
                   aria-label={language === 'th' ? 'มุมมองปฏิทิน' : 'Calendar View'}
                   role="tab"
                   aria-selected={viewMode === 'calendar'}
@@ -371,7 +371,9 @@ export function EventsPage() {
                       <div
                         key={day}
                         className={`h-16 overflow-hidden rounded border p-1 sm:h-24 ${
-                          isToday ? 'border-emerald-500 bg-emerald-50' : 'border-border bg-white'
+                          isToday
+                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50'
+                            : 'border-border bg-white dark:bg-card'
                         } ${dayEvents.length > 0 ? 'cursor-pointer hover:border-emerald-300' : ''}`}
                         title={
                           dayEvents.length > 0
@@ -382,7 +384,7 @@ export function EventsPage() {
                         }
                       >
                         <div
-                          className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600' : 'text-foreground/80'}`}
+                          className={`mb-1 text-sm font-medium ${isToday ? 'text-emerald-600 dark:text-emerald-400' : 'text-foreground/80'}`}
                         >
                           {day}
                         </div>
@@ -391,7 +393,7 @@ export function EventsPage() {
                             <Link
                               key={event.id}
                               to={`/events/${event.id}`}
-                              className="block truncate rounded bg-emerald-100 px-1 text-xs text-emerald-700 hover:bg-emerald-200"
+                              className="block truncate rounded bg-emerald-100 px-1 text-xs text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-800/50"
                             >
                               <span className="hidden sm:inline">
                                 {language === 'th' ? event.titleThai : event.title}

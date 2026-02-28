@@ -86,7 +86,7 @@ export function ResourcesPage() {
                 placeholder={language === 'th' ? 'ค้นหาทรัพยากร...' : 'Search resources...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200"
+                className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200 dark:focus-visible:ring-teal-800"
               />
             </div>
 
@@ -146,9 +146,9 @@ export function ResourcesPage() {
                             <div
                               className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-lg ${
                                 resource.type === 'pdf'
-                                  ? 'bg-red-100'
+                                  ? 'bg-red-100 dark:bg-red-900/30'
                                   : resource.type === 'video'
-                                    ? 'bg-purple-100'
+                                    ? 'bg-purple-100 dark:bg-purple-900/30'
                                     : 'bg-accent'
                               }`}
                             >
@@ -327,12 +327,12 @@ export function ResourcesPage() {
             </Card>
 
             {/* Request Resource */}
-            <Card className="border-teal-200 bg-teal-50">
+            <Card className="border-teal-200 bg-teal-50 dark:border-teal-800 dark:bg-teal-950/50">
               <CardContent className="p-5 text-center">
-                <h3 className="mb-2 font-bold text-teal-900">
+                <h3 className="mb-2 font-bold text-teal-900 dark:text-teal-200">
                   {language === 'th' ? 'ต้องการทรัพยากร?' : 'Need a Resource?'}
                 </h3>
-                <p className="mb-4 text-sm text-teal-700">
+                <p className="mb-4 text-sm text-teal-700 dark:text-teal-300">
                   {language === 'th'
                     ? 'แจ้งให้เราทราบถ้าคุณกำลังมองหาสิ่งที่เฉพาะเจาะจง'
                     : "Let us know if you're looking for something specific"}

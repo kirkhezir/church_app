@@ -49,8 +49,8 @@ const ministries: Ministry[] = [
     description:
       'Empowering young people to grow in faith and become leaders in the church and community.',
     icon: Users,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-blue-600 dark:text-blue-400',
+    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     activities: ['AY Programs', 'Youth Sabbath', 'Outreach Activities', 'Bible Quizzes'],
     category: 'youth',
   },
@@ -60,8 +60,8 @@ const ministries: Ministry[] = [
     description:
       'Nurturing the faith of our youngest members through age-appropriate Bible lessons and activities.',
     icon: Baby,
-    color: 'text-pink-600',
-    bgColor: 'bg-pink-100',
+    color: 'text-pink-600 dark:text-pink-400',
+    bgColor: 'bg-pink-100 dark:bg-pink-900/30',
     activities: ['Sabbath School', 'Vacation Bible School', 'Kids Choir', 'Story Time'],
     category: 'family',
   },
@@ -70,8 +70,8 @@ const ministries: Ministry[] = [
     name: 'Music Ministry',
     description: 'Leading worship through song and inspiring hearts to praise God through music.',
     icon: Music,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
+    color: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     activities: ['Church Choir', 'Praise Team', 'Special Music', 'Music Training'],
     category: 'worship',
   },
@@ -80,8 +80,8 @@ const ministries: Ministry[] = [
     name: 'Community Outreach',
     description: 'Serving our neighbors and sharing the love of Christ through practical ministry.',
     icon: HeartHandshake,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-green-600 dark:text-green-400',
+    bgColor: 'bg-green-100 dark:bg-green-900/30',
     activities: ['Food Distribution', 'Health Programs', 'Community Service', 'Disaster Relief'],
     category: 'service',
   },
@@ -91,8 +91,8 @@ const ministries: Ministry[] = [
     description:
       'Deepening understanding of Scripture through structured Bible study and training.',
     icon: GraduationCap,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
+    color: 'text-orange-600 dark:text-orange-400',
+    bgColor: 'bg-orange-100 dark:bg-orange-900/30',
     activities: ['Bible Classes', 'Leadership Training', 'Seminars', 'Book Clubs'],
     category: 'service',
   },
@@ -101,8 +101,8 @@ const ministries: Ministry[] = [
     name: 'Family Ministry',
     description: 'Strengthening families through counseling, workshops, and fellowship activities.',
     icon: Home,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-red-600 dark:text-red-400',
+    bgColor: 'bg-red-100 dark:bg-red-900/30',
     activities: ['Marriage Enrichment', 'Parenting Classes', 'Family Camps', 'Counseling'],
     category: 'family',
   },
@@ -204,7 +204,7 @@ export function MinistryCardsSection() {
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeFilter === option.value
                   ? 'bg-primary text-primary-foreground'
-                  : 'bg-white text-muted-foreground hover:bg-muted'
+                  : 'bg-white text-muted-foreground hover:bg-muted dark:bg-card'
               }`}
               aria-pressed={activeFilter === option.value}
             >
@@ -218,7 +218,7 @@ export function MinistryCardsSection() {
           {filteredMinistries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border border-border bg-white transition-shadow duration-200 hover:shadow-lg"
+              className="group overflow-hidden border border-border bg-card transition-shadow duration-200 hover:shadow-lg"
             >
               <CardContent className="flex h-full flex-col p-5">
                 {/* Icon + Title */}
@@ -302,7 +302,7 @@ export function MinistryCardsSection() {
 
           {isSubmitted ? (
             <div className="py-6 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
                 <CheckCircle2 className="h-8 w-8 text-emerald-600" />
               </div>
               <p className="text-muted-foreground">

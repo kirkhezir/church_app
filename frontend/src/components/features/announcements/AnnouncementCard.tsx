@@ -46,13 +46,13 @@ export const AnnouncementCard = memo(function AnnouncementCard({
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
               {isUrgent && (
-                <span className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
+                <span className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
                   <AlertCircleIcon className="h-3 w-3" />
                   Urgent
                 </span>
               )}
               {!isUrgent && (
-                <span className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+                <span className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
                   <BellIcon className="h-3 w-3" />
                   Normal
                 </span>
