@@ -163,7 +163,7 @@ export function AdminPrayerPage() {
                       <div className="mb-2 flex flex-wrap items-center gap-2">
                         {statusBadge(prayer.status)}
                         <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                          {prayer.category}
+                          {prayer.category.charAt(0).toUpperCase() + prayer.category.slice(1)}
                         </span>
                         {prayer.isPublic && (
                           <span className="text-xs text-muted-foreground">(Public)</span>

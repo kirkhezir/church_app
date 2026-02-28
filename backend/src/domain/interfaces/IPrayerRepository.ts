@@ -7,5 +7,5 @@ export interface IPrayerRepository {
   findById(id: string): Promise<any | null>;
   create(request: any): Promise<any>;
   updateStatus(id: string, status: string): Promise<any>;
-  incrementPrayerCount(id: string): Promise<void>;
+  incrementPrayerCount(id: string): Promise<any>;
 }

@@ -38,6 +38,16 @@ const categories = [
   { id: 'other', name: 'Other', nameThai: 'อื่นๆ' },
 ];
 
+/** Resolve a category value to its display name (handles lowercase IDs from DB). */
+function getCategoryDisplay(category: string, lang: 'en' | 'th'): string {
+  const match = categories.find(
+    (c) => c.id === category.toLowerCase() || c.name.toLowerCase() === category.toLowerCase()
+  );
+  if (match) return lang === 'th' ? match.nameThai : match.name;
+  // Fallback: capitalize first letter
+  return category.charAt(0).toUpperCase() + category.slice(1);
+}
+
 export function PrayerPage() {
   const { toast } = useToast();
   const { language } = useI18n();
@@ -96,13 +106,23 @@ export function PrayerPage() {
   };
 
   const handlePrayFor = async (id: string) => {
-    setPrayedFor((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    if (prayedFor.includes(id)) return;
+    setPrayedFor((prev) => [...prev, id]);
+    // Optimistically increment local count
+    setPublicPrayers((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
+    );
     try {
       const updated = await prayerService.prayForRequest(id);
-      setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+      if (updated) {
+        setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+      }
     } catch {
       // revert optimistic update
       setPrayedFor((prev) => prev.filter((pId) => pId !== id));
+      setPublicPrayers((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
+      );
     }
   };
 
@@ -363,8 +383,8 @@ export function PrayerPage() {
                     <div className="mb-2 flex items-center justify-between">
                       <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
                         {language === 'th'
-                          ? (prayer.categoryThai ?? prayer.category)
-                          : prayer.category}
+                          ? (prayer.categoryThai ?? getCategoryDisplay(prayer.category, 'th'))
+                          : getCategoryDisplay(prayer.category, 'en')}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
@@ -398,9 +418,7 @@ export function PrayerPage() {
                           : language === 'th'
                             ? 'ฉันอธิษฐาน'
                             : 'I Prayed'}
-                        <span className="ml-1">
-                          ({prayer.prayerCount + (prayedFor.includes(prayer.id) ? 1 : 0)})
-                        </span>
+                        <span className="ml-1">({prayer.prayerCount})</span>
                       </Button>
                     </div>
                   </CardContent>

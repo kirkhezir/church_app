@@ -17,12 +17,17 @@ import {
   HeartHandshake,
   Gift,
   MessageSquare,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageToggle from '@/components/common/LanguageToggle';
 import GlobalSearch from '@/components/common/GlobalSearch';
 import { LiveServiceIndicator } from '@/components/common/LiveServiceIndicator';
 import { useI18n } from '@/i18n';
+import { useTheme } from '@/hooks/useTheme';
+import type { Theme } from '@/hooks/useTheme';
 
 // =============================================================================
 // CONSTANTS
@@ -84,6 +89,27 @@ export function PublicNavigationHeader({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const { t } = useI18n();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  /** Cycle: light → dark → system */
+  const cycleTheme = useCallback(() => {
+    const order: Theme[] = ['light', 'dark', 'system'];
+    const next = order[(order.indexOf(theme) + 1) % order.length];
+    setTheme(next);
+  }, [theme, setTheme]);
+
+  const themeIcon = (transparent: boolean) => {
+    const cls = `h-5 w-5 transition-transform duration-300`;
+    if (theme === 'system')
+      return (
+        <Monitor className={`${cls} ${transparent ? 'text-white/90' : 'text-muted-foreground'}`} />
+      );
+    if (resolvedTheme === 'dark')
+      return <Moon className={`${cls} ${transparent ? 'text-yellow-300' : 'text-yellow-500'}`} />;
+    return <Sun className={`${cls} ${transparent ? 'text-yellow-300' : 'text-yellow-500'}`} />;
+  };
+
+  const themeLabel = theme === 'system' ? 'System' : theme === 'dark' ? 'Dark' : 'Light';
 
   // ---------------------------------------------------------------------------
   // Effects
@@ -390,6 +416,20 @@ export function PublicNavigationHeader({
               {/* Language Toggle */}
               <LanguageToggle compact lightMode={showTransparent} />
 
+              {/* Theme Toggle */}
+              <button
+                onClick={cycleTheme}
+                className={`rounded-lg p-2 transition-colors ${
+                  showTransparent
+                    ? 'text-white/90 hover:bg-white/10'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+                aria-label={`Switch theme (current: ${themeLabel})`}
+                title={`Theme: ${themeLabel}`}
+              >
+                {themeIcon(showTransparent)}
+              </button>
+
               {/* Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
@@ -429,6 +469,17 @@ export function PublicNavigationHeader({
             {/* ---- Mobile Menu Toggle ---- */}
             <div className="flex items-center gap-2 md:hidden">
               <LanguageToggle compact lightMode={showTransparent} />
+              <button
+                onClick={cycleTheme}
+                className={`rounded-lg p-2 ${
+                  showTransparent
+                    ? 'text-white/90 hover:bg-white/10'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+                aria-label={`Switch theme (current: ${themeLabel})`}
+              >
+                {themeIcon(showTransparent)}
+              </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`rounded-lg p-2 ${

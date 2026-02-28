@@ -38,8 +38,8 @@ export class PrayerRepository implements IPrayerRepository {
     });
   }
 
-  async incrementPrayerCount(id: string): Promise<void> {
-    await prisma.prayer_requests.update({
+  async incrementPrayerCount(id: string): Promise<any> {
+    return prisma.prayer_requests.update({
       where: { id },
       data: { prayerCount: { increment: 1 }, updatedAt: new Date() },
     });
