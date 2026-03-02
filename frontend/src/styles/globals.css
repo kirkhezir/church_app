@@ -527,3 +527,22 @@ html.reduce-motion * {
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+/* ================================================================
+   Goey Toast — Fix sonner LI opacity for mounted toasts
+   Sonner's JS-injected CSS sets opacity:0 on [data-sonner-toast].
+   The [data-mounted="true"] rule that transitions to opacity:1
+   can lose the specificity battle. This override ensures visibility.
+   ================================================================ */
+[data-sonner-toast][data-mounted='true'] {
+  opacity: 1 !important;
+}
+
+[data-sonner-toast][data-removed='true'] {
+  opacity: 0 !important;
+}
+
+[data-sonner-toast][data-visible='false'] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

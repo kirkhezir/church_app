@@ -7,8 +7,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { I18nProvider } from './i18n';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
-import { GooeyToaster } from 'goey-toast';
+import { ThemeAwareToaster } from './components/ui/ThemeAwareToaster';
 import './styles/globals.css';
+import 'goey-toast/styles.css';
 
 // Initialize Sentry before rendering
 initSentry();
@@ -82,7 +83,7 @@ ReactDOM.createRoot(root).render(
           <I18nProvider>
             <AuthProvider>
               <App />
-              <GooeyToaster position="bottom-right" theme="light" />
+              <ThemeAwareToaster />
             </AuthProvider>
           </I18nProvider>
         </ThemeProvider>
