@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EventCategory } from '@/types/api';
+import { gooeyToast } from 'goey-toast';
 
 const categoryColors: Record<EventCategory, string> = {
   [EventCategory.WORSHIP]: 'bg-accent text-primary',
@@ -97,10 +98,20 @@ export const EventDetailPage: React.FC = () => {
       return;
     }
 
-    if (event.hasUserRSVPd) {
-      await cancelRSVP(event.id);
-    } else {
-      await rsvpToEvent(event.id);
+    try {
+      if (event.hasUserRSVPd) {
+        await cancelRSVP(event.id);
+        gooeyToast.success('RSVP cancelled');
+      } else {
+        await rsvpToEvent(event.id);
+        gooeyToast.success('RSVP confirmed!', {
+          description: 'You have been registered for this event.',
+        });
+      }
+    } catch {
+      gooeyToast.error('RSVP failed', {
+        description: 'Could not process your request. Please try again.',
+      });
     }
   };
 

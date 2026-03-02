@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { apiClient } from '@/services/api/apiClient';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 interface ProfileData {
   firstName: string;
@@ -31,7 +31,6 @@ interface ProfileData {
 }
 
 export default function ProfileSettings() {
-  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
@@ -82,7 +81,7 @@ export default function ProfileSettings() {
       })) as { success: boolean; message: string; profile: ProfileData };
 
       if (response.success) {
-        toast({ title: 'Profile updated successfully!' });
+        gooeyToast.success('Profile updated successfully!');
         if (response.profile) {
           setFormData((prev) => ({
             ...prev,

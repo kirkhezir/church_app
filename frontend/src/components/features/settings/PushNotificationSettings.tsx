@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 import {
   requestPushPermission,
   isPushEnabled,
@@ -26,7 +26,6 @@ export function PushNotificationSettings() {
   const [toggling, setToggling] = React.useState(false);
   const [subscriptionCount, setSubscriptionCount] = React.useState(0);
   const [isSupported, setIsSupported] = React.useState(true);
-  const { toast } = useToast();
 
   // Check initial state
   React.useEffect(() => {
@@ -63,32 +62,26 @@ export function PushNotificationSettings() {
         if (subscription) {
           setEnabled(true);
           setSubscriptionCount((prev) => prev + 1);
-          toast({
-            title: 'Push notifications enabled',
+          gooeyToast.success('Push notifications enabled', {
             description: 'You will now receive notifications on this device.',
           });
         } else {
-          toast({
-            title: 'Permission denied',
+          gooeyToast.error('Permission denied', {
             description: 'Please allow notifications in your browser settings.',
-            variant: 'destructive',
           });
         }
       } else {
         await unsubscribeFromPush();
         setEnabled(false);
         setSubscriptionCount((prev) => Math.max(0, prev - 1));
-        toast({
-          title: 'Push notifications disabled',
+        gooeyToast.success('Push notifications disabled', {
           description: 'You will no longer receive notifications on this device.',
         });
       }
     } catch (error) {
       console.error('Failed to toggle push notifications:', error);
-      toast({
-        title: 'Error',
+      gooeyToast.error('Error', {
         description: 'Failed to update notification settings. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setToggling(false);
@@ -101,16 +94,13 @@ export function PushNotificationSettings() {
       await unsubscribeAllDevices();
       setEnabled(false);
       setSubscriptionCount(0);
-      toast({
-        title: 'All devices unsubscribed',
+      gooeyToast.success('All devices unsubscribed', {
         description: 'Push notifications disabled on all your devices.',
       });
     } catch (error) {
       console.error('Failed to unsubscribe all devices:', error);
-      toast({
-        title: 'Error',
+      gooeyToast.error('Error', {
         description: 'Failed to unsubscribe all devices. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setToggling(false);

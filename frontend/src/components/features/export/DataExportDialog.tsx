@@ -19,7 +19,7 @@ import {
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Label } from '../../../components/ui/label';
 import { RadioGroup, RadioGroupItem } from '../../../components/ui/radio-group';
-import { useToast } from '../../../hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 type ExportFormat = 'csv' | 'xlsx' | 'pdf';
 type DataType = 'members' | 'events' | 'announcements' | 'attendance';
@@ -88,7 +88,6 @@ const dataTypeLabels: Record<DataType, string> = {
 };
 
 export function DataExportDialog({ dataType, onExport, trigger }: DataExportDialogProps) {
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [format, setFormat] = useState<ExportFormat>('csv');
@@ -114,10 +113,8 @@ export function DataExportDialog({ dataType, onExport, trigger }: DataExportDial
 
   const handleExport = async () => {
     if (selectedFields.length === 0) {
-      toast({
-        title: 'No fields selected',
+      gooeyToast.warning('No fields selected', {
         description: 'Please select at least one field to export.',
-        variant: 'destructive',
       });
       return;
     }
@@ -136,16 +133,13 @@ export function DataExportDialog({ dataType, onExport, trigger }: DataExportDial
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast({
-        title: 'Export successful',
+      gooeyToast.success('Export successful', {
         description: `${dataTypeLabels[dataType]} data exported successfully.`,
       });
       setIsOpen(false);
     } catch {
-      toast({
-        title: 'Export failed',
+      gooeyToast.error('Export failed', {
         description: 'An error occurred while exporting data.',
-        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);

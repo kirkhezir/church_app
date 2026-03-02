@@ -26,14 +26,13 @@ import {
 import { MemberBulkActions } from '@/components/features/members/MemberBulkActions';
 import { DataExportDialog } from '@/components/features/export/DataExportDialog';
 import { adminService } from '@/services/endpoints/adminService';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 const MEMBER_SKELETON_KEYS = ['mem-0', 'mem-1', 'mem-2', 'mem-3', 'mem-4', 'mem-5'];
 
 export function MemberDirectoryPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebounce(searchQuery, 300);
 
@@ -83,19 +82,15 @@ export function MemberDirectoryPage() {
   // Bulk action handlers
   const handleBulkEmail = async (memberIds: string[], _subject: string, _message: string) => {
     // Bulk email requires a dedicated backend endpoint — notify with selected count for now
-    toast({
-      title: 'Email feature coming soon',
+    gooeyToast.info('Email feature coming soon', {
       description: `${memberIds.length} members selected. Bulk email is not yet supported.`,
-      variant: 'default',
     });
   };
 
   const handleBulkStatusChange = async (memberIds: string[], _status: 'ACTIVE' | 'INACTIVE') => {
     // Bulk status change requires a dedicated backend endpoint
-    toast({
-      title: 'Status change coming soon',
+    gooeyToast.info('Status change coming soon', {
       description: `${memberIds.length} members selected. Bulk status change is not yet supported.`,
-      variant: 'default',
     });
   };
 
@@ -106,12 +101,10 @@ export function MemberDirectoryPage() {
         blob,
         `members-export-${new Date().toISOString().split('T')[0]}.csv`
       );
-      toast({ title: 'Export complete', description: 'Member data downloaded successfully' });
+      gooeyToast.success('Export complete', { description: 'Member data downloaded successfully' });
     } catch {
-      toast({
-        title: 'Export failed',
+      gooeyToast.error('Export failed', {
         description: 'Could not export member data',
-        variant: 'destructive',
       });
     }
   };

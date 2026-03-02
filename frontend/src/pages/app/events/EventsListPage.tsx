@@ -14,6 +14,7 @@ import { SidebarLayout } from '@/components/layout';
 import { EventCard } from '@/components/features/events/EventCard';
 import { EventFilters } from '@/components/features/events/EventFilters';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 import { EventCalendarView } from '@/components/features/events/EventCalendarView';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -68,10 +69,16 @@ export function EventsListPage() {
 
       try {
         await rsvpToEvent(eventId);
+        gooeyToast.success('RSVP confirmed!', {
+          description: 'You have been registered for this event.',
+        });
         // Show success message or navigate to event details
         navigate(`/app/events/${eventId}`);
       } catch (err) {
         // Error is already handled by the hook
+        gooeyToast.error('RSVP failed', {
+          description: 'Could not register for this event. Please try again.',
+        });
         reportError('RSVP failed', err);
       }
     },

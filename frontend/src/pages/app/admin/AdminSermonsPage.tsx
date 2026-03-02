@@ -39,10 +39,9 @@ import {
 } from '@/components/ui/sheet';
 import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export function AdminSermonsPage() {
-  const { toast } = useToast();
   const [sermons, setSermons] = useState<Sermon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -166,10 +165,10 @@ export function AdminSermonsPage() {
 
       if (editingSermon) {
         await sermonService.updateSermon(editingSermon.id, payload);
-        toast({ title: 'Sermon updated successfully' });
+        gooeyToast.success('Sermon updated successfully');
       } else {
         await sermonService.createSermon(payload);
-        toast({ title: 'Sermon created successfully' });
+        gooeyToast.success('Sermon created successfully');
       }
       setShowForm(false);
       resetForm();
@@ -185,7 +184,7 @@ export function AdminSermonsPage() {
     try {
       setDeleting(true);
       await sermonService.deleteSermon(id);
-      toast({ title: 'Sermon deleted' });
+      gooeyToast.success('Sermon deleted');
       await fetchSermons();
     } catch {
       setError('Failed to delete sermon');

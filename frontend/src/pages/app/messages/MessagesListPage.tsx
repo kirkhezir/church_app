@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 
 const MSG_SKELETON_KEYS = ['msg-0', 'msg-1', 'msg-2', 'msg-3', 'msg-4'];
 
@@ -59,8 +60,10 @@ export function MessagesListPage() {
     if (!deleteTarget) return;
     try {
       await deleteMessage(deleteTarget.id);
+      gooeyToast.success('Message deleted');
       setFolder(activeFolder);
     } catch (err) {
+      gooeyToast.error('Failed to delete message');
       reportError('Failed to delete message', err);
     } finally {
       setDeleteTarget(null);

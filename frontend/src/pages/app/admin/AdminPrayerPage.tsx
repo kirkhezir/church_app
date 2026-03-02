@@ -24,12 +24,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { SidebarLayout } from '@/components/layout';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 type StatusFilter = 'all' | 'PENDING' | 'APPROVED' | 'ARCHIVED';
 
 export function AdminPrayerPage() {
-  const { toast } = useToast();
   const [requests, setRequests] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +78,7 @@ export function AdminPrayerPage() {
     setActionLoading(id);
     try {
       await prayerService.moderatePrayerRequest(id, status);
-      toast({ title: `Prayer request ${status.toLowerCase()}` });
+      gooeyToast.success(`Prayer request ${status.toLowerCase()}`);
       await fetchRequests();
     } catch {
       setError('Failed to moderate prayer request');

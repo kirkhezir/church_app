@@ -19,12 +19,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export function AnnouncementEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [announcement, setAnnouncement] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -60,7 +59,7 @@ export function AnnouncementEditPage() {
 
     try {
       await announcementService.updateAnnouncement(id, data);
-      toast({ title: 'Announcement updated successfully!' });
+      gooeyToast.success('Announcement updated successfully!');
 
       // Redirect to admin announcements page after short delay
       setTimeout(() => {

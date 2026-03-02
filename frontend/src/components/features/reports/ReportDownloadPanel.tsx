@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 import {
   downloadMemberReport,
   downloadEventsReport,
@@ -41,7 +41,6 @@ function ReportCard({
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
   const [eventId, setEventId] = React.useState('');
-  const { toast } = useToast();
 
   const handleDownload = async () => {
     setLoading(true);
@@ -58,10 +57,8 @@ function ReportCard({
           break;
         case 'attendance':
           if (!eventId) {
-            toast({
-              title: 'Event ID required',
+            gooeyToast.warning('Event ID required', {
               description: 'Please enter an event ID for the attendance report.',
-              variant: 'destructive',
             });
             return;
           }
@@ -69,16 +66,13 @@ function ReportCard({
           break;
       }
 
-      toast({
-        title: 'Report downloaded',
+      gooeyToast.success('Report downloaded', {
         description: `Your ${title.toLowerCase()} has been downloaded.`,
       });
     } catch (error) {
       console.error('Failed to download report:', error);
-      toast({
-        title: 'Download failed',
+      gooeyToast.error('Download failed', {
         description: 'Failed to generate the report. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);

@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 
 export function MessageDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,8 +42,10 @@ export function MessageDetailPage() {
   const handleDelete = async () => {
     try {
       await deleteMessage(id || '');
+      gooeyToast.success('Message deleted');
       navigate('/app/messages');
     } catch (err) {
+      gooeyToast.error('Failed to delete message');
       reportError('Failed to delete message', err);
     } finally {
       setShowDeleteConfirm(false);

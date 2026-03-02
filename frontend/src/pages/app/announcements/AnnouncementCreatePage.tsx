@@ -16,11 +16,10 @@ import { AnnouncementForm } from '@/components/features/announcements/Announceme
 import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export function AnnouncementCreatePage() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (data: {
@@ -33,7 +32,7 @@ export function AnnouncementCreatePage() {
 
     try {
       await announcementService.createAnnouncement(data);
-      toast({ title: 'Announcement created successfully!' });
+      gooeyToast.success('Announcement created successfully!');
 
       // Redirect to admin announcements page after short delay
       setTimeout(() => {

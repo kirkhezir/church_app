@@ -57,6 +57,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { getErrorMessage } from '@/lib/errorReporting';
 import { SidebarLayout } from '@/components/layout';
+import { gooeyToast } from 'goey-toast';
 
 export default function AdminMemberListPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -113,6 +114,9 @@ export default function AdminMemberListPage() {
         address: addFormData.address || undefined,
       });
       setAddSuccess(response);
+      gooeyToast.success('Member created successfully!', {
+        description: `${response.firstName} ${response.lastName} has been added.`,
+      });
       await loadMembers();
     } catch (err: unknown) {
       setAddError(getErrorMessage(err, 'Failed to create member'));
@@ -153,9 +157,11 @@ export default function AdminMemberListPage() {
       await adminService.deleteMember(memberId);
       setMembers(members.filter((m) => m.id !== memberId));
       setDeleteConfirm(null);
+      gooeyToast.success('Member removed');
     } catch (err: unknown) {
       const error = err as { message?: string };
       setError(error.message || 'Failed to delete member');
+      gooeyToast.error('Failed to delete member');
     } finally {
       setDeleteLoading(false);
     }

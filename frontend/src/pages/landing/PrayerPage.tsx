@@ -25,7 +25,7 @@ import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 const categories = [
   { id: 'health', name: 'Health', nameThai: 'สุขภาพ' },
@@ -49,7 +49,6 @@ function getCategoryDisplay(category: string, lang: 'en' | 'th'): string {
 }
 
 export function PrayerPage() {
-  const { toast } = useToast();
   const { language } = useI18n();
   useDocumentTitle('Prayer Requests', 'คำขออธิษฐาน', language);
   const [formData, setFormData] = useState({
@@ -99,7 +98,7 @@ export function PrayerPage() {
       const prayers = await prayerService.getPrayerRequests();
       setPublicPrayers(prayers);
     } catch {
-      toast({ title: 'Failed to submit prayer request', variant: 'destructive' });
+      gooeyToast.error('Failed to submit prayer request');
     } finally {
       setSubmitting(false);
     }

@@ -14,10 +14,9 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { apiClient } from '@/services/api/apiClient';
 import { getErrorMessage } from '@/lib/errorReporting';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export default function NotificationSettingsPage() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
@@ -53,7 +52,7 @@ export default function NotificationSettingsPage() {
       })) as { success: boolean; message: string };
 
       if (response.success) {
-        toast({ title: 'Notification preferences updated successfully!' });
+        gooeyToast.success('Notification preferences updated successfully!');
       } else {
         setError(response.message || 'Failed to update notification preferences');
       }

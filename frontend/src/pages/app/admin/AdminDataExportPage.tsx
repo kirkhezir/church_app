@@ -24,10 +24,9 @@ import { Input } from '@/components/ui/input';
 import { adminService } from '@/services/endpoints/adminService';
 import { getErrorMessage } from '@/lib/errorReporting';
 import { SidebarLayout } from '@/components/layout';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export default function AdminDataExportPage() {
-  const { toast } = useToast();
   const [exportType, setExportType] = useState<'members' | 'events'>('members');
   const [format, setFormat] = useState<'json' | 'csv'>('csv');
   const [roleFilter, setRoleFilter] = useState('ALL');
@@ -61,7 +60,7 @@ export default function AdminDataExportPage() {
           });
           adminService.downloadFile(blob, `members_${dateStr}.json`);
         }
-        toast({ title: 'Member data exported successfully!' });
+        gooeyToast.success('Member data exported successfully!');
       } else {
         const data = await adminService.exportEvents({
           format,
@@ -78,7 +77,7 @@ export default function AdminDataExportPage() {
           });
           adminService.downloadFile(blob, `events_${dateStr}.json`);
         }
-        toast({ title: 'Event data exported successfully!' });
+        gooeyToast.success('Event data exported successfully!');
       }
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Failed to export data'));

@@ -25,10 +25,9 @@ import {
 } from '@/components/ui/dialog';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export function AdminBlogPage() {
-  const { toast } = useToast();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -144,10 +143,10 @@ export function AdminBlogPage() {
 
       if (editingPost) {
         await blogService.updateBlogPost(editingPost.id, payload);
-        toast({ title: 'Blog post updated' });
+        gooeyToast.success('Blog post updated');
       } else {
         await blogService.createBlogPost(payload);
-        toast({ title: 'Blog post created' });
+        gooeyToast.success('Blog post created');
       }
       setShowForm(false);
       resetForm();
@@ -163,7 +162,7 @@ export function AdminBlogPage() {
     try {
       setDeleting(true);
       await blogService.deleteBlogPost(id);
-      toast({ title: 'Blog post deleted' });
+      gooeyToast.success('Blog post deleted');
       await fetchPosts();
     } catch {
       setError('Failed to delete blog post');

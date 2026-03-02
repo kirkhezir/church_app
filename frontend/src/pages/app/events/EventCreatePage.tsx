@@ -8,6 +8,7 @@ import { SidebarLayout } from '@/components/layout';
 import { eventService } from '@/services/endpoints/eventService';
 import { EventCategory } from '@/types/api';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 
 interface EventFormData {
   title: string;
@@ -28,7 +29,7 @@ export const EventCreatePage: React.FC = () => {
     setIsSubmitting(true);
     try {
       const newEvent = await eventService.createEvent(data);
-      // Navigate to the new event detail page
+      gooeyToast.success('Event created successfully!');
       navigate(`/app/events/${newEvent.id}`);
     } catch (error) {
       reportError('Failed to create event', error);

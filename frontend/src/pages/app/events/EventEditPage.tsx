@@ -11,6 +11,7 @@ import { useEventDetail } from '@/hooks/useEvents';
 import { eventService } from '@/services/endpoints/eventService';
 import { EventCategory } from '@/types/api';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 
 interface EventFormData {
   title: string;
@@ -46,7 +47,7 @@ export const EventEditPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       await eventService.updateEvent(id, data);
-      // Navigate back to event detail page
+      gooeyToast.success('Event updated successfully!');
       navigate(`/app/events/${id}`);
     } catch (error) {
       reportError('Failed to update event', error);

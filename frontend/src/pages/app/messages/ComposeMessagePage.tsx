@@ -14,6 +14,7 @@ import { SidebarLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { reportError } from '@/lib/errorReporting';
+import { gooeyToast } from 'goey-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -89,8 +90,10 @@ export function ComposeMessagePage() {
         subject: subject.trim(),
         body: body.trim(),
       });
+      gooeyToast.success('Message sent');
       navigate('/app/messages?folder=sent');
     } catch (err) {
+      gooeyToast.error('Failed to send message');
       reportError('Failed to send message', err);
     }
   };

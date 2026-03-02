@@ -35,10 +35,9 @@ import {
 } from '@/components/ui/sheet';
 import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
-import { useToast } from '@/hooks/use-toast';
+import { gooeyToast } from 'goey-toast';
 
 export function AdminGalleryPage() {
-  const { toast } = useToast();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,7 +114,7 @@ export function AdminGalleryPage() {
         photographer: formData.photographer || undefined,
         eventDate: formData.eventDate || undefined,
       });
-      toast({ title: 'Photo added' });
+      gooeyToast.success('Photo added');
       setShowForm(false);
       resetForm();
       await fetchGallery();
@@ -130,7 +129,7 @@ export function AdminGalleryPage() {
     try {
       setDeleting(true);
       await galleryService.deleteGalleryItem(id);
-      toast({ title: 'Photo deleted' });
+      gooeyToast.success('Photo deleted');
       await fetchGallery();
     } catch {
       setError('Failed to delete photo');
