@@ -16,12 +16,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet';
 import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { useToast } from '@/hooks/use-toast';
@@ -358,176 +359,199 @@ export function AdminSermonsPage() {
           </Card>
         )}
 
-        {/* Create/Edit Dialog */}
-        <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>{editingSermon ? 'Edit Sermon' : 'Add Sermon'}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">
-                    Title (EN) *
-                  </label>
-                  <Input
-                    id="sermon-title-en"
-                    required
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  />
+        {/* Create/Edit Sheet */}
+        <Sheet
+          open={showForm}
+          onOpenChange={(open) => {
+            if (!saving) setShowForm(open);
+          }}
+        >
+          <SheetContent side="right" className="flex w-full flex-col sm:max-w-2xl">
+            <SheetHeader className="border-b pb-4">
+              <SheetTitle>{editingSermon ? 'Edit Sermon' : 'Add Sermon'}</SheetTitle>
+              <SheetDescription>
+                {editingSermon
+                  ? 'Update the sermon details below.'
+                  : 'Fill in the details to add a new sermon to the archive.'}
+              </SheetDescription>
+            </SheetHeader>
+            <div className="flex-1 overflow-y-auto">
+              <form id="sermon-form" onSubmit={handleSubmit} className="space-y-4 py-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">
+                      Title (EN) *
+                    </label>
+                    <Input
+                      id="sermon-title-en"
+                      required
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">
+                      Title (TH)
+                    </label>
+                    <Input
+                      id="sermon-title-th"
+                      value={formData.titleThai}
+                      onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">
+                      Speaker (EN) *
+                    </label>
+                    <Input
+                      id="sermon-speaker-en"
+                      required
+                      value={formData.speaker}
+                      onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">
+                      Speaker (TH)
+                    </label>
+                    <Input
+                      id="sermon-speaker-th"
+                      value={formData.speakerThai}
+                      onChange={(e) => setFormData({ ...formData, speakerThai: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">
+                      Date *
+                    </label>
+                    <Input
+                      id="sermon-date"
+                      type="date"
+                      required
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">
+                      Duration
+                    </label>
+                    <Input
+                      id="sermon-duration"
+                      placeholder="e.g. 45:00"
+                      value={formData.duration}
+                      onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">
+                      Series (EN)
+                    </label>
+                    <Input
+                      id="sermon-series-en"
+                      value={formData.series}
+                      onChange={(e) => setFormData({ ...formData, series: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">
+                      Series (TH)
+                    </label>
+                    <Input
+                      id="sermon-series-th"
+                      value={formData.seriesThai}
+                      onChange={(e) => setFormData({ ...formData, seriesThai: e.target.value })}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">
+                      Scripture
+                    </label>
+                    <Input
+                      id="sermon-scripture"
+                      placeholder="e.g. John 3:16"
+                      value={formData.scripture}
+                      onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">
+                      YouTube URL
+                    </label>
+                    <Input
+                      id="sermon-youtube-url"
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      value={formData.youtubeUrl}
+                      onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">
+                      Audio URL
+                    </label>
+                    <Input
+                      id="sermon-audio-url"
+                      value={formData.audioUrl}
+                      onChange={(e) => setFormData({ ...formData, audioUrl: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="sermon-thumbnail-url"
+                      className="mb-1 block text-sm font-medium"
+                    >
+                      Thumbnail URL
+                    </label>
+                    <Input
+                      id="sermon-thumbnail-url"
+                      value={formData.thumbnailUrl}
+                      onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">
-                    Title (TH)
+                  <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">
+                    Description (EN)
                   </label>
-                  <Input
-                    id="sermon-title-th"
-                    value={formData.titleThai}
-                    onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
+                  <Textarea
+                    id="sermon-description-en"
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">
-                    Speaker (EN) *
+                  <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">
+                    Description (TH)
                   </label>
-                  <Input
-                    id="sermon-speaker-en"
-                    required
-                    value={formData.speaker}
-                    onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                  <Textarea
+                    id="sermon-description-th"
+                    rows={3}
+                    value={formData.descriptionThai}
+                    onChange={(e) => setFormData({ ...formData, descriptionThai: e.target.value })}
                   />
                 </div>
-                <div>
-                  <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">
-                    Speaker (TH)
-                  </label>
-                  <Input
-                    id="sermon-speaker-th"
-                    value={formData.speakerThai}
-                    onChange={(e) => setFormData({ ...formData, speakerThai: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">
-                    Date *
-                  </label>
-                  <Input
-                    id="sermon-date"
-                    type="date"
-                    required
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">
-                    Duration
-                  </label>
-                  <Input
-                    id="sermon-duration"
-                    placeholder="e.g. 45:00"
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">
-                    Series (EN)
-                  </label>
-                  <Input
-                    id="sermon-series-en"
-                    value={formData.series}
-                    onChange={(e) => setFormData({ ...formData, series: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">
-                    Series (TH)
-                  </label>
-                  <Input
-                    id="sermon-series-th"
-                    value={formData.seriesThai}
-                    onChange={(e) => setFormData({ ...formData, seriesThai: e.target.value })}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">
-                    Scripture
-                  </label>
-                  <Input
-                    id="sermon-scripture"
-                    placeholder="e.g. John 3:16"
-                    value={formData.scripture}
-                    onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">
-                    YouTube URL
-                  </label>
-                  <Input
-                    id="sermon-youtube-url"
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    value={formData.youtubeUrl}
-                    onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">
-                    Audio URL
-                  </label>
-                  <Input
-                    id="sermon-audio-url"
-                    value={formData.audioUrl}
-                    onChange={(e) => setFormData({ ...formData, audioUrl: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sermon-thumbnail-url" className="mb-1 block text-sm font-medium">
-                    Thumbnail URL
-                  </label>
-                  <Input
-                    id="sermon-thumbnail-url"
-                    value={formData.thumbnailUrl}
-                    onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">
-                  Description (EN)
-                </label>
-                <Textarea
-                  id="sermon-description-en"
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-              </div>
-              <div>
-                <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">
-                  Description (TH)
-                </label>
-                <Textarea
-                  id="sermon-description-th"
-                  rows={3}
-                  value={formData.descriptionThai}
-                  onChange={(e) => setFormData({ ...formData, descriptionThai: e.target.value })}
-                />
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+              </form>
+            </div>
+            <SheetFooter className="border-t pt-4">
+              <div className="flex w-full gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowForm(false)}
+                  disabled={saving}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={saving}>
+                <Button type="submit" form="sermon-form" className="flex-1" disabled={saving}>
                   {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {editingSermon ? 'Update' : 'Create'}
+                  {editingSermon ? 'Update Sermon' : 'Create Sermon'}
                 </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+              </div>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </div>
       <ConfirmDialog
         open={!!deleteTarget}

@@ -16,12 +16,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet';
 import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { useToast } from '@/hooks/use-toast';
@@ -227,107 +228,128 @@ export function AdminGalleryPage() {
           </div>
         )}
 
-        {/* Add Photo Dialog */}
-        <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Add Photo</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">
-                  Image URL *
-                </label>
-                <Input
-                  id="gallery-image-url"
-                  required
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+        {/* Add Photo Sheet */}
+        <Sheet
+          open={showForm}
+          onOpenChange={(open) => {
+            if (!saving) setShowForm(open);
+          }}
+        >
+          <SheetContent side="right" className="flex w-full flex-col sm:max-w-lg">
+            <SheetHeader className="border-b pb-4">
+              <SheetTitle>Add Photo</SheetTitle>
+              <SheetDescription>
+                Enter the photo details and URL to add it to the gallery.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="flex-1 overflow-y-auto">
+              <form id="gallery-form" onSubmit={handleSubmit} className="space-y-4 py-6">
                 <div>
-                  <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">
-                    Title (EN)
+                  <label htmlFor="gallery-image-url" className="mb-1 block text-sm font-medium">
+                    Image URL *
                   </label>
                   <Input
-                    id="gallery-title-en"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">
-                    Title (TH)
-                  </label>
-                  <Input
-                    id="gallery-title-th"
-                    value={formData.titleThai}
-                    onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">
-                    Album ID *
-                  </label>
-                  <Input
-                    id="gallery-album-id"
+                    id="gallery-image-url"
                     required
-                    value={formData.albumId}
-                    onChange={(e) => setFormData({ ...formData, albumId: e.target.value })}
-                    placeholder="sabbath-worship"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                    placeholder="https://..."
                   />
                 </div>
-                <div>
-                  <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">
-                    Album Title *
-                  </label>
-                  <Input
-                    id="gallery-album-title"
-                    required
-                    value={formData.albumTitle}
-                    onChange={(e) => setFormData({ ...formData, albumTitle: e.target.value })}
-                  />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="gallery-title-en" className="mb-1 block text-sm font-medium">
+                      Title (EN)
+                    </label>
+                    <Input
+                      id="gallery-title-en"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="gallery-title-th" className="mb-1 block text-sm font-medium">
+                      Title (TH)
+                    </label>
+                    <Input
+                      id="gallery-title-th"
+                      value={formData.titleThai}
+                      onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">
-                    Event Date
-                  </label>
-                  <Input
-                    id="gallery-event-date"
-                    type="date"
-                    value={formData.eventDate}
-                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                  />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="gallery-album-id" className="mb-1 block text-sm font-medium">
+                      Album ID *
+                    </label>
+                    <Input
+                      id="gallery-album-id"
+                      required
+                      value={formData.albumId}
+                      onChange={(e) => setFormData({ ...formData, albumId: e.target.value })}
+                      placeholder="sabbath-worship"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="gallery-album-title" className="mb-1 block text-sm font-medium">
+                      Album Title *
+                    </label>
+                    <Input
+                      id="gallery-album-title"
+                      required
+                      value={formData.albumTitle}
+                      onChange={(e) => setFormData({ ...formData, albumTitle: e.target.value })}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="gallery-photographer" className="mb-1 block text-sm font-medium">
-                    Photographer
-                  </label>
-                  <Input
-                    id="gallery-photographer"
-                    value={formData.photographer}
-                    onChange={(e) => setFormData({ ...formData, photographer: e.target.value })}
-                  />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="gallery-event-date" className="mb-1 block text-sm font-medium">
+                      Event Date
+                    </label>
+                    <Input
+                      id="gallery-event-date"
+                      type="date"
+                      value={formData.eventDate}
+                      onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="gallery-photographer"
+                      className="mb-1 block text-sm font-medium"
+                    >
+                      Photographer
+                    </label>
+                    <Input
+                      id="gallery-photographer"
+                      value={formData.photographer}
+                      onChange={(e) => setFormData({ ...formData, photographer: e.target.value })}
+                    />
+                  </div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+              </form>
+            </div>
+            <SheetFooter className="border-t pt-4">
+              <div className="flex w-full gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowForm(false)}
+                  disabled={saving}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={saving}>
+                <Button type="submit" form="gallery-form" className="flex-1" disabled={saving}>
                   {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Add Photo
                 </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+              </div>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </div>
       <ConfirmDialog
         open={!!deleteTarget}
