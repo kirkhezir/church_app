@@ -19,6 +19,9 @@ import {
   UserPlus,
   CheckCircle2,
   Loader2,
+  User,
+  Shield,
+  Phone,
 } from 'lucide-react';
 import { TableSkeleton } from '@/components/ui/skeletons';
 import { Button } from '@/components/ui/button';
@@ -45,7 +48,6 @@ import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
   SheetDescription,
   SheetFooter,
@@ -365,23 +367,40 @@ export default function AdminMemberListPage() {
             }
           }}
         >
-          <SheetContent side="right" className="flex w-full flex-col sm:max-w-lg">
-            <SheetHeader className="border-b pb-4">
-              <SheetTitle className="flex items-center gap-2 text-lg">
-                <UserPlus className="h-5 w-5 text-primary" />
-                {addSuccess ? 'Member Created' : 'Add New Member'}
-              </SheetTitle>
-              <SheetDescription>
-                {addSuccess
-                  ? 'The new member has been added to the directory.'
-                  : 'Fill in the details below. An invitation email will be sent automatically.'}
-              </SheetDescription>
-            </SheetHeader>
+          <SheetContent
+            side="right"
+            className="flex w-full flex-col p-0 sm:max-w-lg"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
+            {/* Accent strip */}
+            <div className="h-1 shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600" />
+            {/* Sheet header */}
+            <div className="shrink-0 border-b bg-card px-6 pb-5 pt-4">
+              <div className="flex items-start gap-4 pr-12">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-300/50 dark:shadow-blue-900/40">
+                  {addSuccess ? (
+                    <CheckCircle2 className="h-6 w-6 text-white" />
+                  ) : (
+                    <UserPlus className="h-6 w-6 text-white" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 pt-1">
+                  <SheetTitle className="text-xl font-bold tracking-tight">
+                    {addSuccess ? 'Member Created!' : 'Add New Member'}
+                  </SheetTitle>
+                  <SheetDescription className="mt-1 text-sm">
+                    {addSuccess
+                      ? 'The member has been added to the directory.'
+                      : 'Invite a new congregation member'}
+                  </SheetDescription>
+                </div>
+              </div>
+            </div>
 
-            <div className="flex-1 overflow-y-auto py-6">
+            <div className="flex-1 overflow-y-auto bg-muted/20 py-4">
               {addSuccess ? (
                 /* ── Success State ── */
-                <div className="flex flex-col items-center gap-6 px-2 text-center">
+                <div className="flex flex-col items-center gap-6 px-6 text-center">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-50 dark:bg-green-900/30">
                     <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
                   </div>
@@ -409,136 +428,212 @@ export default function AdminMemberListPage() {
                 </div>
               ) : (
                 /* ── Add Form ── */
-                <form id="add-member-form" onSubmit={handleAddMember} className="space-y-5 px-1">
+                <form
+                  id="add-member-form"
+                  onSubmit={handleAddMember}
+                  className="space-y-3 px-4 pb-2"
+                >
                   {addError && (
                     <Alert variant="destructive">
                       <AlertDescription>{addError}</AlertDescription>
                     </Alert>
                   )}
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label htmlFor="add-first-name" className="text-sm font-medium">
-                        First Name <span className="text-destructive">*</span>
-                      </label>
-                      <Input
-                        id="add-first-name"
-                        name="firstName"
-                        autoComplete="given-name"
-                        value={addFormData.firstName}
-                        onChange={(e) =>
-                          setAddFormData({ ...addFormData, firstName: e.target.value })
-                        }
-                        required
-                        placeholder="Somchai"
-                      />
+                  {/* Personal Information Card */}
+                  <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                    <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                        <User className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-none">Personal Information</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
+                          Name and contact email
+                        </p>
+                      </div>
                     </div>
-                    <div className="space-y-1.5">
-                      <label htmlFor="add-last-name" className="text-sm font-medium">
-                        Last Name <span className="text-destructive">*</span>
-                      </label>
-                      <Input
-                        id="add-last-name"
-                        name="lastName"
-                        autoComplete="family-name"
-                        value={addFormData.lastName}
-                        onChange={(e) =>
-                          setAddFormData({ ...addFormData, lastName: e.target.value })
-                        }
-                        required
-                        placeholder="Srisuk"
-                      />
+                    <div className="space-y-3 p-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <label
+                            htmlFor="add-first-name"
+                            className="text-xs font-medium text-muted-foreground"
+                          >
+                            First Name <span className="text-destructive">*</span>
+                          </label>
+                          <Input
+                            id="add-first-name"
+                            name="firstName"
+                            autoComplete="given-name"
+                            value={addFormData.firstName}
+                            onChange={(e) =>
+                              setAddFormData({ ...addFormData, firstName: e.target.value })
+                            }
+                            required
+                            placeholder="Somchai"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label
+                            htmlFor="add-last-name"
+                            className="text-xs font-medium text-muted-foreground"
+                          >
+                            Last Name <span className="text-destructive">*</span>
+                          </label>
+                          <Input
+                            id="add-last-name"
+                            name="lastName"
+                            autoComplete="family-name"
+                            value={addFormData.lastName}
+                            onChange={(e) =>
+                              setAddFormData({ ...addFormData, lastName: e.target.value })
+                            }
+                            required
+                            placeholder="Srisuk"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="add-email"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
+                          Email Address <span className="text-destructive">*</span>
+                        </label>
+                        <Input
+                          id="add-email"
+                          type="email"
+                          name="email"
+                          autoComplete="email"
+                          spellCheck={false}
+                          autoCapitalize="none"
+                          value={addFormData.email}
+                          onChange={(e) =>
+                            setAddFormData({ ...addFormData, email: e.target.value })
+                          }
+                          required
+                          placeholder="somchai@example.com"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label htmlFor="add-email" className="text-sm font-medium">
-                      Email Address <span className="text-destructive">*</span>
-                    </label>
-                    <Input
-                      id="add-email"
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      spellCheck={false}
-                      autoCapitalize="none"
-                      value={addFormData.email}
-                      onChange={(e) => setAddFormData({ ...addFormData, email: e.target.value })}
-                      required
-                      placeholder="somchai@example.com"
-                    />
+                  {/* Access & Role Card */}
+                  <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                    <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/30">
+                        <Shield className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-none">Access &amp; Role</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
+                          Permissions level
+                        </p>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="add-role"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
+                          Role <span className="text-destructive">*</span>
+                        </label>
+                        <Select
+                          value={addFormData.role}
+                          onValueChange={(value: 'MEMBER' | 'STAFF' | 'ADMIN') =>
+                            setAddFormData({ ...addFormData, role: value })
+                          }
+                        >
+                          <SelectTrigger id="add-role">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="MEMBER">
+                              Member — Standard congregation member
+                            </SelectItem>
+                            <SelectItem value="STAFF">
+                              Staff — Church staff with extra access
+                            </SelectItem>
+                            <SelectItem value="ADMIN">
+                              Admin — Full administrative access
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label htmlFor="add-role" className="text-sm font-medium">
-                      Role <span className="text-destructive">*</span>
-                    </label>
-                    <Select
-                      value={addFormData.role}
-                      onValueChange={(value: 'MEMBER' | 'STAFF' | 'ADMIN') =>
-                        setAddFormData({ ...addFormData, role: value })
-                      }
-                    >
-                      <SelectTrigger id="add-role">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="MEMBER">
-                          Member — Standard congregation member
-                        </SelectItem>
-                        <SelectItem value="STAFF">
-                          Staff — Church staff with extra access
-                        </SelectItem>
-                        <SelectItem value="ADMIN">Admin — Full administrative access</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label htmlFor="add-phone" className="text-sm font-medium">
-                      Phone{' '}
-                      <span className="text-xs font-normal text-muted-foreground">(optional)</span>
-                    </label>
-                    <Input
-                      id="add-phone"
-                      type="tel"
-                      name="phone"
-                      autoComplete="tel"
-                      inputMode="tel"
-                      value={addFormData.phone}
-                      onChange={(e) => setAddFormData({ ...addFormData, phone: e.target.value })}
-                      placeholder="+66 81 234 5678"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label htmlFor="add-address" className="text-sm font-medium">
-                      Address{' '}
-                      <span className="text-xs font-normal text-muted-foreground">(optional)</span>
-                    </label>
-                    <Textarea
-                      id="add-address"
-                      name="address"
-                      autoComplete="street-address"
-                      value={addFormData.address}
-                      onChange={(e) => setAddFormData({ ...addFormData, address: e.target.value })}
-                      placeholder="123 Moo 4, Sing Buri"
-                      rows={2}
-                      className="resize-none"
-                    />
+                  {/* Contact Details Card */}
+                  <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                    <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                        <Phone className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-none">Contact Details</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
+                          Optional phone and address
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 p-4">
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="add-phone"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
+                          Phone{' '}
+                          <span className="font-normal text-muted-foreground/70">(optional)</span>
+                        </label>
+                        <Input
+                          id="add-phone"
+                          type="tel"
+                          name="phone"
+                          autoComplete="tel"
+                          inputMode="tel"
+                          value={addFormData.phone}
+                          onChange={(e) =>
+                            setAddFormData({ ...addFormData, phone: e.target.value })
+                          }
+                          placeholder="+66 81 234 5678"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="add-address"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
+                          Address{' '}
+                          <span className="font-normal text-muted-foreground/70">(optional)</span>
+                        </label>
+                        <Textarea
+                          id="add-address"
+                          name="address"
+                          autoComplete="street-address"
+                          value={addFormData.address}
+                          onChange={(e) =>
+                            setAddFormData({ ...addFormData, address: e.target.value })
+                          }
+                          placeholder="123 Moo 4, Sing Buri"
+                          rows={2}
+                          className="resize-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </form>
               )}
             </div>
 
-            <SheetFooter className="border-t pt-4">
+            <SheetFooter className="shrink-0 border-t bg-card px-4 py-3 shadow-[0_-1px_8px_rgba(0,0,0,0.06)]">
               {addSuccess ? (
-                <div className="flex w-full gap-3">
+                <div className="flex w-full gap-2">
                   <Button variant="outline" className="flex-1" onClick={() => resetAddForm()}>
                     Add Another
                   </Button>
                   <Button
-                    className="flex-1"
+                    className="flex-1 shadow-md shadow-primary/20"
                     onClick={() => {
                       setShowAddSheet(false);
                       resetAddForm();
@@ -548,7 +643,7 @@ export default function AdminMemberListPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex w-full gap-3">
+                <div className="flex w-full gap-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -564,7 +659,7 @@ export default function AdminMemberListPage() {
                   <Button
                     type="submit"
                     form="add-member-form"
-                    className="flex-1"
+                    className="flex-1 shadow-md shadow-primary/20"
                     disabled={addLoading}
                   >
                     {addLoading ? (

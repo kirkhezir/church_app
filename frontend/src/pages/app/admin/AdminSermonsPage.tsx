@@ -8,7 +8,22 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import { PlusIcon, EditIcon, TrashIcon, Search, Loader2, Youtube, Eye, Music } from 'lucide-react';
+import {
+  PlusIcon,
+  EditIcon,
+  TrashIcon,
+  Search,
+  Loader2,
+  Youtube,
+  Eye,
+  Music,
+  BookOpen,
+  Calendar,
+  Clock,
+  Link2,
+  FileText,
+  Mic,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +33,6 @@ import { SidebarLayout } from '@/components/layout';
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
   SheetDescription,
   SheetFooter,
@@ -366,175 +380,303 @@ export function AdminSermonsPage() {
             if (!saving) setShowForm(open);
           }}
         >
-          <SheetContent side="right" className="flex w-full flex-col sm:max-w-2xl">
-            <SheetHeader className="border-b pb-4">
-              <SheetTitle>{editingSermon ? 'Edit Sermon' : 'Add Sermon'}</SheetTitle>
-              <SheetDescription>
-                {editingSermon
-                  ? 'Update the sermon details below.'
-                  : 'Fill in the details to add a new sermon to the archive.'}
-              </SheetDescription>
-            </SheetHeader>
-            <div className="flex-1 overflow-y-auto">
-              <form id="sermon-form" onSubmit={handleSubmit} className="space-y-4 py-6">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="sermon-title-en" className="mb-1 block text-sm font-medium">
-                      Title (EN) *
-                    </label>
-                    <Input
-                      id="sermon-title-en"
-                      required
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    />
+          <SheetContent
+            side="right"
+            className="flex w-full flex-col p-0 sm:max-w-2xl"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
+            {/* Accent strip */}
+            <div className="h-1 shrink-0 bg-gradient-to-r from-violet-500 to-purple-700" />
+            {/* Sheet header */}
+            <div className="shrink-0 border-b bg-card px-6 pb-5 pt-4">
+              <div className="flex items-start gap-4 pr-12">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-700 shadow-lg shadow-violet-300/50 dark:shadow-violet-900/40">
+                  {editingSermon ? (
+                    <EditIcon className="h-6 w-6 text-white" />
+                  ) : (
+                    <BookOpen className="h-6 w-6 text-white" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 pt-1">
+                  <SheetTitle className="text-xl font-bold tracking-tight">
+                    {editingSermon ? 'Edit Sermon' : 'Add Sermon'}
+                  </SheetTitle>
+                  <SheetDescription className="mt-1 text-sm">
+                    {editingSermon
+                      ? 'Update the sermon details below.'
+                      : 'Fill in the details to add a new sermon to the archive.'}
+                  </SheetDescription>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto bg-muted/20">
+              <form id="sermon-form" onSubmit={handleSubmit} className="space-y-3 p-4">
+                {/* Title & Speaker Card */}
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                  <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                      <Mic className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold leading-none">Title &amp; Speaker</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
+                        Sermon name and preacher
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor="sermon-title-th" className="mb-1 block text-sm font-medium">
-                      Title (TH)
-                    </label>
-                    <Input
-                      id="sermon-title-th"
-                      value={formData.titleThai}
-                      onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-speaker-en" className="mb-1 block text-sm font-medium">
-                      Speaker (EN) *
-                    </label>
-                    <Input
-                      id="sermon-speaker-en"
-                      required
-                      value={formData.speaker}
-                      onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-speaker-th" className="mb-1 block text-sm font-medium">
-                      Speaker (TH)
-                    </label>
-                    <Input
-                      id="sermon-speaker-th"
-                      value={formData.speakerThai}
-                      onChange={(e) => setFormData({ ...formData, speakerThai: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-date" className="mb-1 block text-sm font-medium">
-                      Date *
-                    </label>
-                    <Input
-                      id="sermon-date"
-                      type="date"
-                      required
-                      value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-duration" className="mb-1 block text-sm font-medium">
-                      Duration
-                    </label>
-                    <Input
-                      id="sermon-duration"
-                      placeholder="e.g. 45:00"
-                      value={formData.duration}
-                      onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-series-en" className="mb-1 block text-sm font-medium">
-                      Series (EN)
-                    </label>
-                    <Input
-                      id="sermon-series-en"
-                      value={formData.series}
-                      onChange={(e) => setFormData({ ...formData, series: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-series-th" className="mb-1 block text-sm font-medium">
-                      Series (TH)
-                    </label>
-                    <Input
-                      id="sermon-series-th"
-                      value={formData.seriesThai}
-                      onChange={(e) => setFormData({ ...formData, seriesThai: e.target.value })}
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label htmlFor="sermon-scripture" className="mb-1 block text-sm font-medium">
-                      Scripture
-                    </label>
-                    <Input
-                      id="sermon-scripture"
-                      placeholder="e.g. John 3:16"
-                      value={formData.scripture}
-                      onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label htmlFor="sermon-youtube-url" className="mb-1 block text-sm font-medium">
-                      YouTube URL
-                    </label>
-                    <Input
-                      id="sermon-youtube-url"
-                      placeholder="https://www.youtube.com/watch?v=..."
-                      value={formData.youtubeUrl}
-                      onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sermon-audio-url" className="mb-1 block text-sm font-medium">
-                      Audio URL
-                    </label>
-                    <Input
-                      id="sermon-audio-url"
-                      value={formData.audioUrl}
-                      onChange={(e) => setFormData({ ...formData, audioUrl: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="sermon-thumbnail-url"
-                      className="mb-1 block text-sm font-medium"
-                    >
-                      Thumbnail URL
-                    </label>
-                    <Input
-                      id="sermon-thumbnail-url"
-                      value={formData.thumbnailUrl}
-                      onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    />
+                  <div className="grid gap-3 p-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-title-en"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Title (EN) <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        id="sermon-title-en"
+                        required
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-title-th"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Title (TH)
+                      </label>
+                      <Input
+                        id="sermon-title-th"
+                        value={formData.titleThai}
+                        onChange={(e) => setFormData({ ...formData, titleThai: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-speaker-en"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Speaker (EN) <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        id="sermon-speaker-en"
+                        required
+                        value={formData.speaker}
+                        onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-speaker-th"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Speaker (TH)
+                      </label>
+                      <Input
+                        id="sermon-speaker-th"
+                        value={formData.speakerThai}
+                        onChange={(e) => setFormData({ ...formData, speakerThai: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="sermon-description-en" className="mb-1 block text-sm font-medium">
-                    Description (EN)
-                  </label>
-                  <Textarea
-                    id="sermon-description-en"
-                    rows={3}
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  />
+
+                {/* Schedule & Series Card */}
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                  <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
+                      <Calendar className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold leading-none">Schedule &amp; Series</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
+                        Date, duration and topic series
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-3 p-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-date"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Date <span className="text-destructive">*</span>
+                      </label>
+                      <Input
+                        id="sermon-date"
+                        type="date"
+                        required
+                        value={formData.date}
+                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-duration"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Duration
+                      </label>
+                      <Input
+                        id="sermon-duration"
+                        placeholder="e.g. 45:00"
+                        value={formData.duration}
+                        onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-series-en"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Series (EN)
+                      </label>
+                      <Input
+                        id="sermon-series-en"
+                        value={formData.series}
+                        onChange={(e) => setFormData({ ...formData, series: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-series-th"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Series (TH)
+                      </label>
+                      <Input
+                        id="sermon-series-th"
+                        value={formData.seriesThai}
+                        onChange={(e) => setFormData({ ...formData, seriesThai: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label
+                        htmlFor="sermon-scripture"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Scripture
+                      </label>
+                      <Input
+                        id="sermon-scripture"
+                        placeholder="e.g. John 3:16"
+                        value={formData.scripture}
+                        onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="sermon-description-th" className="mb-1 block text-sm font-medium">
-                    Description (TH)
-                  </label>
-                  <Textarea
-                    id="sermon-description-th"
-                    rows={3}
-                    value={formData.descriptionThai}
-                    onChange={(e) => setFormData({ ...formData, descriptionThai: e.target.value })}
-                  />
+
+                {/* Media Links Card */}
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                  <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
+                      <Link2 className="h-3.5 w-3.5 text-red-500 dark:text-red-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold leading-none">Media Links</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
+                        Video, audio and thumbnail URLs
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-3 p-4 sm:grid-cols-2">
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label
+                        htmlFor="sermon-youtube-url"
+                        className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                      >
+                        <Youtube className="h-3 w-3 text-red-500" /> YouTube URL
+                      </label>
+                      <Input
+                        id="sermon-youtube-url"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        value={formData.youtubeUrl}
+                        onChange={(e) => setFormData({ ...formData, youtubeUrl: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-audio-url"
+                        className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                      >
+                        <Music className="h-3 w-3 text-purple-500" /> Audio URL
+                      </label>
+                      <Input
+                        id="sermon-audio-url"
+                        value={formData.audioUrl}
+                        onChange={(e) => setFormData({ ...formData, audioUrl: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-thumbnail-url"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Thumbnail URL
+                      </label>
+                      <Input
+                        id="sermon-thumbnail-url"
+                        value={formData.thumbnailUrl}
+                        onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description Card */}
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
+                  <div className="flex items-center gap-3 border-b border-border/40 bg-muted/40 px-4 py-2.5">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                      <FileText className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold leading-none">Description</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
+                        Summary or notes in both languages
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 p-4">
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-description-en"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Description (EN)
+                      </label>
+                      <Textarea
+                        id="sermon-description-en"
+                        rows={3}
+                        className="resize-none"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="sermon-description-th"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
+                        Description (TH)
+                      </label>
+                      <Textarea
+                        id="sermon-description-th"
+                        rows={3}
+                        className="resize-none"
+                        value={formData.descriptionThai}
+                        onChange={(e) =>
+                          setFormData({ ...formData, descriptionThai: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </form>
             </div>
-            <SheetFooter className="border-t pt-4">
-              <div className="flex w-full gap-3">
+            <SheetFooter className="shrink-0 border-t bg-card px-4 py-3 shadow-[0_-1px_8px_rgba(0,0,0,0.06)]">
+              <div className="flex w-full gap-2">
                 <Button
                   type="button"
                   variant="outline"
@@ -544,7 +686,12 @@ export function AdminSermonsPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" form="sermon-form" className="flex-1" disabled={saving}>
+                <Button
+                  type="submit"
+                  form="sermon-form"
+                  className="flex-1 shadow-md shadow-primary/20"
+                  disabled={saving}
+                >
                   {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingSermon ? 'Update Sermon' : 'Create Sermon'}
                 </Button>
