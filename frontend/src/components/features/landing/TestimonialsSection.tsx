@@ -95,6 +95,9 @@ export function TestimonialsSection() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
+            Community Voices
+          </p>
           <h2
             id="testimonials-heading"
             className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
@@ -116,11 +119,15 @@ export function TestimonialsSection() {
             }
           }}
         >
-          <Card className="bg-muted shadow-none">
+          <Card className="relative overflow-hidden border-border/50 bg-card shadow-md">
+            {/* Gradient accent at top */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-primary to-purple-500" />
             <CardContent className="p-6 sm:p-10">
-              <Quote className="mx-auto mb-4 h-8 w-8 text-blue-400" aria-hidden="true" />
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Quote className="h-6 w-6 text-primary" aria-hidden="true" />
+              </div>
 
-              <blockquote className="mb-6 text-center text-lg text-foreground/80 sm:text-xl">
+              <blockquote className="mb-6 text-center text-lg leading-relaxed text-foreground/80 sm:text-xl">
                 "{currentTestimonial.quote}"
               </blockquote>
 

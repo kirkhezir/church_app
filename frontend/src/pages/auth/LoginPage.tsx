@@ -83,18 +83,22 @@ export default function LoginPage() {
           loading="eager"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-purple-900/80" />
+        {/* Decorative dot pattern */}
+        <div className="dot-pattern absolute inset-0 text-white opacity-[0.04]" />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
           {/* Logo + Name — links back to landing page */}
           <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
-            <img
-              src="/church-logo.png"
-              alt="Sing Buri Adventist Center"
-              className="h-10 w-10 rounded-full border-2 border-white/20 object-contain"
-              width={40}
-              height={40}
-            />
+            <div className="rounded-full bg-white/10 p-0.5 backdrop-blur-sm">
+              <img
+                src="/church-logo.png"
+                alt="Sing Buri Adventist Center"
+                className="h-10 w-10 rounded-full object-contain"
+                width={40}
+                height={40}
+              />
+            </div>
             <span className="text-lg font-semibold text-white/90">Sing Buri Adventist Center</span>
           </Link>
 
@@ -132,8 +136,16 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel — Login Form */}
-      <div className="flex w-full items-center justify-center bg-background px-4 py-12 sm:px-6 lg:w-1/2 lg:px-8">
-        <div className="w-full max-w-md">
+      <div className="relative flex w-full items-center justify-center bg-background px-4 py-12 sm:px-6 lg:w-1/2 lg:px-8">
+        {/* Subtle decorative background on form side */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="animate-float absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/[0.03] blur-3xl" />
+          <div
+            className="animate-float absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-amber-500/[0.03] blur-3xl"
+            style={{ animationDelay: '2s' }}
+          />
+        </div>
+        <div className="relative w-full max-w-md">
           {/* Back to home — always visible */}
           <Link
             to="/"
@@ -145,19 +157,21 @@ export default function LoginPage() {
 
           {/* Mobile-only logo */}
           <div className="mb-8 flex items-center justify-center gap-3 lg:hidden">
-            <img
-              src="/church-logo.png"
-              alt="Sing Buri Adventist Center"
-              className="h-12 w-12 rounded-full object-contain"
-              width={48}
-              height={48}
-            />
+            <div className="rounded-full bg-primary/10 p-0.5">
+              <img
+                src="/church-logo.png"
+                alt="Sing Buri Adventist Center"
+                className="h-12 w-12 rounded-full object-contain"
+                width={48}
+                height={48}
+              />
+            </div>
             <span className="text-lg font-semibold text-foreground">
               Sing Buri Adventist Center
             </span>
           </div>
 
-          <Card className="border-0 shadow-none lg:border lg:shadow-sm">
+          <Card className="border-border/50 shadow-lg lg:border lg:shadow-xl">
             <CardHeader className="space-y-1 pb-6">
               <CardTitle className="text-center text-2xl font-bold tracking-tight">
                 Sign In
@@ -222,7 +236,12 @@ export default function LoginPage() {
               </CardContent>
 
               <CardFooter className="flex flex-col space-y-4">
-                <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer shadow-md shadow-primary/20 transition-shadow hover:shadow-lg hover:shadow-primary/30"
+                  size="lg"
+                  disabled={loading}
+                >
                   {loading ? (
                     'Signing in\u2026'
                   ) : (

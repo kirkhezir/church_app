@@ -39,11 +39,16 @@ export function PublicFooter({ showNewsletter = false }: PublicFooterProps) {
   };
 
   return (
-    <footer className="border-t bg-slate-900 text-slate-300" role="contentinfo">
+    <footer
+      className="relative overflow-hidden border-t bg-slate-900 text-slate-300"
+      role="contentinfo"
+    >
+      {/* Decorative gradient at top */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         {/* Newsletter Section — home page only */}
         {showNewsletter && (
-          <div className="mb-10 rounded-xl bg-slate-800/50 p-6 sm:p-8">
+          <div className="mb-10 rounded-xl border border-slate-700/50 bg-gradient-to-r from-slate-800/80 to-slate-800/50 p-6 sm:p-8">
             <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
               <div className="flex-1">
                 <h3 className="mb-1 text-lg font-semibold text-white">

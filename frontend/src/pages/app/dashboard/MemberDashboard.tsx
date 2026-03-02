@@ -2,16 +2,16 @@
  * Member Dashboard Page (T097)
  *
  * Main dashboard view for authenticated members showing:
- * - Welcome banner with greeting
- * - Quick stats (events, announcements, RSVPs) in shadcn Cards
+ * - Time-aware welcome banner with decorative pattern
+ * - Quick stats with colored icon backgrounds
  * - Profile summary widget
  * - Upcoming events + announcements widgets
  *
  * Design System: design-system/pages/dashboard.md
  */
 
-import { useState, useEffect } from 'react';
-import { Calendar, Bell, CheckCircle } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Calendar, Bell, CheckCircle, Sparkles } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
 import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
@@ -55,6 +55,14 @@ interface DashboardData {
     unreadAnnouncementsCount: number;
     myRsvpCount: number;
   };
+}
+
+/** Time-of-day greeting */
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
 }
 
 export default function MemberDashboard() {
@@ -145,57 +153,102 @@ export default function MemberDashboard() {
 
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
-      {/* Welcome Header */}
-      <Card className="animate-fade-in-up border-0 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg">
-        <CardContent className="p-6">
-          <h1 className="text-balance text-3xl font-bold">
-            Welcome back, {dashboard.profile.firstName}!
-          </h1>
-          <p className="mt-1 text-sm text-primary-foreground/70">
-            Here&apos;s what&apos;s happening in your church community
-          </p>
+      {/* Welcome Header — warm gradient with decorative pattern */}
+      <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-lg">
+        {/* Animated gradient background */}
+        <div className="animate-gradient absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-700 dark:via-indigo-800 dark:to-slate-900" />
+        {/* Decorative dot pattern overlay */}
+        <div className="dot-pattern absolute inset-0 text-white opacity-[0.06]" />
+        {/* Decorative shimmer streak */}
+        <div className="animate-shimmer absolute inset-0" />
+        {/* Floating decorative circle */}
+        <div className="animate-float absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/[0.06]" />
+        <div
+          className="animate-float absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-white/[0.04]"
+          style={{ animationDelay: '1s' }}
+        />
+
+        <CardContent className="relative z-10 p-6 sm:p-8">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="mb-1 flex items-center gap-2 text-sm font-medium text-white/70">
+                <Sparkles className="h-4 w-4" />
+                <span>{getGreeting()}</span>
+              </p>
+              <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                {dashboard.profile.firstName}
+              </h1>
+              <p className="mt-2 max-w-md text-sm text-white/60">
+                Here&apos;s what&apos;s happening in your church community today
+              </p>
+            </div>
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-medium text-white/60">
+                {new Date().toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Stats Overview */}
+      {/* Stats Overview — colored accent cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="animate-fade-in-up stagger-1 transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-1 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(222,70%,55%)]">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Upcoming Events
             </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400">
+              <Calendar className="h-4 w-4" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tabular-nums tracking-tight">
+            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight">
               {dashboard.stats.upcomingEventsCount}
             </div>
+            <p className="mt-1 text-xs text-muted-foreground">this week</p>
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-in-up stagger-2 transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-2 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(38,92%,50%)]">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Unread Announcements
             </CardTitle>
-            <Bell className="h-4 w-4 text-muted-foreground" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10 dark:text-amber-400">
+              <Bell className="h-4 w-4" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tabular-nums tracking-tight">
+            <div
+              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
+              style={{ animationDelay: '0.1s' }}
+            >
               {dashboard.stats.unreadAnnouncementsCount}
             </div>
+            <p className="mt-1 text-xs text-muted-foreground">to review</p>
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-in-up stagger-3 transition-shadow duration-200 hover:shadow-md">
+        <Card className="animate-fade-in-up stagger-3 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(142,71%,45%)]">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:bg-emerald-400/10 dark:text-emerald-400">
+              <CheckCircle className="h-4 w-4" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-semibold tabular-nums tracking-tight">
+            <div
+              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
+              style={{ animationDelay: '0.2s' }}
+            >
               {dashboard.stats.myRsvpCount}
             </div>
+            <p className="mt-1 text-xs text-muted-foreground">confirmed</p>
           </CardContent>
         </Card>
       </div>

@@ -194,29 +194,38 @@ function HeroSection() {
           fetchPriority="high"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/60 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/75 via-blue-900/50 to-slate-900/85" />
       </div>
+
+      {/* Decorative floating orbs */}
+      <div className="animate-float absolute left-[10%] top-[20%] h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+      <div
+        className="animate-float absolute bottom-[15%] right-[10%] h-48 w-48 rounded-full bg-amber-500/10 blur-3xl"
+        style={{ animationDelay: '2s' }}
+      />
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-        {/* Logo */}
+        {/* Logo — refined with soft glow */}
         <div className="mb-6 sm:mb-8">
-          <img
-            src={CHURCH_LOGO}
-            alt={t('common.churchName')}
-            width={128}
-            height={128}
-            className="mx-auto h-24 w-24 rounded-full border-4 border-white/20 object-contain shadow-2xl sm:h-32 sm:w-32"
-          />
+          <div className="mx-auto inline-block rounded-full bg-white/10 p-1 shadow-2xl backdrop-blur-sm">
+            <img
+              src={CHURCH_LOGO}
+              alt={t('common.churchName')}
+              width={128}
+              height={128}
+              className="h-24 w-24 rounded-full object-contain sm:h-28 sm:w-28"
+            />
+          </div>
         </div>
 
-        {/* Heading */}
-        <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+        {/* Heading — with gradient accent */}
+        <h1 className="mb-4 text-balance text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl">
           {t('common.churchName')}
         </h1>
 
         {/* Tagline */}
-        <p className="mx-auto mb-6 max-w-2xl text-lg text-slate-200 sm:text-xl md:text-2xl">
+        <p className="mx-auto mb-6 max-w-2xl text-lg font-light text-slate-200/90 sm:text-xl md:text-2xl">
           {t('hero.tagline')
             .replace(/<faith>(.*?)<\/faith>/, '|||faith:$1|||')
             .replace(/<hope>(.*?)<\/hope>/, '|||hope:$1|||')
@@ -225,19 +234,19 @@ function HeroSection() {
             .map((segment, i) => {
               if (segment.startsWith('faith:'))
                 return (
-                  <span key={i} className="text-amber-300">
+                  <span key={i} className="font-semibold text-amber-300">
                     {segment.slice(6)}
                   </span>
                 );
               if (segment.startsWith('hope:'))
                 return (
-                  <span key={i} className="text-emerald-300">
+                  <span key={i} className="font-semibold text-emerald-300">
                     {segment.slice(5)}
                   </span>
                 );
               if (segment.startsWith('love:'))
                 return (
-                  <span key={i} className="text-rose-300">
+                  <span key={i} className="font-semibold text-rose-300">
                     {segment.slice(5)}
                   </span>
                 );
@@ -245,15 +254,28 @@ function HeroSection() {
             })}
         </p>
 
-        {/* Live Countdown */}
-        <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
-          <span className="text-white/90">
-            {t('hero.nextService')}{' '}
-            <span className="font-semibold tabular-nums text-amber-300">
-              {countdown.days}d {countdown.hours}h {countdown.minutes}m
-            </span>
+        {/* Live Countdown — pill badge with glass effect */}
+        <div className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.08] px-5 py-2.5 backdrop-blur-md">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
           </span>
+          <span className="text-sm text-white/80">{t('hero.nextService')} </span>
+          <div className="flex gap-1.5">
+            {[
+              { value: countdown.days, unit: 'd' },
+              { value: countdown.hours, unit: 'h' },
+              { value: countdown.minutes, unit: 'm' },
+            ].map(({ value, unit }) => (
+              <span
+                key={unit}
+                className="rounded-md bg-white/10 px-2 py-0.5 text-sm font-semibold tabular-nums text-amber-300"
+              >
+                {value}
+                {unit}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* CTA Buttons */}
@@ -261,7 +283,7 @@ function HeroSection() {
           <Button
             size="lg"
             onClick={scrollToServices}
-            className="motion-safe:animate-glow bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 [--glow-color:rgba(245,158,11,0.4)] hover:bg-amber-400 sm:px-8"
+            className="motion-safe:animate-glow bg-amber-500 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-amber-500/20 [--glow-color:rgba(245,158,11,0.4)] hover:bg-amber-400 sm:px-8"
           >
             <Clock className="mr-2 h-5 w-5" />
             {t('hero.serviceTimes')}
@@ -272,23 +294,27 @@ function HeroSection() {
             onClick={() =>
               document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             }
-            className="border-2 border-white/30 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm hover:bg-white hover:text-slate-900 sm:px-8"
+            className="border-2 border-white/20 bg-white/[0.08] px-6 py-3 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white hover:text-slate-900 sm:px-8"
           >
             <MapPin className="mr-2 h-5 w-5" />
             {t('hero.visitUs')}
           </Button>
         </div>
 
-        {/* Improved Stats */}
-        <div className="mt-12 flex justify-center gap-6 sm:mt-16 sm:gap-12">
+        {/* Stats — larger with dividers */}
+        <div className="mt-12 inline-flex items-center gap-0 divide-x divide-white/20 rounded-2xl border border-white/10 bg-white/[0.06] px-2 py-4 backdrop-blur-sm sm:mt-16 sm:px-4">
           {[
             { value: CHURCH_STATS.sabbaths, label: t('hero.stats.sabbaths') },
             { value: CHURCH_STATS.families, label: t('hero.stats.families') },
             { value: CHURCH_STATS.years, label: t('hero.stats.years') },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-2xl font-bold tabular-nums text-white sm:text-3xl">{stat.value}</p>
-              <p className="text-xs text-slate-300 sm:text-sm">{stat.label}</p>
+            <div key={stat.label} className="px-5 text-center sm:px-8">
+              <p className="text-2xl font-bold tabular-nums text-white sm:text-3xl md:text-4xl">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-300/80 sm:text-sm">
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>
@@ -297,7 +323,7 @@ function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToServices}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full p-2 text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full p-2 text-white/50 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
         aria-label="Scroll to content"
       >
         <ChevronDown className="h-8 w-8 motion-safe:animate-bounce" />
@@ -316,19 +342,25 @@ const AboutSection = memo(function AboutSection() {
       icon: BookOpen,
       title: t('about.values.bibleCentered.title'),
       description: t('about.values.bibleCentered.description'),
-      color: 'bg-blue-500',
+      gradient: 'from-blue-500 to-indigo-600',
+      lightBg: 'bg-blue-50 dark:bg-blue-900/20',
+      iconColor: 'text-blue-600 dark:text-blue-400',
     },
     {
       icon: Users,
       title: t('about.values.welcoming.title'),
       description: t('about.values.welcoming.description'),
-      color: 'bg-emerald-500',
+      gradient: 'from-emerald-500 to-teal-600',
+      lightBg: 'bg-emerald-50 dark:bg-emerald-900/20',
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
     },
     {
       icon: Heart,
       title: t('about.values.caring.title'),
       description: t('about.values.caring.description'),
-      color: 'bg-rose-500',
+      gradient: 'from-rose-500 to-pink-600',
+      lightBg: 'bg-rose-50 dark:bg-rose-900/20',
+      iconColor: 'text-rose-600 dark:text-rose-400',
     },
   ];
 
@@ -337,6 +369,9 @@ const AboutSection = memo(function AboutSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
+            Our Community
+          </p>
           <h2
             id="about-heading"
             className="mb-4 text-balance text-3xl font-bold text-foreground sm:text-4xl"
@@ -346,47 +381,74 @@ const AboutSection = memo(function AboutSection() {
           <p className="text-lg text-muted-foreground">{t('about.description')}</p>
         </div>
 
-        {/* Pastor Welcome Card */}
+        {/* Pastor Welcome Card — elevated with warm treatment */}
         <div className="mx-auto mt-10 max-w-3xl">
-          <div className="flex flex-col items-center gap-6 rounded-2xl bg-muted p-6 sm:flex-row sm:p-8">
-            {/* Pastor Avatar */}
-            <div className="flex-shrink-0">
-              <div className="h-24 w-24 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-muted text-3xl font-bold text-muted-foreground">
-                  P
+          <div className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-6 shadow-md transition-shadow hover:shadow-lg sm:p-8">
+            {/* Subtle gradient accent at top */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+            <div className="flex flex-col items-center gap-6 sm:flex-row">
+              {/* Pastor Avatar — gradient ring */}
+              <div className="flex-shrink-0">
+                <div className="rounded-full bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500 p-[3px] shadow-lg">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-card text-2xl font-bold text-muted-foreground sm:h-24 sm:w-24 sm:text-3xl">
+                    P
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="mb-2 italic text-foreground/80">
-                &ldquo;{t('about.pastorWelcome')}&rdquo;
-              </p>
-              <p className="font-semibold text-foreground">{t('about.pastorTitle')}</p>
-              <p className="text-sm text-muted-foreground">Sing Buri Adventist Center</p>
+              <div className="text-center sm:text-left">
+                <svg
+                  className="mb-1 h-6 w-6 text-primary/30"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+                <p className="italic leading-relaxed text-foreground/80">
+                  {t('about.pastorWelcome')}
+                </p>
+                <div className="mt-3">
+                  <p className="font-semibold text-foreground">{t('about.pastorTitle')}</p>
+                  <p className="text-sm text-muted-foreground">Sing Buri Adventist Center</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-3xl rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-center text-white shadow-xl sm:p-8">
-          <blockquote className="text-lg italic sm:text-xl">
-            &ldquo;{t('about.mission')}&rdquo;
-          </blockquote>
+        {/* Mission Statement — distinctive gradient card */}
+        <div className="mx-auto mt-10 max-w-3xl">
+          <div className="animate-gradient relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-6 text-center text-white shadow-xl sm:p-8">
+            {/* Decorative elements */}
+            <div className="dot-pattern absolute inset-0 text-white opacity-[0.04]" />
+            <div className="animate-float absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/[0.06]" />
+            <div
+              className="animate-float absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/[0.04]"
+              style={{ animationDelay: '1.5s' }}
+            />
+            <blockquote className="relative text-lg italic leading-relaxed sm:text-xl">
+              &ldquo;{t('about.mission')}&rdquo;
+            </blockquote>
+          </div>
         </div>
 
-        {/* Values */}
+        {/* Values — cards with hover gradient effect */}
         <div className="mt-12 grid gap-6 sm:mt-16 sm:grid-cols-3 sm:gap-8">
           {values.map((value) => (
             <div
               key={value.title}
-              className="rounded-xl bg-muted p-6 text-center transition-shadow hover:shadow-lg"
+              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
+              {/* Hover gradient overlay */}
               <div
-                className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl ${value.color} text-white`}
+                className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-[0.04]`}
+              />
+              <div
+                className={`relative mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl ${value.lightBg} ${value.iconColor} transition-transform duration-300 group-hover:scale-110`}
               >
                 <value.icon className="h-7 w-7" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-foreground">{value.title}</h3>
-              <p className="text-muted-foreground">{value.description}</p>
+              <h3 className="relative mb-2 text-lg font-semibold text-foreground">{value.title}</h3>
+              <p className="relative text-muted-foreground">{value.description}</p>
             </div>
           ))}
         </div>
@@ -397,7 +459,7 @@ const AboutSection = memo(function AboutSection() {
             href="https://www.adventist.org/beliefs/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 hover:underline"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80 hover:underline"
           >
             <BookOpen className="h-4 w-4" />
             {t('about.learnBeliefs')}

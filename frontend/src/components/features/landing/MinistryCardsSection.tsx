@@ -185,6 +185,9 @@ export function MinistryCardsSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto mb-8 max-w-2xl text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
+            Get Involved
+          </p>
           <h2
             id="ministries-heading"
             className="mb-3 text-balance text-3xl font-bold text-foreground sm:text-4xl"
@@ -218,7 +221,7 @@ export function MinistryCardsSection() {
           {filteredMinistries.map((ministry) => (
             <Card
               key={ministry.id}
-              className="group overflow-hidden border border-border bg-card transition-shadow duration-200 hover:shadow-lg"
+              className="group overflow-hidden border border-border/50 bg-card shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             >
               <CardContent className="flex h-full flex-col p-5">
                 {/* Icon + Title */}

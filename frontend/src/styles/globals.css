@@ -264,6 +264,96 @@
   }
 }
 
+/* Shimmer sweep — for loading states and decorative highlights */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Gentle float — for decorative elements and hero illustrations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Gradient shift — animated gradient backgrounds */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Subtle pulse ring — for badges and attention indicators */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Slide in from left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Number count-up feel (scale bounce) */
+@keyframes number-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* ===========================
    Scroll-Reveal Utility Classes
    Applied via className; IntersectionObserver toggles .is-visible
@@ -321,6 +411,91 @@
   /* Dashboard card entrance */
   .animate-fade-in-up {
     animation: fade-in-up 0.5s ease-out both;
+  }
+
+  /* Shimmer effect for decorative streaks */
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  /* Floating animation for decorative elements */
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Animated gradient background */
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 6s ease infinite;
+  }
+
+  /* Number pop-in */
+  .animate-number-pop {
+    animation: number-pop 0.5s ease-out both;
+  }
+
+  /* Slide-in variants */
+  .animate-slide-in-left {
+    animation: slide-in-left 0.4s ease-out both;
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right 0.4s ease-out both;
+  }
+
+  /* Glass morphism card utility */
+  .glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* Gradient text utility */
+  .gradient-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Decorative dot pattern overlay */
+  .dot-pattern {
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Card lift on hover */
+  .card-hover-lift {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .card-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 25px -5px rgba(0, 0, 0, 0.1),
+      0 4px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Accent top border for cards */
+  .accent-top {
+    position: relative;
+  }
+  .accent-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 9999px 9999px 0 0;
+    background: var(--accent-color, hsl(var(--primary)));
   }
 }
 
