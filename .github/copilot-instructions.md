@@ -170,6 +170,33 @@ npx prisma generate          # Regenerate Prisma Client after schema changes
 
 ## 📝 Code Conventions
 
+## 🔨 Build & Pre-Push Checklist
+
+**CRITICAL: Every code change — feature, fix, enhancement, or improvement — MUST pass a clean frontend build before being committed or pushed.**
+
+### Required Before Every Push
+
+```bash
+cd frontend
+npm run build   # Must exit with code 0, zero TypeScript errors
+```
+
+### Common Build-Breaking Issues to Avoid
+
+1. **Unused imports** — TypeScript `noUnusedLocals: true` is enforced. Never leave `import { Foo }` if `Foo` is not used in the file. Remove it immediately.
+2. **Unused variables/parameters** — Same rule: `noUnusedParameters: true`. Prefix intentionally-unused params with `_` (e.g. `_event`).
+3. **Type errors** — Strict mode is on. No `any` casts to silence errors; fix the types.
+4. **Missing exports** — If you add a new file/component, make sure it's exported correctly.
+5. **Import path aliases** — Use `@/` alias for `src/` imports in frontend (e.g. `@/components/ui/button`).
+
+### Workflow Rule
+
+- Before `git push`, always run `cd frontend && npm run build` locally.
+- If `tsc` reports `error TS6133` (declared but never read) → remove the unused import/variable.
+- If build exits with code non-zero → fix ALL errors before pushing; Vercel will reject the deploy.
+
+---
+
 ## ✅ Coding Principles
 
 - DRY: Extract shared logic into use cases or services (e.g., API calls belong in `frontend/src/services/endpoints`, not duplicated in pages).

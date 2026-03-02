@@ -19,7 +19,6 @@ import {
   Music,
   BookOpen,
   Calendar,
-  Clock,
   Link2,
   FileText,
   Mic,

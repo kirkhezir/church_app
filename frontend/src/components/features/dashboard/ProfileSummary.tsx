@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import { memo, useMemo } from 'react';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
-import { User, Mail, Phone, CalendarDays, Shield } from 'lucide-react';
+import { User, Mail, Phone, CalendarDays } from 'lucide-react';
 
 interface ProfileSummaryProps {
   profile: {

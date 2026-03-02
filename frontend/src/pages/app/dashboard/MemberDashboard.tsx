@@ -10,7 +10,7 @@
  * Design System: design-system/pages/dashboard.md
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Bell, CheckCircle, Sparkles } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
@@ -160,11 +160,11 @@ export default function MemberDashboard() {
         {/* Decorative dot pattern overlay */}
         <div className="dot-pattern absolute inset-0 text-white opacity-[0.06]" />
         {/* Decorative shimmer streak */}
-        <div className="animate-shimmer absolute inset-0" />
+        <div className="absolute inset-0 animate-shimmer" />
         {/* Floating decorative circle */}
-        <div className="animate-float absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/[0.06]" />
+        <div className="absolute -right-6 -top-6 h-32 w-32 animate-float rounded-full bg-white/[0.06]" />
         <div
-          className="animate-float absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-white/[0.04]"
+          className="absolute -bottom-4 -left-4 h-20 w-20 animate-float rounded-full bg-white/[0.04]"
           style={{ animationDelay: '1s' }}
         />
 

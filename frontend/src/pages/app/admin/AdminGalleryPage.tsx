@@ -17,8 +17,6 @@ import {
   FolderOpen,
   Camera,
   Calendar,
-  User,
-  Link2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +26,6 @@ import { SidebarLayout } from '@/components/layout';
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
   SheetDescription,
   SheetFooter,
