@@ -10,7 +10,7 @@
  * T308-T309: Create admin member list page
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Search,
   Users,
@@ -123,11 +123,7 @@ export default function AdminMemberListPage() {
 
   const ITEMS_PER_PAGE = 10;
 
-  useEffect(() => {
-    loadMembers();
-  }, [page, roleFilter, debouncedSearch]);
-
-  const loadMembers = async () => {
+  const loadMembers = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -145,7 +141,11 @@ export default function AdminMemberListPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, debouncedSearch, roleFilter]);
+
+  useEffect(() => {
+    loadMembers();
+  }, [loadMembers]);
 
   const handleDelete = async (memberId: string) => {
     try {
