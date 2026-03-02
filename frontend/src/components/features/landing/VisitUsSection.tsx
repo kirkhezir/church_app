@@ -302,7 +302,7 @@ export function VisitUsSection() {
                   }
                   variant="secondary"
                   size="default"
-                  className="w-full bg-white text-primary hover:bg-accent sm:w-auto sm:px-6"
+                  className="w-full bg-white text-blue-700 hover:bg-blue-50 dark:text-blue-700 dark:hover:bg-blue-50 sm:w-auto sm:px-6"
                 >
                   <MapPin className="mr-2 h-4 w-4" />
                   {language === 'th' ? 'เส้นทาง' : 'Get Directions'}

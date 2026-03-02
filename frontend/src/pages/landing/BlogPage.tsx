@@ -306,7 +306,7 @@ export function BlogPage() {
                     className="flex-1 rounded-lg bg-white px-4 py-3 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 dark:bg-slate-800"
                   />
                   <Button
-                    className="bg-white text-primary hover:bg-accent"
+                    className="bg-white text-blue-700 hover:bg-blue-50 dark:text-blue-700 dark:hover:bg-blue-50"
                     onClick={() => {
                       if (newsletterEmail && newsletterEmail.includes('@')) {
                         setNewsletterSubmitted(true);

@@ -462,7 +462,7 @@ export function VisitPage() {
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="bg-white text-primary hover:bg-accent"
+                  className="bg-white text-blue-700 hover:bg-blue-50 dark:text-blue-700 dark:hover:bg-blue-50"
                   onClick={() =>
                     window.open(
                       'https://www.google.com/maps/dir/?api=1&destination=Singburi+Seventh+Day+Adventist+Center',

@@ -452,7 +452,7 @@ export function PublicNavigationHeader({
                   size="sm"
                   className={`group relative overflow-hidden px-5 py-2 font-semibold tracking-wide transition-[transform,box-shadow,background-color,border-color,color] duration-300 hover:scale-105 ${
                     showTransparent
-                      ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-primary hover:shadow-white/20'
+                      ? 'border-2 border-white/80 bg-white/10 text-white shadow-lg shadow-white/10 backdrop-blur-sm hover:border-white hover:bg-white hover:text-blue-700 hover:shadow-white/20 dark:hover:text-blue-700'
                       : 'border-0 bg-gradient-to-r from-primary via-indigo-600 to-purple-600 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40'
                   }`}
                 >

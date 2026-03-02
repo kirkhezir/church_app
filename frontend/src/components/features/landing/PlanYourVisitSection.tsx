@@ -233,7 +233,7 @@ export function PlanYourVisitSection() {
                     onClick={scrollToContact}
                     variant="secondary"
                     size="lg"
-                    className="bg-white text-primary hover:bg-accent"
+                    className="bg-white text-blue-700 hover:bg-blue-50 dark:text-blue-700 dark:hover:bg-blue-50"
                   >
                     <MapPin className="mr-2 h-4 w-4" />
                     Get Directions
