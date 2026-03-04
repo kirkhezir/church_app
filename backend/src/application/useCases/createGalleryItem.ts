@@ -12,7 +12,6 @@ export class CreateGalleryItem {
     title?: string;
     titleThai?: string;
     description?: string;
-    descriptionThai?: string;
     albumId: string;
     albumTitle: string;
     albumTitleThai?: string;
@@ -38,7 +37,6 @@ export class CreateGalleryItem {
       albumTitleThai: input.albumTitleThai ?? null,
       photographer: input.photographer ?? null,
       description: input.description ?? null,
-      descriptionThai: input.descriptionThai ?? null,
       eventDate: input.eventDate ?? null,
       sortOrder: input.sortOrder ?? 0,
     });

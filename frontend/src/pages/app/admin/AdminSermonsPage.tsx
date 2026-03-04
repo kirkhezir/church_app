@@ -158,7 +158,7 @@ export function AdminSermonsPage() {
         audioUrl: formData.audioUrl || undefined,
         thumbnailUrl: formData.thumbnailUrl || undefined,
         duration: formData.duration || undefined,
-        description: formData.description || undefined,
+        description: formData.description,
         descriptionThai: formData.descriptionThai || undefined,
       };
 
@@ -642,12 +642,15 @@ export function AdminSermonsPage() {
                         htmlFor="sermon-description-en"
                         className="text-xs font-medium text-muted-foreground"
                       >
-                        Description (EN)
+                        Description (EN) <span className="text-destructive">*</span>
                       </label>
                       <Textarea
                         id="sermon-description-en"
                         rows={3}
                         className="resize-none"
+                        required
+                        minLength={10}
+                        placeholder="At least 10 characters"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       />

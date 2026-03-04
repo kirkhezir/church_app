@@ -21,6 +21,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
@@ -357,6 +358,11 @@ export function AdminBlogPage() {
           <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>{editingPost ? 'Edit Blog Post' : 'New Blog Post'}</DialogTitle>
+              <DialogDescription>
+                {editingPost
+                  ? 'Update the blog post details below.'
+                  : 'Fill in the details to create a new blog post.'}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">

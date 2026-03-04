@@ -48,7 +48,6 @@ export class GalleryController {
         title: req.body.title,
         titleThai: req.body.titleThai,
         description: req.body.description,
-        descriptionThai: req.body.descriptionThai,
         albumId: req.body.albumId,
         albumTitle: req.body.albumTitle,
         albumTitleThai: req.body.albumTitleThai,

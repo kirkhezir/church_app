@@ -20,7 +20,6 @@ export interface GalleryItem {
   title: string;
   titleThai?: string;
   description?: string;
-  descriptionThai?: string;
   albumId: string;
   albumTitle: string;
   albumTitleThai?: string;
@@ -44,7 +43,6 @@ interface CreateGalleryItemInput {
   title?: string;
   titleThai?: string;
   description?: string;
-  descriptionThai?: string;
   albumId: string;
   albumTitle: string;
   albumTitleThai?: string;
