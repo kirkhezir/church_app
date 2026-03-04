@@ -139,9 +139,9 @@ export default function LoginPage() {
       <div className="relative flex w-full items-center justify-center bg-background px-4 py-12 sm:px-6 lg:w-1/2 lg:px-8">
         {/* Subtle decorative background on form side */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="animate-float absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/[0.03] blur-3xl" />
+          <div className="absolute -right-20 -top-20 h-64 w-64 animate-float rounded-full bg-primary/[0.03] blur-3xl" />
           <div
-            className="animate-float absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-amber-500/[0.03] blur-3xl"
+            className="absolute -bottom-20 -left-20 h-48 w-48 animate-float rounded-full bg-amber-500/[0.03] blur-3xl"
             style={{ animationDelay: '2s' }}
           />
         </div>

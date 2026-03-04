@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { format } from 'date-fns';
 import {
@@ -11,6 +11,7 @@ import {
   UserMinus,
   Edit,
   AlertTriangle,
+  Ban,
 } from 'lucide-react';
 import { useEventDetail, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,6 +23,19 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EventCategory } from '@/types/api';
 import { gooeyToast } from 'goey-toast';
+import { eventService } from '@/services/endpoints/eventService';
+import { reportError } from '@/lib/errorReporting';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const categoryColors: Record<EventCategory, string> = {
   [EventCategory.WORSHIP]: 'bg-accent text-primary',
@@ -52,6 +66,23 @@ export const EventDetailPage: React.FC = () => {
   const { rsvping, rsvpError, rsvpToEvent, cancelRSVP } = useEventRSVP(() => {
     refetch();
   });
+
+  const [cancelling, setCancelling] = useState(false);
+
+  const handleCancelEvent = async () => {
+    if (!event) return;
+    setCancelling(true);
+    try {
+      await eventService.cancelEvent(event.id);
+      gooeyToast.success('Event cancelled');
+      refetch();
+    } catch (err) {
+      gooeyToast.error('Failed to cancel event');
+      reportError('Failed to cancel event', err);
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   // Always wrap with SidebarLayout — this page is behind PrivateRoute at /app/events/:id
   const wrapWithLayout = (content: React.ReactNode) => {
@@ -131,10 +162,38 @@ export const EventDetailPage: React.FC = () => {
           Back to Events
         </Button>
         {canEdit && !isCancelled && (
-          <Button onClick={() => navigate(`/app/events/${event.id}/edit`)}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Event
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate(`/app/events/${event.id}/edit`)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Event
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" disabled={cancelling}>
+                  <Ban className="mr-2 h-4 w-4" />
+                  Cancel Event
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Cancel this event?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will cancel &ldquo;{event.title}&rdquo; and notify all RSVPd attendees.
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Keep Event</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleCancelEvent}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Cancel Event
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         )}
       </div>
 

@@ -22,7 +22,12 @@ import { format } from 'date-fns';
 export function AnnouncementDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { announcement, loading, error } = useAnnouncement(id);
+
+  // Validate UUID format — prevents 400 errors when `:id` captures non-UUID strings like "create"
+  const isValidUUID =
+    id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+  const { announcement, loading, error } = useAnnouncement(isValidUUID ? id : undefined);
 
   const handleBack = () => {
     navigate('/app/announcements');
@@ -46,6 +51,9 @@ export function AnnouncementDetailPage() {
   }
 
   if (error || !announcement) {
+    const notFoundMessage = !isValidUUID
+      ? 'Invalid announcement ID'
+      : error || 'Announcement not found';
     const errorContent = (
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4">
@@ -53,7 +61,7 @@ export function AnnouncementDetailPage() {
           Back to Announcements
         </Button>
         <Alert variant="destructive">
-          <AlertDescription>{error || 'Announcement not found'}</AlertDescription>
+          <AlertDescription>{notFoundMessage}</AlertDescription>
         </Alert>
       </div>
     );

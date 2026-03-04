@@ -1,0 +1,26 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5173",
+      "localStorage": [
+        {
+          "name": "accessToken",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5MTFkNGNiNi0wZmY1LTRlN2EtOTBkOS1lYjg4YjkzMjVkYWIiLCJlbWFpbCI6ImFkbWluQHNpbmdidXJpLWFkdmVudGlzdC5vcmciLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzI2MDY2NTksImV4cCI6MTc3MjYwNzU1OSwiYXVkIjoiY2h1cmNoLWFwcC11c2VycyIsImlzcyI6ImNodXJjaC1hcHAifQ.ZC1CTeZFuRLNBAirEtamEGgq6Ixc1YOpBi9fdpd0K3g"
+        },
+        {
+          "name": "visitCount",
+          "value": "4"
+        },
+        {
+          "name": "refreshToken",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5MTFkNGNiNi0wZmY1LTRlN2EtOTBkOS1lYjg4YjkzMjVkYWIiLCJlbWFpbCI6ImFkbWluQHNpbmdidXJpLWFkdmVudGlzdC5vcmciLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzI2MDY2NTksImV4cCI6MTc3MzIxMTQ1OSwiYXVkIjoiY2h1cmNoLWFwcC11c2VycyIsImlzcyI6ImNodXJjaC1hcHAifQ.Rnyx0YqcugZRBYTHuMiT31LAWF3Qmsa44BSoapq4zVE"
+        },
+        {
+          "name": "user",
+          "value": "{\"id\":\"911d4cb6-0ff5-4e7a-90d9-eb88b9325dab\",\"email\":\"admin@singburi-adventist.org\",\"firstName\":\"Admin\",\"lastName\":\"User\",\"role\":\"ADMIN\"}"
+        }
+      ]
+    }
+  ]
+}

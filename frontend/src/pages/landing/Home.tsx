@@ -198,9 +198,9 @@ function HeroSection() {
       </div>
 
       {/* Decorative floating orbs */}
-      <div className="animate-float absolute left-[10%] top-[20%] h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+      <div className="absolute left-[10%] top-[20%] h-64 w-64 animate-float rounded-full bg-blue-500/10 blur-3xl" />
       <div
-        className="animate-float absolute bottom-[15%] right-[10%] h-48 w-48 rounded-full bg-amber-500/10 blur-3xl"
+        className="absolute bottom-[15%] right-[10%] h-48 w-48 animate-float rounded-full bg-amber-500/10 blur-3xl"
         style={{ animationDelay: '2s' }}
       />
 
@@ -420,9 +420,9 @@ const AboutSection = memo(function AboutSection() {
           <div className="animate-gradient relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-6 text-center text-white shadow-xl sm:p-8">
             {/* Decorative elements */}
             <div className="dot-pattern absolute inset-0 text-white opacity-[0.04]" />
-            <div className="animate-float absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/[0.06]" />
+            <div className="absolute -right-4 -top-4 h-24 w-24 animate-float rounded-full bg-white/[0.06]" />
             <div
-              className="animate-float absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/[0.04]"
+              className="absolute -bottom-4 -left-4 h-16 w-16 animate-float rounded-full bg-white/[0.04]"
               style={{ animationDelay: '1.5s' }}
             />
             <blockquote className="relative text-lg italic leading-relaxed sm:text-xl">
