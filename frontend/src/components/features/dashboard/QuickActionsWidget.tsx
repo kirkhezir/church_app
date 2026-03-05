@@ -1,8 +1,8 @@
 /**
  * Quick Actions Widget
  *
- * Grid of icon+label action buttons for common tasks.
- * Shows admin-specific actions when user has ADMIN/STAFF role.
+ * Visually distinct action tiles for common tasks.
+ * Member actions use the app's public pages; admin actions link to management pages.
  */
 
 import { Link } from 'react-router';
@@ -19,29 +19,33 @@ const memberActions = [
     label: 'Browse Events',
     icon: Calendar,
     href: '/app/events',
-    color: 'text-blue-600 dark:text-blue-400',
-    bg: 'bg-blue-500/10 dark:bg-blue-400/10',
+    gradient: 'from-blue-500 to-blue-600',
+    glow: 'group-hover:shadow-blue-500/25',
+    text: 'text-blue-50',
   },
   {
     label: 'Send Message',
     icon: MessageSquare,
     href: '/app/messages',
-    color: 'text-purple-600 dark:text-purple-400',
-    bg: 'bg-purple-500/10 dark:bg-purple-400/10',
+    gradient: 'from-purple-500 to-purple-600',
+    glow: 'group-hover:shadow-purple-500/25',
+    text: 'text-purple-50',
   },
   {
     label: 'View Sermons',
     icon: Video,
-    href: '/app/sermons',
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-500/10 dark:bg-amber-400/10',
+    href: '/sermons',
+    gradient: 'from-amber-500 to-orange-500',
+    glow: 'group-hover:shadow-amber-500/25',
+    text: 'text-amber-50',
   },
   {
     label: 'Submit Prayer',
     icon: Heart,
-    href: '/app/prayer',
-    color: 'text-rose-600 dark:text-rose-400',
-    bg: 'bg-rose-500/10 dark:bg-rose-400/10',
+    href: '/prayer',
+    gradient: 'from-rose-500 to-pink-500',
+    glow: 'group-hover:shadow-rose-500/25',
+    text: 'text-rose-50',
   },
 ];
 
@@ -49,23 +53,26 @@ const adminActions = [
   {
     label: 'Create Event',
     icon: Plus,
-    href: '/app/admin/events',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-500/10 dark:bg-emerald-400/10',
+    href: '/app/events/create',
+    gradient: 'from-emerald-500 to-teal-500',
+    glow: 'group-hover:shadow-emerald-500/25',
+    text: 'text-emerald-50',
   },
   {
     label: 'Post Announcement',
     icon: Megaphone,
     href: '/app/admin/announcements',
-    color: 'text-orange-600 dark:text-orange-400',
-    bg: 'bg-orange-500/10 dark:bg-orange-400/10',
+    gradient: 'from-orange-500 to-red-500',
+    glow: 'group-hover:shadow-orange-500/25',
+    text: 'text-orange-50',
   },
   {
     label: 'Manage Members',
     icon: Users,
     href: '/app/admin/members',
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bg: 'bg-cyan-500/10 dark:bg-cyan-400/10',
+    gradient: 'from-cyan-500 to-sky-500',
+    glow: 'group-hover:shadow-cyan-500/25',
+    text: 'text-cyan-50',
   },
 ];
 
@@ -73,7 +80,6 @@ export const QuickActionsWidget = memo(function QuickActionsWidget({
   role,
 }: QuickActionsWidgetProps) {
   const isAdmin = role === 'ADMIN' || role === 'STAFF';
-  const actions = isAdmin ? [...memberActions, ...adminActions] : memberActions;
 
   return (
     <Card>
@@ -83,25 +89,53 @@ export const QuickActionsWidget = memo(function QuickActionsWidget({
           Quick Actions
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-4">
-          {actions.map((action) => (
+      <CardContent className="space-y-3">
+        {/* Member actions */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {memberActions.map((action) => (
             <Link
               key={action.label}
               to={action.href}
-              className="group flex flex-col items-center gap-2 rounded-xl border border-border/50 p-3 transition-all duration-200 hover:-translate-y-px hover:border-primary/20 hover:bg-accent/50 hover:shadow-sm"
+              className={`group flex flex-col items-center gap-2.5 rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${action.glow} bg-gradient-to-br ${action.gradient}`}
             >
-              <div
-                className={`flex h-10 w-10 items-center justify-center rounded-lg ${action.bg} transition-colors group-hover:scale-110`}
-              >
-                <action.icon className={`h-5 w-5 ${action.color}`} />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
+                <action.icon className={`h-5 w-5 ${action.text}`} />
               </div>
-              <span className="text-center text-xs font-medium text-muted-foreground group-hover:text-foreground">
+              <span className={`text-center text-xs font-semibold ${action.text}`}>
                 {action.label}
               </span>
             </Link>
           ))}
         </div>
+
+        {/* Admin actions (with subtle separator) */}
+        {isAdmin && (
+          <>
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-border/60" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Admin
+              </span>
+              <div className="h-px flex-1 bg-border/60" />
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {adminActions.map((action) => (
+                <Link
+                  key={action.label}
+                  to={action.href}
+                  className={`group flex flex-col items-center gap-2.5 rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${action.glow} bg-gradient-to-br ${action.gradient}`}
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110">
+                    <action.icon className={`h-5 w-5 ${action.text}`} />
+                  </div>
+                  <span className={`text-center text-xs font-semibold ${action.text}`}>
+                    {action.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

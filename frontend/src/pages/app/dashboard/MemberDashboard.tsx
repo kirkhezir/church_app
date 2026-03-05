@@ -18,7 +18,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, Heart } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
-import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
+
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
 import { QuickActionsWidget } from '@/components/features/dashboard/QuickActionsWidget';
@@ -389,11 +389,6 @@ export default function MemberDashboard() {
         </div>
       </div>
 
-      {/* Profile Summary */}
-      <div className="animate-fade-in-up stagger-8">
-        <ProfileSummary profile={dashboard.profile} />
-      </div>
-
       {/* Events and Announcements */}
       <div className="animate-fade-in-up stagger-9 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <UpcomingEventsWidget events={dashboard.upcomingEvents} />
@@ -401,7 +396,7 @@ export default function MemberDashboard() {
       </div>
 
       {/* Admin Section (admin/staff only) */}
-      {isAdmin && dashboard.adminStats && (
+      {isAdmin && (
         <div className="animate-fade-in-up stagger-10">
           <AdminDashboardSection stats={dashboard.adminStats} />
         </div>
