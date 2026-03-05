@@ -4,19 +4,31 @@
  * Main dashboard view for authenticated members showing:
  * - Time-aware welcome banner with decorative pattern
  * - Quick stats with colored icon backgrounds
+ * - Quick actions grid
+ * - Messages, content, and prayer widgets
+ * - Activity feed and birthdays
  * - Profile summary widget
  * - Upcoming events + announcements widgets
+ * - Admin overview section (admin/staff only)
  *
  * Design System: design-system/pages/dashboard.md
  */
 
 import { useState, useEffect } from 'react';
-import { Calendar, Bell, CheckCircle, Sparkles } from 'lucide-react';
+import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, Heart } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
 import { ProfileSummary } from '@/components/features/dashboard/ProfileSummary';
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
+import { QuickActionsWidget } from '@/components/features/dashboard/QuickActionsWidget';
+import { UnreadMessagesWidget } from '@/components/features/dashboard/UnreadMessagesWidget';
+import { LatestContentWidget } from '@/components/features/dashboard/LatestContentWidget';
+import { PrayerRequestsWidget } from '@/components/features/dashboard/PrayerRequestsWidget';
+import { BirthdayCelebrationWidget } from '@/components/features/dashboard/BirthdayCelebrationWidget';
+import { BibleVerseWidget } from '@/components/features/dashboard/BibleVerseWidget';
+import { ActivityFeedWidget } from '@/components/features/dashboard/ActivityFeedWidget';
+import { AdminDashboardSection } from '@/components/features/dashboard/AdminDashboardSection';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -54,6 +66,58 @@ interface DashboardData {
     upcomingEventsCount: number;
     unreadAnnouncementsCount: number;
     myRsvpCount: number;
+    unreadMessagesCount: number;
+    prayerRequestsCount: number;
+  };
+  recentMessages: Array<{
+    id: string;
+    senderId: string;
+    subject: string;
+    sentAt: string;
+    isRead: boolean;
+  }>;
+  recentSermon: {
+    id: string;
+    title: string;
+    speaker: string;
+    date: string;
+    thumbnailUrl?: string;
+    youtubeUrl?: string;
+  } | null;
+  recentBlogPost: {
+    id: string;
+    title: string;
+    excerpt: string;
+    slug: string;
+    publishedAt: string;
+    thumbnailUrl?: string;
+  } | null;
+  recentPrayerRequests: Array<{
+    id: string;
+    name: string;
+    category: string;
+    request: string;
+    isAnonymous: boolean;
+    prayerCount: number;
+    createdAt: string;
+  }>;
+  birthdayMembers: Array<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+  }>;
+  activityFeed: Array<{
+    id: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    timestamp: string;
+  }>;
+  adminStats?: {
+    totalMembers: number;
+    newMembersThisMonth: number;
+    pendingPrayerRequests: number;
   };
 }
 
@@ -101,8 +165,8 @@ export default function MemberDashboard() {
             </CardContent>
           </Card>
           {/* Stats skeleton */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {Array.from({ length: 5 }).map((_, i) => (
               <Card key={i}>
                 <CardHeader className="pb-2">
                   <Skeleton className="h-4 w-24" />
@@ -113,24 +177,27 @@ export default function MemberDashboard() {
               </Card>
             ))}
           </div>
+          {/* Quick actions skeleton */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 rounded-xl" />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
           {/* Widgets skeleton */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <Card>
-              <CardContent className="p-6">
-                <Skeleton className="mx-auto h-20 w-20 rounded-full" />
-                <Skeleton className="mx-auto mt-4 h-5 w-32" />
-                <Skeleton className="mx-auto mt-2 h-4 w-24" />
-              </CardContent>
-            </Card>
-            <div className="space-y-4 lg:col-span-2">
-              <Card>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Card key={i}>
                 <CardContent className="space-y-3 p-6">
                   <Skeleton className="h-5 w-40" />
                   <Skeleton className="h-16 w-full" />
                   <Skeleton className="h-16 w-full" />
                 </CardContent>
               </Card>
-            </div>
+            ))}
           </div>
         </div>
       </SidebarLayout>
@@ -150,6 +217,8 @@ export default function MemberDashboard() {
   if (!dashboard) {
     return null;
   }
+
+  const isAdmin = dashboard.profile.role === 'ADMIN' || dashboard.profile.role === 'STAFF';
 
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
@@ -195,8 +264,8 @@ export default function MemberDashboard() {
         </CardContent>
       </Card>
 
-      {/* Stats Overview — colored accent cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {/* Stats Overview — 5 colored accent cards */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <Card className="animate-fade-in-up stagger-1 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(222,70%,55%)]">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -251,21 +320,92 @@ export default function MemberDashboard() {
             <p className="mt-1 text-xs text-muted-foreground">confirmed</p>
           </CardContent>
         </Card>
+
+        <Card className="animate-fade-in-up stagger-4 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(270,70%,55%)]">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Unread Messages
+            </CardTitle>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-400/10 dark:text-purple-400">
+              <MessageSquare className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div
+              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
+              style={{ animationDelay: '0.3s' }}
+            >
+              {dashboard.stats.unreadMessagesCount ?? 0}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">inbox</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-in-up stagger-5 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(350,70%,55%)]">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Prayer Requests
+            </CardTitle>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400">
+              <Heart className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div
+              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
+              style={{ animationDelay: '0.4s' }}
+            >
+              {dashboard.stats.prayerRequestsCount ?? 0}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">active</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Dashboard Widgets */}
-      <div className="animate-fade-in-up stagger-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {/* Profile Summary - Left Column */}
-        <div className="lg:col-span-1">
-          <ProfileSummary profile={dashboard.profile} />
-        </div>
+      {/* Quick Actions */}
+      <div className="animate-fade-in-up stagger-5">
+        <QuickActionsWidget role={dashboard.profile.role} />
+      </div>
 
-        {/* Events and Announcements - Right Columns */}
-        <div className="space-y-4 lg:col-span-2">
-          <UpcomingEventsWidget events={dashboard.upcomingEvents} />
-          <RecentAnnouncementsWidget announcements={dashboard.recentAnnouncements} />
+      {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
+      <div className="animate-fade-in-up stagger-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <UnreadMessagesWidget
+          messages={dashboard.recentMessages ?? []}
+          unreadCount={dashboard.stats.unreadMessagesCount ?? 0}
+        />
+        <LatestContentWidget
+          sermon={dashboard.recentSermon ?? null}
+          blogPost={dashboard.recentBlogPost ?? null}
+        />
+        <PrayerRequestsWidget requests={dashboard.recentPrayerRequests ?? []} />
+      </div>
+
+      {/* Activity Feed + Birthdays & Bible Verse */}
+      <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
+        <div className="space-y-4">
+          <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />
+          <BibleVerseWidget />
         </div>
       </div>
+
+      {/* Profile Summary */}
+      <div className="animate-fade-in-up stagger-8">
+        <ProfileSummary profile={dashboard.profile} />
+      </div>
+
+      {/* Events and Announcements */}
+      <div className="animate-fade-in-up stagger-9 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <UpcomingEventsWidget events={dashboard.upcomingEvents} />
+        <RecentAnnouncementsWidget announcements={dashboard.recentAnnouncements} />
+      </div>
+
+      {/* Admin Section (admin/staff only) */}
+      {isAdmin && dashboard.adminStats && (
+        <div className="animate-fade-in-up stagger-10">
+          <AdminDashboardSection stats={dashboard.adminStats} />
+        </div>
+      )}
     </SidebarLayout>
   );
 }

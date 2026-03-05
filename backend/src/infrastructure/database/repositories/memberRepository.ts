@@ -238,6 +238,67 @@ export class MemberRepository implements IMemberRepository {
       where: { id },
     });
   }
+
+  /**
+   * Find members with birthdays this week
+   */
+  async findBirthdaysThisWeek(): Promise<
+    Array<{ id: string; firstName: string; lastName: string; dateOfBirth: Date }>
+  > {
+    const today = new Date();
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() + 7);
+
+    // Get all non-deleted members with dateOfBirth
+    const members = await prisma.members.findMany({
+      where: {
+        deletedAt: null,
+        dateOfBirth: { not: null },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+      },
+    });
+
+    const todayMonth = today.getMonth();
+    const todayDate = today.getDate();
+    const endMonth = endOfWeek.getMonth();
+    const endDate = endOfWeek.getDate();
+
+    return members.filter((m) => {
+      if (!m.dateOfBirth) return false;
+      const bMonth = m.dateOfBirth.getMonth();
+      const bDate = m.dateOfBirth.getDate();
+
+      if (todayMonth === endMonth) {
+        // Same month — simple range
+        return bMonth === todayMonth && bDate >= todayDate && bDate <= endDate;
+      }
+      // Spans month boundary
+      return (
+        (bMonth === todayMonth && bDate >= todayDate) || (bMonth === endMonth && bDate <= endDate)
+      );
+    }) as Array<{ id: string; firstName: string; lastName: string; dateOfBirth: Date }>;
+  }
+
+  /**
+   * Count members created this month
+   */
+  async countNewThisMonth(): Promise<number> {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    return prisma.members.count({
+      where: {
+        deletedAt: null,
+        createdAt: { gte: startOfMonth },
+      },
+    });
+  }
 }
 
 // Export singleton instance

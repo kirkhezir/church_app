@@ -23,6 +23,10 @@ import { MemberRepository } from '../../infrastructure/database/repositories/mem
 import { EventRepository } from '../../infrastructure/database/repositories/eventRepository';
 import { EventRSVPRepository } from '../../infrastructure/database/repositories/eventRSVPRepository';
 import { AnnouncementRepository } from '../../infrastructure/database/repositories/announcementRepository';
+import { MessageRepository } from '../../infrastructure/database/repositories/messageRepository';
+import { SermonRepository } from '../../infrastructure/database/repositories/sermonRepository';
+import { BlogRepository } from '../../infrastructure/database/repositories/blogRepository';
+import { PrayerRepository } from '../../infrastructure/database/repositories/prayerRepository';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -43,12 +47,20 @@ export class MemberController {
     const eventRepository = new EventRepository();
     const eventRSVPRepository = new EventRSVPRepository();
     const announcementRepository = new AnnouncementRepository();
+    const messageRepository = new MessageRepository();
+    const sermonRepository = new SermonRepository();
+    const blogRepository = new BlogRepository();
+    const prayerRepository = new PrayerRepository();
 
     this.getMemberDashboardUseCase = new GetMemberDashboard(
       this.memberRepository,
       eventRepository,
       announcementRepository,
-      eventRSVPRepository
+      eventRSVPRepository,
+      messageRepository,
+      sermonRepository,
+      blogRepository,
+      prayerRepository
     );
     this.updateProfileUseCase = new UpdateProfile(this.memberRepository);
     this.updateNotificationPreferencesUseCase = new UpdateNotificationPreferences(

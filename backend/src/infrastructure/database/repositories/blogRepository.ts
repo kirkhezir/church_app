@@ -52,4 +52,12 @@ export class BlogRepository implements IBlogRepository {
     });
     return results.map((r: any) => r.category);
   }
+
+  async findRecent(limit: number): Promise<any[]> {
+    return prisma.blog_posts.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: 'desc' },
+      take: limit,
+    });
+  }
 }

@@ -13,4 +13,5 @@ export interface IBlogRepository {
   update(id: string, data: any): Promise<any>;
   delete(id: string): Promise<void>;
   getCategories(): Promise<string[]>;
+  findRecent(limit: number): Promise<any[]>;
 }

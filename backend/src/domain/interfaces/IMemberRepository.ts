@@ -49,4 +49,16 @@ export interface IMemberRepository {
    * Count total members
    */
   count(): Promise<number>;
+
+  /**
+   * Find members with birthdays this week
+   */
+  findBirthdaysThisWeek(): Promise<
+    Array<{ id: string; firstName: string; lastName: string; dateOfBirth: Date }>
+  >;
+
+  /**
+   * Count members created this month
+   */
+  countNewThisMonth(): Promise<number>;
 }

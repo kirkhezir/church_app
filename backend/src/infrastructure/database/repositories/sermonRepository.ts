@@ -65,4 +65,12 @@ export class SermonRepository implements ISermonRepository {
     });
     return results.map((r: any) => r.series).filter(Boolean);
   }
+
+  async findRecent(limit: number): Promise<any[]> {
+    return prisma.sermons.findMany({
+      where: { isPublished: true },
+      orderBy: { date: 'desc' },
+      take: limit,
+    });
+  }
 }

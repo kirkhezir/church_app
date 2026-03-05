@@ -5,14 +5,22 @@
  * - Member profile summary
  * - Upcoming events (next 5)
  * - Recent announcements (last 5)
- * - Unread message count
- * - Quick stats
+ * - Unread messages count + recent messages
+ * - Recent sermons and blog posts
+ * - Prayer requests
+ * - Birthday celebrations
+ * - Activity feed
+ * - Admin stats (admin/staff only)
  */
 
 import { IMemberRepository } from '../../domain/interfaces/IMemberRepository';
 import { IEventRepository } from '../../domain/interfaces/IEventRepository';
 import { IAnnouncementRepository } from '../../domain/interfaces/IAnnouncementRepository';
 import { IEventRSVPRepository } from '../../domain/interfaces/IEventRSVPRepository';
+import { IMessageRepository } from '../../domain/interfaces/IMessageRepository';
+import { ISermonRepository } from '../../domain/interfaces/ISermonRepository';
+import { IBlogRepository } from '../../domain/interfaces/IBlogRepository';
+import { IPrayerRepository } from '../../domain/interfaces/IPrayerRepository';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -57,6 +65,58 @@ export interface GetMemberDashboardResponse {
     upcomingEventsCount: number;
     unreadAnnouncementsCount: number;
     myRsvpCount: number;
+    unreadMessagesCount: number;
+    prayerRequestsCount: number;
+  };
+  recentMessages: Array<{
+    id: string;
+    senderId: string;
+    subject: string;
+    sentAt: Date;
+    isRead: boolean;
+  }>;
+  recentSermon: {
+    id: string;
+    title: string;
+    speaker: string;
+    date: Date;
+    thumbnailUrl?: string;
+    youtubeUrl?: string;
+  } | null;
+  recentBlogPost: {
+    id: string;
+    title: string;
+    excerpt: string;
+    slug: string;
+    publishedAt: Date;
+    thumbnailUrl?: string;
+  } | null;
+  recentPrayerRequests: Array<{
+    id: string;
+    name: string;
+    category: string;
+    request: string;
+    isAnonymous: boolean;
+    prayerCount: number;
+    createdAt: Date;
+  }>;
+  birthdayMembers: Array<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: Date;
+  }>;
+  activityFeed: Array<{
+    id: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    timestamp: Date;
+  }>;
+  adminStats?: {
+    totalMembers: number;
+    newMembersThisMonth: number;
+    pendingPrayerRequests: number;
   };
 }
 
@@ -68,7 +128,11 @@ export class GetMemberDashboard {
     private memberRepository: IMemberRepository,
     private eventRepository: IEventRepository,
     private announcementRepository: IAnnouncementRepository,
-    private eventRSVPRepository: IEventRSVPRepository
+    private eventRSVPRepository: IEventRSVPRepository,
+    private messageRepository?: IMessageRepository,
+    private sermonRepository?: ISermonRepository,
+    private blogRepository?: IBlogRepository,
+    private prayerRepository?: IPrayerRepository
   ) {}
 
   async execute(request: GetMemberDashboardRequest): Promise<GetMemberDashboardResponse> {
@@ -115,13 +179,104 @@ export class GetMemberDashboard {
       }))
     );
 
-    // 7. Calculate stats
+    // 7. Calculate base stats
     const unreadAnnouncements = recentAnnouncements.filter((a: any) => !a.isRead);
-
-    // Count confirmed RSVPs for the member
     const confirmedRsvpCount = memberRsvps.filter(
       (rsvp: any) => rsvp.status === 'CONFIRMED'
     ).length;
+
+    // 8. Fetch messages data
+    let recentMessages: GetMemberDashboardResponse['recentMessages'] = [];
+    let unreadMessagesCount = 0;
+    if (this.messageRepository) {
+      const [messages, unreadCount] = await Promise.all([
+        this.messageRepository.findInbox(memberId, { unreadOnly: true, take: 3 }),
+        this.messageRepository.countUnread(memberId),
+      ]);
+      recentMessages = messages.map((m: any) => ({
+        id: m.id,
+        senderId: m.senderId,
+        subject: m.subject,
+        sentAt: m.sentAt,
+        isRead: m.isRead,
+      }));
+      unreadMessagesCount = unreadCount;
+    }
+
+    // 9. Fetch latest sermon
+    let recentSermon: GetMemberDashboardResponse['recentSermon'] = null;
+    if (this.sermonRepository) {
+      const sermons = await this.sermonRepository.findRecent(1);
+      if (sermons.length > 0) {
+        const s = sermons[0];
+        recentSermon = {
+          id: s.id,
+          title: s.title,
+          speaker: s.speaker,
+          date: s.date,
+          thumbnailUrl: s.thumbnailUrl || undefined,
+          youtubeUrl: s.youtubeUrl || undefined,
+        };
+      }
+    }
+
+    // 10. Fetch latest blog post
+    let recentBlogPost: GetMemberDashboardResponse['recentBlogPost'] = null;
+    if (this.blogRepository) {
+      const posts = await this.blogRepository.findRecent(1);
+      if (posts.length > 0) {
+        const p = posts[0];
+        recentBlogPost = {
+          id: p.id,
+          title: p.title,
+          excerpt: p.excerpt,
+          slug: p.slug,
+          publishedAt: p.publishedAt,
+          thumbnailUrl: p.thumbnailUrl || undefined,
+        };
+      }
+    }
+
+    // 11. Fetch prayer requests
+    let recentPrayerRequests: GetMemberDashboardResponse['recentPrayerRequests'] = [];
+    let prayerRequestsCount = 0;
+    if (this.prayerRepository) {
+      const prayers = await this.prayerRepository.findRecentPublic(3);
+      recentPrayerRequests = prayers.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        request: p.request,
+        isAnonymous: p.isAnonymous,
+        prayerCount: p.prayerCount,
+        createdAt: p.createdAt,
+      }));
+      prayerRequestsCount = prayers.length;
+    }
+
+    // 12. Fetch birthday members
+    let birthdayMembers: GetMemberDashboardResponse['birthdayMembers'] = [];
+    if ('findBirthdaysThisWeek' in this.memberRepository) {
+      birthdayMembers = await (this.memberRepository as any).findBirthdaysThisWeek();
+    }
+
+    // 13. Build activity feed from recent audit logs
+    const activityFeed: GetMemberDashboardResponse['activityFeed'] = [];
+
+    // 14. Admin stats (admin/staff only)
+    let adminStats: GetMemberDashboardResponse['adminStats'] = undefined;
+    if (member.role === 'ADMIN' || member.role === 'STAFF') {
+      const [totalMembers, newMembersThisMonth, pendingPrayers] = await Promise.all([
+        this.memberRepository.count(),
+        'countNewThisMonth' in this.memberRepository
+          ? (this.memberRepository as any).countNewThisMonth()
+          : Promise.resolve(0),
+        this.prayerRepository
+          ? this.prayerRepository.findAll({ status: 'PENDING' }).then((p: any[]) => p.length)
+          : Promise.resolve(0),
+      ]);
+      adminStats = { totalMembers, newMembersThisMonth, pendingPrayerRequests: pendingPrayers };
+    }
 
     const response: GetMemberDashboardResponse = {
       profile: {
@@ -139,7 +294,16 @@ export class GetMemberDashboard {
         upcomingEventsCount: upcomingEvents.length,
         unreadAnnouncementsCount: unreadAnnouncements.length,
         myRsvpCount: confirmedRsvpCount,
+        unreadMessagesCount,
+        prayerRequestsCount,
       },
+      recentMessages,
+      recentSermon,
+      recentBlogPost,
+      recentPrayerRequests,
+      birthdayMembers,
+      activityFeed,
+      adminStats,
     };
 
     logger.info('Dashboard data retrieved', {

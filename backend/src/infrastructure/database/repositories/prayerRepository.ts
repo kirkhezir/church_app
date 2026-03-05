@@ -44,4 +44,12 @@ export class PrayerRepository implements IPrayerRepository {
       data: { prayerCount: { increment: 1 }, updatedAt: new Date() },
     });
   }
+
+  async findRecentPublic(limit: number): Promise<any[]> {
+    return prisma.prayer_requests.findMany({
+      where: { isPublic: true, status: 'APPROVED' },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+  }
 }

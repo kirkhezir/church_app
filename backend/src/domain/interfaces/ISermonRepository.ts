@@ -10,4 +10,5 @@ export interface ISermonRepository {
   incrementViews(id: string): Promise<void>;
   getSpeakers(): Promise<string[]>;
   getSeries(): Promise<string[]>;
+  findRecent(limit: number): Promise<any[]>;
 }
