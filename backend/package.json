@@ -58,7 +58,7 @@
     "helmet": "^7.1.0",
     "ioredis": "^5.8.2",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2",
+    "multer": "^2.1.1",
     "nodemailer": "^7.0.11",
     "otplib": "^12.0.1",
     "pdfkit": "^0.17.2",
@@ -106,8 +106,9 @@
   },
   "overrides": {
     "lodash": "^4.17.23",
-    "hono": "^4.11.9",
-    "fast-xml-parser": "^5.3.6",
+    "hono": ">=4.12.5",
+    "@hono/node-server": ">=1.19.10",
+    "fast-xml-parser": ">=5.4.2",
     "qs": "^6.15.0",
     "brace-expansion": "^2.0.2"
   }

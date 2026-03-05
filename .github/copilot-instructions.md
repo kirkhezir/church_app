@@ -629,4 +629,105 @@ Before committing:
 - **Security Guide:** `SECURITY_GUIDE.md`
 - **Incident Response:** `SECURITY_INCIDENT_REPORT.md`
 
+## 🛡️ Dependency Security & Vulnerability Prevention
+
+**⚠️ CRITICAL: Every change — features, fixes, enhancements — MUST pass a zero-vulnerability audit before being committed or pushed.**
+
+### Mandatory Security Checks Before Every Push
+
+```bash
+# Backend: must report "found 0 vulnerabilities"
+cd backend && npm audit
+
+# Root (E2E/dev deps): must report "found 0 vulnerabilities"
+cd .. && npm audit
+```
+
+If either reports vulnerabilities, fix them BEFORE pushing. Never push with known vulnerabilities.
+
+### Dependency Vulnerability Fix Strategy
+
+**When npm audit reports vulnerabilities:**
+
+1. **Run `npm audit fix` first** — fixes non-breaking issues automatically
+2. **For remaining issues, use `overrides`** — force a safe minimum version without breaking the dependency tree:
+
+```json
+// backend/package.json or root package.json
+"overrides": {
+  "vulnerable-package": ">=safe-version"
+}
+```
+
+Then run `npm install` to apply overrides.
+
+3. **For direct dependencies** — update the version in `dependencies`/`devDependencies` directly, then run `npm install`
+
+4. **Verify fix**: `npm audit` must show `found 0 vulnerabilities`
+
+> **NEVER** use `npm audit fix --force` without understanding the breaking change — it may downgrade major versions (e.g. prisma 7→6).
+
+### Transitive Dependency Override Pattern (This Repo)
+
+This repo uses `overrides` to force safe minimum versions for transitive dependencies. **When adding or updating packages, always re-run `npm audit` and update the overrides section if new vulnerabilities arise.**
+
+Current security overrides in `backend/package.json`:
+
+```json
+"overrides": {
+  "lodash": "^4.17.23",           // prototype pollution fix
+  "hono": ">=4.12.5",             // serveStatic / SSE / cookie injection fix
+  "@hono/node-server": ">=1.19.10", // authorization bypass fix (via prisma)
+  "fast-xml-parser": ">=5.4.2",   // stack overflow DoS fix
+  "qs": "^6.15.0",                // prototype pollution fix
+  "brace-expansion": "^2.0.2"     // ReDoS fix
+}
+```
+
+Current security overrides in root `package.json`:
+
+```json
+"overrides": {
+  "minimatch": ">=3.1.4",   // ReDoS fix (via serve/serve-handler)
+  "ajv": ">=8.18.0"         // ReDoS fix (via serve)
+}
+```
+
+### Security Review Checklist (Every PR / Feature)
+
+Before committing any code change:
+
+- [ ] `cd backend && npm audit` → `found 0 vulnerabilities`
+- [ ] `cd .. && npm audit` → `found 0 vulnerabilities`
+- [ ] `cd frontend && npm audit` → check for vulnerabilities
+- [ ] No new direct dependencies added without verifying their security record
+- [ ] No secrets, credentials, or API keys introduced in code
+- [ ] Input from external sources (requests, files, events) is validated/sanitized
+- [ ] SQL queries use Prisma's parameterized API (never raw string interpolation)
+- [ ] File uploads use validated MIME type + size limits (multer config)
+- [ ] Rate limiting exists on new public-facing endpoints
+
+### OWASP Top 10 Prevention Rules
+
+| Risk                              | Prevention                                                                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **A01 Broken Access Control**     | Always verify `req.member.role` in admin routes; use `AdminRoute` guard in frontend                                                  |
+| **A02 Cryptographic Failures**    | Never store plain-text passwords; use `bcrypt` via `PasswordService`; JWT secrets from env only                                      |
+| **A03 Injection**                 | Always use Prisma parameterized queries; never use `prisma.$queryRawUnsafe` with user input; sanitize with `sanitizeInputMiddleware` |
+| **A04 Insecure Design**           | Business logic belongs in use cases, never in controllers or routes                                                                  |
+| **A05 Security Misconfiguration** | Helmet.js is enabled; CORS is restricted; rate limits are applied to auth/MFA/contact endpoints                                      |
+| **A06 Vulnerable Components**     | Run `npm audit` before every push; use `overrides` for transitive fixes                                                              |
+| **A07 Auth Failures**             | MFA required for Admin/Staff; JWT access tokens expire in 15 min; refresh tokens are httpOnly cookies                                |
+| **A08 Data Integrity**            | Validate all request bodies with `zod` or express-validator before use-case execution                                                |
+| **A09 Logging Failures**          | Log all auth events, errors, and admin actions via Winston logger                                                                    |
+| **A10 SSRF**                      | Never fetch user-supplied URLs server-side without allow-listing                                                                     |
+
+### When Adding New npm Packages
+
+1. Check the package's GitHub security advisories before adding
+2. Prefer well-maintained packages with recent activity
+3. Use `npm install <pkg>` then immediately run `npm audit`
+4. If the new package introduces vulnerabilities, evaluate alternatives or add overrides
+5. Pin exact versions for security-critical packages (e.g. `"multer": "2.1.1"` not `"^2.1.1"`)
+
 <!-- MANUAL ADDITIONS END -->
