@@ -46,7 +46,9 @@ class ApiClient {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
         // Handle 401 Unauthorized - attempt token refresh
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Skip refresh for auth endpoints (login, register, etc.) — a 401 there is a legitimate credential error
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/');
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
           originalRequest._retry = true;
 
           try {
