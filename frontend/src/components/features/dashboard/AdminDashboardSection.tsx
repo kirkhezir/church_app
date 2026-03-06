@@ -5,9 +5,16 @@
  * pending prayer requests, and system overview.
  */
 
-import { useState } from 'react';
-import { memo } from 'react';
-import { Shield, Users, Heart, ChevronDown, BarChart2, Eye } from 'lucide-react';
+import { useState, useEffect, memo } from 'react';
+import {
+  Shield,
+  Users,
+  HeartHandshake,
+  ChevronDown,
+  BarChart2,
+  Eye,
+  ArrowUpRight,
+} from 'lucide-react';
 import { Link } from 'react-router';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../../ui/collapsible';
@@ -23,18 +30,35 @@ interface AdminDashboardSectionProps {
   stats?: AdminStats;
 }
 
+type SystemStatus = 'operational' | 'degraded' | 'down' | 'loading';
+
 export const AdminDashboardSection = memo(function AdminDashboardSection({
   stats,
 }: AdminDashboardSectionProps) {
   const [isOpen, setIsOpen] = useState(
     () => localStorage.getItem('adminOverviewExpanded') !== 'false'
   );
+  const [systemStatus, setSystemStatus] = useState<SystemStatus>('loading');
   const loading = !stats;
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     localStorage.setItem('adminOverviewExpanded', String(open));
   };
+
+  useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+    const healthUrl = apiBase.replace('/api/v1', '') + '/health';
+    const controller = new AbortController();
+    fetch(healthUrl, { signal: controller.signal })
+      .then((r) => {
+        if (r.status === 200) setSystemStatus('operational');
+        else if (r.status === 503) setSystemStatus('down');
+        else setSystemStatus('degraded');
+      })
+      .catch(() => setSystemStatus('down'));
+    return () => controller.abort();
+  }, []);
 
   return (
     <Collapsible open={isOpen} onOpenChange={handleOpenChange}>
@@ -92,10 +116,11 @@ export const AdminDashboardSection = memo(function AdminDashboardSection({
                 {/* Total Members */}
                 <Link
                   to="/app/admin/members"
-                  className="rounded-lg border border-border/50 p-4 transition-all hover:border-blue-200 hover:bg-blue-50/50 hover:shadow-sm dark:hover:border-blue-800/30 dark:hover:bg-blue-950/20"
+                  className="group relative rounded-lg border border-border/50 p-4 transition-all hover:border-blue-200 hover:bg-blue-50/50 hover:shadow-sm dark:hover:border-blue-800/30 dark:hover:bg-blue-950/20"
                 >
+                  <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground/0 transition-all group-hover:text-blue-400 group-hover:text-muted-foreground/60" />
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-400/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10">
                       <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
@@ -113,11 +138,12 @@ export const AdminDashboardSection = memo(function AdminDashboardSection({
                 {/* Pending Prayer Requests */}
                 <Link
                   to="/app/admin/prayer"
-                  className="rounded-lg border border-border/50 p-4 transition-all hover:border-rose-200 hover:bg-rose-50/50 hover:shadow-sm dark:hover:border-rose-800/30 dark:hover:bg-rose-950/20"
+                  className="group relative rounded-lg border border-border/50 p-4 transition-all hover:border-rose-200 hover:bg-rose-50/50 hover:shadow-sm dark:hover:border-rose-800/30 dark:hover:bg-rose-950/20"
                 >
+                  <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground/0 transition-all group-hover:text-rose-400" />
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-500/10 dark:bg-rose-400/10">
-                      <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-500/10 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10">
+                      <HeartHandshake className="h-5 w-5 text-rose-600 dark:text-rose-400" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold tabular-nums">
@@ -133,20 +159,62 @@ export const AdminDashboardSection = memo(function AdminDashboardSection({
                   )}
                 </Link>
 
-                {/* System Status */}
+                {/* System Status — fetched dynamically from /health */}
                 <Link
                   to="/app/admin/health"
-                  className="rounded-lg border border-border/50 p-4 transition-all hover:border-emerald-200 hover:bg-emerald-50/50 hover:shadow-sm dark:hover:border-emerald-800/30 dark:hover:bg-emerald-950/20"
+                  className="group relative rounded-lg border border-border/50 p-4 transition-all hover:border-emerald-200 hover:bg-emerald-50/50 hover:shadow-sm dark:hover:border-emerald-800/30 dark:hover:bg-emerald-950/20"
                 >
+                  <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground/0 transition-all group-hover:text-emerald-400" />
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 dark:bg-emerald-400/10">
-                      <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                        systemStatus === 'operational'
+                          ? 'bg-emerald-500/10 group-hover:bg-emerald-500/20 dark:bg-emerald-400/10'
+                          : systemStatus === 'degraded'
+                            ? 'bg-amber-500/10 group-hover:bg-amber-500/20 dark:bg-amber-400/10'
+                            : systemStatus === 'down'
+                              ? 'bg-red-500/10 group-hover:bg-red-500/20 dark:bg-red-400/10'
+                              : 'bg-muted/50'
+                      }`}
+                    >
+                      <Shield
+                        className={`h-5 w-5 ${
+                          systemStatus === 'operational'
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : systemStatus === 'degraded'
+                              ? 'text-amber-600 dark:text-amber-400'
+                              : systemStatus === 'down'
+                                ? 'text-red-600 dark:text-red-400'
+                                : 'text-muted-foreground'
+                        }`}
+                      />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                        All Systems Operational
-                      </p>
-                      <p className="text-xs text-muted-foreground">System Status</p>
+                      {systemStatus === 'loading' ? (
+                        <>
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="mt-1 h-3 w-20" />
+                        </>
+                      ) : (
+                        <>
+                          <p
+                            className={`text-sm font-semibold ${
+                              systemStatus === 'operational'
+                                ? 'text-emerald-600 dark:text-emerald-400'
+                                : systemStatus === 'degraded'
+                                  ? 'text-amber-600 dark:text-amber-400'
+                                  : 'text-red-600 dark:text-red-400'
+                            }`}
+                          >
+                            {systemStatus === 'operational'
+                              ? 'All Systems Operational'
+                              : systemStatus === 'degraded'
+                                ? 'Degraded Performance'
+                                : 'Service Disruption'}
+                          </p>
+                          <p className="text-xs text-muted-foreground">System Status</p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </Link>

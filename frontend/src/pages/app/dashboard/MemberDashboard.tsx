@@ -16,9 +16,10 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, Heart } from 'lucide-react';
+import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, HeartHandshake } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
+import { useNotificationCounts } from '@/hooks/useNotificationCounts';
 
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
@@ -134,6 +135,7 @@ export default function MemberDashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { refresh: refreshNotifications } = useNotificationCounts();
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -143,6 +145,8 @@ export default function MemberDashboard() {
 
         const response = await apiClient.get('/members/dashboard');
         setDashboard(response as unknown as DashboardData);
+        // Ensure bell counts are in sync with freshly loaded dashboard data
+        refreshNotifications();
       } catch (err) {
         reportError('Failed to fetch dashboard', err);
         setError('Failed to load dashboard data. Please try again.');
@@ -152,7 +156,7 @@ export default function MemberDashboard() {
     };
 
     fetchDashboard();
-  }, []);
+  }, [refreshNotifications]);
 
   if (loading) {
     return (
@@ -394,7 +398,7 @@ export default function MemberDashboard() {
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400"
                 aria-hidden="true"
               >
-                <Heart className="h-4 w-4" />
+                <HeartHandshake className="h-4 w-4" />
               </div>
             </CardHeader>
             <CardContent>

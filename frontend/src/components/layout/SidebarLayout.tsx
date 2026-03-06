@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { MobileBottomNav } from '@/components/features/mobile/MobileBottomNav';
 import { useTheme } from '@/hooks/useTheme';
 import { useNotificationCounts } from '@/hooks/useNotificationCounts';
-import { Sun, Moon, Bell, MessageSquare, Megaphone, Heart } from 'lucide-react';
+import { Sun, Moon, Bell, MessageSquare, Megaphone, HeartHandshake } from 'lucide-react';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -127,7 +127,7 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                       to="/app/admin/prayer"
                       className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
                     >
-                      <Heart className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <HeartHandshake className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <span className="flex-1 text-foreground">Prayer Requests</span>
                       <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10px] font-bold text-white">
                         {counts.prayerRequests > 99 ? '99+' : counts.prayerRequests}
