@@ -4,6 +4,7 @@
  * Routes for member-related endpoints:
  * - GET /api/v1/members - List members (directory)
  * - GET /api/v1/members/dashboard - Get dashboard data
+ * - GET /api/v1/members/notification-counts - Get lightweight notification badge counts
  * - GET /api/v1/members/me - Get current member profile
  * - GET /api/v1/members/search - Search members
  * - GET /api/v1/members/:id - Get member profile
@@ -34,6 +35,13 @@ router.get('/', authMiddleware, memberController.listMembers);
  * Requires authentication
  */
 router.get('/dashboard', authMiddleware, memberController.getDashboard);
+
+/**
+ * GET /api/v1/members/notification-counts
+ * Get lightweight notification badge counts for the bell icon
+ * Requires authentication
+ */
+router.get('/notification-counts', authMiddleware, memberController.getNotificationCounts);
 
 /**
  * GET /api/v1/members/me

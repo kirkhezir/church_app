@@ -10,4 +10,5 @@ export interface IPrayerRepository {
   incrementPrayerCount(id: string): Promise<any>;
   findRecentPublic(limit: number): Promise<any[]>;
   countPublicApproved(): Promise<number>;
+  countPending(): Promise<number>;
 }

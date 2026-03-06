@@ -13,6 +13,7 @@
 
 import { Request, Response } from 'express';
 import { GetMemberDashboard } from '../../application/useCases/getMemberDashboard';
+import { GetNotificationCounts } from '../../application/useCases/getNotificationCounts';
 import { UpdateProfile } from '../../application/useCases/updateProfile';
 import { UpdateNotificationPreferences } from '../../application/useCases/updateNotificationPreferences';
 import { DeleteOwnAccount } from '../../application/useCases/deleteOwnAccount';
@@ -35,6 +36,7 @@ import logger from '../../infrastructure/logging/logger';
  */
 export class MemberController {
   private getMemberDashboardUseCase: GetMemberDashboard;
+  private getNotificationCountsUseCase: GetNotificationCounts;
   private updateProfileUseCase: UpdateProfile;
   private updateNotificationPreferencesUseCase: UpdateNotificationPreferences;
   private getMemberDirectoryUseCase: GetMemberDirectory;
@@ -62,6 +64,11 @@ export class MemberController {
       messageRepository,
       sermonRepository,
       blogRepository,
+      prayerRepository
+    );
+    this.getNotificationCountsUseCase = new GetNotificationCounts(
+      announcementRepository,
+      messageRepository,
       prayerRepository
     );
     this.updateProfileUseCase = new UpdateProfile(this.memberRepository);
@@ -113,6 +120,33 @@ export class MemberController {
       res.status(500).json({
         error: 'InternalServerError',
         message: 'Failed to retrieve dashboard data',
+      });
+    }
+  };
+
+  /**
+   * GET /api/v1/members/notification-counts
+   * Returns lightweight notification badge counts for the current member.
+   */
+  getNotificationCounts = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const memberId = (req as any).user?.userId;
+      const role = (req as any).user?.role ?? 'MEMBER';
+
+      if (!memberId) {
+        res.status(401).json({ error: 'Unauthorized', message: 'User not authenticated' });
+        return;
+      }
+
+      const result = await this.getNotificationCountsUseCase.execute({ memberId, role });
+      res.status(200).json(result);
+    } catch (error) {
+      logger.error('Error getting notification counts', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+      res.status(500).json({
+        error: 'InternalServerError',
+        message: 'Failed to retrieve notification counts',
       });
     }
   };

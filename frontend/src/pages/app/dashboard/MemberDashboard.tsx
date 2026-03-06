@@ -15,6 +15,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
 import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, Heart } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
@@ -297,110 +298,127 @@ export default function MemberDashboard() {
         </CardContent>
       </Card>
 
-      {/* Stats Overview — 5 colored accent cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        <Card className="animate-fade-in-up stagger-1 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(222,70%,55%)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Upcoming Events
-            </CardTitle>
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400"
-              aria-hidden="true"
-            >
-              <Calendar className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight">
-              {dashboard.stats.upcomingEventsCount}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">this week</p>
-          </CardContent>
-        </Card>
+      {/* Stats Overview — 5 colored accent cards, each linking to the relevant page */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 [&>*:last-child]:col-span-2 sm:[&>*:last-child]:col-span-1">
+        <Link to="/app/events" className="group block">
+          <Card className="animate-fade-in-up stagger-1 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(222,70%,55%)] hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Upcoming Events
+              </CardTitle>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400"
+                aria-hidden="true"
+              >
+                <Calendar className="h-4 w-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight">
+                {dashboard.stats.upcomingEventsCount}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">this week</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="animate-fade-in-up stagger-2 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(38,92%,50%)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Unread Announcements
-            </CardTitle>
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10 dark:text-amber-400"
-              aria-hidden="true"
-            >
-              <Bell className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.1s]">
-              {dashboard.stats.unreadAnnouncementsCount}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">to review</p>
-          </CardContent>
-        </Card>
+        <Link to="/app/announcements" className="group block">
+          <Card className="animate-fade-in-up stagger-2 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(38,92%,50%)] hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Announcements
+              </CardTitle>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10 dark:text-amber-400"
+                aria-hidden="true"
+              >
+                <Bell className="h-4 w-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.1s]">
+                {dashboard.stats.unreadAnnouncementsCount}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">unread</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="animate-fade-in-up stagger-3 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(142,71%,45%)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:bg-emerald-400/10 dark:text-emerald-400"
-              aria-hidden="true"
-            >
-              <CheckCircle className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.2s]">
-              {dashboard.stats.myRsvpCount}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">confirmed</p>
-          </CardContent>
-        </Card>
+        <Link to="/app/events" className="group block">
+          <Card className="animate-fade-in-up stagger-3 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(142,71%,45%)] hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:bg-emerald-400/10 dark:text-emerald-400"
+                aria-hidden="true"
+              >
+                <CheckCircle className="h-4 w-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.2s]">
+                {dashboard.stats.myRsvpCount}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">confirmed</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="animate-fade-in-up stagger-4 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(270,70%,55%)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Unread Messages
-            </CardTitle>
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-400/10 dark:text-purple-400"
-              aria-hidden="true"
-            >
-              <MessageSquare className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.3s]">
-              {dashboard.stats.unreadMessagesCount ?? 0}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">inbox</p>
-          </CardContent>
-        </Card>
+        <Link to="/app/messages" className="group block">
+          <Card className="animate-fade-in-up stagger-4 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(270,70%,55%)] hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Messages</CardTitle>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-400/10 dark:text-purple-400"
+                aria-hidden="true"
+              >
+                <MessageSquare className="h-4 w-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.3s]">
+                {dashboard.stats.unreadMessagesCount ?? 0}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">unread</p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="animate-fade-in-up stagger-5 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(350,70%,55%)]">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Prayer Requests
-            </CardTitle>
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400"
-              aria-hidden="true"
-            >
-              <Heart className="h-4 w-4" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.4s]">
-              {dashboard.stats.prayerRequestsCount ?? 0}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">active</p>
-          </CardContent>
-        </Card>
+        <Link to="/app/prayer" className="group block">
+          <Card className="animate-fade-in-up stagger-5 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(350,70%,55%)] hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Prayer Requests
+              </CardTitle>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400"
+                aria-hidden="true"
+              >
+                <Heart className="h-4 w-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.4s]">
+                {dashboard.stats.prayerRequestsCount ?? 0}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">active</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Quick Actions */}
       <div className="animate-fade-in-up stagger-6">
         <QuickActionsWidget role={dashboard.profile.role} />
+      </div>
+
+      {/* ─── Stay Connected ─────────────────────────────────────────── */}
+      <div className="flex items-center gap-3 pt-1">
+        <div className="h-px flex-1 bg-border/50" />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+          Stay Connected
+        </span>
+        <div className="h-px flex-1 bg-border/50" />
       </div>
 
       {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
@@ -416,6 +434,15 @@ export default function MemberDashboard() {
         <PrayerRequestsWidget requests={dashboard.recentPrayerRequests ?? []} />
       </div>
 
+      {/* ─── Community Life ─────────────────────────────────────────── */}
+      <div className="flex items-center gap-3 pt-1">
+        <div className="h-px flex-1 bg-border/50" />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+          Community Life
+        </span>
+        <div className="h-px flex-1 bg-border/50" />
+      </div>
+
       {/* Activity Feed + Birthdays & Bible Verse */}
       <div className="animate-fade-in-up stagger-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
@@ -423,6 +450,15 @@ export default function MemberDashboard() {
           <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />
           <BibleVerseWidget />
         </div>
+      </div>
+
+      {/* ─── What's Coming ──────────────────────────────────────────── */}
+      <div className="flex items-center gap-3 pt-1">
+        <div className="h-px flex-1 bg-border/50" />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+          What's Coming
+        </span>
+        <div className="h-px flex-1 bg-border/50" />
       </div>
 
       {/* Events and Announcements */}

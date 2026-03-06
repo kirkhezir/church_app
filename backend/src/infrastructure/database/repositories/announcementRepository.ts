@@ -268,6 +268,24 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   }
 
   /**
+   * Count active announcements not yet viewed by a member (efficient single COUNT query)
+   */
+  async countUnreadForMember(memberId: string): Promise<number> {
+    return prisma.announcements.count({
+      where: {
+        deletedAt: null,
+        archivedAt: null,
+        publishedAt: { lte: new Date() },
+        NOT: {
+          member_announcement_views: {
+            some: { memberId },
+          },
+        },
+      },
+    });
+  }
+
+  /**
    * Check if member has viewed announcement
    */
   async hasViewed(announcementId: string, memberId: string): Promise<boolean> {

@@ -58,4 +58,10 @@ export class PrayerRepository implements IPrayerRepository {
       where: { isPublic: true, status: 'APPROVED' },
     });
   }
+
+  async countPending(): Promise<number> {
+    return prisma.prayer_requests.count({
+      where: { status: 'PENDING' },
+    });
+  }
 }

@@ -46,4 +46,9 @@ export interface IAnnouncementRepository {
    * Check if a member has viewed an announcement
    */
   hasViewed(announcementId: string, memberId: string): Promise<boolean>;
+
+  /**
+   * Count active announcements that a member has NOT yet viewed
+   */
+  countUnreadForMember(memberId: string): Promise<number>;
 }
