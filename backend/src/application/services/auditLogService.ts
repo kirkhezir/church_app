@@ -150,7 +150,7 @@ export class AuditLogService {
    * Get audit logs for a specific entity
    */
   async getLogsForEntity(entityType: string, entityId: string) {
-    return prisma.auditLog.findMany({
+    return prisma.audit_logs.findMany({
       where: {
         entityType,
         entityId,
@@ -175,7 +175,7 @@ export class AuditLogService {
    * Get audit logs for a specific user
    */
   async getLogsByUser(userId: string, limit: number = 50) {
-    return prisma.auditLog.findMany({
+    return prisma.audit_logs.findMany({
       where: {
         userId,
       },
@@ -207,7 +207,7 @@ export class AuditLogService {
   }) {
     const { action, entityType, limit = 50, offset = 0 } = options;
 
-    return prisma.auditLog.findMany({
+    return prisma.audit_logs.findMany({
       where: {
         ...(action && { action }),
         ...(entityType && { entityType }),

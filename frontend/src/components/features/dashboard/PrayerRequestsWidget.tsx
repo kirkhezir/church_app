@@ -43,7 +43,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
               <Heart className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="text-sm text-muted-foreground">No prayer requests yet</p>
-            <Link to="/app/prayer" className="mt-2">
+            <Link to="/prayer" className="mt-2">
               <Button variant="link" size="sm">
                 Submit a Request
               </Button>
@@ -61,7 +61,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
           <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
           Prayer Requests
         </CardTitle>
-        <Link to="/app/prayer">
+        <Link to="/prayer">
           <Button variant="ghost" size="sm" className="gap-1">
             View All
             <ArrowRight className="h-3.5 w-3.5" />
@@ -93,7 +93,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
                   <Heart className="h-3 w-3" />
                   {req.prayerCount} {req.prayerCount === 1 ? 'prayer' : 'prayers'}
                 </span>
-                <Link to="/app/prayer">
+                <Link to="/prayer">
                   <Button
                     variant="ghost"
                     size="sm"

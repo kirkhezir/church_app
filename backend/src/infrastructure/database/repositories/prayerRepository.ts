@@ -52,4 +52,10 @@ export class PrayerRepository implements IPrayerRepository {
       take: limit,
     });
   }
+
+  async countPublicApproved(): Promise<number> {
+    return prisma.prayer_requests.count({
+      where: { isPublic: true, status: 'APPROVED' },
+    });
+  }
 }

@@ -21,6 +21,7 @@ import { IMessageRepository } from '../../domain/interfaces/IMessageRepository';
 import { ISermonRepository } from '../../domain/interfaces/ISermonRepository';
 import { IBlogRepository } from '../../domain/interfaces/IBlogRepository';
 import { IPrayerRepository } from '../../domain/interfaces/IPrayerRepository';
+import { auditLogService } from '../../application/services/auditLogService';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -251,7 +252,7 @@ export class GetMemberDashboard {
         prayerCount: p.prayerCount,
         createdAt: p.createdAt,
       }));
-      prayerRequestsCount = prayers.length;
+      prayerRequestsCount = await this.prayerRepository.countPublicApproved();
     }
 
     // 12. Fetch birthday members
@@ -261,7 +262,19 @@ export class GetMemberDashboard {
     }
 
     // 13. Build activity feed from recent audit logs
-    const activityFeed: GetMemberDashboardResponse['activityFeed'] = [];
+    let activityFeed: GetMemberDashboardResponse['activityFeed'] = [];
+    try {
+      const recentLogs = await auditLogService.getRecentLogs({ limit: 10 });
+      activityFeed = recentLogs.map((log: any) => ({
+        id: log.id,
+        action: log.action,
+        entityType: log.entityType,
+        entityId: log.entityId,
+        timestamp: log.timestamp,
+      }));
+    } catch (_err) {
+      logger.warn('Failed to load activity feed', { error: (_err as Error).message });
+    }
 
     // 14. Admin stats (admin/staff only)
     let adminStats: GetMemberDashboardResponse['adminStats'] = undefined;
