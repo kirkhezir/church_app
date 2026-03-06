@@ -225,15 +225,15 @@ export default function MemberDashboard() {
       {/* Welcome Header — warm gradient with decorative pattern */}
       <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-xl">
         {/* Animated gradient background */}
-        <div className="animate-gradient absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 dark:from-blue-900 dark:via-blue-800 dark:to-indigo-900" />
+        <div className="motion-safe:animate-gradient absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 dark:from-blue-900 dark:via-blue-800 dark:to-indigo-900" />
         {/* Decorative dot pattern overlay */}
         <div className="dot-pattern absolute inset-0 text-white opacity-[0.06]" />
         {/* Decorative shimmer streak */}
-        <div className="absolute inset-0 animate-shimmer" />
+        <div className="absolute inset-0 motion-safe:animate-shimmer" />
         {/* Floating decorative circles */}
-        <div className="absolute -right-8 -top-8 h-40 w-40 animate-float rounded-full bg-white/[0.06]" />
-        <div className="absolute -bottom-6 left-1/3 h-24 w-24 animate-float rounded-full bg-white/[0.04] [animation-delay:1.2s]" />
-        <div className="absolute right-1/4 top-1/2 h-14 w-14 animate-float rounded-full bg-white/[0.03] [animation-delay:0.7s]" />
+        <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/[0.06] motion-safe:animate-float" />
+        <div className="absolute -bottom-6 left-1/3 h-24 w-24 rounded-full bg-white/[0.04] [animation-delay:1.2s] motion-safe:animate-float" />
+        <div className="absolute right-1/4 top-1/2 h-14 w-14 rounded-full bg-white/[0.03] [animation-delay:0.7s] motion-safe:animate-float" />
 
         <CardContent className="relative z-10 p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
