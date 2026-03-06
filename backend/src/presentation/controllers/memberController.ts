@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import { GetMemberDashboard } from '../../application/useCases/getMemberDashboard';
 import { UpdateProfile } from '../../application/useCases/updateProfile';
 import { UpdateNotificationPreferences } from '../../application/useCases/updateNotificationPreferences';
+import { DeleteOwnAccount } from '../../application/useCases/deleteOwnAccount';
 import { GetMemberDirectory } from '../../application/useCases/getMemberDirectory';
 import { SearchMembers } from '../../application/useCases/searchMembers';
 import { GetMemberProfile } from '../../application/useCases/getMemberProfile';
@@ -40,6 +41,7 @@ export class MemberController {
   private searchMembersUseCase: SearchMembers;
   private getMemberProfileUseCase: GetMemberProfile;
   private updatePrivacySettingsUseCase: UpdatePrivacySettings;
+  private deleteOwnAccountUseCase: DeleteOwnAccount;
   private memberRepository: MemberRepository;
 
   constructor() {
@@ -70,6 +72,7 @@ export class MemberController {
     this.searchMembersUseCase = new SearchMembers();
     this.getMemberProfileUseCase = new GetMemberProfile();
     this.updatePrivacySettingsUseCase = new UpdatePrivacySettings();
+    this.deleteOwnAccountUseCase = new DeleteOwnAccount(this.memberRepository);
   }
 
   /**
@@ -271,6 +274,53 @@ export class MemberController {
       res.status(500).json({
         error: 'InternalServerError',
         message: 'Failed to update notification preferences',
+      });
+    }
+  };
+
+  /**
+   * DELETE /api/v1/members/me
+   * Delete own account (soft delete)
+   */
+  deleteOwnAccount = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const memberId = (req as any).user?.userId;
+
+      if (!memberId) {
+        res.status(401).json({
+          error: 'Unauthorized',
+          message: 'Authentication required',
+        });
+        return;
+      }
+
+      await this.deleteOwnAccountUseCase.execute({ memberId });
+
+      res.status(200).json({
+        success: true,
+        message: 'Account has been deleted',
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+
+      logger.error('Error deleting own account', {
+        error: message,
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+
+      if (message === 'Member not found') {
+        res.status(404).json({ error: 'NotFound', message });
+        return;
+      }
+
+      if (message.includes('Admin accounts cannot be self-deleted')) {
+        res.status(403).json({ error: 'Forbidden', message });
+        return;
+      }
+
+      res.status(500).json({
+        error: 'InternalServerError',
+        message: 'Failed to delete account',
       });
     }
   };

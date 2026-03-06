@@ -6,13 +6,27 @@
  */
 
 import { useState, useEffect, FormEvent } from 'react';
+import { useNavigate } from 'react-router';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { apiClient } from '@/services/api/apiClient';
+import { deleteAccount } from '@/services/endpoints/memberService';
+import { useAuth } from '@/contexts/AuthContext';
 import { gooeyToast } from 'goey-toast';
 
 interface ProfileData {
@@ -34,6 +48,10 @@ export default function ProfileSettings() {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<ProfileData>({
     firstName: '',
@@ -257,6 +275,75 @@ export default function ProfileSettings() {
           </Button>
         </div>
       </form>
+
+      {/* Danger Zone */}
+      <Card className="border-destructive/50">
+        <CardHeader>
+          <CardTitle className="text-base text-destructive">Danger Zone</CardTitle>
+          <CardDescription>
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">Delete Account</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete your account, messages, RSVPs, and all associated
+                  data. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="space-y-2 py-2">
+                <Label htmlFor="deleteConfirm" className="text-sm">
+                  Type <span className="font-semibold">DELETE</span> to confirm
+                </Label>
+                <Input
+                  id="deleteConfirm"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="DELETE"
+                  disabled={deleting}
+                />
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setDeleteConfirmText('')} disabled={deleting}>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={deleteConfirmText !== 'DELETE' || deleting}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setDeleting(true);
+                    try {
+                      await deleteAccount();
+                      await logout();
+                      navigate('/login');
+                      gooeyToast.success('Account deleted successfully.');
+                    } catch (err: unknown) {
+                      const error = err as {
+                        response?: { data?: { message?: string } };
+                      };
+                      gooeyToast.error(
+                        error.response?.data?.message || 'Failed to delete account.'
+                      );
+                    } finally {
+                      setDeleting(false);
+                      setDeleteConfirmText('');
+                    }
+                  }}
+                >
+                  {deleting ? 'Deleting...' : 'Delete Account'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardContent>
+      </Card>
     </div>
   );
 }

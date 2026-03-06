@@ -77,4 +77,11 @@ router.patch('/me/privacy', authMiddleware, memberController.updatePrivacySettin
  */
 router.patch('/me/notifications', authMiddleware, memberController.updateNotificationPreferences);
 
+/**
+ * DELETE /api/v1/members/me
+ * Delete own account (soft delete)
+ * Requires authentication
+ */
+router.delete('/me', authMiddleware, memberController.deleteOwnAccount);
+
 export default router;

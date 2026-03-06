@@ -50,11 +50,11 @@ const STAT_SKELETON_KEYS = ['stat-0', 'stat-1', 'stat-2', 'stat-3'];
 
 // Fallback demographics shown while real data loads
 const fallbackDemographics: AgeDemographic[] = [
-  { label: 'Age 0-17', value: 0, color: '#3b82f6' },
-  { label: 'Age 18-30', value: 0, color: '#22c55e' },
-  { label: 'Age 31-45', value: 0, color: '#eab308' },
-  { label: 'Age 46-60', value: 0, color: '#f97316' },
-  { label: 'Age 61+', value: 0, color: '#a855f7' },
+  { label: 'Age 0-17', value: 0, color: '#1E40AF' },
+  { label: 'Age 18-30', value: 0, color: '#16A34A' },
+  { label: 'Age 31-45', value: 0, color: '#F59E0B' },
+  { label: 'Age 46-60', value: 0, color: '#D97706' },
+  { label: 'Age 61+', value: 0, color: '#7C3AED' },
 ];
 
 export default function AdminAnalyticsPage() {

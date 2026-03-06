@@ -232,10 +232,7 @@ export default function MemberDashboard() {
         <div className="absolute inset-0 animate-shimmer" />
         {/* Floating decorative circle */}
         <div className="absolute -right-6 -top-6 h-32 w-32 animate-float rounded-full bg-white/[0.06]" />
-        <div
-          className="absolute -bottom-4 -left-4 h-20 w-20 animate-float rounded-full bg-white/[0.04]"
-          style={{ animationDelay: '1s' }}
-        />
+        <div className="absolute -bottom-4 -left-4 h-20 w-20 animate-float rounded-full bg-white/[0.04] [animation-delay:1s]" />
 
         <CardContent className="relative z-10 p-6 sm:p-8">
           <div className="flex items-start justify-between">
@@ -271,7 +268,10 @@ export default function MemberDashboard() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Upcoming Events
             </CardTitle>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400"
+              aria-hidden="true"
+            >
               <Calendar className="h-4 w-4" />
             </div>
           </CardHeader>
@@ -288,15 +288,15 @@ export default function MemberDashboard() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Unread Announcements
             </CardTitle>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10 dark:text-amber-400">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-500/20 dark:bg-amber-400/10 dark:text-amber-400"
+              aria-hidden="true"
+            >
               <Bell className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div
-              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
-              style={{ animationDelay: '0.1s' }}
-            >
+            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.1s]">
               {dashboard.stats.unreadAnnouncementsCount}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">to review</p>
@@ -306,15 +306,15 @@ export default function MemberDashboard() {
         <Card className="animate-fade-in-up stagger-3 card-hover-lift accent-top group overflow-hidden [--accent-color:hsl(142,71%,45%)]">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:bg-emerald-400/10 dark:text-emerald-400">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:bg-emerald-400/10 dark:text-emerald-400"
+              aria-hidden="true"
+            >
               <CheckCircle className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div
-              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
-              style={{ animationDelay: '0.2s' }}
-            >
+            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.2s]">
               {dashboard.stats.myRsvpCount}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">confirmed</p>
@@ -326,15 +326,15 @@ export default function MemberDashboard() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Unread Messages
             </CardTitle>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-400/10 dark:text-purple-400">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-400/10 dark:text-purple-400"
+              aria-hidden="true"
+            >
               <MessageSquare className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div
-              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
-              style={{ animationDelay: '0.3s' }}
-            >
+            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.3s]">
               {dashboard.stats.unreadMessagesCount ?? 0}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">inbox</p>
@@ -346,15 +346,15 @@ export default function MemberDashboard() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Prayer Requests
             </CardTitle>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 transition-colors group-hover:bg-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400"
+              aria-hidden="true"
+            >
               <Heart className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div
-              className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight"
-              style={{ animationDelay: '0.4s' }}
-            >
+            <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.4s]">
               {dashboard.stats.prayerRequestsCount ?? 0}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">active</p>

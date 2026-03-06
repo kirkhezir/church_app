@@ -87,6 +87,7 @@ export function AnnouncementsPage() {
           onClick={() => handleFilterChange(false)}
           disabled={loading}
           className="flex-1 sm:flex-none"
+          aria-pressed={!showArchived}
         >
           <BellIcon className="mr-2 h-4 w-4" />
           Active
@@ -96,6 +97,7 @@ export function AnnouncementsPage() {
           onClick={() => handleFilterChange(true)}
           disabled={loading}
           className="flex-1 sm:flex-none"
+          aria-pressed={showArchived}
         >
           <ArchiveIcon className="mr-2 h-4 w-4" />
           Archived

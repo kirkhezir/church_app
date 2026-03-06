@@ -179,7 +179,7 @@ export function MemberDirectoryPage() {
 
       {/* Search and Advanced Filters */}
       <div className="mb-6 space-y-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" role="search">
           <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -233,12 +233,12 @@ export function MemberDirectoryPage() {
       {/* Members Grid */}
       {!loading && members.length > 0 && (
         <div className="grid flex-1 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {members.map((member) => (
+          {members.map((member, index) => (
             <Card
               key={member.id}
-              className={`cursor-pointer transition-shadow hover:shadow-md ${
-                selectedMembers.some((m) => m.id === member.id) ? 'ring-2 ring-primary' : ''
-              }`}
+              className={`animate-fade-in-up cursor-pointer transition-shadow hover:shadow-md ${
+                index < 10 ? `stagger-${index + 1}` : ''
+              } ${selectedMembers.some((m) => m.id === member.id) ? 'ring-2 ring-primary' : ''}`}
               onClick={() => handleViewProfile(member.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -264,6 +264,7 @@ export function MemberDirectoryPage() {
                       }
                       onClick={(e) => e.stopPropagation()}
                       className="mt-1"
+                      aria-label={`Select ${member.firstName} ${member.lastName}`}
                     />
                   )}
                   <Avatar className="h-12 w-12">
@@ -302,6 +303,7 @@ export function MemberDirectoryPage() {
                         size="sm"
                         variant="outline"
                         onClick={(e) => handleSendMessage(member.id, e)}
+                        aria-label={`Message ${member.firstName} ${member.lastName}`}
                       >
                         <Mail className="mr-2 h-3 w-3" />
                         Message

@@ -100,15 +100,17 @@ export function MessagesListPage() {
   const content = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
-            <Mail className="h-8 w-8" />
+          <h1 className="flex items-center gap-2 text-balance text-2xl font-bold sm:text-3xl">
+            <Mail className="h-7 w-7 sm:h-8 sm:w-8" />
             Messages
           </h1>
-          <p className="mt-2 text-muted-foreground">Your private messages with church members</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Your private messages with church members
+          </p>
         </div>
-        <Button onClick={handleCompose}>
+        <Button onClick={handleCompose} className="w-full sm:w-auto">
           <Mail className="mr-2 h-4 w-4" />
           Compose
         </Button>
@@ -160,14 +162,15 @@ export function MessagesListPage() {
           {/* Messages List */}
           {!loading && messages.length > 0 && (
             <Card>
-              <CardContent className="p-0">
+              <CardContent className="p-0" role="list">
                 {messages.map((message) => {
                   const person = getOtherPerson(message);
+                  const isUnread = !message.isRead && activeFolder === 'inbox';
                   return (
                     <div
                       key={message.id}
-                      className={`flex cursor-pointer items-center gap-4 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 ${
-                        !message.isRead && activeFolder === 'inbox' ? 'bg-primary/5' : ''
+                      className={`flex cursor-pointer items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
+                        isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
                       }`}
                       onClick={() => handleViewMessage(message.id)}
                       onKeyDown={(e) => {
@@ -176,10 +179,11 @@ export function MessagesListPage() {
                           handleViewMessage(message.id);
                         }
                       }}
-                      role="button"
+                      role="listitem"
                       tabIndex={0}
+                      aria-label={`Message from ${person ? `${person.firstName} ${person.lastName}` : 'Unknown'}: ${message.subject}`}
                     >
-                      <Avatar className="h-10 w-10">
+                      <Avatar className="h-10 w-10 shrink-0">
                         <AvatarFallback>
                           {person ? getInitials(person.firstName, person.lastName) : '??'}
                         </AvatarFallback>
@@ -188,44 +192,43 @@ export function MessagesListPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`truncate font-medium ${
-                              !message.isRead && activeFolder === 'inbox' ? 'font-semibold' : ''
+                            className={`truncate text-sm font-medium sm:text-base ${
+                              isUnread ? 'font-semibold' : ''
                             }`}
                           >
                             {person ? `${person.firstName} ${person.lastName}` : 'Unknown'}
                           </span>
-                          {!message.isRead && activeFolder === 'inbox' && (
-                            <Badge variant="default" className="text-xs">
+                          {isUnread && (
+                            <Badge variant="secondary" className="text-xs">
                               New
                             </Badge>
                           )}
+                          <span className="ml-auto hidden text-xs text-muted-foreground sm:inline">
+                            {formatDate(message.sentAt)}
+                          </span>
                         </div>
                         <p
                           className={`truncate text-sm ${
-                            !message.isRead && activeFolder === 'inbox'
-                              ? 'font-medium text-foreground'
-                              : 'text-muted-foreground'
+                            isUnread ? 'font-medium text-foreground' : 'text-muted-foreground'
                           }`}
                         >
                           {message.subject}
                         </p>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="mt-1 block text-xs text-muted-foreground sm:hidden">
                           {formatDate(message.sentAt)}
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label="Delete message"
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          onClick={(e) => handleDeleteClick(message.id, e)}
-                          disabled={deleteLoading}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
                       </div>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Delete message"
+                        className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                        onClick={(e) => handleDeleteClick(message.id, e)}
+                        disabled={deleteLoading}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   );
                 })}

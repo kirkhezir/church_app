@@ -110,11 +110,19 @@ export function EventsListPage() {
           {/* View Toggle */}
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')}>
             <TabsList>
-              <TabsTrigger value="list" className="flex items-center gap-2">
+              <TabsTrigger
+                value="list"
+                className="flex items-center gap-2"
+                aria-label="Switch to list view"
+              >
                 <List className="h-4 w-4" />
                 List
               </TabsTrigger>
-              <TabsTrigger value="calendar" className="flex items-center gap-2">
+              <TabsTrigger
+                value="calendar"
+                className="flex items-center gap-2"
+                aria-label="Switch to calendar view"
+              >
                 <LayoutGrid className="h-4 w-4" />
                 Calendar
               </TabsTrigger>
@@ -132,7 +140,7 @@ export function EventsListPage() {
 
       {/* Error Alert */}
       {(error || rsvpError) && (
-        <Alert variant="destructive" className="mb-6">
+        <Alert variant="destructive" className="mb-6" role="alert">
           <AlertDescription>{error || rsvpError}</AlertDescription>
         </Alert>
       )}
@@ -204,14 +212,18 @@ export function EventsListPage() {
                   Showing {events.length} {events.length === 1 ? 'event' : 'events'}
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {events.map((event) => (
-                    <EventCard
+                  {events.map((event, index) => (
+                    <div
                       key={event.id}
-                      event={event}
-                      onViewDetails={handleViewDetails}
-                      onRSVP={handleRSVP}
-                      showRSVPButton={true}
-                    />
+                      className={`animate-fade-in-up ${index < 10 ? `stagger-${index + 1}` : ''}`}
+                    >
+                      <EventCard
+                        event={event}
+                        onViewDetails={handleViewDetails}
+                        onRSVP={handleRSVP}
+                        showRSVPButton={true}
+                      />
+                    </div>
                   ))}
                 </div>
               </>

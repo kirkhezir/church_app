@@ -111,6 +111,13 @@ export async function updatePrivacySettings(
   return await apiClient.patch<PrivacySettingsResponse>('/members/me/privacy', settings);
 }
 
+/**
+ * Delete own account (soft delete)
+ */
+export async function deleteAccount(): Promise<{ success: boolean; message: string }> {
+  return await apiClient.delete<{ success: boolean; message: string }>('/members/me');
+}
+
 // ============================================================================
 // EXPORTS
 // ============================================================================
@@ -120,6 +127,7 @@ const memberService = {
   searchMembers,
   getMemberProfile,
   updatePrivacySettings,
+  deleteAccount,
 };
 
 export default memberService;

@@ -265,59 +265,103 @@ export default function AdminMemberListPage() {
                 </p>
               </div>
             ) : (
-              <Table className="table-fixed">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[20%] pl-6">Name</TableHead>
-                    <TableHead className="w-[28%]">Email</TableHead>
-                    <TableHead className="w-[12%]">Role</TableHead>
-                    <TableHead className="w-[15%]">Member Since</TableHead>
-                    <TableHead className="w-[10%]">MFA</TableHead>
-                    <TableHead className="w-[15%] pr-6 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <>
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="pl-6">Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Member Since</TableHead>
+                        <TableHead>MFA</TableHead>
+                        <TableHead className="pr-6 text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {members.map((member) => (
+                        <TableRow key={member.id}>
+                          <TableCell className="pl-6 font-medium">
+                            {member.firstName} {member.lastName}
+                          </TableCell>
+                          <TableCell className="max-w-[200px] truncate text-muted-foreground">
+                            {member.email}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={getRoleBadgeVariant(member.role)}>{member.role}</Badge>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {formatDate(member.membershipDate)}
+                          </TableCell>
+                          <TableCell>
+                            {member.mfaEnabled ? (
+                              <Badge
+                                variant="outline"
+                                className="border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
+                              >
+                                Enabled
+                              </Badge>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="pr-6 text-right">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                              onClick={() => setDeleteConfirm(member.id)}
+                              aria-label={`Delete ${member.firstName} ${member.lastName}`}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile card view */}
+                <div className="divide-y md:hidden">
                   {members.map((member) => (
-                    <TableRow key={member.id}>
-                      <TableCell className="pl-6 font-medium">
-                        {member.firstName} {member.lastName}
-                      </TableCell>
-                      <TableCell className="truncate text-muted-foreground">
-                        {member.email}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getRoleBadgeVariant(member.role)}>{member.role}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {formatDate(member.membershipDate)}
-                      </TableCell>
-                      <TableCell>
-                        {member.mfaEnabled ? (
-                          <Badge
-                            variant="outline"
-                            className="border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
-                          >
-                            Enabled
+                    <div key={member.id} className="space-y-2 px-4 py-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">
+                            {member.firstName} {member.lastName}
+                          </span>
+                          <Badge variant={getRoleBadgeVariant(member.role)} className="text-[10px]">
+                            {member.role}
                           </Badge>
-                        ) : (
-                          <span className="text-sm text-muted-foreground">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="pr-6 text-right">
+                        </div>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
                           onClick={() => setDeleteConfirm(member.id)}
                           aria-label={`Delete ${member.firstName} ${member.lastName}`}
                         >
                           Delete
                         </Button>
-                      </TableCell>
-                    </TableRow>
+                      </div>
+                      <p className="truncate text-sm text-muted-foreground">{member.email}</p>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span>Since {formatDate(member.membershipDate)}</span>
+                        {member.mfaEnabled && (
+                          <Badge
+                            variant="outline"
+                            className="border-green-200 bg-green-50 text-[10px] text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
+                          >
+                            MFA
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+              </>
             )}
 
             {/* Pagination */}

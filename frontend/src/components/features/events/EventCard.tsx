@@ -29,9 +29,9 @@ const categoryLabels: Record<EventCategory, string> = {
 
 const categoryColors: Record<EventCategory, string> = {
   WORSHIP: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  BIBLE_STUDY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  COMMUNITY: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  FELLOWSHIP: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+  BIBLE_STUDY: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  COMMUNITY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  FELLOWSHIP: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
 };
 
 export const EventCard = memo(function EventCard({
@@ -56,7 +56,7 @@ export const EventCard = memo(function EventCard({
 
   return (
     <Card
-      className={`transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
+      className={`cursor-pointer transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
       data-testid="event-card"
     >
       <CardHeader>
@@ -139,16 +139,24 @@ export const EventCard = memo(function EventCard({
           {showRSVPButton && !isCancelled && (
             <>
               {event.hasUserRSVPd ? (
-                <Button variant="secondary" size="sm" disabled className="flex-1">
-                  Already RSVP&apos;d
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled
+                  className="flex-1 border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
+                >
+                  Going ✓
                 </Button>
               ) : (
                 <Button
-                  variant="default"
                   size="sm"
                   onClick={() => onRSVP?.(event.id)}
                   disabled={isFull}
-                  className="flex-1"
+                  className={`flex-1 ${
+                    isFull
+                      ? 'bg-muted text-muted-foreground'
+                      : 'bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700'
+                  }`}
                 >
                   {isFull ? 'Event Full' : 'RSVP'}
                 </Button>
