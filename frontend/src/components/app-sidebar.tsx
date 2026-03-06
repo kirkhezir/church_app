@@ -14,7 +14,7 @@ import {
   BookOpen,
   Newspaper,
   Image,
-  Heart,
+  HeartHandshake,
   PenSquare,
   Monitor,
   ClipboardList,
@@ -46,7 +46,7 @@ const BASE_NAV = [
   { title: 'Announcements', url: '/app/announcements', icon: Megaphone },
   { title: 'Messages', url: '/app/messages', icon: Mail },
   { title: 'Sermons', url: '/app/sermons', icon: BookOpen },
-  { title: 'Prayer Wall', url: '/app/prayer', icon: Heart },
+  { title: 'Prayer Wall', url: '/app/prayer', icon: HeartHandshake },
   { title: 'Blog', url: '/app/blog', icon: Newspaper },
   { title: 'Gallery', url: '/app/gallery', icon: Image },
 ];
@@ -65,7 +65,7 @@ const ADMIN_NAV: NavCollapsibleItem[] = [
       { title: 'Sermons', url: '/app/admin/sermons', icon: BookOpen },
       { title: 'Blog', url: '/app/admin/blog', icon: Newspaper },
       { title: 'Gallery', url: '/app/admin/gallery', icon: Image },
-      { title: 'Prayer', url: '/app/admin/prayer', icon: Heart },
+      { title: 'Prayer', url: '/app/admin/prayer', icon: HeartHandshake },
     ],
   },
   {

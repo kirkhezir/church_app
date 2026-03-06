@@ -6,7 +6,7 @@
 
 import { Link } from 'react-router';
 import { memo, useState, useCallback } from 'react';
-import { Heart, ArrowRight } from 'lucide-react';
+import { HeartHandshake, Heart, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -55,14 +55,14 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+            <HeartHandshake className="h-5 w-5 text-rose-600 dark:text-rose-400" />
             Prayer Requests
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center py-6 text-center">
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <Heart className="h-6 w-6 text-muted-foreground" />
+              <HeartHandshake className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="text-sm text-muted-foreground">No prayer requests yet</p>
             <Link to="/app/prayer" className="mt-2">
@@ -80,7 +80,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle className="flex items-center gap-2">
-          <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+          <HeartHandshake className="h-5 w-5 text-rose-600 dark:text-rose-400" />
           Prayer Requests
         </CardTitle>
         <Link to="/app/prayer">
