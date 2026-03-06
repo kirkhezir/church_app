@@ -47,6 +47,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<LoginResult | void>;
   logout: () => Promise<void>;
   completeMFALogin: (response: MFALoginResponse) => void;
+  updateUser: (partial: Partial<Member>) => void;
 }
 
 /**
@@ -166,6 +167,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   /**
+   * Update user profile data in context + localStorage without a full re-login.
+   * Called by ProfileSettings after a successful PATCH /members/me.
+   */
+  const updateUser = useCallback((partial: Partial<Member>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...partial };
+      localStorage.setItem('user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  /**
    * Logout user
    */
   const logout = useCallback(async () => {
@@ -258,6 +272,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     completeMFALogin,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

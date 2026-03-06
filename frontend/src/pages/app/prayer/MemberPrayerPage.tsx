@@ -20,6 +20,7 @@ import {
   Calendar,
   Loader2,
   Sparkles,
+  EyeOff,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SidebarLayout } from '@/components/layout';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationCounts } from '@/hooks/useNotificationCounts';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
 import { gooeyToast } from 'goey-toast';
 
@@ -140,12 +142,14 @@ function getInitials(name: string): string {
 
 export function MemberPrayerPage() {
   const { user } = useAuth();
+  const { refresh: refreshNotifications } = useNotificationCounts();
   const memberName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Member';
   const memberInitials = getInitials(memberName);
 
   const [category, setCategory] = useState('');
   const [request, setRequest] = useState('');
   const [isPublic, setIsPublic] = useState(true);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
@@ -195,13 +199,15 @@ export function MemberPrayerPage() {
     setSubmitting(true);
     try {
       await prayerService.submitPrayerRequest({
-        name: memberName,
-        email: user?.email,
+        name: isAnonymous ? 'Anonymous' : memberName,
+        email: isAnonymous ? undefined : user?.email,
         request,
         category: category || undefined,
-        isAnonymous: false,
+        isAnonymous,
       });
       setIsSubmitted(true);
+      // Refresh notification counts so the bell updates immediately
+      refreshNotifications();
       const prayers = await prayerService.getPrayerRequests();
       setPublicPrayers(prayers);
     } catch {
@@ -254,12 +260,16 @@ export function MemberPrayerPage() {
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 px-4 py-3">
               <Avatar className="h-9 w-9 flex-shrink-0">
                 <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
-                  {memberInitials}
+                  {isAnonymous ? '?' : memberInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">{memberName}</p>
-                <p className="text-xs text-muted-foreground">Submitting as yourself</p>
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {isAnonymous ? 'Anonymous' : memberName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isAnonymous ? 'Your identity will be hidden' : 'Submitting as yourself'}
+                </p>
               </div>
             </div>
 
@@ -331,6 +341,27 @@ export function MemberPrayerPage() {
               />
             </div>
 
+            {/* Anonymous toggle */}
+            <div className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-3">
+              <div className="min-w-0 pr-4">
+                <p className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                  <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                  Submit Anonymously
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {isAnonymous
+                    ? 'Your name will not appear on the prayer wall'
+                    : 'Your name will be shown on the prayer wall'}
+                </p>
+              </div>
+              <Switch
+                id="isAnonymous"
+                checked={isAnonymous}
+                onCheckedChange={setIsAnonymous}
+                aria-label="Submit prayer request anonymously"
+              />
+            </div>
+
             <div className="flex items-start gap-2 text-xs text-muted-foreground">
               <Lock className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
               <span>Your prayer request is kept confidential within the church community.</span>
@@ -372,6 +403,7 @@ export function MemberPrayerPage() {
                 setCategory('');
                 setRequest('');
                 setIsPublic(true);
+                setIsAnonymous(false);
               }}
               variant="outline"
               className="w-full"

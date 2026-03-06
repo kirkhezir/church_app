@@ -26,11 +26,18 @@ interface AdminDashboardSectionProps {
 export const AdminDashboardSection = memo(function AdminDashboardSection({
   stats,
 }: AdminDashboardSectionProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(
+    () => localStorage.getItem('adminOverviewExpanded') !== 'false'
+  );
   const loading = !stats;
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    localStorage.setItem('adminOverviewExpanded', String(open));
+  };
+
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+    <Collapsible open={isOpen} onOpenChange={handleOpenChange}>
       <Card className="border-amber-200/50 dark:border-amber-800/30">
         {/* Amber header accent bar */}
         <div className="h-1 w-full rounded-t-lg bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />

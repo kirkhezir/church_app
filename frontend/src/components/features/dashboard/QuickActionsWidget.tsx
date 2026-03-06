@@ -11,7 +11,7 @@ import {
   Calendar,
   MessageSquare,
   Video,
-  Heart,
+  HeartHandshake,
   Plus,
   Megaphone,
   Users,
@@ -58,7 +58,7 @@ const memberActions = [
   {
     label: 'Submit Prayer',
     description: 'Share your request',
-    icon: Heart,
+    icon: HeartHandshake,
     href: '/app/prayer',
     iconBg: 'bg-rose-100 dark:bg-rose-900/50',
     iconColor: 'text-rose-600 dark:text-rose-400',

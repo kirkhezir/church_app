@@ -50,7 +50,7 @@ export default function ProfileSettings() {
   const [error, setError] = useState('');
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
-  const { logout } = useAuth();
+  const { logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<ProfileData>({
@@ -105,6 +105,11 @@ export default function ProfileSettings() {
             ...prev,
             ...response.profile,
           }));
+          // Keep sidebar + header in sync without requiring a re-login
+          updateUser({
+            firstName: response.profile.firstName,
+            lastName: response.profile.lastName,
+          });
         }
       } else {
         setError(response.message || 'Failed to update profile');
