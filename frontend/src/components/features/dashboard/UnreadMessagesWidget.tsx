@@ -38,13 +38,14 @@ export const UnreadMessagesWidget = memo(function UnreadMessagesWidget({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center py-6 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <MessageSquare className="h-6 w-6 text-muted-foreground" />
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
+              <MessageSquare className="h-6 w-6 text-purple-400 dark:text-purple-500" />
             </div>
-            <p className="text-sm text-muted-foreground">No unread messages</p>
-            <Link to="/app/messages" className="mt-2">
-              <Button variant="link" size="sm">
-                Go to Messages
+            <p className="text-sm font-medium text-foreground/70">All caught up!</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">No unread messages right now</p>
+            <Link to="/app/messages" className="mt-3">
+              <Button variant="outline" size="sm" className="h-7 text-xs">
+                Open Messages
               </Button>
             </Link>
           </div>

@@ -120,12 +120,14 @@ export const RecentAnnouncementsWidget = memo(function RecentAnnouncementsWidget
                       {announcement.content}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${styles.badge}`}
-                      >
-                        <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
-                        {announcement.priority}
-                      </span>
+                      {(priority === 'URGENT' || priority === 'HIGH') && (
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${styles.badge}`}
+                        >
+                          <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                          {announcement.priority}
+                        </span>
+                      )}
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {publishedDate}

@@ -221,23 +221,42 @@ export const BibleVerseWidget = memo(function BibleVerseWidget() {
   const verse = WEEKLY_VERSES[(weekNumber - 1) % WEEKLY_VERSES.length];
 
   return (
-    <Card className="border-indigo-200/50 bg-gradient-to-br from-indigo-50/50 to-violet-50/30 dark:border-indigo-800/30 dark:from-indigo-950/20 dark:to-violet-950/10">
-      <CardContent className="p-5">
-        <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 dark:bg-indigo-400/10">
-            <BookOpenText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+    <Card className="relative overflow-hidden border-amber-200/70 shadow-sm dark:border-amber-800/40">
+      {/* Warm parchment gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-yellow-50/50 to-orange-50/40 dark:from-amber-950/30 dark:via-yellow-950/20 dark:to-orange-950/15" />
+      {/* Top accent bar */}
+      <div className="absolute inset-x-0 top-0 h-[3px] rounded-t-lg bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500" />
+      {/* Large decorative opening quote in corner */}
+      <div
+        className="pointer-events-none absolute right-4 top-3 select-none font-serif text-[6rem] leading-none text-amber-300/70 dark:text-amber-700/50"
+        aria-hidden="true"
+      >
+        &#10077;
+      </div>
+
+      <CardContent className="relative p-5">
+        {/* Header row */}
+        <div className="mb-4 flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/50">
+            <BookOpenText className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600/70 dark:text-indigo-400/70">
-              Verse of the Week
-            </p>
-            <blockquote className="mt-2 text-sm italic leading-relaxed text-foreground/90">
-              &ldquo;{verse.text}&rdquo;
-            </blockquote>
-            <p className="mt-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-              — {verse.reference}
-            </p>
-          </div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-amber-700 dark:text-amber-400">
+            Verse of the Week
+          </span>
+        </div>
+
+        {/* Verse text */}
+        <p className="pr-8 text-sm font-medium italic leading-[1.8] text-foreground/90">
+          &ldquo;{verse.text}&rdquo;
+        </p>
+
+        {/* Reference with horizontal rules */}
+        <div className="mt-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-amber-200/80 dark:bg-amber-800/50" />
+          <span className="text-xs font-bold tracking-wide text-amber-700 dark:text-amber-400">
+            {verse.reference}
+          </span>
+          <div className="h-px flex-1 bg-amber-200/80 dark:bg-amber-800/50" />
         </div>
       </CardContent>
     </Card>

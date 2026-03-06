@@ -223,39 +223,75 @@ export default function MemberDashboard() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
       {/* Welcome Header — warm gradient with decorative pattern */}
-      <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-lg">
+      <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-xl">
         {/* Animated gradient background */}
-        <div className="animate-gradient absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-700 dark:via-indigo-800 dark:to-slate-900" />
+        <div className="animate-gradient absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 dark:from-blue-900 dark:via-blue-800 dark:to-indigo-900" />
         {/* Decorative dot pattern overlay */}
         <div className="dot-pattern absolute inset-0 text-white opacity-[0.06]" />
         {/* Decorative shimmer streak */}
         <div className="absolute inset-0 animate-shimmer" />
-        {/* Floating decorative circle */}
-        <div className="absolute -right-6 -top-6 h-32 w-32 animate-float rounded-full bg-white/[0.06]" />
-        <div className="absolute -bottom-4 -left-4 h-20 w-20 animate-float rounded-full bg-white/[0.04] [animation-delay:1s]" />
+        {/* Floating decorative circles */}
+        <div className="absolute -right-8 -top-8 h-40 w-40 animate-float rounded-full bg-white/[0.06]" />
+        <div className="absolute -bottom-6 left-1/3 h-24 w-24 animate-float rounded-full bg-white/[0.04] [animation-delay:1.2s]" />
+        <div className="absolute right-1/4 top-1/2 h-14 w-14 animate-float rounded-full bg-white/[0.03] [animation-delay:0.7s]" />
 
         <CardContent className="relative z-10 p-6 sm:p-8">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="mb-1 flex items-center gap-2 text-sm font-medium text-white/70">
-                <Sparkles className="h-4 w-4" />
-                <span>{getGreeting()}</span>
-              </p>
-              <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                {dashboard.profile.firstName}
-              </h1>
-              <p className="mt-2 max-w-md text-sm text-white/60">
-                Here&apos;s what&apos;s happening in your church community today
-              </p>
+          <div className="flex items-start justify-between gap-4">
+            {/* Left side: avatar + user info */}
+            <div className="flex min-w-0 items-start gap-4">
+              {/* Avatar with initials */}
+              <div
+                className="hidden h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15 text-lg font-bold text-white ring-2 ring-white/25 backdrop-blur-sm sm:flex"
+                aria-hidden="true"
+              >
+                {dashboard.profile.firstName[0]}
+                {dashboard.profile.lastName?.[0] ?? ''}
+              </div>
+
+              <div className="min-w-0">
+                {/* Greeting line */}
+                <p className="mb-0.5 flex items-center gap-1.5 text-sm font-medium text-white/70">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>{getGreeting()}</span>
+                </p>
+                {/* Full name */}
+                <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  {dashboard.profile.firstName} {dashboard.profile.lastName}
+                </h1>
+                <p className="mt-1.5 text-sm text-white/65">
+                  Welcome back to Sing Buri Adventist Center
+                </p>
+                {/* Badges row */}
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white/95 backdrop-blur-sm">
+                    {dashboard.profile.role.charAt(0) +
+                      dashboard.profile.role.slice(1).toLowerCase()}
+                  </span>
+                  {dashboard.profile.membershipDate && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white/75">
+                      <Calendar className="h-3 w-3" />
+                      Member since {new Date(dashboard.profile.membershipDate).getFullYear()}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-medium text-white/60">
-                {new Date().toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+
+            {/* Right side: prominent date display */}
+            <div className="hidden flex-shrink-0 text-right sm:block">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/50">
+                Today
               </p>
+              <p className="mt-0.5 text-sm font-medium text-white/70">
+                {new Date().toLocaleDateString('en-US', { weekday: 'long' })}
+              </p>
+              <p className="text-3xl font-bold tabular-nums leading-tight text-white">
+                {new Date().toLocaleDateString('en-US', { day: 'numeric' })}
+              </p>
+              <p className="text-sm font-semibold text-white/80">
+                {new Date().toLocaleDateString('en-US', { month: 'long' })}
+              </p>
+              <p className="mt-0.5 text-xs text-white/45">{new Date().getFullYear()}</p>
             </div>
           </div>
         </CardContent>
@@ -363,12 +399,12 @@ export default function MemberDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="animate-fade-in-up stagger-5">
+      <div className="animate-fade-in-up stagger-6">
         <QuickActionsWidget role={dashboard.profile.role} />
       </div>
 
       {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
-      <div className="animate-fade-in-up stagger-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <UnreadMessagesWidget
           messages={dashboard.recentMessages ?? []}
           unreadCount={dashboard.stats.unreadMessagesCount ?? 0}
@@ -381,7 +417,7 @@ export default function MemberDashboard() {
       </div>
 
       {/* Activity Feed + Birthdays & Bible Verse */}
-      <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="animate-fade-in-up stagger-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
         <div className="space-y-4">
           <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />

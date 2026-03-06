@@ -74,10 +74,13 @@ export const ActivityFeedWidget = memo(function ActivityFeedWidget({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center py-6 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <Activity className="h-6 w-6 text-muted-foreground" />
+            <div className="bg-primary/8 mb-3 flex h-12 w-12 items-center justify-center rounded-full dark:bg-primary/15">
+              <Activity className="h-6 w-6 text-primary/50" />
             </div>
-            <p className="text-sm text-muted-foreground">No recent activity</p>
+            <p className="text-sm font-medium text-foreground/70">Quiet right now</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Community activity will appear here
+            </p>
           </div>
         </CardContent>
       </Card>
