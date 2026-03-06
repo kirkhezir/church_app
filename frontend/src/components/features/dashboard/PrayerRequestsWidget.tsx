@@ -5,11 +5,12 @@
  */
 
 import { Link } from 'react-router';
-import { memo } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { Heart, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
+import { prayerService } from '@/services/endpoints/prayerService';
 
 interface PrayerRequest {
   id: string;
@@ -28,6 +29,27 @@ interface PrayerRequestsWidgetProps {
 export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
   requests = [],
 }: PrayerRequestsWidgetProps) {
+  const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
+  const [counters, setCounters] = useState<Record<string, number>>({});
+
+  const handlePray = useCallback(
+    async (id: string) => {
+      if (prayedFor.has(id)) return;
+      setPrayedFor((prev) => new Set(prev).add(id));
+      setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
+      try {
+        await prayerService.prayForRequest(id);
+      } catch {
+        setPrayedFor((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+        setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 1) - 1 }));
+      }
+    },
+    [prayedFor]
+  );
   if (!requests || requests.length === 0) {
     return (
       <Card>
@@ -43,7 +65,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
               <Heart className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="text-sm text-muted-foreground">No prayer requests yet</p>
-            <Link to="/prayer" className="mt-2">
+            <Link to="/app/prayer" className="mt-2">
               <Button variant="link" size="sm">
                 Submit a Request
               </Button>
@@ -61,7 +83,7 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
           <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
           Prayer Requests
         </CardTitle>
-        <Link to="/prayer">
+        <Link to="/app/prayer">
           <Button variant="ghost" size="sm" className="gap-1">
             View All
             <ArrowRight className="h-3.5 w-3.5" />
@@ -91,18 +113,19 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
               <div className="mt-2 flex items-center justify-between">
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Heart className="h-3 w-3" />
-                  {req.prayerCount} {req.prayerCount === 1 ? 'prayer' : 'prayers'}
+                  {req.prayerCount + (counters[req.id] ?? 0)}{' '}
+                  {req.prayerCount + (counters[req.id] ?? 0) === 1 ? 'prayer' : 'prayers'}
                 </span>
-                <Link to="/prayer">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 gap-1 text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400"
-                  >
-                    <Heart className="h-3 w-3" />
-                    Pray
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 gap-1 text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400"
+                  disabled={prayedFor.has(req.id)}
+                  onClick={() => handlePray(req.id)}
+                >
+                  <Heart className={`h-3 w-3 ${prayedFor.has(req.id) ? 'fill-current' : ''}`} />
+                  {prayedFor.has(req.id) ? 'Prayed' : 'Pray'}
+                </Button>
               </div>
             </div>
           ))}

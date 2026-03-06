@@ -49,7 +49,7 @@ const memberActions = [
     label: 'View Sermons',
     description: 'Messages & media',
     icon: Video,
-    href: '/sermons',
+    href: '/app/sermons',
     iconBg: 'bg-amber-100 dark:bg-amber-900/50',
     iconColor: 'text-amber-600 dark:text-amber-400',
     hover:
@@ -59,7 +59,7 @@ const memberActions = [
     label: 'Submit Prayer',
     description: 'Share your request',
     icon: Heart,
-    href: '/prayer',
+    href: '/app/prayer',
     iconBg: 'bg-rose-100 dark:bg-rose-900/50',
     iconColor: 'text-rose-600 dark:text-rose-400',
     hover:

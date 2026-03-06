@@ -45,6 +45,10 @@ const BASE_NAV = [
   { title: 'Events', url: '/app/events', icon: Calendar },
   { title: 'Announcements', url: '/app/announcements', icon: Megaphone },
   { title: 'Messages', url: '/app/messages', icon: Mail },
+  { title: 'Sermons', url: '/app/sermons', icon: BookOpen },
+  { title: 'Prayer Wall', url: '/app/prayer', icon: Heart },
+  { title: 'Blog', url: '/app/blog', icon: Newspaper },
+  { title: 'Gallery', url: '/app/gallery', icon: Image },
 ];
 
 const MEMBERS_ITEM = { title: 'Members', url: '/app/members', icon: Users };

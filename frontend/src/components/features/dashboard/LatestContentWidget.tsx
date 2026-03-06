@@ -82,7 +82,7 @@ export const LatestContentWidget = memo(function LatestContentWidget({
                 })}
               </p>
             </div>
-            <Link to="/sermons">
+            <Link to={`/app/sermons/${sermon.id}`}>
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 Watch
                 <ArrowRight className="h-3 w-3" />
@@ -102,7 +102,7 @@ export const LatestContentWidget = memo(function LatestContentWidget({
                 {blogPost.excerpt}
               </p>
             </div>
-            <Link to="/blog">
+            <Link to={`/app/blog/${blogPost.slug}`}>
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 Read
                 <ArrowRight className="h-3 w-3" />

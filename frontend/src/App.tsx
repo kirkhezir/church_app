@@ -148,6 +148,28 @@ const ComposeMessagePage = lazy(() =>
   import('./pages/app/messages').then((m) => ({ default: m.ComposeMessagePage }))
 );
 
+// Content pages (member-facing versions of public content)
+const MemberSermonsPage = lazy(() =>
+  import('./pages/app/sermons/MemberSermonsPage').then((m) => ({ default: m.MemberSermonsPage }))
+);
+const MemberSermonDetailPage = lazy(() =>
+  import('./pages/app/sermons/MemberSermonDetailPage').then((m) => ({
+    default: m.MemberSermonDetailPage,
+  }))
+);
+const MemberPrayerPage = lazy(() =>
+  import('./pages/app/prayer/MemberPrayerPage').then((m) => ({ default: m.MemberPrayerPage }))
+);
+const MemberBlogPage = lazy(() =>
+  import('./pages/app/blog/MemberBlogPage').then((m) => ({ default: m.MemberBlogPage }))
+);
+const MemberBlogPostPage = lazy(() =>
+  import('./pages/app/blog/MemberBlogPostPage').then((m) => ({ default: m.MemberBlogPostPage }))
+);
+const MemberGalleryPage = lazy(() =>
+  import('./pages/app/gallery/MemberGalleryPage').then((m) => ({ default: m.MemberGalleryPage }))
+);
+
 // Loading component for Suspense fallback
 const PageLoader = () => (
   <div className="flex min-h-screen items-center justify-center bg-background">
@@ -364,6 +386,62 @@ const App: React.FC = () => {
               element={
                 <PrivateRoute>
                   <MessageDetailPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Sermons */}
+            <Route
+              path="/app/sermons"
+              element={
+                <PrivateRoute>
+                  <MemberSermonsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/sermons/:id"
+              element={
+                <PrivateRoute>
+                  <MemberSermonDetailPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Prayer */}
+            <Route
+              path="/app/prayer"
+              element={
+                <PrivateRoute>
+                  <MemberPrayerPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Blog */}
+            <Route
+              path="/app/blog"
+              element={
+                <PrivateRoute>
+                  <MemberBlogPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/app/blog/:slug"
+              element={
+                <PrivateRoute>
+                  <MemberBlogPostPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Gallery */}
+            <Route
+              path="/app/gallery"
+              element={
+                <PrivateRoute>
+                  <MemberGalleryPage />
                 </PrivateRoute>
               }
             />
