@@ -146,6 +146,8 @@ export function MemberPrayerPage() {
   const memberName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Member';
   const memberInitials = getInitials(memberName);
 
+  const prayedStorageKey = user?.id ? `prayer_prayed:${user.id}` : null;
+
   const [category, setCategory] = useState('');
   const [request, setRequest] = useState('');
   const [isPublic, setIsPublic] = useState(true);
@@ -156,6 +158,27 @@ export function MemberPrayerPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
+
+  // Load persisted "prayed for" IDs from localStorage once user is known
+  useEffect(() => {
+    if (!prayedStorageKey) return;
+    try {
+      const stored = localStorage.getItem(prayedStorageKey);
+      if (stored) setPrayedFor(new Set(JSON.parse(stored) as string[]));
+    } catch {
+      // ignore malformed storage
+    }
+  }, [prayedStorageKey]);
+
+  // Persist "prayed for" IDs to localStorage whenever they change
+  useEffect(() => {
+    if (!prayedStorageKey) return;
+    try {
+      localStorage.setItem(prayedStorageKey, JSON.stringify([...prayedFor]));
+    } catch {
+      // ignore storage quota errors
+    }
+  }, [prayedFor, prayedStorageKey]);
 
   useEffect(() => {
     async function load() {

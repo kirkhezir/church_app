@@ -5,12 +5,13 @@
  */
 
 import { Link } from 'react-router';
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { HeartHandshake, Heart, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { prayerService } from '@/services/endpoints/prayerService';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PrayerRequest {
   id: string;
@@ -29,8 +30,32 @@ interface PrayerRequestsWidgetProps {
 export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
   requests = [],
 }: PrayerRequestsWidgetProps) {
+  const { user } = useAuth();
+  const prayedStorageKey = user?.id ? `prayer_prayed:${user.id}` : null;
+
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [counters, setCounters] = useState<Record<string, number>>({});
+
+  // Load persisted "prayed for" IDs from localStorage once user is known
+  useEffect(() => {
+    if (!prayedStorageKey) return;
+    try {
+      const stored = localStorage.getItem(prayedStorageKey);
+      if (stored) setPrayedFor(new Set(JSON.parse(stored) as string[]));
+    } catch {
+      // ignore malformed storage
+    }
+  }, [prayedStorageKey]);
+
+  // Persist to localStorage whenever prayedFor changes
+  useEffect(() => {
+    if (!prayedStorageKey) return;
+    try {
+      localStorage.setItem(prayedStorageKey, JSON.stringify([...prayedFor]));
+    } catch {
+      // ignore storage quota errors
+    }
+  }, [prayedFor, prayedStorageKey]);
 
   const handlePray = useCallback(
     async (id: string) => {
@@ -104,7 +129,9 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
                       {req.isAnonymous ? 'Anonymous' : req.name}
                     </p>
                     <Badge variant="outline" className="text-[10px]">
-                      {req.category}
+                      {req.category
+                        ? req.category.charAt(0).toUpperCase() + req.category.slice(1)
+                        : ''}
                     </Badge>
                   </div>
                   <p className="mt-1 line-clamp-2 text-sm text-foreground">{req.request}</p>

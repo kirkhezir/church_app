@@ -164,12 +164,15 @@ export function MessagesListPage() {
                     const person = getOtherPerson(message);
                     const isUnread = !message.isRead && activeFolder === 'inbox';
                     return (
-                      <li key={message.id}>
+                      <li
+                        key={message.id}
+                        className={`relative flex items-stretch border-b transition-colors last:border-b-0 hover:bg-muted/50 ${
+                          isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
+                        }`}
+                      >
                         <Link
                           to={`/app/messages/${message.id}`}
-                          className={`flex items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
-                            isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
-                          }`}
+                          className="flex flex-1 items-start gap-3 p-4 sm:items-center sm:gap-4"
                           aria-label={`Message from ${person ? `${person.firstName} ${person.lastName}` : 'Unknown'}: ${message.subject}`}
                         >
                           <Avatar className="h-10 w-10 shrink-0">
@@ -207,7 +210,10 @@ export function MessagesListPage() {
                               {formatDate(message.sentAt)}
                             </span>
                           </div>
+                        </Link>
 
+                        {/* Delete button sits outside the Link to avoid button-inside-anchor nesting */}
+                        <div className="flex items-center pr-2">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -218,7 +224,7 @@ export function MessagesListPage() {
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
-                        </Link>
+                        </div>
                       </li>
                     );
                   })}
