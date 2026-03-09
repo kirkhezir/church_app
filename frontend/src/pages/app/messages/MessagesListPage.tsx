@@ -158,68 +158,71 @@ export function MessagesListPage() {
           {/* Messages List */}
           {!loading && messages.length > 0 && (
             <Card>
-              <CardContent className="p-0" role="list">
-                {messages.map((message) => {
-                  const person = getOtherPerson(message);
-                  const isUnread = !message.isRead && activeFolder === 'inbox';
-                  return (
-                    <Link
-                      key={message.id}
-                      to={`/app/messages/${message.id}`}
-                      className={`flex items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
-                        isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
-                      }`}
-                      aria-label={`Message from ${person ? `${person.firstName} ${person.lastName}` : 'Unknown'}: ${message.subject}`}
-                    >
-                      <Avatar className="h-10 w-10 shrink-0">
-                        <AvatarFallback>
-                          {person ? getInitials(person.firstName, person.lastName) : '??'}
-                        </AvatarFallback>
-                      </Avatar>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`truncate text-sm font-medium sm:text-base ${
-                              isUnread ? 'font-semibold' : ''
-                            }`}
-                          >
-                            {person ? `${person.firstName} ${person.lastName}` : 'Unknown'}
-                          </span>
-                          {isUnread && (
-                            <Badge variant="secondary" className="text-xs">
-                              New
-                            </Badge>
-                          )}
-                          <span className="ml-auto hidden text-xs text-muted-foreground sm:inline">
-                            {formatDate(message.sentAt)}
-                          </span>
-                        </div>
-                        <p
-                          className={`truncate text-sm ${
-                            isUnread ? 'font-medium text-foreground' : 'text-muted-foreground'
+              <CardContent className="p-0">
+                <ul className="list-none">
+                  {messages.map((message) => {
+                    const person = getOtherPerson(message);
+                    const isUnread = !message.isRead && activeFolder === 'inbox';
+                    return (
+                      <li key={message.id}>
+                        <Link
+                          to={`/app/messages/${message.id}`}
+                          className={`flex items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
+                            isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
                           }`}
+                          aria-label={`Message from ${person ? `${person.firstName} ${person.lastName}` : 'Unknown'}: ${message.subject}`}
                         >
-                          {message.subject}
-                        </p>
-                        <span className="mt-1 block text-xs text-muted-foreground sm:hidden">
-                          {formatDate(message.sentAt)}
-                        </span>
-                      </div>
+                          <Avatar className="h-10 w-10 shrink-0">
+                            <AvatarFallback>
+                              {person ? getInitials(person.firstName, person.lastName) : '??'}
+                            </AvatarFallback>
+                          </Avatar>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Delete message"
-                        className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                        onClick={(e) => handleDeleteClick(message.id, e)}
-                        disabled={deleteLoading}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                  );
-                })}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`truncate text-sm font-medium sm:text-base ${
+                                  isUnread ? 'font-semibold' : ''
+                                }`}
+                              >
+                                {person ? `${person.firstName} ${person.lastName}` : 'Unknown'}
+                              </span>
+                              {isUnread && (
+                                <Badge variant="secondary" className="text-xs">
+                                  New
+                                </Badge>
+                              )}
+                              <span className="ml-auto hidden text-xs text-muted-foreground sm:inline">
+                                {formatDate(message.sentAt)}
+                              </span>
+                            </div>
+                            <p
+                              className={`truncate text-sm ${
+                                isUnread ? 'font-medium text-foreground' : 'text-muted-foreground'
+                              }`}
+                            >
+                              {message.subject}
+                            </p>
+                            <span className="mt-1 block text-xs text-muted-foreground sm:hidden">
+                              {formatDate(message.sentAt)}
+                            </span>
+                          </div>
+
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Delete message"
+                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                            onClick={(e) => handleDeleteClick(message.id, e)}
+                            disabled={deleteLoading}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
               </CardContent>
             </Card>
           )}

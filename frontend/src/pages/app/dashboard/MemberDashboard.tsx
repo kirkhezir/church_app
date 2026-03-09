@@ -417,59 +417,74 @@ export default function MemberDashboard() {
       </div>
 
       {/* ─── Stay Connected ─────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 pt-1">
-        <div className="h-px flex-1 bg-border/50" />
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-          Stay Connected
-        </span>
-        <div className="h-px flex-1 bg-border/50" />
-      </div>
+      <section aria-labelledby="stay-connected-heading">
+        <div className="flex items-center gap-3 pt-1">
+          <div className="h-px flex-1 bg-border/50" />
+          <h2
+            id="stay-connected-heading"
+            className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70"
+          >
+            Stay Connected
+          </h2>
+          <div className="h-px flex-1 bg-border/50" />
+        </div>
 
-      {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
-      <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <UnreadMessagesWidget
-          messages={dashboard.recentMessages ?? []}
-          unreadCount={dashboard.stats.unreadMessagesCount ?? 0}
-        />
-        <LatestContentWidget
-          sermon={dashboard.recentSermon ?? null}
-          blogPost={dashboard.recentBlogPost ?? null}
-        />
-        <PrayerRequestsWidget requests={dashboard.recentPrayerRequests ?? []} />
-      </div>
+        {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
+        <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <UnreadMessagesWidget
+            messages={dashboard.recentMessages ?? []}
+            unreadCount={dashboard.stats.unreadMessagesCount ?? 0}
+          />
+          <LatestContentWidget
+            sermon={dashboard.recentSermon ?? null}
+            blogPost={dashboard.recentBlogPost ?? null}
+          />
+          <PrayerRequestsWidget requests={dashboard.recentPrayerRequests ?? []} />
+        </div>
+      </section>
 
       {/* ─── Community Life ─────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 pt-1">
-        <div className="h-px flex-1 bg-border/50" />
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-          Community Life
-        </span>
-        <div className="h-px flex-1 bg-border/50" />
-      </div>
-
-      {/* Activity Feed + Birthdays & Bible Verse */}
-      <div className="animate-fade-in-up stagger-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
-        <div className="space-y-4">
-          <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />
-          <BibleVerseWidget />
+      <section aria-labelledby="community-life-heading">
+        <div className="flex items-center gap-3 pt-1">
+          <div className="h-px flex-1 bg-border/50" />
+          <h2
+            id="community-life-heading"
+            className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70"
+          >
+            Community Life
+          </h2>
+          <div className="h-px flex-1 bg-border/50" />
         </div>
-      </div>
+
+        {/* Activity Feed + Birthdays & Bible Verse */}
+        <div className="animate-fade-in-up stagger-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
+          <div className="space-y-4">
+            <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />
+            <BibleVerseWidget />
+          </div>
+        </div>
+      </section>
 
       {/* ─── What's Coming ──────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 pt-1">
-        <div className="h-px flex-1 bg-border/50" />
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-          What&apos;s Coming
-        </span>
-        <div className="h-px flex-1 bg-border/50" />
-      </div>
+      <section aria-labelledby="whats-coming-heading">
+        <div className="flex items-center gap-3 pt-1">
+          <div className="h-px flex-1 bg-border/50" />
+          <h2
+            id="whats-coming-heading"
+            className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70"
+          >
+            What&apos;s Coming
+          </h2>
+          <div className="h-px flex-1 bg-border/50" />
+        </div>
 
-      {/* Events and Announcements */}
-      <div className="animate-fade-in-up stagger-9 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <UpcomingEventsWidget events={dashboard.upcomingEvents} />
-        <RecentAnnouncementsWidget announcements={dashboard.recentAnnouncements} />
-      </div>
+        {/* Events and Announcements */}
+        <div className="animate-fade-in-up stagger-9 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <UpcomingEventsWidget events={dashboard.upcomingEvents} />
+          <RecentAnnouncementsWidget announcements={dashboard.recentAnnouncements} />
+        </div>
+      </section>
 
       {/* Admin Section (admin/staff only) */}
       {isAdmin && (

@@ -97,6 +97,7 @@ export default function PasswordResetRequestPage() {
                 required
                 disabled={loading}
                 spellCheck={false}
+                autoComplete="email"
                 autoCapitalize="none"
               />
             </div>

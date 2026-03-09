@@ -222,12 +222,24 @@ export function AdminBlogPage() {
                 <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
-                      <th className="w-[28%] px-4 py-3 text-left font-medium">Title</th>
-                      <th className="w-[16%] px-4 py-3 text-left font-medium">Author</th>
-                      <th className="w-[14%] px-4 py-3 text-left font-medium">Category</th>
-                      <th className="w-[14%] px-4 py-3 text-left font-medium">Date</th>
-                      <th className="w-[12%] px-4 py-3 text-center font-medium">Featured</th>
-                      <th className="w-[16%] px-4 py-3 text-right font-medium">Actions</th>
+                      <th scope="col" className="w-[28%] px-4 py-3 text-left font-medium">
+                        Title
+                      </th>
+                      <th scope="col" className="w-[16%] px-4 py-3 text-left font-medium">
+                        Author
+                      </th>
+                      <th scope="col" className="w-[14%] px-4 py-3 text-left font-medium">
+                        Category
+                      </th>
+                      <th scope="col" className="w-[14%] px-4 py-3 text-left font-medium">
+                        Date
+                      </th>
+                      <th scope="col" className="w-[12%] px-4 py-3 text-center font-medium">
+                        Featured
+                      </th>
+                      <th scope="col" className="w-[16%] px-4 py-3 text-right font-medium">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -241,6 +253,7 @@ export function AdminBlogPage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-muted-foreground hover:text-primary"
+                              aria-label={`Open ${post.title} in new tab`}
                             >
                               <ExternalLink className="h-3 w-3" />
                             </a>

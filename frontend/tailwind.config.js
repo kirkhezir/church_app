@@ -26,8 +26,14 @@ export default {
           DEFAULT: 'hsl(var(--color-cta))',
           hover: 'hsl(38 92% 42%)',
         },
-        success: 'hsl(var(--color-success))',
-        warning: 'hsl(var(--color-warning))',
+        success: {
+          DEFAULT: 'hsl(var(--color-success))',
+          foreground: 'hsl(var(--color-success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--color-warning))',
+          foreground: 'hsl(var(--color-warning-foreground))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

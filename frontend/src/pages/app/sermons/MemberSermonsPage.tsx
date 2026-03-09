@@ -185,60 +185,64 @@ export function MemberSermonsPage() {
                 <p className="text-muted-foreground">No sermons found matching your criteria.</p>
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid list-none gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {displayedSermons.map((sermon: Sermon) => (
-                  <Link key={sermon.id} to={`/app/sermons/${sermon.id}`}>
-                    <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
-                      <div className="relative aspect-video overflow-hidden bg-muted">
-                        {sermon.thumbnailUrl ? (
-                          <img
-                            src={sermon.thumbnailUrl}
-                            alt={sermon.title}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center bg-muted">
-                            <BookOpen className="h-12 w-12 text-muted-foreground/50" />
+                  <li key={sermon.id}>
+                    <Link to={`/app/sermons/${sermon.id}`}>
+                      <Card className="group cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
+                        <div className="relative aspect-video overflow-hidden bg-muted">
+                          {sermon.thumbnailUrl ? (
+                            <img
+                              src={sermon.thumbnailUrl}
+                              alt={sermon.title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center bg-muted">
+                              <BookOpen className="h-12 w-12 text-muted-foreground/50" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+                              <Play className="h-6 w-6 text-primary" />
+                            </div>
                           </div>
-                        )}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-                            <Play className="h-6 w-6 text-primary" />
-                          </div>
+                          {extractYoutubeId(sermon.youtubeUrl) && (
+                            <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
+                              <Youtube className="h-4 w-4 text-white" />
+                            </div>
+                          )}
+                          {!extractYoutubeId(sermon.youtubeUrl) && sermon.audioUrl && (
+                            <div className="absolute bottom-2 right-2 rounded bg-primary px-2 py-0.5">
+                              <Headphones className="h-4 w-4 text-white" />
+                            </div>
+                          )}
                         </div>
-                        {extractYoutubeId(sermon.youtubeUrl) && (
-                          <div className="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5">
-                            <Youtube className="h-4 w-4 text-white" />
+                        <CardContent className="p-4">
+                          <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                            <Calendar className="h-3 w-3" />
+                            <time dateTime={sermon.date.split('T')[0]}>
+                              {formatDate(sermon.date)}
+                            </time>
+                            <span className="text-border">•</span>
+                            <Clock className="h-3 w-3" />
+                            {sermon.duration}
                           </div>
-                        )}
-                        {!extractYoutubeId(sermon.youtubeUrl) && sermon.audioUrl && (
-                          <div className="absolute bottom-2 right-2 rounded bg-primary px-2 py-0.5">
-                            <Headphones className="h-4 w-4 text-white" />
+                          <h2 className="mb-1 line-clamp-2 text-balance font-semibold text-foreground group-hover:text-primary">
+                            {sermon.title}
+                          </h2>
+                          <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <BookOpen className="h-3 w-3" />
+                            {sermon.scripture}
                           </div>
-                        )}
-                      </div>
-                      <CardContent className="p-4">
-                        <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                          <Calendar className="h-3 w-3" />
-                          {formatDate(sermon.date)}
-                          <span className="text-border">•</span>
-                          <Clock className="h-3 w-3" />
-                          {sermon.duration}
-                        </div>
-                        <h2 className="mb-1 line-clamp-2 text-balance font-semibold text-foreground group-hover:text-primary">
-                          {sermon.title}
-                        </h2>
-                        <p className="mb-2 text-sm text-muted-foreground">{sermon.speaker}</p>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <BookOpen className="h-3 w-3" />
-                          {sermon.scripture}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
 
             {/* Pagination */}

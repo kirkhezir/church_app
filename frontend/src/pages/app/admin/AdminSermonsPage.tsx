@@ -245,13 +245,27 @@ export function AdminSermonsPage() {
                 <table className="w-full table-fixed text-sm">
                   <thead className="border-b bg-muted/50">
                     <tr>
-                      <th className="w-[22%] px-4 py-3 text-left font-medium">Title</th>
-                      <th className="w-[16%] px-4 py-3 text-left font-medium">Speaker</th>
-                      <th className="w-[12%] px-4 py-3 text-left font-medium">Date</th>
-                      <th className="w-[16%] px-4 py-3 text-left font-medium">Series</th>
-                      <th className="w-[10%] px-4 py-3 text-center font-medium">Media</th>
-                      <th className="w-[10%] px-4 py-3 text-center font-medium">Views</th>
-                      <th className="w-[14%] px-4 py-3 text-right font-medium">Actions</th>
+                      <th scope="col" className="w-[22%] px-4 py-3 text-left font-medium">
+                        Title
+                      </th>
+                      <th scope="col" className="w-[16%] px-4 py-3 text-left font-medium">
+                        Speaker
+                      </th>
+                      <th scope="col" className="w-[12%] px-4 py-3 text-left font-medium">
+                        Date
+                      </th>
+                      <th scope="col" className="w-[16%] px-4 py-3 text-left font-medium">
+                        Series
+                      </th>
+                      <th scope="col" className="w-[10%] px-4 py-3 text-center font-medium">
+                        Media
+                      </th>
+                      <th scope="col" className="w-[10%] px-4 py-3 text-center font-medium">
+                        Views
+                      </th>
+                      <th scope="col" className="w-[14%] px-4 py-3 text-right font-medium">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -311,9 +325,9 @@ export function AdminSermonsPage() {
               </div>
 
               {/* Mobile cards */}
-              <div className="divide-y md:hidden">
+              <ul className="list-none divide-y md:hidden">
                 {filteredSermons.map((sermon) => (
-                  <div key={sermon.id} className="flex items-start justify-between gap-3 p-4">
+                  <li key={sermon.id} className="flex items-start justify-between gap-3 p-4">
                     <div className="min-w-0 flex-1 space-y-1">
                       <p className="font-medium leading-tight">{sermon.title}</p>
                       <p className="text-sm text-muted-foreground">{sermon.speaker}</p>
@@ -355,18 +369,18 @@ export function AdminSermonsPage() {
                         <TrashIcon className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
+                  </li>
                 ))}
                 {filteredSermons.length === 0 && (
-                  <div className="px-4 py-12 text-center">
+                  <li className="px-4 py-12 text-center">
                     <Music className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
                     <p className="text-muted-foreground">No sermons found</p>
                     <p className="mt-1 text-xs text-muted-foreground/70">
                       Try adjusting your search or add a new sermon.
                     </p>
-                  </div>
+                  </li>
                 )}
-              </div>
+              </ul>
             </CardContent>
           </Card>
         )}

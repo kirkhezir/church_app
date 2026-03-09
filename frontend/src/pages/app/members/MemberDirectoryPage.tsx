@@ -233,89 +233,90 @@ export function MemberDirectoryPage() {
 
       {/* Members Grid */}
       {!loading && members.length > 0 && (
-        <div className="grid flex-1 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid flex-1 list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member, index) => (
-            <Card
-              key={member.id}
-              className={`animate-fade-in-up cursor-pointer transition-shadow hover:shadow-md ${
-                index < 10 ? `stagger-${index + 1}` : ''
-              } ${selectedMembers.some((m) => m.id === member.id) ? 'ring-2 ring-primary' : ''}`}
-              onClick={() => handleViewProfile(member.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleViewProfile(member.id);
-                }
-              }}
-              role="button"
-              tabIndex={0}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  {isAdmin && (
-                    <Checkbox
-                      checked={selectedMembers.some((m) => m.id === member.id)}
-                      onCheckedChange={() =>
-                        handleSelectMember({
-                          id: member.id,
-                          firstName: member.firstName,
-                          lastName: member.lastName,
-                          email: member.email || '',
-                        })
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                      className="mt-1"
-                      aria-label={`Select ${member.firstName} ${member.lastName}`}
-                    />
-                  )}
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback>
-                      {getInitials(member.firstName, member.lastName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-semibold">
-                      {member.firstName} {member.lastName}
-                    </h3>
+            <li key={member.id}>
+              <Card
+                className={`animate-fade-in-up cursor-pointer transition-shadow hover:shadow-md ${
+                  index < 10 ? `stagger-${index + 1}` : ''
+                } ${selectedMembers.some((m) => m.id === member.id) ? 'ring-2 ring-primary' : ''}`}
+                onClick={() => handleViewProfile(member.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleViewProfile(member.id);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    {isAdmin && (
+                      <Checkbox
+                        checked={selectedMembers.some((m) => m.id === member.id)}
+                        onCheckedChange={() =>
+                          handleSelectMember({
+                            id: member.id,
+                            firstName: member.firstName,
+                            lastName: member.lastName,
+                            email: member.email || '',
+                          })
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1"
+                        aria-label={`Select ${member.firstName} ${member.lastName}`}
+                      />
+                    )}
+                    <Avatar className="h-12 w-12">
+                      <AvatarFallback>
+                        {getInitials(member.firstName, member.lastName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="truncate font-semibold">
+                        {member.firstName} {member.lastName}
+                      </h3>
 
-                    <div className="mt-2 space-y-1 text-sm text-muted-foreground">
-                      {member.email && (
-                        <div className="flex items-center gap-2 truncate">
-                          <Mail className="h-3 w-3 flex-shrink-0" />
-                          <span className="truncate">{member.email}</span>
-                        </div>
-                      )}
+                      <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+                        {member.email && (
+                          <div className="flex items-center gap-2 truncate">
+                            <Mail className="h-3 w-3 flex-shrink-0" />
+                            <span className="truncate">{member.email}</span>
+                          </div>
+                        )}
 
-                      {member.phone && (
+                        {member.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-3 w-3 flex-shrink-0" />
+                            <span>{member.phone}</span>
+                          </div>
+                        )}
+
                         <div className="flex items-center gap-2">
-                          <Phone className="h-3 w-3 flex-shrink-0" />
-                          <span>{member.phone}</span>
+                          <Calendar className="h-3 w-3 flex-shrink-0" />
+                          <span>Member since {formatDate(member.membershipDate)}</span>
                         </div>
-                      )}
+                      </div>
 
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-3 w-3 flex-shrink-0" />
-                        <span>Member since {formatDate(member.membershipDate)}</span>
+                      <div className="mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => handleSendMessage(member.id, e)}
+                          aria-label={`Message ${member.firstName} ${member.lastName}`}
+                        >
+                          <Mail className="mr-2 h-3 w-3" />
+                          Message
+                        </Button>
                       </div>
                     </div>
-
-                    <div className="mt-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => handleSendMessage(member.id, e)}
-                        aria-label={`Message ${member.firstName} ${member.lastName}`}
-                      >
-                        <Mail className="mr-2 h-3 w-3" />
-                        Message
-                      </Button>
-                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {/* Empty State */}

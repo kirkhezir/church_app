@@ -11,6 +11,7 @@ import { BellIcon, AlertCircleIcon, CalendarIcon, UserIcon } from 'lucide-react'
 import { Announcement } from '@/services/endpoints/announcementService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 
 interface AnnouncementCardProps {
@@ -37,7 +38,7 @@ export const AnnouncementCard = memo(function AnnouncementCard({
   return (
     <Card
       className={`transition-shadow hover:shadow-lg ${isArchived ? 'opacity-60' : ''} ${
-        isUrgent ? 'border-l-4 border-l-red-500' : ''
+        isUrgent ? 'border-l-4 border-l-destructive' : ''
       }`}
       data-testid="announcement-card"
     >
@@ -46,21 +47,21 @@ export const AnnouncementCard = memo(function AnnouncementCard({
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
               {isUrgent && (
-                <span className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
+                <Badge variant="destructive" className="flex items-center gap-1 rounded-full">
                   <AlertCircleIcon className="h-3 w-3" />
                   Urgent
-                </span>
+                </Badge>
               )}
               {!isUrgent && (
-                <span className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                <Badge variant="default" className="flex items-center gap-1 rounded-full">
                   <BellIcon className="h-3 w-3" />
                   Normal
-                </span>
+                </Badge>
               )}
               {isArchived && (
-                <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium text-foreground">
+                <Badge variant="outline" className="rounded-full">
                   Archived
-                </span>
+                </Badge>
               )}
             </div>
             <CardTitle className="text-xl">{announcement.title}</CardTitle>
@@ -82,7 +83,9 @@ export const AnnouncementCard = memo(function AnnouncementCard({
           </div>
           <div className="flex items-center gap-1">
             <CalendarIcon className="h-4 w-4" />
-            <span>{format(publishedDate, 'MMM d, yyyy')}</span>
+            <time dateTime={publishedDate.toISOString()}>
+              {format(publishedDate, 'MMM d, yyyy')}
+            </time>
           </div>
         </div>
 

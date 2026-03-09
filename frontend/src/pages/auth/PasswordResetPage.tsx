@@ -160,6 +160,7 @@ export default function PasswordResetPage() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
                 disabled={loading}
+                autoComplete="new-password"
               />
               <p className="text-xs text-muted-foreground">
                 Password must be at least 8 characters with uppercase, lowercase, number, and
@@ -178,6 +179,7 @@ export default function PasswordResetPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={loading}
+                autoComplete="new-password"
               />
             </div>
 

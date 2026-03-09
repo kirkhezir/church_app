@@ -19,6 +19,10 @@
     --color-warning: 38 92% 50%; /* #D97706 */
     --color-error: 0 84% 60%; /* #DC2626 */
 
+    /* Foreground variants for semantic status colors */
+    --color-success-foreground: 0 0% 98%;
+    --color-warning-foreground: 0 0% 98%;
+
     /* Spacing scale */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -106,6 +110,11 @@
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
+
+    --color-success: 142 71% 40%;
+    --color-success-foreground: 0 0% 98%;
+    --color-warning: 38 80% 50%;
+    --color-warning-foreground: 0 0% 98%;
 
     --border: 215 28% 17%;
     --input: 215 28% 17%;

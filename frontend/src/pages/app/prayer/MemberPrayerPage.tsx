@@ -483,7 +483,7 @@ export function MemberPrayerPage() {
             const hasPrayed = prayedFor.has(prayer.id);
             const authorInitials = prayer.isAnonymous ? '?' : getInitials(prayer.name);
             return (
-              <div
+              <article
                 key={prayer.id}
                 className={`rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
               >
@@ -542,7 +542,7 @@ export function MemberPrayerPage() {
                     <span className="ml-1 text-[11px] opacity-75">({prayer.prayerCount})</span>
                   </Button>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
@@ -550,7 +550,7 @@ export function MemberPrayerPage() {
     </div>
   );
 
-  // ─── Page ───────────────────────────────────────────────────────────────────
+  // ─── Page
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">

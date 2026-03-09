@@ -11,6 +11,7 @@ import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon } from 'lucide-react';
 import { Event, EventCategory } from '../../../types/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
 import { format } from 'date-fns';
 
 interface EventCardProps {
@@ -27,12 +28,13 @@ const categoryLabels: Record<EventCategory, string> = {
   FELLOWSHIP: 'Fellowship',
 };
 
-const categoryColors: Record<EventCategory, string> = {
-  WORSHIP: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  BIBLE_STUDY: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  COMMUNITY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  FELLOWSHIP: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-};
+const categoryBadgeVariant: Record<EventCategory, 'default' | 'success' | 'secondary' | 'warning'> =
+  {
+    WORSHIP: 'default',
+    BIBLE_STUDY: 'success',
+    COMMUNITY: 'secondary',
+    FELLOWSHIP: 'warning',
+  };
 
 export const EventCard = memo(function EventCard({
   event,
@@ -55,116 +57,109 @@ export const EventCard = memo(function EventCard({
   const isFull = availableSpots !== undefined && availableSpots <= 0;
 
   return (
-    <Card
-      className={`cursor-pointer transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
-      data-testid="event-card"
-    >
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="mb-2 flex items-center gap-2">
-              <span
-                className={`rounded-full px-2 py-1 text-xs font-medium ${categoryColors[event.category]}`}
-              >
-                {categoryLabels[event.category]}
-              </span>
-              {isCancelled && (
-                <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
-                  Cancelled
-                </span>
-              )}
-              {isFull && !isCancelled && (
-                <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-                  Full
-                </span>
-              )}
+    <article>
+      <Card
+        className={`cursor-pointer transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
+        data-testid="event-card"
+      >
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="mb-2 flex items-center gap-2">
+                <Badge variant={categoryBadgeVariant[event.category]} className="rounded-full">
+                  {categoryLabels[event.category]}
+                </Badge>
+                {isCancelled && (
+                  <Badge variant="destructive" className="rounded-full">
+                    Cancelled
+                  </Badge>
+                )}
+                {isFull && !isCancelled && (
+                  <Badge variant="warning" className="rounded-full">
+                    Full
+                  </Badge>
+                )}
+              </div>
+              <CardTitle className="text-xl">{event.title}</CardTitle>
             </div>
-            <CardTitle className="text-xl">{event.title}</CardTitle>
           </div>
-        </div>
-        <CardDescription className="line-clamp-2">{event.description}</CardDescription>
-      </CardHeader>
+          <CardDescription className="line-clamp-2">{event.description}</CardDescription>
+        </CardHeader>
 
-      <CardContent className="space-y-3">
-        {/* Date and Time */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <CalendarIcon className="h-4 w-4" />
-          <span>{formatDate(startDate)}</span>
-        </div>
-
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <ClockIcon className="h-4 w-4" />
-          <span>
-            {formatTime(startDate)} - {formatTime(endDate)}
-          </span>
-        </div>
-
-        {/* Location */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPinIcon className="h-4 w-4" />
-          <span>{event.location}</span>
-        </div>
-
-        {/* Capacity */}
-        {event.maxCapacity && (
+        <CardContent className="space-y-3">
+          {/* Date and Time */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <UsersIcon className="h-4 w-4" />
+            <CalendarIcon className="h-4 w-4" />
+            <time dateTime={startDate.toISOString().split('T')[0]}>{formatDate(startDate)}</time>
+          </div>
+
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ClockIcon className="h-4 w-4" />
             <span>
-              {event.rsvpCount || 0} / {event.maxCapacity} attendees
-              {availableSpots !== undefined && availableSpots > 0 && (
-                <span className="ml-1 text-green-600">({availableSpots} spots left)</span>
-              )}
+              <time dateTime={startDate.toISOString()}>{formatTime(startDate)}</time> -{' '}
+              <time dateTime={endDate.toISOString()}>{formatTime(endDate)}</time>
             </span>
           </div>
-        )}
 
-        {/* Creator */}
-        {event.creator && (
-          <div className="border-t pt-2 text-xs text-muted-foreground">
-            Organized by {event.creator.firstName} {event.creator.lastName}
+          {/* Location */}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPinIcon className="h-4 w-4" />
+            <span>{event.location}</span>
           </div>
-        )}
 
-        {/* Actions */}
-        <div className="flex gap-2 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onViewDetails?.(event.id)}
-            className="flex-1"
-          >
-            View Details
-          </Button>
-
-          {showRSVPButton && !isCancelled && (
-            <>
-              {event.hasUserRSVPd ? (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled
-                  className="flex-1 border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
-                >
-                  Going ✓
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  onClick={() => onRSVP?.(event.id)}
-                  disabled={isFull}
-                  className={`flex-1 ${
-                    isFull
-                      ? 'bg-muted text-muted-foreground'
-                      : 'bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700'
-                  }`}
-                >
-                  {isFull ? 'Event Full' : 'RSVP'}
-                </Button>
-              )}
-            </>
+          {/* Capacity */}
+          {event.maxCapacity && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <UsersIcon className="h-4 w-4" />
+              <span>
+                {event.rsvpCount || 0} / {event.maxCapacity} attendees
+                {availableSpots !== undefined && availableSpots > 0 && (
+                  <span className="ml-1 text-success">({availableSpots} spots left)</span>
+                )}
+              </span>
+            </div>
           )}
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* Creator */}
+          {event.creator && (
+            <div className="border-t pt-2 text-xs text-muted-foreground">
+              Organized by {event.creator.firstName} {event.creator.lastName}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onViewDetails?.(event.id)}
+              className="flex-1"
+            >
+              View Details
+            </Button>
+
+            {showRSVPButton && !isCancelled && (
+              <>
+                {event.hasUserRSVPd ? (
+                  <Button variant="success" size="sm" disabled className="flex-1">
+                    Going ✓
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant={isFull ? 'secondary' : 'warning'}
+                    onClick={() => onRSVP?.(event.id)}
+                    disabled={isFull}
+                    className="flex-1"
+                  >
+                    {isFull ? 'Event Full' : 'RSVP'}
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </article>
   );
 });
