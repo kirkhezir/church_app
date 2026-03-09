@@ -77,7 +77,7 @@ export function EventFilters({
       {/* Date Range Filter */}
       <div className="space-y-3">
         <Label>Date Range</Label>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="start-date" className="text-xs text-muted-foreground">
               From

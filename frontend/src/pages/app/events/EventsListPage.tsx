@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { CalendarIcon, PlusIcon, List, LayoutGrid } from 'lucide-react';
+import { CalendarIcon, PlusIcon, List, LayoutGrid, SlidersHorizontal } from 'lucide-react';
 import { useEvents, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/hooks/useAuth';
 import { SidebarLayout } from '@/components/layout';
@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { EventCategory } from '@/types/api';
 
 export function EventsListPage() {
@@ -28,6 +29,7 @@ export function EventsListPage() {
 
   // View state
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+  const [showFilters, setShowFilters] = useState(false);
 
   // Filter state
   const [selectedCategory, setSelectedCategory] = useState<EventCategory | undefined>(undefined);
@@ -135,6 +137,18 @@ export function EventsListPage() {
               Create Event
             </Button>
           )}
+
+          {viewMode === 'list' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1.5 lg:hidden"
+              onClick={() => setShowFilters(true)}
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Filters
+            </Button>
+          )}
         </div>
       </div>
 
@@ -165,8 +179,8 @@ export function EventsListPage() {
       ) : (
         /* List View */
         <div className="grid flex-1 grid-cols-1 gap-6 lg:grid-cols-4">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Filters Sidebar — desktop only */}
+          <div className="hidden lg:col-span-1 lg:block">
             <EventFilters
               selectedCategory={selectedCategory}
               startDate={startDate}
@@ -231,6 +245,32 @@ export function EventsListPage() {
           </div>
         </div>
       )}
+
+      {/* Mobile Filter Sheet */}
+      <Sheet open={showFilters} onOpenChange={setShowFilters}>
+        <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Filter Events</SheetTitle>
+          </SheetHeader>
+          <div className="py-4">
+            <EventFilters
+              selectedCategory={selectedCategory}
+              startDate={startDate}
+              endDate={endDate}
+              onCategoryChange={(cat) => {
+                setSelectedCategory(cat);
+                setShowFilters(false);
+              }}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              onClear={() => {
+                handleClearFilters();
+                setShowFilters(false);
+              }}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 

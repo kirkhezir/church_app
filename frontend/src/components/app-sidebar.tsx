@@ -41,7 +41,7 @@ import {
 
 /** Core app navigation visible to all authenticated members. */
 const BASE_NAV = [
-  { title: 'Dashboard', url: '/app/dashboard', icon: Home },
+  { title: 'Home', url: '/app/dashboard', icon: Home },
   { title: 'Events', url: '/app/events', icon: Calendar },
   { title: 'Announcements', url: '/app/announcements', icon: Megaphone },
   { title: 'Messages', url: '/app/messages', icon: Mail },

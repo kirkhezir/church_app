@@ -218,7 +218,7 @@ export default function AdminMemberListPage() {
                 </div>
               </div>
               {/* Search & Filter toolbar */}
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -228,7 +228,7 @@ export default function AdminMemberListPage() {
                       setSearch(e.target.value);
                       setPage(1);
                     }}
-                    className="w-[220px] pl-9"
+                    className="w-full pl-9 sm:w-[220px]"
                   />
                 </div>
                 <Select
@@ -238,7 +238,7 @@ export default function AdminMemberListPage() {
                     setPage(1);
                   }}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-full sm:w-[140px]">
                     <SelectValue placeholder="All Roles" />
                   </SelectTrigger>
                   <SelectContent>

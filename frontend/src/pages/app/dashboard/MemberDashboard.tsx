@@ -160,7 +160,7 @@ export default function MemberDashboard() {
 
   if (loading) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Home' }]}>
         <div className="space-y-6">
           {/* Welcome header skeleton */}
           <Card>
@@ -211,7 +211,7 @@ export default function MemberDashboard() {
 
   if (error) {
     return (
-      <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
+      <SidebarLayout breadcrumbs={[{ label: 'Home' }]}>
         <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
           <AlertDescription className="text-red-800 dark:text-red-300">{error}</AlertDescription>
         </Alert>
@@ -226,7 +226,7 @@ export default function MemberDashboard() {
   const isAdmin = dashboard.profile.role === 'ADMIN' || dashboard.profile.role === 'STAFF';
 
   return (
-    <SidebarLayout breadcrumbs={[{ label: 'Dashboard' }]}>
+    <SidebarLayout breadcrumbs={[{ label: 'Home' }]}>
       {/* Welcome Header — warm gradient with decorative pattern */}
       <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-xl">
         {/* Animated gradient background */}

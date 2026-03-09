@@ -143,7 +143,7 @@ export function AdminGalleryPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Manage Gallery</h1>
             <p className="text-muted-foreground">
@@ -151,6 +151,7 @@ export function AdminGalleryPage() {
             </p>
           </div>
           <Button
+            className="w-full sm:w-auto"
             onClick={() => {
               resetForm();
               setShowForm(true);

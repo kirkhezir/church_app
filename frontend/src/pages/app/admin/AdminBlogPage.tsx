@@ -183,12 +183,12 @@ export function AdminBlogPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Manage Blog Posts</h1>
             <p className="text-muted-foreground">{posts.length} total posts</p>
           </div>
-          <Button onClick={openCreate}>
+          <Button onClick={openCreate} className="w-full sm:w-auto">
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Blog Post
           </Button>

@@ -154,9 +154,9 @@ export const EventDetailPage: React.FC = () => {
   const canEdit = user && (user.role === 'ADMIN' || user.role === 'STAFF' || isCreator);
 
   const eventDetailContent = (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Button variant="ghost" onClick={() => navigate('/app/events')}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Events

@@ -152,7 +152,11 @@ export default function AdminAuditLogsPage() {
                 />
               </div>
 
-              <Button onClick={handleFilter}>Apply Filters</Button>
+              <div className="self-end">
+                <Button onClick={handleFilter} className="w-full md:w-auto">
+                  Apply Filters
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

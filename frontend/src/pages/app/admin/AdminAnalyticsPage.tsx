@@ -180,7 +180,7 @@ export default function AdminAnalyticsPage() {
   const content = (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <BarChart3 className="h-8 w-8" />
