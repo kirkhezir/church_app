@@ -23,6 +23,9 @@ export default function NotificationSettings() {
   const [error, setError] = useState('');
 
   const [emailNotifications, setEmailNotifications] = useState(true);
+  const [emailEvents, setEmailEvents] = useState(true);
+  const [emailAnnouncements, setEmailAnnouncements] = useState(true);
+  const [emailMessages, setEmailMessages] = useState(true);
 
   useEffect(() => {
     fetchPreferences();
@@ -32,8 +35,14 @@ export default function NotificationSettings() {
     try {
       const response = (await apiClient.get('/members/me')) as {
         emailNotifications: boolean;
+        emailEvents?: boolean;
+        emailAnnouncements?: boolean;
+        emailMessages?: boolean;
       };
       setEmailNotifications(response.emailNotifications);
+      setEmailEvents(response.emailEvents ?? true);
+      setEmailAnnouncements(response.emailAnnouncements ?? true);
+      setEmailMessages(response.emailMessages ?? true);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       setError(error.response?.data?.message || 'Failed to load notification preferences');
@@ -50,6 +59,9 @@ export default function NotificationSettings() {
     try {
       const response = (await apiClient.patch('/members/me/notifications', {
         emailNotifications,
+        emailEvents,
+        emailAnnouncements,
+        emailMessages,
       })) as { success: boolean; message: string };
 
       if (response.success) {
@@ -130,7 +142,12 @@ export default function NotificationSettings() {
                     Get notified about upcoming events you&apos;ve RSVP&apos;d to
                   </p>
                 </div>
-                <Switch id="email-events" defaultChecked />
+                <Switch
+                  id="email-events"
+                  checked={emailEvents}
+                  onCheckedChange={setEmailEvents}
+                  disabled={loading || !emailNotifications}
+                />
               </div>
 
               <Separator />
@@ -142,7 +159,12 @@ export default function NotificationSettings() {
                     Receive important church announcements
                   </p>
                 </div>
-                <Switch id="email-announcements" defaultChecked />
+                <Switch
+                  id="email-announcements"
+                  checked={emailAnnouncements}
+                  onCheckedChange={setEmailAnnouncements}
+                  disabled={loading || !emailNotifications}
+                />
               </div>
 
               <Separator />
@@ -154,7 +176,12 @@ export default function NotificationSettings() {
                     Get notified when someone sends you a message
                   </p>
                 </div>
-                <Switch id="email-messages" defaultChecked />
+                <Switch
+                  id="email-messages"
+                  checked={emailMessages}
+                  onCheckedChange={setEmailMessages}
+                  disabled={loading || !emailNotifications}
+                />
               </div>
             </div>
 

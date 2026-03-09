@@ -12,7 +12,7 @@ import {
   Calendar,
   User,
   Tag,
-  ChevronRight,
+  ChevronDown,
   Search,
   BookOpen,
   Heart,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
 import { blogService, type BlogPost } from '@/services/endpoints/blogService';
 
@@ -40,6 +41,7 @@ export function MemberBlogPage() {
   const [visibleCount, setVisibleCount] = useState(9);
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -47,7 +49,7 @@ export function MemberBlogPage() {
         const posts = await blogService.getBlogPosts();
         setAllPosts(posts);
       } catch {
-        // silent
+        setError('Failed to load blog posts. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -82,6 +84,10 @@ export function MemberBlogPage() {
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
+        ) : error ? (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         ) : (
           <>
             {/* Filters */}
@@ -105,6 +111,7 @@ export function MemberBlogPage() {
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
+                      aria-pressed={selectedCategory === cat.id}
                       className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
                         selectedCategory === cat.id
                           ? 'bg-primary text-primary-foreground'
@@ -181,7 +188,7 @@ export function MemberBlogPage() {
               <div className="text-center">
                 <Button variant="outline" onClick={() => setVisibleCount((prev) => prev + 6)}>
                   Load More
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </div>
             )}

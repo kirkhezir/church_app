@@ -246,7 +246,7 @@ export default function MemberDashboard() {
             <div className="flex min-w-0 items-start gap-4">
               {/* Avatar with initials */}
               <div
-                className="hidden h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15 text-lg font-bold text-white ring-2 ring-white/25 backdrop-blur-sm sm:flex"
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15 text-sm font-bold text-white ring-2 ring-white/25 backdrop-blur-sm sm:h-14 sm:w-14 sm:text-lg"
                 aria-hidden="true"
               >
                 {dashboard.profile.firstName[0]}

@@ -19,8 +19,8 @@ import {
   Heart,
   Loader2,
 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
 import { galleryService, type GalleryItem, type Album } from '@/services/endpoints/galleryService';
 
@@ -34,6 +34,7 @@ export function MemberGalleryPage() {
   const [photos, setPhotos] = useState<GalleryItem[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -42,7 +43,7 @@ export function MemberGalleryPage() {
         setPhotos(data.items);
         setAlbums(data.albums);
       } catch {
-        // silent
+        setError('Failed to load gallery. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -109,6 +110,18 @@ export function MemberGalleryPage() {
     );
   }
 
+  if (error) {
+    return (
+      <SidebarLayout breadcrumbs={[{ label: 'Gallery' }]}>
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </div>
+      </SidebarLayout>
+    );
+  }
+
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Gallery' }]}>
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
@@ -156,22 +169,14 @@ export function MemberGalleryPage() {
         {viewMode === 'albums' && !selectedAlbum ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {albums.map((album) => (
-              <Card
+              <button
                 key={album.id}
-                className="group cursor-pointer overflow-hidden transition-shadow duration-200 hover:shadow-xl"
-                role="button"
-                tabIndex={0}
+                type="button"
+                className="group w-full cursor-pointer overflow-hidden rounded-lg border bg-card text-left shadow-sm transition-shadow duration-200 hover:shadow-xl"
                 aria-label={`View album ${album.title}`}
                 onClick={() => {
                   setSelectedAlbum(album.id);
                   setViewMode('photos');
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedAlbum(album.id);
-                    setViewMode('photos');
-                  }
                 }}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -187,25 +192,18 @@ export function MemberGalleryPage() {
                     <p className="text-sm text-white/80">{album.photoCount} photos</p>
                   </div>
                 </div>
-              </Card>
+              </button>
             ))}
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredPhotos.map((photo, index) => (
-              <div
+              <button
                 key={photo.id}
-                className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg"
-                role="button"
-                tabIndex={0}
+                type="button"
+                className="group relative aspect-square w-full cursor-pointer overflow-hidden rounded-lg"
                 aria-label={`View photo ${photo.title}`}
                 onClick={() => openLightbox(photo, index)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openLightbox(photo, index);
-                  }
-                }}
               >
                 <img
                   src={photo.thumbnailUrl ?? photo.imageUrl}
@@ -219,7 +217,7 @@ export function MemberGalleryPage() {
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-3 transition-transform group-hover:translate-y-0">
                   <p className="text-sm font-medium text-white">{photo.title}</p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   AlertDialog,
@@ -180,6 +181,7 @@ export default function ProfileSettings() {
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="given-name"
                 />
               </div>
               <div className="space-y-2">
@@ -190,13 +192,21 @@ export default function ProfileSettings() {
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="family-name"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={formData.email} disabled />
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                disabled
+                spellCheck={false}
+                autoCorrect="off"
+              />
               <p className="text-xs text-muted-foreground">
                 Email cannot be changed. Contact admin to update.
               </p>
@@ -211,18 +221,23 @@ export default function ProfileSettings() {
                 value={formData.phone || ''}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 disabled={loading}
+                autoComplete="tel"
+                inputMode="tel"
               />
               <p className="text-xs text-muted-foreground">Use E.164 format (e.g., +66812345678)</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Input
+              <Textarea
                 id="address"
                 placeholder="Your address"
                 value={formData.address || ''}
                 onChange={(e) => handleInputChange('address', e.target.value)}
                 disabled={loading}
+                autoComplete="street-address"
+                rows={2}
+                className="resize-none"
               />
             </div>
           </CardContent>

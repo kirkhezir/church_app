@@ -56,6 +56,7 @@ export default function AppearanceSettings() {
               <button
                 key={opt.value}
                 onClick={() => setScopedTheme('app', opt.value)}
+                aria-pressed={appTheme === opt.value}
                 className={`flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-sm transition-colors ${
                   appTheme === opt.value
                     ? 'border-primary bg-primary/5 text-primary'

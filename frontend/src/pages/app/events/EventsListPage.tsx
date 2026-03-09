@@ -95,7 +95,7 @@ export function EventsListPage() {
   const eventListContent = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <CalendarIcon className="h-8 w-8" />
@@ -106,7 +106,7 @@ export function EventsListPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           {/* View Toggle */}
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')}>
             <TabsList>

@@ -107,7 +107,12 @@ export function MemberProfilePage() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium">{member.email}</p>
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {member.email}
+                      </a>
                     </div>
                   </div>
                 )}
@@ -119,7 +124,12 @@ export function MemberProfilePage() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Phone</p>
-                      <p className="font-medium">{member.phone}</p>
+                      <a
+                        href={`tel:${member.phone}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {member.phone}
+                      </a>
                     </div>
                   </div>
                 )}

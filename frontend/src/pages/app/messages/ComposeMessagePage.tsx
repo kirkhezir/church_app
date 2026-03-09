@@ -160,11 +160,19 @@ export function ComposeMessagePage() {
                     }}
                     onFocus={() => setShowRecipientDropdown(true)}
                     className="pl-10"
+                    role="combobox"
+                    aria-expanded={showRecipientDropdown && recipientSearch.length >= 2}
+                    aria-autocomplete="list"
+                    aria-controls="recipient-listbox"
                   />
 
                   {/* Search Results Dropdown */}
                   {showRecipientDropdown && recipientSearch.length >= 2 && (
-                    <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-md border bg-background shadow-lg">
+                    <div
+                      id="recipient-listbox"
+                      role="listbox"
+                      className="absolute left-0 right-0 top-full z-10 mt-1 rounded-md border bg-background shadow-lg"
+                    >
                       {searchLoading ? (
                         <div className="p-4 text-center text-sm text-muted-foreground">
                           Searching…
@@ -175,6 +183,7 @@ export function ComposeMessagePage() {
                             <button
                               key={member.id}
                               type="button"
+                              role="option"
                               className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-muted"
                               onClick={() => handleSelectRecipient(member)}
                             >

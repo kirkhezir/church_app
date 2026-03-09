@@ -196,6 +196,10 @@ export function MemberPrayerPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!category) {
+      gooeyToast.error('Please select a category');
+      return;
+    }
     setSubmitting(true);
     try {
       await prayerService.submitPrayerRequest({

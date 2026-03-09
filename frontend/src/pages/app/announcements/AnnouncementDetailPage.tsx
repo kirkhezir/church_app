@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarLayout } from '@/components/layout';
 import { ArrowLeftIcon, CalendarIcon, UserIcon, AlertCircleIcon, BellIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import ReactMarkdown from 'react-markdown';
 
 export function AnnouncementDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -122,8 +123,8 @@ export function AnnouncementDetailPage() {
         </div>
 
         {/* Content */}
-        <div className="prose prose-sm prose-gray sm:prose-base max-w-none">
-          <div className="whitespace-pre-wrap text-foreground/80">{announcement.content}</div>
+        <div className="prose prose-sm prose-gray dark:prose-invert sm:prose-base max-w-none text-foreground/80">
+          <ReactMarkdown>{announcement.content}</ReactMarkdown>
         </div>
       </div>
     </div>

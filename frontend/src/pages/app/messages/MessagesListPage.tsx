@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams, Link } from 'react-router';
 import { Inbox, Send, Mail, Trash2 } from 'lucide-react';
 import { useMessages, useDeleteMessage } from '@/hooks/useMessages';
 import { SidebarLayout } from '@/components/layout';
@@ -41,10 +41,6 @@ export function MessagesListPage() {
     const newFolder = folder as 'inbox' | 'sent';
     setActiveFolder(newFolder);
     setFolder(newFolder);
-  };
-
-  const handleViewMessage = (messageId: string) => {
-    navigate(`/app/messages/${messageId}`);
   };
 
   const handleCompose = () => {
@@ -167,20 +163,12 @@ export function MessagesListPage() {
                   const person = getOtherPerson(message);
                   const isUnread = !message.isRead && activeFolder === 'inbox';
                   return (
-                    <div
+                    <Link
                       key={message.id}
-                      className={`flex cursor-pointer items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
+                      to={`/app/messages/${message.id}`}
+                      className={`flex items-start gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-muted/50 sm:items-center sm:gap-4 ${
                         isUnread ? 'border-l-2 border-l-primary bg-primary/5' : ''
                       }`}
-                      onClick={() => handleViewMessage(message.id)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleViewMessage(message.id);
-                        }
-                      }}
-                      role="listitem"
-                      tabIndex={0}
                       aria-label={`Message from ${person ? `${person.firstName} ${person.lastName}` : 'Unknown'}: ${message.subject}`}
                     >
                       <Avatar className="h-10 w-10 shrink-0">
@@ -229,7 +217,7 @@ export function MessagesListPage() {
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
-                    </div>
+                    </Link>
                   );
                 })}
               </CardContent>

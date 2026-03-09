@@ -209,52 +209,85 @@ export const RSVPListPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="rounded-lg border">
-                    <Table className="table-fixed">
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[22%]">Name</TableHead>
-                          <TableHead className="w-[28%]">Email</TableHead>
-                          <TableHead className="w-[16%]">Status</TableHead>
-                          <TableHead className="w-[17%]">RSVP Date</TableHead>
-                          <TableHead className="w-[17%]">Last Updated</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {rsvps.map((rsvp) => (
-                          <TableRow key={rsvp.id}>
-                            <TableCell className="font-medium">
+                    {/* Desktop table */}
+                    <div className="hidden md:block">
+                      <Table className="table-fixed">
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[22%]">Name</TableHead>
+                            <TableHead className="w-[28%]">Email</TableHead>
+                            <TableHead className="w-[16%]">Status</TableHead>
+                            <TableHead className="w-[17%]">RSVP Date</TableHead>
+                            <TableHead className="w-[17%]">Last Updated</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {rsvps.map((rsvp) => (
+                            <TableRow key={rsvp.id}>
+                              <TableCell className="font-medium">
+                                {rsvp.member
+                                  ? `${rsvp.member.firstName} ${rsvp.member.lastName}`
+                                  : 'Unknown'}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Mail className="h-4 w-4 text-muted-foreground" />
+                                  {rsvp.member?.email || 'N/A'}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge className={statusColors[rsvp.status]}>
+                                  <span className="flex items-center gap-1">
+                                    {statusIcons[rsvp.status]}
+                                    {statusLabels[rsvp.status]}
+                                  </span>
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {rsvp.rsvpedAt
+                                  ? format(new Date(rsvp.rsvpedAt), 'MMM d, yyyy')
+                                  : 'N/A'}
+                              </TableCell>
+                              <TableCell>
+                                {rsvp.updatedAt
+                                  ? format(new Date(rsvp.updatedAt), 'MMM d, yyyy h:mm a')
+                                  : 'N/A'}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+
+                    {/* Mobile cards */}
+                    <div className="divide-y md:hidden">
+                      {rsvps.map((rsvp) => (
+                        <div key={rsvp.id} className="space-y-1.5 p-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-medium">
                               {rsvp.member
                                 ? `${rsvp.member.firstName} ${rsvp.member.lastName}`
                                 : 'Unknown'}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Mail className="h-4 w-4 text-muted-foreground" />
-                                {rsvp.member?.email || 'N/A'}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge className={statusColors[rsvp.status]}>
-                                <span className="flex items-center gap-1">
-                                  {statusIcons[rsvp.status]}
-                                  {statusLabels[rsvp.status]}
-                                </span>
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {rsvp.rsvpedAt
-                                ? format(new Date(rsvp.rsvpedAt), 'MMM d, yyyy')
-                                : 'N/A'}
-                            </TableCell>
-                            <TableCell>
-                              {rsvp.updatedAt
-                                ? format(new Date(rsvp.updatedAt), 'MMM d, yyyy h:mm a')
-                                : 'N/A'}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                            </span>
+                            <Badge className={statusColors[rsvp.status]}>
+                              <span className="flex items-center gap-1">
+                                {statusIcons[rsvp.status]}
+                                {statusLabels[rsvp.status]}
+                              </span>
+                            </Badge>
+                          </div>
+                          {rsvp.member?.email && (
+                            <p className="truncate text-sm text-muted-foreground">
+                              {rsvp.member.email}
+                            </p>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            RSVP&apos;d{' '}
+                            {rsvp.rsvpedAt ? format(new Date(rsvp.rsvpedAt), 'MMM d, yyyy') : 'N/A'}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </TabsContent>

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarLayout } from '@/components/layout';
 import { sermonService, type Sermon } from '@/services/endpoints/sermonService';
 import { reportError } from '@/lib/errorReporting';
@@ -38,6 +39,7 @@ export function MemberSermonsPage() {
   const [speakerList, setSpeakerList] = useState<string[]>(['All Speakers']);
   const [seriesList, setSeriesList] = useState<string[]>(['All Series']);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('All Series');
   const [selectedSpeaker, setSelectedSpeaker] = useState('All Speakers');
@@ -57,6 +59,7 @@ export function MemberSermonsPage() {
         setSeriesList(['All Series', ...series]);
       } catch (err) {
         reportError('Failed to load sermons', err);
+        setError('Failed to load sermons. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -113,6 +116,10 @@ export function MemberSermonsPage() {
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
+        ) : error ? (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         ) : (
           <>
             {/* Filters */}

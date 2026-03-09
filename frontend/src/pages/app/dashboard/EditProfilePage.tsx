@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { apiClient } from '@/services/api/apiClient';
 import { getErrorMessage } from '@/lib/errorReporting';
@@ -123,7 +124,26 @@ export default function EditProfilePage() {
       <SidebarLayout breadcrumbs={[{ label: 'Profile' }]}>
         <Card className="w-full max-w-2xl">
           <CardContent className="py-8">
-            <p className="text-center text-muted-foreground">Loading profile...</p>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+                  <div className="h-10 w-full animate-pulse rounded bg-muted" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+                  <div className="h-10 w-full animate-pulse rounded bg-muted" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+                <div className="h-10 w-full animate-pulse rounded bg-muted" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+                <div className="h-10 w-full animate-pulse rounded bg-muted" />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </SidebarLayout>
@@ -159,6 +179,7 @@ export default function EditProfilePage() {
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
                       required
                       disabled={loading}
+                      autoComplete="given-name"
                     />
                   </div>
 
@@ -170,13 +191,21 @@ export default function EditProfilePage() {
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
                       required
                       disabled={loading}
+                      autoComplete="family-name"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" value={formData.email} disabled />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    disabled
+                    spellCheck={false}
+                    autoCorrect="off"
+                  />
                   <p className="text-xs text-muted-foreground">
                     Email cannot be changed. Contact admin to update.
                   </p>
@@ -191,6 +220,8 @@ export default function EditProfilePage() {
                     value={formData.phone || ''}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     disabled={loading}
+                    autoComplete="tel"
+                    inputMode="tel"
                   />
                   <p className="text-xs text-muted-foreground">
                     Use E.164 format (e.g., +66812345678)
@@ -199,12 +230,15 @@ export default function EditProfilePage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="address">Address</Label>
-                  <Input
+                  <Textarea
                     id="address"
                     placeholder="Your address"
                     value={formData.address || ''}
                     onChange={(e) => handleInputChange('address', e.target.value)}
                     disabled={loading}
+                    autoComplete="street-address"
+                    rows={2}
+                    className="resize-none"
                   />
                 </div>
               </div>

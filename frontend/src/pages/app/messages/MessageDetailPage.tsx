@@ -35,7 +35,9 @@ export function MessageDetailPage() {
 
   const handleReply = () => {
     if (message && message.sender) {
-      navigate(`/app/messages/compose?to=${message.sender.id}&subject=Re: ${message.subject}`);
+      navigate(
+        `/app/messages/compose?to=${message.sender.id}&subject=${encodeURIComponent(`Re: ${message.subject}`)}`
+      );
     }
   };
 

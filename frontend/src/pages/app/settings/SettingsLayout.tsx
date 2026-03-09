@@ -53,7 +53,7 @@ export default function SettingsLayout() {
         </Tabs>
 
         {/* Tab content (rendered by React Router) — stable height avoids layout shifts */}
-        <div className="min-h-[520px]">
+        <div className="min-h-[400px] sm:min-h-[520px]">
           <Outlet />
         </div>
       </div>
