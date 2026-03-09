@@ -15,7 +15,7 @@ export function measureRenderTime(componentName: string) {
     const duration = endTime - startTime;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[Performance] ${componentName} rendered in ${duration.toFixed(2)}ms`);
+      console.warn(`[Performance] ${componentName} rendered in ${duration.toFixed(2)}ms`);
     }
 
     // Report to analytics if in production

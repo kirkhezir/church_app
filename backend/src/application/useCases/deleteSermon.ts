@@ -9,8 +9,7 @@ export class DeleteSermon {
   async execute(id: string): Promise<void> {
     const existing = await this.sermonRepository.findById(id);
     if (!existing) {
-      const error = new Error('Sermon not found');
-      (error as any).statusCode = 404;
+      const error = Object.assign(new Error('Sermon not found'), { statusCode: 404 });
       throw error;
     }
     await this.sermonRepository.delete(id);

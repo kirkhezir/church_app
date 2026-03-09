@@ -150,7 +150,7 @@ export async function verifyMFALogin(
     let tokenPayload;
     try {
       tokenPayload = jwtService.verifyMFAToken(mfaToken);
-    } catch (_error) {
+    } catch {
       res.status(401).json({ error: 'Invalid or expired MFA token' });
       return;
     }

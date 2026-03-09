@@ -128,7 +128,7 @@ export function TestimonialsSection() {
               </div>
 
               <blockquote className="mb-6 text-center text-lg leading-relaxed text-foreground/80 sm:text-xl">
-                "{currentTestimonial.quote}"
+                &ldquo;{currentTestimonial.quote}&rdquo;
               </blockquote>
 
               {currentTestimonial.rating && (

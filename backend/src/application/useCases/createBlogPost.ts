@@ -26,7 +26,7 @@ interface CreateBlogPostInput {
 export class CreateBlogPost {
   constructor(private blogRepository: IBlogRepository) {}
 
-  async execute(input: CreateBlogPostInput): Promise<any> {
+  async execute(input: CreateBlogPostInput) {
     if (!input.title || input.title.trim().length < 3) {
       throw new Error('Blog post title must be at least 3 characters');
     }

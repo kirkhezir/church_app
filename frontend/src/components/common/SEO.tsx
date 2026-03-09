@@ -151,6 +151,7 @@ export function SEO({
 /**
  * Default SEO values for different page types
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const DEFAULT_SEO = {
   home: {
     title: 'Welcome',

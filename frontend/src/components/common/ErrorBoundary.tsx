@@ -255,6 +255,7 @@ function DefaultErrorUI({ message, onRetry }: { message?: string; onRetry?: () =
 /**
  * Higher-order component for error boundary wrapping
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function withErrorBoundary<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   fallback?: ReactNode

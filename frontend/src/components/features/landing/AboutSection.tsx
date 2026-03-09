@@ -55,8 +55,8 @@ export function AboutSection() {
               <div className="mx-auto max-w-3xl text-center">
                 <Sparkles className="mx-auto mb-6 h-12 w-12 text-yellow-300" />
                 <blockquote className="text-xl leading-relaxed md:text-2xl">
-                  "Our mission is to share God's love through worship, fellowship, and service —
-                  building a community where faith grows and hope flourishes."
+                  &ldquo;Our mission is to share God&apos;s love through worship, fellowship, and
+                  service &mdash; building a community where faith grows and hope flourishes.&rdquo;
                 </blockquote>
               </div>
             </CardContent>
@@ -86,9 +86,9 @@ export function AboutSection() {
         {/* Simple CTA */}
         <div className="mt-16 text-center">
           <p className="mb-4 text-lg text-muted-foreground">
-            Whether you're seeking spiritual growth or simply a place to belong —
+            Whether you&apos;re seeking spiritual growth or simply a place to belong &mdash;
           </p>
-          <p className="text-2xl font-bold text-primary">You're welcome here.</p>
+          <p className="text-2xl font-bold text-primary">You&apos;re welcome here.</p>
         </div>
       </div>
     </section>

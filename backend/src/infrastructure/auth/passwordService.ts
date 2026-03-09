@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 /**
  * Password Service for hashing and validation
@@ -48,7 +49,6 @@ export class PasswordService {
    * Generate a random password
    */
   generateRandomPassword(length: number = 12): string {
-    const crypto = require('crypto');
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';

@@ -137,7 +137,7 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                 </div>
                 {counts.total === 0 && (
                   <p className="px-4 py-4 text-center text-xs text-muted-foreground">
-                    You're all caught up!
+                    You&apos;re all caught up!
                   </p>
                 )}
               </PopoverContent>

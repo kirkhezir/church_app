@@ -28,6 +28,8 @@ const mockMemberRepository: jest.Mocked<IMemberRepository> = {
   findByRole: jest.fn(),
   searchByName: jest.fn(),
   count: jest.fn(),
+  findBirthdaysThisWeek: jest.fn(),
+  countNewThisMonth: jest.fn(),
 };
 
 // Create mock services with jest.fn() methods

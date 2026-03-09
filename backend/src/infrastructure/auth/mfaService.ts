@@ -110,7 +110,7 @@ export class MFAService {
       }
 
       return authenticator.verify({ token, secret });
-    } catch (_error) {
+    } catch {
       return false;
     }
   }

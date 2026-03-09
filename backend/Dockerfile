@@ -3,6 +3,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+# Upgrade Alpine packages to patch system-level CVEs (e.g. zlib)
+RUN apk upgrade --no-cache
+
 # Update bundled npm dependencies for security fixes
 RUN npm install -g npm@11.10.0
 
@@ -26,6 +29,9 @@ RUN npm run build
 FROM node:24-alpine AS production
 
 WORKDIR /app
+
+# Upgrade Alpine packages to patch system-level CVEs (e.g. zlib)
+RUN apk upgrade --no-cache
 
 # Update bundled npm dependencies for security fixes
 RUN npm install -g npm@11.10.0

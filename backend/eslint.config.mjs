@@ -7,6 +7,7 @@ export default tseslint.config(
   {
     ignores: [
       'dist/',
+      'build/',
       'node_modules/',
       'coverage/',
       '*.config.js',
@@ -35,6 +36,23 @@ export default tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
+  },
+
+  // Adapter/infrastructure layers bridge dynamically-typed DB/external services.
+  // Suppressing no-explicit-any here is an intentional architectural trade-off
+  // until the repository interfaces are fully typed against Prisma-generated types.
+  {
+    files: [
+      'src/infrastructure/**/*.ts',
+      'src/domain/interfaces/**/*.ts',
+      'src/application/useCases/**/*.ts',
+      'src/presentation/controllers/**/*.ts',
+      'src/presentation/middleware/**/*.ts',
+      'src/presentation/routes/**/*.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 

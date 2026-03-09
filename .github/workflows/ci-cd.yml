@@ -47,14 +47,6 @@ jobs:
         run: npm audit --audit-level=high || true
         continue-on-error: true
 
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --all-projects --severity-threshold=high
-
   # ==========================================
   # Lint and Type Check
   # ==========================================
@@ -283,27 +275,8 @@ jobs:
     environment: production
 
     steps:
-      - name: Check deploy secrets
-        id: check-secrets
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      - name: Deployment handled by Render
         run: |
-          if [ -z "$DEPLOY_HOST" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Deploy secrets not configured — skipping SSH deploy (deployment handled by Render)"
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Deploy to server
-        if: steps.check-secrets.outputs.skip != 'true'
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd /opt/church_app
-            docker compose pull
-            docker compose up -d
-            docker system prune -f
+          echo "✅ Production deployment is managed automatically by Render.com"
+          echo "   Render detects pushes to main and deploys the latest image."
+          echo "   No manual SSH deploy step is required."

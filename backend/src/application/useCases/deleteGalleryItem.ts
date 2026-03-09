@@ -9,8 +9,7 @@ export class DeleteGalleryItem {
   async execute(id: string): Promise<void> {
     const existing = await this.galleryRepository.findById(id);
     if (!existing) {
-      const error: any = new Error('Gallery item not found');
-      error.statusCode = 404;
+      const error = Object.assign(new Error('Gallery item not found'), { statusCode: 404 });
       throw error;
     }
     await this.galleryRepository.delete(id);

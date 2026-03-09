@@ -16,7 +16,7 @@ const SENTRY_ENABLED = import.meta.env.VITE_SENTRY_ENABLED === 'true' && !!SENTR
  */
 export function initSentry(): void {
   if (!SENTRY_ENABLED) {
-    console.info('Sentry is disabled. Set VITE_SENTRY_ENABLED=true and VITE_SENTRY_DSN to enable.');
+    console.warn('Sentry is disabled. Set VITE_SENTRY_ENABLED=true and VITE_SENTRY_DSN to enable.');
     return;
   }
 
@@ -86,7 +86,7 @@ export function initSentry(): void {
     ],
   });
 
-  console.info('Sentry initialized', {
+  console.warn('Sentry initialized', {
     environment: SENTRY_ENVIRONMENT,
     release: SENTRY_RELEASE,
   });
@@ -132,7 +132,7 @@ export function captureException(error: Error, context?: Record<string, unknown>
  */
 export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info'): void {
   if (!SENTRY_ENABLED) {
-    console.log(`[${level}]`, message);
+    console.warn(`[${level}]`, message);
     return;
   }
 

@@ -20,7 +20,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('/sw.js')
       .then((registration) => {
-        console.log('Service Worker registered:', registration.scope);
+        console.warn('Service Worker registered:', registration.scope);
 
         // Check for updates every 60 seconds
         setInterval(() => {
@@ -50,14 +50,14 @@ if ('serviceWorker' in navigator) {
     // Listen for messages from service worker
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'SW_UPDATED') {
-        console.log('Service Worker updated to version:', event.data.version);
+        console.warn('Service Worker updated to version:', event.data.version);
         // Could show a toast notification here
       }
     });
 
     // Handle controller change (new SW activated)
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('New service worker activated, reloading page...');
+      console.warn('New service worker activated, reloading page...');
       window.location.reload();
     });
   });

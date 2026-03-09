@@ -106,7 +106,10 @@ export function WorshipTimesSection() {
           <Users className="h-6 w-6 flex-shrink-0 text-primary" />
           <p className="text-foreground/80">
             <span className="font-medium">All are welcome!</span>
-            <span className="hidden sm:inline"> First-time visitors, we'd love to meet you.</span>
+            <span className="hidden sm:inline">
+              {' '}
+              First-time visitors, we&apos;d love to meet you.
+            </span>
           </p>
         </div>
       </div>

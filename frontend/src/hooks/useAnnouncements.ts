@@ -47,7 +47,7 @@ export function useAnnouncements(
 
     fetchAnnouncements();
     // Serialize filters to avoid unnecessary re-renders
-    // eslint_disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [archived, page, limit, refreshTrigger, JSON.stringify(filters)]);
 
   return { announcements, pagination, loading, error };

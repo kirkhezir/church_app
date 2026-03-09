@@ -189,7 +189,9 @@ export function TermsOfServicePage() {
                 days)
               </li>
               <li>We will provide donation receipts for record-keeping purposes upon request</li>
-              <li>Donated funds will be used for the church's ministry and operational purposes</li>
+              <li>
+                Donated funds will be used for the church&apos;s ministry and operational purposes
+              </li>
             </ul>
           </section>
 

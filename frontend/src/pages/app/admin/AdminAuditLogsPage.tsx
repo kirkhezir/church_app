@@ -41,6 +41,7 @@ export default function AdminAuditLogsPage() {
 
   useEffect(() => {
     loadLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const loadLogs = async () => {

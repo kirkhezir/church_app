@@ -24,7 +24,7 @@ interface CreateSermonInput {
 export class CreateSermon {
   constructor(private sermonRepository: ISermonRepository) {}
 
-  async execute(input: CreateSermonInput): Promise<any> {
+  async execute(input: CreateSermonInput) {
     if (!input.title || input.title.trim().length < 3) {
       throw new Error('Sermon title must be at least 3 characters');
     }

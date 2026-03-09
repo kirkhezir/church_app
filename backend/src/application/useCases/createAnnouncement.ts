@@ -29,7 +29,6 @@ export async function createAnnouncement(
   content: string,
   priority: Priority = Priority.NORMAL,
   isDraft: boolean = false
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   try {
     logger.info('Creating announcement', { authorId, title, priority, isDraft });
@@ -97,12 +96,7 @@ export async function createAnnouncement(
 /**
  * Send urgent announcement emails to all members with notifications enabled
  */
-async function sendUrgentAnnouncementEmails(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  announcement: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  author: any
-): Promise<void> {
+async function sendUrgentAnnouncementEmails(announcement: any, author: any): Promise<void> {
   try {
     // Get all members with email notifications enabled
     const members = await memberRepository.findAll();

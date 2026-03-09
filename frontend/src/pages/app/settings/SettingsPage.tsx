@@ -47,7 +47,7 @@ export default function SettingsPage() {
                   <div className="space-y-0.5">
                     <Label htmlFor="email-events">Event Reminders</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get notified about upcoming events you've RSVP'd to
+                      Get notified about upcoming events you&apos;ve RSVP&apos;d to
                     </p>
                   </div>
                   <Switch id="email-events" defaultChecked />

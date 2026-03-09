@@ -18,7 +18,7 @@ export class CreateGalleryItem {
     photographer?: string;
     eventDate?: string;
     sortOrder?: number;
-  }): Promise<any> {
+  }) {
     if (!input.imageUrl) {
       throw new Error('Image URL is required');
     }

@@ -170,7 +170,7 @@ export function ProgressCountersSection() {
         {/* Tagline */}
         <div className="mt-16 text-center">
           <p className="text-lg text-blue-100">
-            "To the glory of God, we continue to grow in faith and numbers"
+            &ldquo;To the glory of God, we continue to grow in faith and numbers&rdquo;
           </p>
         </div>
       </div>

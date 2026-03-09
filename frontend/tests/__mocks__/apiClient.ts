@@ -1,7 +1,6 @@
 /**
  * Mock API Client for Jest tests
  */
-import axios from 'axios';
 
 const mockAxiosInstance = {
   get: jest.fn().mockResolvedValue({ data: {} }),

@@ -107,6 +107,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, AUTO_LOGOUT_DURATION);
 
     setLogoutTimer(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearLogoutTimer]);
 
   /**
@@ -240,6 +241,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => {
       clearLogoutTimer();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**

@@ -19,6 +19,7 @@ function isSafeUrlValue(value: string): boolean {
     }
   }
 
+  // eslint-disable-next-line no-control-regex
   const compact = decoded.replace(/[\u0000-\u001F\u007F\s]+/g, '');
   const lower = compact.toLowerCase();
 

@@ -43,11 +43,11 @@ export async function deleteAnnouncement(id: string, userId: string): Promise<vo
     await announcementRepository.delete(id);
 
     logger.info('Announcement deleted successfully', { id });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Failed to delete announcement', {
       id,
       userId,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }

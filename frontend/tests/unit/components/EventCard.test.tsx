@@ -84,7 +84,7 @@ describe('EventCard', () => {
 
   describe('Category Badge Colors', () => {
     it('should render WORSHIP category with blue badge', () => {
-      const { container } = render(
+      render(
         <EventCard
           event={{ ...mockEvent, category: EventCategory.WORSHIP }}
           onViewDetails={mockOnViewDetails}
@@ -97,7 +97,7 @@ describe('EventCard', () => {
     });
 
     it('should render BIBLE_STUDY category with purple badge', () => {
-      const { container } = render(
+      render(
         <EventCard
           event={{ ...mockEvent, category: EventCategory.BIBLE_STUDY }}
           onViewDetails={mockOnViewDetails}
@@ -110,7 +110,7 @@ describe('EventCard', () => {
     });
 
     it('should render COMMUNITY category with green badge', () => {
-      const { container } = render(
+      render(
         <EventCard
           event={{ ...mockEvent, category: EventCategory.COMMUNITY }}
           onViewDetails={mockOnViewDetails}
@@ -123,7 +123,7 @@ describe('EventCard', () => {
     });
 
     it('should render FELLOWSHIP category with orange badge', () => {
-      const { container } = render(
+      render(
         <EventCard
           event={{ ...mockEvent, category: EventCategory.FELLOWSHIP }}
           onViewDetails={mockOnViewDetails}

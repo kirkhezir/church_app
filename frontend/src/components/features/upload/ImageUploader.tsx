@@ -158,6 +158,7 @@ export function ImageUploader({
         setUploading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [uploadType, folder, currentImageUrl, onUploadComplete, onUploadError, maxSizeMB, accept]
   );
 

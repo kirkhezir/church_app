@@ -91,7 +91,9 @@ export function UpcomingEventsSection() {
             >
               Upcoming Events
             </h2>
-            <p className="mt-1 text-lg text-muted-foreground">See what's happening at our church</p>
+            <p className="mt-1 text-lg text-muted-foreground">
+              See what&apos;s happening at our church
+            </p>
           </div>
           <Link to="/events">
             <Button className="bg-primary hover:bg-primary/90">
