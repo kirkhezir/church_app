@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import prisma from '../prismaClient';
 import { IPrayerRepository } from '../../../domain/interfaces/IPrayerRepository';
 
@@ -11,6 +12,40 @@ export class PrayerRepository implements IPrayerRepository {
       where: { isPublic: true, status: 'APPROVED' },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async findPublicApprovedWithHasPrayed(memberId?: string): Promise<any[]> {
+    const prayers = await prisma.prayer_requests.findMany({
+      where: { isPublic: true, status: 'APPROVED' },
+      orderBy: { createdAt: 'desc' },
+      include: memberId ? { supporters: { where: { memberId }, select: { id: true } } } : false,
+    });
+    return prayers.map((p: any) => {
+      const { supporters, ...rest } = p as any;
+      return {
+        ...rest,
+        hasPrayed: memberId ? (supporters?.length ?? 0) > 0 : false,
+      };
+    });
+  }
+
+  async addSupporter(prayerRequestId: string, memberId: string): Promise<void> {
+    await prisma.prayer_supporters.upsert({
+      where: { prayerRequestId_memberId: { prayerRequestId, memberId } },
+      create: { id: randomUUID(), prayerRequestId, memberId },
+      update: {},
+    });
+  }
+
+  async removeSupporter(prayerRequestId: string, memberId: string): Promise<void> {
+    await prisma.prayer_supporters.deleteMany({ where: { prayerRequestId, memberId } });
+  }
+
+  async hasMemberPrayed(prayerRequestId: string, memberId: string): Promise<boolean> {
+    const count = await prisma.prayer_supporters.count({
+      where: { prayerRequestId, memberId },
+    });
+    return count > 0;
   }
 
   async findAll(options: { status?: string } = {}): Promise<any[]> {

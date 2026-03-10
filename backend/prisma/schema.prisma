@@ -124,6 +124,7 @@ model members {
   messages_messages_senderIdTomembers    messages[]                  @relation("messages_senderIdTomembers")
   push_subscriptions                     push_subscriptions[]
   user_sessions                          user_sessions[]
+  prayer_supporters                      prayer_supporters[]
 
   @@index([email])
   @@index([membershipDate])
@@ -287,20 +288,33 @@ model gallery_items {
 }
 
 model prayer_requests {
-  id              String        @id
+  id              String               @id
   name            String
   email           String?
   category        String
   categoryThai    String?
   request         String
   requestThai     String?
-  isPublic        Boolean       @default(false)
-  isAnonymous     Boolean       @default(true)
-  prayerCount     Int           @default(0)
-  status          PrayerStatus  @default(PENDING)
-  createdAt       DateTime      @default(now())
+  isPublic        Boolean              @default(false)
+  isAnonymous     Boolean              @default(true)
+  prayerCount     Int                  @default(0)
+  status          PrayerStatus         @default(PENDING)
+  createdAt       DateTime             @default(now())
   updatedAt       DateTime
+  supporters      prayer_supporters[]
 
   @@index([status, createdAt(sort: Desc)])
   @@index([isPublic, status])
+}
+
+model prayer_supporters {
+  id              String          @id @default(cuid())
+  prayerRequestId String
+  memberId        String
+  createdAt       DateTime        @default(now())
+  prayer_request  prayer_requests @relation(fields: [prayerRequestId], references: [id], onDelete: Cascade)
+  member          members         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([prayerRequestId, memberId])
+  @@index([memberId])
 }

@@ -6,6 +6,7 @@ import { UnprayForRequest } from '../../application/useCases/unprayForRequest';
 import { ModeratePrayerRequest } from '../../application/useCases/moderatePrayerRequest';
 import { PrayerRepository } from '../../infrastructure/database/repositories/prayerRepository';
 import { websocketServer } from '../../infrastructure/websocket/websocketServer';
+import { AuthenticatedRequest } from '../middleware/authMiddleware';
 
 /**
  * PrayerController
@@ -23,10 +24,11 @@ export class PrayerController {
    * GET /api/v1/prayer
    * Get public approved prayer requests (PUBLIC)
    */
-  async getPrayerRequests(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getPrayerRequests(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const memberId = (req as AuthenticatedRequest).user?.userId;
       const useCase = new GetPrayerRequests(this.prayerRepository);
-      const result = await useCase.execute();
+      const result = await useCase.execute(memberId);
 
       res.status(200).json({
         success: true,
@@ -93,8 +95,9 @@ export class PrayerController {
    */
   async prayForRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const memberId = (req as AuthenticatedRequest).user?.userId;
       const useCase = new PrayForRequest(this.prayerRepository);
-      const result = await useCase.execute(req.params.id);
+      const result = await useCase.execute(req.params.id, memberId);
 
       res.status(200).json({
         success: true,
@@ -111,8 +114,9 @@ export class PrayerController {
    */
   async unprayForRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const memberId = (req as AuthenticatedRequest).user?.userId;
       const useCase = new UnprayForRequest(this.prayerRepository);
-      const result = await useCase.execute(req.params.id);
+      const result = await useCase.execute(req.params.id, memberId);
 
       res.status(200).json({
         success: true,

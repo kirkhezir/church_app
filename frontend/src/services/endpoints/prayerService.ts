@@ -26,6 +26,8 @@ export interface PrayerRequest {
   prayerCount: number;
   isPublic: boolean;
   isAnonymous: boolean;
+  /** Server-side boolean: true when the authenticated caller has prayed for this request */
+  hasPrayed?: boolean;
   createdAt: string;
   updatedAt: string;
 }

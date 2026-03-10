@@ -79,32 +79,22 @@ export const authMiddleware = async (
 };
 
 /**
- * Optional authentication middleware
- * Attaches user data if token is valid, but doesn't require authentication
+ * Optional Auth Middleware
+ * Extracts JWT user data if a valid Bearer token is present, but never rejects.
+ * Use for routes that are public but can benefit from knowing who the caller is.
  */
 export const optionalAuthMiddleware = async (
   req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction
 ): Promise<void> => {
-  try {
-    const authHeader = req.headers.authorization;
-
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-
-      try {
-        const decoded = jwtService.verifyAccessToken(token);
-        req.user = decoded;
-      } catch {
-        // Token invalid or expired, but we don't fail the request
-        // Just continue without user data
-      }
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    try {
+      req.user = jwtService.verifyAccessToken(authHeader.substring(7));
+    } catch {
+      // Invalid / expired token — treat request as anonymous
     }
-
-    next();
-  } catch {
-    // Silently fail and continue
-    next();
   }
+  next();
 };

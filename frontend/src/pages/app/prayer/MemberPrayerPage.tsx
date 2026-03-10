@@ -150,14 +150,13 @@ export function MemberPrayerPage() {
   const memberName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Member';
   const memberInitials = getInitials(memberName);
 
-  const prayedStorageKey = user?.id ? `prayer_prayed:${user.id}` : null;
-
   const [category, setCategory] = useState('');
   const [request, setRequest] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
+  const [prayingId, setPrayingId] = useState<string | null>(null);
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -180,27 +179,19 @@ export function MemberPrayerPage() {
     try {
       const prayers = await prayerService.getPrayerRequests();
       setPublicPrayers(prayers);
+      // Sync server-side pray state (source of truth for authenticated users)
+      setPrayedFor(new Set(prayers.filter((p) => p.hasPrayed).map((p) => p.id)));
     } catch {
       // silent
     }
   }, []);
-
-  // Load persisted "prayed for" IDs from localStorage once user is known
-  useEffect(() => {
-    if (!prayedStorageKey) return;
-    try {
-      const stored = localStorage.getItem(prayedStorageKey);
-      if (stored) setPrayedFor(new Set(JSON.parse(stored) as string[]));
-    } catch {
-      // ignore malformed storage
-    }
-  }, [prayedStorageKey]);
 
   useEffect(() => {
     async function load() {
       try {
         const prayers = await prayerService.getPrayerRequests();
         setPublicPrayers(prayers);
+        setPrayedFor(new Set(prayers.filter((p) => p.hasPrayed).map((p) => p.id)));
       } catch {
         // silent
       } finally {
@@ -286,78 +277,57 @@ export function MemberPrayerPage() {
   };
 
   const handlePrayFor = async (id: string) => {
+    if (prayingId === id) return; // prevent double-click
+    setPrayingId(id);
     if (prayedFor.has(id)) {
-      // Toggle off: unpray
+      // Toggle off: unpray (optimistic)
       const next = new Set(prayedFor);
       next.delete(id);
       setPrayedFor(next);
-      if (prayedStorageKey) {
-        try {
-          localStorage.setItem(prayedStorageKey, JSON.stringify([...next]));
-        } catch {
-          /* quota */
-        }
-      }
       setPublicPrayers((prev) =>
         prev.map((p) => (p.id === id ? { ...p, prayerCount: Math.max(0, p.prayerCount - 1) } : p))
       );
       try {
         const updated = await prayerService.unprayForRequest(id);
         if (updated) {
-          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+          setPublicPrayers((prev) =>
+            prev.map((p) => (p.id === id ? { ...updated, hasPrayed: false } : p))
+          );
         }
       } catch {
         // revert optimistic update
         const reverted = new Set(next);
         reverted.add(id);
         setPrayedFor(reverted);
-        if (prayedStorageKey) {
-          try {
-            localStorage.setItem(prayedStorageKey, JSON.stringify([...reverted]));
-          } catch {
-            /* quota */
-          }
-        }
         setPublicPrayers((prev) =>
           prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
         );
       }
     } else {
-      // Toggle on: pray
+      // Toggle on: pray (optimistic)
       const next = new Set(prayedFor);
       next.add(id);
       setPrayedFor(next);
-      if (prayedStorageKey) {
-        try {
-          localStorage.setItem(prayedStorageKey, JSON.stringify([...next]));
-        } catch {
-          /* quota */
-        }
-      }
       setPublicPrayers((prev) =>
         prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
       );
       try {
         const updated = await prayerService.prayForRequest(id);
         if (updated) {
-          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+          setPublicPrayers((prev) =>
+            prev.map((p) => (p.id === id ? { ...updated, hasPrayed: true } : p))
+          );
         }
       } catch {
         const reverted = new Set(next);
         reverted.delete(id);
         setPrayedFor(reverted);
-        if (prayedStorageKey) {
-          try {
-            localStorage.setItem(prayedStorageKey, JSON.stringify([...reverted]));
-          } catch {
-            /* quota */
-          }
-        }
         setPublicPrayers((prev) =>
           prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
         );
       }
     }
+    setPrayingId(null);
   };
 
   if (loading) {
@@ -543,13 +513,13 @@ export function MemberPrayerPage() {
       {activeCategories.length > 0 && (
         <div className="space-y-2">
           <div
-            className="flex flex-wrap gap-2"
+            className="flex gap-2 overflow-x-auto pb-1"
             role="group"
             aria-label="Filter prayer requests by category"
           >
             <button
               onClick={() => setActiveFilter('all')}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+              className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
                 activeFilter === 'all'
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -566,7 +536,7 @@ export function MemberPrayerPage() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveFilter(isActive ? 'all' : cat.id)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                  className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
                     isActive
                       ? `${style.badge} ring-current/20 shadow-sm ring-1 ring-inset`
                       : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -612,7 +582,7 @@ export function MemberPrayerPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {visiblePrayers.map((prayer) => {
             const style = getCategoryStyle(prayer.category);
             const hasPrayed = prayedFor.has(prayer.id);
@@ -620,7 +590,7 @@ export function MemberPrayerPage() {
             return (
               <article
                 key={prayer.id}
-                className={`rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
+                className={`flex flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
               >
                 {/* Header row */}
                 <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -639,10 +609,12 @@ export function MemberPrayerPage() {
                 </div>
 
                 {/* Request text */}
-                <p className="mb-3 text-sm leading-relaxed text-foreground/85">{prayer.request}</p>
+                <p className="mb-3 line-clamp-4 flex-1 text-sm leading-relaxed text-foreground/85">
+                  {prayer.request}
+                </p>
 
                 {/* Footer row */}
-                <div className="flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Avatar className="h-6 w-6">
                       <AvatarFallback className="bg-muted text-[10px] font-medium text-muted-foreground">
@@ -656,6 +628,7 @@ export function MemberPrayerPage() {
                   <Button
                     size="sm"
                     variant={hasPrayed ? 'default' : 'outline'}
+                    disabled={prayingId === prayer.id}
                     className={
                       hasPrayed
                         ? 'h-8 bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
@@ -668,10 +641,14 @@ export function MemberPrayerPage() {
                         : `Pray for this request (${prayer.prayerCount} prayers)`
                     }
                   >
-                    <Heart
-                      className={`mr-1 h-3.5 w-3.5 ${hasPrayed ? 'fill-white' : ''}`}
-                      aria-hidden="true"
-                    />
+                    {prayingId === prayer.id ? (
+                      <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Heart
+                        className={`mr-1 h-3.5 w-3.5 ${hasPrayed ? 'fill-white' : ''}`}
+                        aria-hidden="true"
+                      />
+                    )}
                     {hasPrayed ? 'Prayed ✓' : 'Pray'}
                     <span className="ml-1 text-[11px] opacity-75">({prayer.prayerCount})</span>
                   </Button>
@@ -683,9 +660,6 @@ export function MemberPrayerPage() {
           {/* Load More / pagination */}
           {visibleCount < filteredPrayers.length && (
             <div className="pt-2 text-center">
-              <p className="mb-2 text-xs text-muted-foreground">
-                Showing {visiblePrayers.length} of {filteredPrayers.length} prayer requests
-              </p>
               <Button
                 variant="outline"
                 size="sm"
@@ -693,7 +667,10 @@ export function MemberPrayerPage() {
                 className="gap-1.5"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
-                Load More
+                Show {Math.min(PAGE_SIZE, filteredPrayers.length - visibleCount)} more
+                <span className="ml-1 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  {filteredPrayers.length - visibleCount} remaining
+                </span>
               </Button>
             </div>
           )}
@@ -723,19 +700,26 @@ export function MemberPrayerPage() {
 
         {/* Community stats strip */}
         <div className="mb-6 grid grid-cols-3 gap-3">
-          <div className="rounded-xl border border-border/50 bg-card px-4 py-3 text-center shadow-sm">
-            <p className="text-xl font-bold tabular-nums text-foreground">{publicPrayers.length}</p>
-            <p className="text-xs text-muted-foreground">Active Requests</p>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20">
+            <Users className="mb-1 h-4 w-4 text-blue-500" />
+            <p className="text-xl font-bold tabular-nums text-blue-700 dark:text-blue-300">
+              {publicPrayers.length}
+            </p>
+            <p className="text-xs text-blue-600/70 dark:text-blue-400/70">Requests</p>
           </div>
-          <div className="rounded-xl border border-border/50 bg-card px-4 py-3 text-center shadow-sm">
-            <p className="text-xl font-bold tabular-nums text-foreground">{requestsThisMonth}</p>
-            <p className="text-xs text-muted-foreground">This Month</p>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
+            <Calendar className="mb-1 h-4 w-4 text-amber-500" />
+            <p className="text-xl font-bold tabular-nums text-amber-700 dark:text-amber-300">
+              {requestsThisMonth}
+            </p>
+            <p className="text-xs text-amber-600/70 dark:text-amber-400/70">This Month</p>
           </div>
-          <div className="rounded-xl border border-border/50 bg-card px-4 py-3 text-center shadow-sm">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20">
+            <Heart className="mb-1 h-4 w-4 fill-rose-500 text-rose-500" />
             <p className="text-xl font-bold tabular-nums text-rose-600 dark:text-rose-400">
               {totalPrayers}
             </p>
-            <p className="text-xs text-muted-foreground">Total Prayers</p>
+            <p className="text-xs text-rose-600/70 dark:text-rose-400/70">Prayers Offered</p>
           </div>
         </div>
 

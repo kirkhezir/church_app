@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { PrayerController } from '../controllers/prayerController';
-import { authMiddleware } from '../middleware/authMiddleware';
+import { authMiddleware, optionalAuthMiddleware } from '../middleware/authMiddleware';
 import { requireRole } from '../middleware/roleMiddleware';
 import rateLimit from 'express-rate-limit';
 
@@ -25,7 +25,9 @@ const prayerSubmitLimiter = rateLimit({
  */
 
 // GET /api/v1/prayer - Get public approved prayer requests
-router.get('/', (req, res, next) => prayerController.getPrayerRequests(req, res, next));
+router.get('/', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.getPrayerRequests(req, res, next)
+);
 
 // POST /api/v1/prayer - Submit a prayer request (rate limited)
 router.post('/', prayerSubmitLimiter, (req, res, next) =>
@@ -33,10 +35,14 @@ router.post('/', prayerSubmitLimiter, (req, res, next) =>
 );
 
 // POST /api/v1/prayer/:id/pray - Pray for a request (increment count)
-router.post('/:id/pray', (req, res, next) => prayerController.prayForRequest(req, res, next));
+router.post('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.prayForRequest(req, res, next)
+);
 
 // DELETE /api/v1/prayer/:id/pray - Unpray / toggle off (decrement count)
-router.delete('/:id/pray', (req, res, next) => prayerController.unprayForRequest(req, res, next));
+router.delete('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.unprayForRequest(req, res, next)
+);
 
 /**
  * Admin/Staff routes (requires authentication + role check)
