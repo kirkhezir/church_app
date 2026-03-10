@@ -80,6 +80,7 @@ async function main(): Promise<void> {
     await prisma.blog_posts.deleteMany();
     await prisma.gallery_items.deleteMany();
     await prisma.prayer_requests.deleteMany();
+    console.log('✅ Existing data cleared');
   }
 
   // Create admin user
