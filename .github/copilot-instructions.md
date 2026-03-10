@@ -730,4 +730,49 @@ Before committing any code change:
 4. If the new package introduces vulnerabilities, evaluate alternatives or add overrides
 5. Pin exact versions for security-critical packages (e.g. `"multer": "2.1.1"` not `"^2.1.1"`)
 
+## 🔍 Mandatory Error & Warning Scan After Every Change
+
+**⚠️ CRITICAL: After ANY change — feature, fix, enhancement, improvement, refactor, or new file — ALWAYS run a full error and warning scan before considering the work done.**
+
+### Required Checks After Every Code Change
+
+```bash
+# Backend: TypeScript must be error-free
+cd backend && npx tsc --noEmit      # Must exit 0, zero errors
+
+# Frontend: Full build must succeed
+cd frontend && npm run build         # Must exit 0, zero TypeScript errors
+
+# Security: Zero known vulnerabilities
+cd backend && npm audit              # Must report "found 0 vulnerabilities"
+npm audit                            # Root (E2E/dev deps) must also be 0
+```
+
+### Additional Scans to Run
+
+- **VS Code Problems panel** — Check for red/yellow squiggles across all changed files
+- **GitHub MCP** — After pushing, check `mcp_github_list_issues` and recent CI runs for new failures
+- Use `mcp_github_search_code` to verify no related patterns are broken elsewhere in the codebase
+
+### Common Error Classes to Proactively Prevent
+
+| Error                        | Root Cause                                                                                           | Prevention                                                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `TS2322` (type mismatch)     | Ternary returning `false` where `undefined` is required (e.g. Prisma `include: ... ? {...} : false`) | Always use `undefined` as the falsy branch, never `false`, for optional Prisma include/select/where objects |
+| `TS6133` (unused variable)   | Import/variable declared but never used                                                              | Remove unused imports immediately after editing; never leave stale imports                                  |
+| `TS2345` (argument mismatch) | Wrong type passed to function                                                                        | Check function signatures before calling; use IDE hover to verify parameter types                           |
+| Prisma `include` type error  | Passing `false` instead of `undefined` to optional Prisma fields                                     | Prisma `include`, `select`, and `where` fields only accept objects or `undefined`/`null`, never `false`     |
+
+### Workflow Rule
+
+**Before every `git push`:**
+
+1. `cd backend && npx tsc --noEmit` → exit 0
+2. `cd frontend && npm run build` → exit 0
+3. `cd backend && npm audit` → 0 vulnerabilities
+4. `npm audit` (root) → 0 vulnerabilities
+5. Review GitHub Actions CI results after push with GitHub MCP server
+
+If ANY check fails → fix ALL issues before pushing. Never push with known TypeScript errors, build failures, or vulnerabilities.
+
 <!-- MANUAL ADDITIONS END -->

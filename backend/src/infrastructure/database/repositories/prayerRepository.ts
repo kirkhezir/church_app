@@ -18,7 +18,7 @@ export class PrayerRepository implements IPrayerRepository {
     const prayers = await prisma.prayer_requests.findMany({
       where: { isPublic: true, status: 'APPROVED' },
       orderBy: { createdAt: 'desc' },
-      include: memberId ? { supporters: { where: { memberId }, select: { id: true } } } : false,
+      include: memberId ? { supporters: { where: { memberId }, select: { id: true } } } : undefined,
     });
     return prayers.map((p: any) => {
       const { supporters, ...rest } = p as any;
