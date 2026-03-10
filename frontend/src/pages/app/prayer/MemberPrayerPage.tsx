@@ -684,7 +684,7 @@ export function MemberPrayerPage() {
     <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         {/* Page header */}
-        <div className="mb-6 flex items-start gap-3">
+        <header className="mb-6 flex items-start gap-3">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/30">
             <HeartHandshake className="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
@@ -696,7 +696,7 @@ export function MemberPrayerPage() {
               our community
             </p>
           </div>
-        </div>
+        </header>
 
         {/* Community stats strip */}
         <div className="mb-6 grid grid-cols-3 gap-3">

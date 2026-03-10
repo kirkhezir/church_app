@@ -15,9 +15,12 @@ export class WebSocketServer {
    * Initialize WebSocket server
    */
   initialize(httpServer: HTTPServer): void {
+    const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+      .split(',')
+      .map((s) => s.trim());
     this.io = new SocketIOServer(httpServer, {
       cors: {
-        origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+        origin: corsOrigins,
         credentials: true,
       },
     });

@@ -203,7 +203,7 @@ export function AdminSermonsPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Manage Sermons</h1>
             <p className="text-muted-foreground">{sermons.length} total sermons</p>
@@ -212,7 +212,7 @@ export function AdminSermonsPage() {
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Sermon
           </Button>
-        </div>
+        </header>
 
         {/* Alerts */}
         {error && (

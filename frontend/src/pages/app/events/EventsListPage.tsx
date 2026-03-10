@@ -97,7 +97,7 @@ export function EventsListPage() {
   const eventListContent = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
             <CalendarIcon className="h-8 w-8" />
@@ -150,9 +150,7 @@ export function EventsListPage() {
             </Button>
           )}
         </div>
-      </div>
-
-      {/* Error Alert */}
+      </header>
       {(error || rsvpError) && (
         <Alert variant="destructive" className="mb-6" role="alert">
           <AlertDescription>{error || rsvpError}</AlertDescription>

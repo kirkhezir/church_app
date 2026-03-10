@@ -60,7 +60,7 @@ export function AnnouncementsPage() {
   const announcementContent = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
           <h1 className="mb-2 text-balance text-2xl font-bold sm:text-3xl">Church Announcements</h1>
           <p className="text-sm text-muted-foreground sm:text-base">
@@ -78,10 +78,13 @@ export function AnnouncementsPage() {
             <span className="sm:hidden">Manage</span>
           </Button>
         )}
-      </div>
+      </header>
 
       {/* Filter Controls */}
-      <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-4">
+      <nav
+        aria-label="Filter announcements"
+        className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-4"
+      >
         <Button
           variant={!showArchived ? 'default' : 'outline'}
           onClick={() => handleFilterChange(false)}
@@ -102,7 +105,7 @@ export function AnnouncementsPage() {
           <ArchiveIcon className="mr-2 h-4 w-4" />
           Archived
         </Button>
-      </div>
+      </nav>
 
       {/* Error State */}
       {error && (
@@ -149,7 +152,10 @@ export function AnnouncementsPage() {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:mt-8 sm:flex-row sm:gap-0">
+            <nav
+              aria-label="Pagination"
+              className="mt-6 flex flex-col items-center justify-between gap-3 sm:mt-8 sm:flex-row sm:gap-0"
+            >
               <div className="text-sm text-muted-foreground">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} total)
               </div>
@@ -165,7 +171,7 @@ export function AnnouncementsPage() {
                   Next
                 </Button>
               </div>
-            </div>
+            </nav>
           )}
         </div>
       )}

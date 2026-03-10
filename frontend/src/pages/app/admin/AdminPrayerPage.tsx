@@ -110,10 +110,10 @@ export function AdminPrayerPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div>
+        <header>
           <h1 className="text-2xl font-bold">Moderate Prayer Requests</h1>
           <p className="text-muted-foreground">{requests.length} total requests</p>
-        </div>
+        </header>
 
         {error && (
           <Alert variant="destructive">
@@ -121,7 +121,10 @@ export function AdminPrayerPage() {
           </Alert>
         )}
         {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <nav
+          aria-label="Filter prayer requests"
+          className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
           <div className="flex flex-wrap gap-2">
             {(['all', 'PENDING', 'APPROVED', 'ARCHIVED'] as StatusFilter[]).map((status) => (
               <Button
@@ -145,7 +148,7 @@ export function AdminPrayerPage() {
               className="pl-9"
             />
           </div>
-        </div>
+        </nav>
 
         {/* Requests List */}
         {loading ? (

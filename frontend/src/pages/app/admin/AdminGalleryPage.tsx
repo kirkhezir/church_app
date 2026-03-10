@@ -143,7 +143,7 @@ export function AdminGalleryPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Manage Gallery</h1>
             <p className="text-muted-foreground">
@@ -160,7 +160,7 @@ export function AdminGalleryPage() {
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Photo
           </Button>
-        </div>
+        </header>
 
         {error && (
           <Alert variant="destructive">
@@ -168,7 +168,7 @@ export function AdminGalleryPage() {
           </Alert>
         )}
         {/* Album Filter */}
-        <div className="flex flex-wrap gap-2">
+        <nav aria-label="Filter by album" className="flex flex-wrap gap-2">
           <Button
             variant={selectedAlbum === 'all' ? 'default' : 'outline'}
             size="sm"
@@ -188,7 +188,7 @@ export function AdminGalleryPage() {
               {album.title} ({album.photoCount})
             </Button>
           ))}
-        </div>
+        </nav>
 
         {/* Gallery Grid */}
         {loading ? (

@@ -143,7 +143,7 @@ export function MemberDirectoryPage() {
   const content = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-balance text-2xl font-bold sm:text-3xl">
             <Users className="h-7 w-7 sm:h-8 sm:w-8" />
@@ -166,7 +166,7 @@ export function MemberDirectoryPage() {
             }
           />
         )}
-      </div>
+      </header>
 
       {/* Bulk Actions Bar */}
       {isAdmin && (

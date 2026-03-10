@@ -73,12 +73,12 @@ export function MemberBlogPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Blog' }]}>
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
-        <div>
+        <header>
           <h1 className="text-2xl font-bold tracking-tight">News & Blog</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Latest updates, announcements, and inspiring stories from our community
           </p>
-        </div>
+        </header>
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -104,7 +104,7 @@ export function MemberBlogPage() {
                   className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
-              <div className="flex flex-wrap gap-2">
+              <nav aria-label="Filter by category" className="flex flex-wrap gap-2">
                 {categories.map((cat) => {
                   const Icon = cat.icon;
                   return (
@@ -123,7 +123,7 @@ export function MemberBlogPage() {
                     </button>
                   );
                 })}
-              </div>
+              </nav>
             </div>
 
             {/* Blog Posts Grid */}

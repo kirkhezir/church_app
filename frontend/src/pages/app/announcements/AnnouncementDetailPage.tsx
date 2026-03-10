@@ -87,7 +87,7 @@ export function AnnouncementDetailPage() {
       </Button>
 
       {/* Announcement Content */}
-      <div className="rounded-lg border bg-card p-4 shadow-sm sm:p-6 md:p-8">
+      <article className="rounded-lg border bg-card p-4 shadow-sm sm:p-6 md:p-8">
         {/* Priority Badge */}
         <div className="mb-3 sm:mb-4">
           {isUrgent ? (
@@ -126,7 +126,7 @@ export function AnnouncementDetailPage() {
         <div className="prose prose-sm prose-gray dark:prose-invert sm:prose-base max-w-none text-foreground/80">
           <ReactMarkdown>{announcement.content}</ReactMarkdown>
         </div>
-      </div>
+      </article>
     </div>
   );
 

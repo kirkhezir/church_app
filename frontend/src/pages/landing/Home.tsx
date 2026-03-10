@@ -191,7 +191,6 @@ function HeroSection() {
           className="h-full w-full object-cover"
           width={1920}
           height={1080}
-          fetchPriority="high"
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/75 via-blue-900/50 to-slate-900/85" />

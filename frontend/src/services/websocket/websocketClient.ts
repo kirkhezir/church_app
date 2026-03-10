@@ -64,18 +64,17 @@ class WebSocketClient {
 
     this.socket.on('disconnect', () => {});
 
-    this.socket.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
+    this.socket.on('connect_error', () => {
       this.reconnectAttempts++;
 
       if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-        console.error('Max reconnection attempts reached');
+        console.warn('[WebSocket] Max reconnection attempts reached, giving up');
         this.disconnect();
       }
     });
 
     this.socket.on('error', (error) => {
-      console.error('WebSocket error:', error);
+      console.warn('[WebSocket] error:', error);
     });
   }
 
@@ -91,7 +90,6 @@ class WebSocketClient {
    */
   emit(event: string, data: unknown): void {
     if (!this.socket?.connected) {
-      console.error('Cannot emit event - WebSocket not connected');
       return;
     }
 
@@ -103,7 +101,6 @@ class WebSocketClient {
    */
   on<T = unknown>(event: string, callback: (data: T) => void): void {
     if (!this.socket) {
-      console.error('Cannot listen to event - WebSocket not initialized');
       return;
     }
 

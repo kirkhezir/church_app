@@ -81,7 +81,6 @@ export default function LoginPage() {
           width={1200}
           height={1600}
           loading="eager"
-          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-purple-900/80" />
         {/* Decorative dot pattern */}

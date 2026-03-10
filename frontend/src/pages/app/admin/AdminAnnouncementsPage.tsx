@@ -256,7 +256,7 @@ export function AdminAnnouncementsPage() {
   const adminContent = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1">
           <h1 className="text-balance text-2xl font-bold sm:text-3xl">Manage Announcements</h1>
           <p className="mt-1 text-sm text-muted-foreground sm:mt-2 sm:text-base">
@@ -268,10 +268,13 @@ export function AdminAnnouncementsPage() {
           <span className="hidden sm:inline">Create Announcement</span>
           <span className="sm:hidden">Create</span>
         </Button>
-      </div>
+      </header>
 
       {/* Filter Controls */}
-      <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-4">
+      <nav
+        aria-label="Filter announcements"
+        className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-4"
+      >
         <Button
           variant={!showArchived ? 'default' : 'outline'}
           onClick={() => setShowArchived(false)}
@@ -294,7 +297,7 @@ export function AdminAnnouncementsPage() {
           <span className="sm:hidden">Archived</span>
           {!loading && ` (${archivedCount})`}
         </Button>
-      </div>
+      </nav>
 
       {/* Advanced Filters */}
       <div className="mb-6">

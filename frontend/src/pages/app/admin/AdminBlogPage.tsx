@@ -183,7 +183,7 @@ export function AdminBlogPage() {
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Manage Blog Posts</h1>
             <p className="text-muted-foreground">{posts.length} total posts</p>
@@ -192,7 +192,7 @@ export function AdminBlogPage() {
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Blog Post
           </Button>
-        </div>
+        </header>
 
         {error && (
           <Alert variant="destructive">
@@ -313,9 +313,9 @@ export function AdminBlogPage() {
               </div>
 
               {/* Mobile cards */}
-              <div className="divide-y md:hidden">
+              <ul className="list-none divide-y md:hidden">
                 {filteredPosts.map((post) => (
-                  <div key={post.id} className="flex items-start justify-between gap-3 p-4">
+                  <li key={post.id} className="flex items-start justify-between gap-3 p-4">
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium leading-tight">{post.title}</p>
@@ -350,18 +350,18 @@ export function AdminBlogPage() {
                         <TrashIcon className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
+                  </li>
                 ))}
                 {filteredPosts.length === 0 && (
-                  <div className="px-4 py-12 text-center">
+                  <li className="px-4 py-12 text-center">
                     <ExternalLink className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-30" />
                     <p className="text-muted-foreground">No blog posts found</p>
                     <p className="mt-1 text-xs text-muted-foreground/70">
                       Try adjusting your search or create a new post.
                     </p>
-                  </div>
+                  </li>
                 )}
-              </div>
+              </ul>
             </CardContent>
           </Card>
         )}

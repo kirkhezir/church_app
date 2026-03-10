@@ -145,7 +145,7 @@ export function MemberBlogPostPage() {
 
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Blog', href: '/app/blog' }, { label: post.title }]}>
-      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
+      <article className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
         {/* Hero Image */}
         {post.thumbnailUrl && (
           <div className="relative mb-6 h-48 overflow-hidden rounded-xl sm:h-64 md:h-80">
@@ -244,7 +244,7 @@ export function MemberBlogPostPage() {
             </div>
           </div>
         )}
-      </div>
+      </article>
     </SidebarLayout>
   );
 }

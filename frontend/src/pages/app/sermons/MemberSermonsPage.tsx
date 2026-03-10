@@ -105,12 +105,12 @@ export function MemberSermonsPage() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Sermons' }]}>
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
-        <div>
+        <header>
           <h1 className="text-2xl font-bold tracking-tight">Sermons</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Watch or listen to messages from our church family
           </p>
-        </div>
+        </header>
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -123,7 +123,11 @@ export function MemberSermonsPage() {
         ) : (
           <>
             {/* Filters */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div
+              role="search"
+              aria-label="Search and filter sermons"
+              className="flex flex-col gap-3 sm:flex-row"
+            >
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -247,7 +251,10 @@ export function MemberSermonsPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2">
+              <nav
+                aria-label="Sermon pagination"
+                className="flex items-center justify-center gap-2"
+              >
                 <Button
                   variant="outline"
                   size="sm"
@@ -269,7 +276,7 @@ export function MemberSermonsPage() {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-              </div>
+              </nav>
             )}
           </>
         )}

@@ -297,7 +297,6 @@ export function AboutPage() {
                   alt="Church community"
                   width={600}
                   height={400}
-                  fetchPriority="high"
                   className="rounded-2xl shadow-xl"
                 />
                 <div className="absolute -bottom-6 -left-6 rounded-xl bg-primary p-6 text-primary-foreground shadow-lg">

@@ -51,7 +51,8 @@ export default function AppearanceSettings() {
           <CardDescription>Choose your preferred color scheme</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-2">
+          <fieldset className="grid grid-cols-3 gap-2">
+            <legend className="sr-only">Choose your preferred color scheme</legend>
             {themeOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -67,7 +68,7 @@ export default function AppearanceSettings() {
                 {opt.label}
               </button>
             ))}
-          </div>
+          </fieldset>
         </CardContent>
       </Card>
 

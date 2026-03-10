@@ -73,17 +73,21 @@ export class Server {
       })
     );
 
-    // CORS configuration
-    const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
-    this.app.use(
-      cors({
-        origin: corsOrigin.split(','), // Support multiple origins
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        exposedHeaders: ['Content-Disposition', 'Content-Length', 'Content-Type'],
-      })
-    );
+    // CORS configuration — skip /socket.io/ (handled by Socket.io's own CORS)
+    const corsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+      .split(',')
+      .map((s) => s.trim());
+    const corsMiddleware = cors({
+      origin: corsOrigins,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      exposedHeaders: ['Content-Disposition', 'Content-Length', 'Content-Type'],
+    });
+    this.app.use((req, res, next) => {
+      if (req.path.startsWith('/socket.io')) return next();
+      corsMiddleware(req, res, next);
+    });
 
     // Body parsing middleware
     this.app.use(express.json({ limit: '10mb' }));
