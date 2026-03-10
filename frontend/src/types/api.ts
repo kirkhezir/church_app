@@ -292,3 +292,15 @@ export interface EventUpdateEvent {
     startDateTime: string;
   };
 }
+
+export interface PrayerApprovedEvent {
+  id: string;
+  category: string;
+  request: string;
+}
+
+export interface PrayerPendingEvent {
+  id: string;
+  name: string;
+  category: string;
+}

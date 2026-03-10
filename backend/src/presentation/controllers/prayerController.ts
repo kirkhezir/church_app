@@ -5,6 +5,7 @@ import { PrayForRequest } from '../../application/useCases/prayForRequest';
 import { UnprayForRequest } from '../../application/useCases/unprayForRequest';
 import { ModeratePrayerRequest } from '../../application/useCases/moderatePrayerRequest';
 import { PrayerRepository } from '../../infrastructure/database/repositories/prayerRepository';
+import { websocketServer } from '../../infrastructure/websocket/websocketServer';
 
 /**
  * PrayerController
@@ -74,6 +75,13 @@ export class PrayerController {
         success: true,
         data: result,
       });
+
+      // Notify admin/staff of new pending prayer request via WebSocket
+      websocketServer.sendPrayerPendingNotification({
+        id: result.id,
+        name: result.name ?? 'Anonymous',
+        category: result.category ?? 'other',
+      });
     } catch (error) {
       next(error);
     }
@@ -131,6 +139,15 @@ export class PrayerController {
         success: true,
         data: result,
       });
+
+      // Broadcast to all connected members when prayer is approved (added to wall)
+      if (req.body.status === 'APPROVED') {
+        websocketServer.sendPrayerApprovedNotification({
+          id: result.id,
+          category: result.category ?? 'other',
+          request: result.request ?? '',
+        });
+      }
     } catch (error) {
       next(error);
     }

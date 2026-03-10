@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router';
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { I18nProvider } from './i18n';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ThemeAwareToaster } from './components/ui/ThemeAwareToaster';
@@ -82,7 +83,9 @@ ReactDOM.createRoot(root).render(
         <ThemeProvider>
           <I18nProvider>
             <AuthProvider>
-              <App />
+              <NotificationProvider>
+                <App />
+              </NotificationProvider>
               <ThemeAwareToaster />
             </AuthProvider>
           </I18nProvider>

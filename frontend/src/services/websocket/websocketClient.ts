@@ -5,6 +5,8 @@ import {
   TypingEvent,
   AnnouncementEvent,
   EventUpdateEvent,
+  PrayerApprovedEvent,
+  PrayerPendingEvent,
 } from '../../types/api';
 
 /**
@@ -232,6 +234,36 @@ class WebSocketClient {
     this.off('event:update');
   }
 
+  // ============================================================================
+  // PRAYER EVENTS
+  // ============================================================================
+
+  /**
+   * Listen for prayer request approved (broadcast to all members)
+   */
+  onPrayerApproved(callback: (data: PrayerApprovedEvent) => void): void {
+    this.on<PrayerApprovedEvent>('prayer:approved', callback);
+  }
+
+  /**
+   * Listen for new pending prayer request (admin/staff only)
+   */
+  onPrayerPending(callback: (data: PrayerPendingEvent) => void): void {
+    this.on<PrayerPendingEvent>('prayer:pending', callback);
+  }
+
+  /**
+   * Remove all prayer event listeners
+   */
+  offPrayerEvents(): void {
+    this.off('prayer:approved');
+    this.off('prayer:pending');
+  }
+
+  // ============================================================================
+  // CLEANUP
+  // ============================================================================
+
   /**
    * Remove all event listeners
    */
@@ -239,6 +271,7 @@ class WebSocketClient {
     this.offMessageEvents();
     this.offAnnouncementEvents();
     this.offEventUpdateEvents();
+    this.offPrayerEvents();
   }
 }
 

@@ -9,7 +9,7 @@
  *   Heart (filled)  — "I Prayed" button: personal affirmation action
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   HeartHandshake,
   Heart,
@@ -21,6 +21,8 @@ import {
   Loader2,
   Sparkles,
   EyeOff,
+  ChevronDown,
+  ArrowUpDown,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,11 +42,13 @@ import { SidebarLayout } from '@/components/layout';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationCounts } from '@/hooks/useNotificationCounts';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
+import { websocketClient } from '@/services/websocket/websocketClient';
 import { gooeyToast } from 'goey-toast';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const MAX_REQUEST_LENGTH = 500;
+const PAGE_SIZE = 9; // cards per "Load More" step
 
 const CATEGORIES = [
   { id: 'health', name: 'Health' },
@@ -158,6 +162,28 @@ export function MemberPrayerPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'recent' | 'most_prayed'>('recent');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Reset pagination when filter or sort changes
+  const prevFilterRef = useRef(activeFilter);
+  const prevSortRef = useRef(sortBy);
+  useEffect(() => {
+    if (prevFilterRef.current !== activeFilter || prevSortRef.current !== sortBy) {
+      setVisibleCount(PAGE_SIZE);
+      prevFilterRef.current = activeFilter;
+      prevSortRef.current = sortBy;
+    }
+  }, [activeFilter, sortBy]);
+
+  const loadPrayers = useCallback(async () => {
+    try {
+      const prayers = await prayerService.getPrayerRequests();
+      setPublicPrayers(prayers);
+    } catch {
+      // silent
+    }
+  }, []);
 
   // Load persisted "prayed for" IDs from localStorage once user is known
   useEffect(() => {
@@ -184,12 +210,38 @@ export function MemberPrayerPage() {
     load();
   }, []);
 
+  // Refresh prayer wall in real-time when admin approves a new prayer
+  useEffect(() => {
+    const handler = () => {
+      loadPrayers();
+    };
+    websocketClient.onPrayerApproved(handler);
+    return () => {
+      websocketClient.off('prayer:approved', handler);
+    };
+  }, [loadPrayers]);
+
+  const sortedPrayers = useMemo(() => {
+    const copy = [...publicPrayers];
+    if (sortBy === 'most_prayed') {
+      copy.sort((a, b) => b.prayerCount - a.prayerCount);
+    } else {
+      copy.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    return copy;
+  }, [publicPrayers, sortBy]);
+
   const filteredPrayers = useMemo(
     () =>
       activeFilter === 'all'
-        ? publicPrayers
-        : publicPrayers.filter((p) => p.category.toLowerCase() === activeFilter),
-    [publicPrayers, activeFilter]
+        ? sortedPrayers
+        : sortedPrayers.filter((p) => p.category.toLowerCase() === activeFilter),
+    [sortedPrayers, activeFilter]
+  );
+
+  const visiblePrayers = useMemo(
+    () => filteredPrayers.slice(0, visibleCount),
+    [filteredPrayers, visibleCount]
   );
 
   const totalPrayers = publicPrayers.reduce((sum, p) => sum + p.prayerCount, 0);
@@ -225,8 +277,7 @@ export function MemberPrayerPage() {
       setIsSubmitted(true);
       // Refresh notification counts so the bell updates immediately
       refreshNotifications();
-      const prayers = await prayerService.getPrayerRequests();
-      setPublicPrayers(prayers);
+      await loadPrayers();
     } catch {
       gooeyToast.error('Failed to submit prayer request');
     } finally {
@@ -488,43 +539,62 @@ export function MemberPrayerPage() {
   // ─── Prayer Wall (shared between mobile tab and desktop column) ─────────────
   const prayerWall = (
     <div className="space-y-4">
-      {/* Category filter chips */}
+      {/* Category filter chips + sort */}
       {activeCategories.length > 0 && (
-        <div
-          className="flex flex-wrap gap-2"
-          role="group"
-          aria-label="Filter prayer requests by category"
-        >
-          <button
-            onClick={() => setActiveFilter('all')}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
-              activeFilter === 'all'
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
-            }`}
-            aria-pressed={activeFilter === 'all'}
+        <div className="space-y-2">
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Filter prayer requests by category"
           >
-            All ({publicPrayers.length})
-          </button>
-          {activeCategories.map((cat) => {
-            const style = CATEGORY_STYLES[cat.id];
-            const count = publicPrayers.filter((p) => p.category.toLowerCase() === cat.id).length;
-            const isActive = activeFilter === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveFilter(isActive ? 'all' : cat.id)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
-                  isActive
-                    ? `${style.badge} ring-current/20 shadow-sm ring-1 ring-inset`
-                    : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
-                }`}
-                aria-pressed={isActive}
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                activeFilter === 'all'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
+              }`}
+              aria-pressed={activeFilter === 'all'}
+            >
+              All ({publicPrayers.length})
+            </button>
+            {activeCategories.map((cat) => {
+              const style = CATEGORY_STYLES[cat.id];
+              const count = publicPrayers.filter((p) => p.category.toLowerCase() === cat.id).length;
+              const isActive = activeFilter === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveFilter(isActive ? 'all' : cat.id)}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                    isActive
+                      ? `${style.badge} ring-current/20 shadow-sm ring-1 ring-inset`
+                      : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
+                  }`}
+                  aria-pressed={isActive}
+                >
+                  {cat.name} ({count})
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Sort control */}
+          <div className="flex items-center justify-end gap-1.5">
+            <ArrowUpDown className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as 'recent' | 'most_prayed')}>
+              <SelectTrigger
+                className="h-7 w-auto gap-1 border-0 bg-transparent px-0 text-xs text-muted-foreground shadow-none focus:ring-0"
+                aria-label="Sort prayer requests"
               >
-                {cat.name} ({count})
-              </button>
-            );
-          })}
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="recent">Most Recent</SelectItem>
+                <SelectItem value="most_prayed">Most Prayed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       )}
 
@@ -543,7 +613,7 @@ export function MemberPrayerPage() {
         </Card>
       ) : (
         <div className="space-y-3">
-          {filteredPrayers.map((prayer) => {
+          {visiblePrayers.map((prayer) => {
             const style = getCategoryStyle(prayer.category);
             const hasPrayed = prayedFor.has(prayer.id);
             const authorInitials = prayer.isAnonymous ? '?' : getInitials(prayer.name);
@@ -609,6 +679,24 @@ export function MemberPrayerPage() {
               </article>
             );
           })}
+
+          {/* Load More / pagination */}
+          {visibleCount < filteredPrayers.length && (
+            <div className="pt-2 text-center">
+              <p className="mb-2 text-xs text-muted-foreground">
+                Showing {visiblePrayers.length} of {filteredPrayers.length} prayer requests
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                className="gap-1.5"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+                Load More
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

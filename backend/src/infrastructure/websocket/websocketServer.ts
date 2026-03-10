@@ -76,6 +76,12 @@ export class WebSocketServer {
       // Join user to their personal room
       socket.join(`user:${userId}`);
 
+      // Join role-based room for targeted broadcasts (admin/staff notifications)
+      const role = socket.data.role as string | undefined;
+      if (role === 'ADMIN' || role === 'STAFF') {
+        socket.join('role:staff-admin');
+      }
+
       // Handle disconnection
       socket.on('disconnect', () => {
         logger.info('WebSocket client disconnected', {
@@ -198,6 +204,20 @@ export class WebSocketServer {
       eventId,
       ...update,
     });
+  }
+
+  /**
+   * Notify admin/staff of a new pending prayer request
+   */
+  sendPrayerPendingNotification(prayer: { id: string; name: string; category: string }): void {
+    this.io?.to('role:staff-admin').emit('prayer:pending', prayer);
+  }
+
+  /**
+   * Broadcast to all members when a prayer request is approved (added to wall)
+   */
+  sendPrayerApprovedNotification(prayer: { id: string; category: string; request: string }): void {
+    this.broadcast('prayer:approved', prayer);
   }
 
   /**

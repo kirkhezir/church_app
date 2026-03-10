@@ -4,7 +4,7 @@
  * Private prayer request form with prayer wall and prayer updates
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router';
 import {
   Heart,
@@ -17,6 +17,8 @@ import {
   MessageCircle,
   Calendar,
   Loader2,
+  ChevronDown,
+  ArrowUpDown,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -66,6 +68,30 @@ export function PrayerPage() {
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [sortBy, setSortBy] = useState<'recent' | 'most_prayed'>('recent');
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  const PAGE_SIZE = 6;
+
+  const sortedPrayers = useMemo(() => {
+    const copy = [...publicPrayers];
+    if (sortBy === 'most_prayed') {
+      copy.sort((a, b) => b.prayerCount - a.prayerCount);
+    } else {
+      copy.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    return copy;
+  }, [publicPrayers, sortBy]);
+
+  const visiblePrayers = useMemo(
+    () => sortedPrayers.slice(0, visibleCount),
+    [sortedPrayers, visibleCount]
+  );
+
+  // Reset visible count when sort changes
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [sortBy]);
 
   // Load persisted anonymous prayed-for IDs from localStorage on mount
   useEffect(() => {
@@ -412,17 +438,43 @@ export function PrayerPage() {
 
           {/* Prayer Wall */}
           <div>
-            <h2 className="mb-6 flex items-center gap-2 text-balance text-xl font-bold text-foreground">
-              <Users className="h-5 w-5 text-purple-600" />
-              {language === 'th' ? 'กำแพงอธิษฐาน' : 'Prayer Wall'}
-            </h2>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-balance text-xl font-bold text-foreground">
+                <Users className="h-5 w-5 text-purple-600" />
+                {language === 'th' ? 'กำแพงอธิษฐาน' : 'Prayer Wall'}
+              </h2>
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                <button
+                  onClick={() => setSortBy('recent')}
+                  className={`rounded px-2 py-0.5 text-xs transition-colors ${
+                    sortBy === 'recent'
+                      ? 'bg-purple-100 font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                      : 'hover:text-foreground'
+                  }`}
+                >
+                  {language === 'th' ? 'ล่าสุด' : 'Recent'}
+                </button>
+                <span className="text-border">|</span>
+                <button
+                  onClick={() => setSortBy('most_prayed')}
+                  className={`rounded px-2 py-0.5 text-xs transition-colors ${
+                    sortBy === 'most_prayed'
+                      ? 'bg-purple-100 font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                      : 'hover:text-foreground'
+                  }`}
+                >
+                  {language === 'th' ? 'อธิษฐานมากที่สุด' : 'Most Prayed'}
+                </button>
+              </div>
+            </div>
             <p className="mb-4 text-sm text-muted-foreground">
               {language === 'th'
                 ? 'อธิษฐานเผื่อพี่น้องในชุมชนของเรา คลิก "ฉันอธิษฐานแล้ว" เพื่อแสดงการสนับสนุน'
                 : 'Pray for our community members. Click "I Prayed" to show your support.'}
             </p>
             <div className="space-y-4">
-              {publicPrayers.map((prayer) => (
+              {visiblePrayers.map((prayer) => (
                 <Card key={prayer.id} className="transition-shadow hover:shadow-md">
                   <CardContent className="p-5">
                     <div className="mb-2 flex items-center justify-between">
@@ -468,6 +520,26 @@ export function PrayerPage() {
                   </CardContent>
                 </Card>
               ))}
+
+              {/* Load More */}
+              {visibleCount < sortedPrayers.length && (
+                <div className="pt-2 text-center">
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    {language === 'th'
+                      ? `แสดง ${visiblePrayers.length} จาก ${sortedPrayers.length} คำอธิษฐาน`
+                      : `Showing ${visiblePrayers.length} of ${sortedPrayers.length} prayers`}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+                    className="gap-1.5 border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-400 dark:hover:bg-purple-950/30"
+                  >
+                    <ChevronDown className="h-3.5 w-3.5" />
+                    {language === 'th' ? 'โหลดเพิ่มเติม' : 'Load More'}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
