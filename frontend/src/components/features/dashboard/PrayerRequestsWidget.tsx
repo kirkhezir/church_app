@@ -11,7 +11,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { prayerService } from '@/services/endpoints/prayerService';
-import { useAuth } from '@/hooks/useAuth';
 
 interface PrayerRequest {
   id: string;
@@ -21,6 +20,7 @@ interface PrayerRequest {
   isAnonymous: boolean;
   prayerCount: number;
   createdAt: string;
+  hasPrayed?: boolean;
 }
 
 interface PrayerRequestsWidgetProps {
@@ -30,39 +30,21 @@ interface PrayerRequestsWidgetProps {
 export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
   requests = [],
 }: PrayerRequestsWidgetProps) {
-  const { user } = useAuth();
-  const prayedStorageKey = user?.id ? `prayer_prayed:${user.id}` : null;
-
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [counters, setCounters] = useState<Record<string, number>>({});
 
-  // Load persisted "prayed for" IDs from localStorage once user is known
+  // Sync pray state from server-side hasPrayed whenever requests data changes
   useEffect(() => {
-    if (!prayedStorageKey) return;
-    try {
-      const stored = localStorage.getItem(prayedStorageKey);
-      if (stored) setPrayedFor(new Set(JSON.parse(stored) as string[]));
-    } catch {
-      // ignore malformed storage
-    }
-  }, [prayedStorageKey]);
+    setPrayedFor(new Set(requests.filter((r) => r.hasPrayed).map((r) => r.id)));
+  }, [requests]);
 
   const handlePray = useCallback(
     async (id: string) => {
-      const saveToStorage = (set: Set<string>) => {
-        if (!prayedStorageKey) return;
-        try {
-          localStorage.setItem(prayedStorageKey, JSON.stringify([...set]));
-        } catch {
-          /* quota */
-        }
-      };
       if (prayedFor.has(id)) {
-        // Toggle off: unpray
+        // Toggle off: unpray (optimistic)
         const next = new Set(prayedFor);
         next.delete(id);
         setPrayedFor(next);
-        saveToStorage(next);
         setCounters((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) - 1) }));
         try {
           await prayerService.unprayForRequest(id);
@@ -70,15 +52,13 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
           const reverted = new Set(next);
           reverted.add(id);
           setPrayedFor(reverted);
-          saveToStorage(reverted);
           setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
         }
       } else {
-        // Toggle on: pray
+        // Toggle on: pray (optimistic)
         const next = new Set(prayedFor);
         next.add(id);
         setPrayedFor(next);
-        saveToStorage(next);
         setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
         try {
           await prayerService.prayForRequest(id);
@@ -86,12 +66,11 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
           const reverted = new Set(next);
           reverted.delete(id);
           setPrayedFor(reverted);
-          saveToStorage(reverted);
           setCounters((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 1) - 1) }));
         }
       }
     },
-    [prayedFor, prayedStorageKey]
+    [prayedFor]
   );
   if (!requests || requests.length === 0) {
     return (

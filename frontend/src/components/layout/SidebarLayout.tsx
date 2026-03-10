@@ -205,42 +205,44 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                       );
                     })}
                   </div>
+                ) : counts.total === 0 ? (
+                  /* Empty state — no unread notifications */
+                  <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                      <CheckCheck className="h-5 w-5 text-muted-foreground/60" />
+                    </span>
+                    <p className="text-sm font-medium text-foreground">
+                      You&apos;re all caught up!
+                    </p>
+                    <p className="text-xs text-muted-foreground">No new notifications right now.</p>
+                  </div>
                 ) : (
-                  /* Fallback: category rows when no WS items yet (e.g., first load) */
+                  /* DB counts summary — only show categories with unread items */
                   <div className="flex flex-col py-1">
-                    {/* Messages */}
-                    <Link
-                      to="/app/messages"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
-                    >
-                      <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="flex-1 text-foreground">Messages</span>
-                      {counts.messages > 0 ? (
+                    {counts.messages > 0 && (
+                      <Link
+                        to="/app/messages"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
+                      >
+                        <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 text-foreground">Messages</span>
                         <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
                           {counts.messages > 99 ? '99+' : counts.messages}
                         </span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">0</span>
-                      )}
-                    </Link>
-
-                    {/* Announcements */}
-                    <Link
-                      to="/app/announcements"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
-                    >
-                      <Megaphone className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="flex-1 text-foreground">Announcements</span>
-                      {counts.announcements > 0 ? (
+                      </Link>
+                    )}
+                    {counts.announcements > 0 && (
+                      <Link
+                        to="/app/announcements"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
+                      >
+                        <Megaphone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 text-foreground">Announcements</span>
                         <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[10px] font-bold text-white">
                           {counts.announcements > 99 ? '99+' : counts.announcements}
                         </span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">0</span>
-                      )}
-                    </Link>
-
-                    {/* Prayer Requests — admin/staff only */}
+                      </Link>
+                    )}
                     {counts.prayerRequests > 0 && (
                       <Link
                         to="/app/admin/prayer"
@@ -252,12 +254,6 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                           {counts.prayerRequests > 99 ? '99+' : counts.prayerRequests}
                         </span>
                       </Link>
-                    )}
-
-                    {counts.total === 0 && (
-                      <p className="px-4 py-5 text-center text-xs text-muted-foreground">
-                        You&apos;re all caught up!
-                      </p>
                     )}
                   </div>
                 )}

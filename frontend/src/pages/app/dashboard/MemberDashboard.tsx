@@ -102,6 +102,7 @@ interface DashboardData {
     isAnonymous: boolean;
     prayerCount: number;
     createdAt: string;
+    hasPrayed?: boolean;
   }>;
   birthdayMembers: Array<{
     id: string;
@@ -135,7 +136,11 @@ export default function MemberDashboard() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { refresh: refreshNotifications } = useNotificationCounts();
+  const {
+    refresh: refreshNotifications,
+    announcements: liveAnnouncements,
+    messages: liveMessages,
+  } = useNotificationCounts();
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -341,7 +346,9 @@ export default function MemberDashboard() {
             </CardHeader>
             <CardContent>
               <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.1s]">
-                {dashboard.stats.unreadAnnouncementsCount}
+                {liveAnnouncements > 0
+                  ? liveAnnouncements
+                  : dashboard.stats.unreadAnnouncementsCount}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">unread</p>
             </CardContent>
@@ -381,7 +388,7 @@ export default function MemberDashboard() {
             </CardHeader>
             <CardContent>
               <div className="animate-number-pop text-3xl font-bold tabular-nums tracking-tight [animation-delay:0.3s]">
-                {dashboard.stats.unreadMessagesCount ?? 0}
+                {liveMessages > 0 ? liveMessages : (dashboard.stats.unreadMessagesCount ?? 0)}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">unread</p>
             </CardContent>

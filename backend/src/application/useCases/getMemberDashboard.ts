@@ -100,6 +100,7 @@ export interface GetMemberDashboardResponse {
     isAnonymous: boolean;
     prayerCount: number;
     createdAt: Date;
+    hasPrayed?: boolean;
   }>;
   birthdayMembers: Array<{
     id: string;
@@ -238,12 +239,12 @@ export class GetMemberDashboard {
       }
     }
 
-    // 11. Fetch prayer requests
+    // 11. Fetch prayer requests with hasPrayed status for the requesting member
     let recentPrayerRequests: GetMemberDashboardResponse['recentPrayerRequests'] = [];
     let prayerRequestsCount = 0;
     if (this.prayerRepository) {
-      const prayers = await this.prayerRepository.findRecentPublic(3);
-      recentPrayerRequests = prayers.map((p: any) => ({
+      const allPrayers = await this.prayerRepository.findPublicApprovedWithHasPrayed(memberId);
+      recentPrayerRequests = allPrayers.slice(0, 3).map((p: any) => ({
         id: p.id,
         name: p.name,
         category: p.category,
@@ -251,6 +252,7 @@ export class GetMemberDashboard {
         isAnonymous: p.isAnonymous,
         prayerCount: p.prayerCount,
         createdAt: p.createdAt,
+        hasPrayed: p.hasPrayed ?? false,
       }));
       prayerRequestsCount = await this.prayerRepository.countPublicApproved();
     }
