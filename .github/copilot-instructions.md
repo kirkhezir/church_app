@@ -1,7 +1,7 @@
 # church_app Development Guidelines
 
 **Church Management Application for Sing Buri Adventist Center**  
-Last updated: 2026-02-04
+Last updated: 2026-03-10
 
 ## 🎯 Project Overview
 
@@ -52,7 +52,7 @@ frontend/src/
 │   ├── features/     # Feature-specific components (EventCard, AnnouncementList)
 │   └── layout/       # Layout components (Header, Footer, MobileNav)
 ├── pages/
-│   ├── public/       # Landing pages (home, about, visit, events calendar, etc.)
+│   ├── landing/      # Landing pages (home, about, visit, events calendar, etc.)
 │   ├── auth/         # Auth pages (login, register, MFA, password reset) - not nested
 │   └── app/          # Church management app pages (authenticated routes)
 │       ├── admin/    # Admin-only pages (member management, analytics, reports)
@@ -153,7 +153,7 @@ npm run test:contract        # Contract tests only
 npm run test:e2e             # From project root
 ```
 
-Files: `/tests/e2e/*.spec.ts` (authentication.spec.ts, events.spec.ts, member-directory.spec.ts)
+Files: `/e2e/*.spec.ts` — see `/e2e/` for current spec files.
 
 **TDD Approach**: Tests are written BEFORE implementation (Red-Green-Refactor). See `specs/001-full-stack-web/tasks.md` for task organization by phase.
 
@@ -169,6 +169,12 @@ npx prisma generate          # Regenerate Prisma Client after schema changes
 **Schema**: `backend/prisma/schema.prisma` - PostgreSQL models for members, events, announcements, messages, audit_logs, etc.
 
 ## 📝 Code Conventions
+
+- Use `snake_case` for Prisma model names and generated types (e.g. `Prisma.membersCreateInput`, `Prisma.eventsCreateInput`).
+- Prisma `include`, `select`, and `where` fields accept objects or `undefined`/`null` — **never `false`**. Use `condition ? { ... } : undefined`.
+- Test factories must supply explicit `id` (`randomUUID()`) and `updatedAt` (`new Date()`); schema fields lack `@default()` and `@updatedAt` directives.
+- Admin pages use breadcrumbs: **Administration > Category (Content | Monitoring) > Page** — mirrors the sidebar collapsible groups.
+- Home page component is `HomePage` in `pages/landing/Home.tsx` (previously `LandingPage` in `pages/public/`).
 
 ## 🔨 Build & Pre-Push Checklist
 
