@@ -191,9 +191,9 @@ export default function AdminAnalyticsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder="Time range" />
             </SelectTrigger>
             <SelectContent>
@@ -225,7 +225,7 @@ export default function AdminAnalyticsPage() {
 
       {/* Quick Stats */}
       {loading ? (
-        <div className="mb-8 grid gap-4 md:grid-cols-4">
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {STAT_SKELETON_KEYS.map((key) => (
             <Card key={key}>
               <CardHeader className="pb-2">
@@ -238,7 +238,7 @@ export default function AdminAnalyticsPage() {
           ))}
         </div>
       ) : (
-        <div className="mb-8 grid gap-4 md:grid-cols-4">
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Members</CardTitle>

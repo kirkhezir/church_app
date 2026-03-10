@@ -361,31 +361,50 @@ export function AdminAnnouncementsPage() {
                   <table className="min-w-full table-fixed divide-y divide-border">
                     <thead className="bg-background">
                       <tr>
-                        <th className="w-12 px-4 py-3">
+                        <th scope="col" className="w-12 px-4 py-3">
                           <Checkbox
                             checked={
                               selectedIds.length === announcements.length &&
                               announcements.length > 0
                             }
                             onCheckedChange={handleSelectAll}
+                            aria-label="Select all announcements"
                           />
                         </th>
-                        <th className="min-w-[200px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="min-w-[200px] px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Title
                         </th>
-                        <th className="w-24 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-24 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Priority
                         </th>
-                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Author
                         </th>
-                        <th className="w-28 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-28 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Status
                         </th>
-                        <th className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-32 px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Published
                         </th>
-                        <th className="w-40 px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-40 px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                        >
                           Actions
                         </th>
                       </tr>

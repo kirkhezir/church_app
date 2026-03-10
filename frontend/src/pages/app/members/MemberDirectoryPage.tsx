@@ -143,13 +143,15 @@ export function MemberDirectoryPage() {
   const content = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
-            <Users className="h-8 w-8" />
+          <h1 className="flex items-center gap-2 text-balance text-2xl font-bold sm:text-3xl">
+            <Users className="h-7 w-7 sm:h-8 sm:w-8" />
             Member Directory
           </h1>
-          <p className="mt-2 text-muted-foreground">Connect with fellow church members</p>
+          <p className="mt-1 text-sm text-muted-foreground sm:mt-2 sm:text-base">
+            Connect with fellow church members
+          </p>
         </div>
 
         {isAdmin && (

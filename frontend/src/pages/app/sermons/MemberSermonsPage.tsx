@@ -139,7 +139,7 @@ export function MemberSermonsPage() {
                   className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 />
               </div>
-              <div className="relative">
+              <div className="relative flex-1">
                 <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <select
                   name="sermon-series"
@@ -149,7 +149,7 @@ export function MemberSermonsPage() {
                     setSelectedSeries(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 >
                   {seriesList.map((series) => (
                     <option key={series} value={series}>
@@ -158,7 +158,7 @@ export function MemberSermonsPage() {
                   ))}
                 </select>
               </div>
-              <div className="relative">
+              <div className="relative flex-1">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <select
                   name="sermon-speaker"
@@ -168,7 +168,7 @@ export function MemberSermonsPage() {
                     setSelectedSpeaker(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                  className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-8 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 >
                   {speakerList.map((speaker) => (
                     <option key={speaker} value={speaker}>

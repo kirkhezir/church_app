@@ -36,7 +36,7 @@ export function AnnouncementDetailPage() {
 
   if (loading) {
     const loadingContent = (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-4xl sm:px-6 sm:py-8">
         <Skeleton className="mb-4 h-10 w-32" />
         <Skeleton className="mb-4 h-12 w-3/4" />
         <Skeleton className="mb-4 h-64 w-full" />
@@ -56,7 +56,7 @@ export function AnnouncementDetailPage() {
       ? 'Invalid announcement ID'
       : error || 'Announcement not found';
     const errorContent = (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-full px-4 py-4 sm:max-w-4xl sm:px-6 sm:py-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4">
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back to Announcements

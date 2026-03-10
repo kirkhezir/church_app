@@ -218,7 +218,7 @@ export function MemberBlogPostPage() {
         {displayRelated.length > 0 && (
           <div className="mt-8 border-t border-border pt-8">
             <h2 className="mb-4 text-xl font-bold text-foreground">Related Articles</h2>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               {displayRelated.map((rp) => (
                 <Link key={rp.id} to={`/app/blog/${rp.slug}`}>
                   <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">

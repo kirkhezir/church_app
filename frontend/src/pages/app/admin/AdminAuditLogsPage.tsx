@@ -106,7 +106,7 @@ export default function AdminAuditLogsPage() {
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <Select value={actionFilter} onValueChange={setActionFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Actions" />
@@ -182,22 +182,40 @@ export default function AdminAuditLogsPage() {
                   <table className="w-full table-fixed">
                     <thead>
                       <tr className="border-b">
-                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           Timestamp
                         </th>
-                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           User
                         </th>
-                        <th className="w-[12%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[12%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           Action
                         </th>
-                        <th className="w-[14%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[14%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           Type
                         </th>
-                        <th className="w-[20%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[20%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           Entity ID
                         </th>
-                        <th className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground">
+                        <th
+                          scope="col"
+                          className="w-[18%] px-4 py-3 text-left text-sm font-medium text-muted-foreground"
+                        >
                           IP Address
                         </th>
                       </tr>

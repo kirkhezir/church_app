@@ -111,18 +111,18 @@ export function MessageDetailPage() {
       {!loading && message && (
         <Card>
           <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
                   <AvatarFallback>
                     {message.sender
                       ? getInitials(message.sender.firstName, message.sender.lastName)
                       : '??'}
                   </AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">
+                    <span className="truncate font-semibold">
                       {message.sender
                         ? `${message.sender.firstName} ${message.sender.lastName}`
                         : 'Unknown Sender'}
@@ -146,7 +146,8 @@ export function MessageDetailPage() {
                 {!isSender && (
                   <Button variant="outline" size="sm" onClick={handleReply}>
                     <Reply className="mr-2 h-4 w-4" />
-                    Reply
+                    <span className="hidden sm:inline">Reply</span>
+                    <span className="sm:hidden">Reply</span>
                   </Button>
                 )}
                 <Button
@@ -155,9 +156,11 @@ export function MessageDetailPage() {
                   onClick={() => setShowDeleteConfirm(true)}
                   disabled={deleteLoading}
                   className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  aria-label="Delete message"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
+                  <span className="hidden sm:inline">Delete</span>
+                  <span className="sm:hidden">Delete</span>
                 </Button>
               </div>
             </div>
