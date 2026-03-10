@@ -67,6 +67,16 @@ export function PrayerPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  // Load persisted anonymous prayed-for IDs from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('prayer_prayed:anon');
+      if (stored) setPrayedFor(JSON.parse(stored) as string[]);
+    } catch {
+      // ignore malformed storage
+    }
+  }, []);
+
   useEffect(() => {
     async function load() {
       try {
@@ -104,24 +114,60 @@ export function PrayerPage() {
     }
   };
 
-  const handlePrayFor = async (id: string) => {
-    if (prayedFor.includes(id)) return;
-    setPrayedFor((prev) => [...prev, id]);
-    // Optimistically increment local count
-    setPublicPrayers((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
-    );
+  const saveAnonPrayed = (list: string[]) => {
     try {
-      const updated = await prayerService.prayForRequest(id);
-      if (updated) {
-        setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
-      }
+      localStorage.setItem('prayer_prayed:anon', JSON.stringify(list));
     } catch {
-      // revert optimistic update
-      setPrayedFor((prev) => prev.filter((pId) => pId !== id));
+      /* quota */
+    }
+  };
+
+  const handlePrayFor = async (id: string) => {
+    if (prayedFor.includes(id)) {
+      // Toggle off: unpray
+      const next = prayedFor.filter((pId) => pId !== id);
+      setPrayedFor(next);
+      saveAnonPrayed(next);
       setPublicPrayers((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
+        prev.map((p) => (p.id === id ? { ...p, prayerCount: Math.max(0, p.prayerCount - 1) } : p))
       );
+      try {
+        const updated = await prayerService.unprayForRequest(id);
+        if (updated) {
+          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+        }
+      } catch {
+        // revert optimistic update
+        const reverted = [...next, id];
+        setPrayedFor(reverted);
+        saveAnonPrayed(reverted);
+        setPublicPrayers((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
+        );
+      }
+    } else {
+      // Toggle on: pray
+      const next = [...prayedFor, id];
+      setPrayedFor(next);
+      saveAnonPrayed(next);
+      // Optimistically increment local count
+      setPublicPrayers((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
+      );
+      try {
+        const updated = await prayerService.prayForRequest(id);
+        if (updated) {
+          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+        }
+      } catch {
+        // revert optimistic update
+        const reverted = next.filter((pId) => pId !== id);
+        setPrayedFor(reverted);
+        saveAnonPrayed(reverted);
+        setPublicPrayers((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
+        );
+      }
     }
   };
 
@@ -401,22 +447,21 @@ export function PrayerPage() {
                         variant={prayedFor.includes(prayer.id) ? 'default' : 'outline'}
                         className={
                           prayedFor.includes(prayer.id)
-                            ? 'bg-purple-600'
+                            ? 'bg-purple-600 hover:bg-purple-500'
                             : 'border-purple-300 text-purple-600 dark:border-purple-700 dark:text-purple-400'
                         }
                         onClick={() => handlePrayFor(prayer.id)}
-                        disabled={prayedFor.includes(prayer.id)}
                       >
                         <Heart
                           className={`mr-1 h-4 w-4 ${prayedFor.includes(prayer.id) ? 'fill-white' : ''}`}
                         />
                         {prayedFor.includes(prayer.id)
                           ? language === 'th'
-                            ? 'อธิษฐานแล้ว'
-                            : 'Prayed'
+                            ? 'อธิษฐานแล้ว ✓'
+                            : 'Prayed ✓'
                           : language === 'th'
-                            ? 'ฉันอธิษฐาน'
-                            : 'I Prayed'}
+                            ? 'อธิษฐาน'
+                            : 'Pray'}
                         <span className="ml-1">({prayer.prayerCount})</span>
                       </Button>
                     </div>

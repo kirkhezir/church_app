@@ -170,16 +170,6 @@ export function MemberPrayerPage() {
     }
   }, [prayedStorageKey]);
 
-  // Persist "prayed for" IDs to localStorage whenever they change
-  useEffect(() => {
-    if (!prayedStorageKey) return;
-    try {
-      localStorage.setItem(prayedStorageKey, JSON.stringify([...prayedFor]));
-    } catch {
-      // ignore storage quota errors
-    }
-  }, [prayedFor, prayedStorageKey]);
-
   useEffect(() => {
     async function load() {
       try {
@@ -245,25 +235,77 @@ export function MemberPrayerPage() {
   };
 
   const handlePrayFor = async (id: string) => {
-    if (prayedFor.has(id)) return;
-    setPrayedFor((prev) => new Set(prev).add(id));
-    setPublicPrayers((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
-    );
-    try {
-      const updated = await prayerService.prayForRequest(id);
-      if (updated) {
-        setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    if (prayedFor.has(id)) {
+      // Toggle off: unpray
+      const next = new Set(prayedFor);
+      next.delete(id);
+      setPrayedFor(next);
+      if (prayedStorageKey) {
+        try {
+          localStorage.setItem(prayedStorageKey, JSON.stringify([...next]));
+        } catch {
+          /* quota */
+        }
       }
-    } catch {
-      setPrayedFor((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
       setPublicPrayers((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
+        prev.map((p) => (p.id === id ? { ...p, prayerCount: Math.max(0, p.prayerCount - 1) } : p))
       );
+      try {
+        const updated = await prayerService.unprayForRequest(id);
+        if (updated) {
+          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+        }
+      } catch {
+        // revert optimistic update
+        const reverted = new Set(next);
+        reverted.add(id);
+        setPrayedFor(reverted);
+        if (prayedStorageKey) {
+          try {
+            localStorage.setItem(prayedStorageKey, JSON.stringify([...reverted]));
+          } catch {
+            /* quota */
+          }
+        }
+        setPublicPrayers((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
+        );
+      }
+    } else {
+      // Toggle on: pray
+      const next = new Set(prayedFor);
+      next.add(id);
+      setPrayedFor(next);
+      if (prayedStorageKey) {
+        try {
+          localStorage.setItem(prayedStorageKey, JSON.stringify([...next]));
+        } catch {
+          /* quota */
+        }
+      }
+      setPublicPrayers((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount + 1 } : p))
+      );
+      try {
+        const updated = await prayerService.prayForRequest(id);
+        if (updated) {
+          setPublicPrayers((prev) => prev.map((p) => (p.id === id ? updated : p)));
+        }
+      } catch {
+        const reverted = new Set(next);
+        reverted.delete(id);
+        setPrayedFor(reverted);
+        if (prayedStorageKey) {
+          try {
+            localStorage.setItem(prayedStorageKey, JSON.stringify([...reverted]));
+          } catch {
+            /* quota */
+          }
+        }
+        setPublicPrayers((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, prayerCount: p.prayerCount - 1 } : p))
+        );
+      }
     }
   };
 
@@ -546,14 +588,13 @@ export function MemberPrayerPage() {
                     variant={hasPrayed ? 'default' : 'outline'}
                     className={
                       hasPrayed
-                        ? 'h-8 bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-700 dark:hover:bg-rose-600'
+                        ? 'h-8 bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
                         : 'h-8 border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/30'
                     }
                     onClick={() => handlePrayFor(prayer.id)}
-                    disabled={hasPrayed}
                     aria-label={
                       hasPrayed
-                        ? `You prayed for this request (${prayer.prayerCount} prayers)`
+                        ? `Undo prayer for this request (${prayer.prayerCount} prayers)`
                         : `Pray for this request (${prayer.prayerCount} prayers)`
                     }
                   >
@@ -561,7 +602,7 @@ export function MemberPrayerPage() {
                       className={`mr-1 h-3.5 w-3.5 ${hasPrayed ? 'fill-white' : ''}`}
                       aria-hidden="true"
                     />
-                    {hasPrayed ? 'Prayed' : 'I Prayed'}
+                    {hasPrayed ? 'Prayed ✓' : 'Pray'}
                     <span className="ml-1 text-[11px] opacity-75">({prayer.prayerCount})</span>
                   </Button>
                 </div>

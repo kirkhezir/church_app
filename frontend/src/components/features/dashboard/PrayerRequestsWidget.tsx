@@ -47,33 +47,51 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
     }
   }, [prayedStorageKey]);
 
-  // Persist to localStorage whenever prayedFor changes
-  useEffect(() => {
-    if (!prayedStorageKey) return;
-    try {
-      localStorage.setItem(prayedStorageKey, JSON.stringify([...prayedFor]));
-    } catch {
-      // ignore storage quota errors
-    }
-  }, [prayedFor, prayedStorageKey]);
-
   const handlePray = useCallback(
     async (id: string) => {
-      if (prayedFor.has(id)) return;
-      setPrayedFor((prev) => new Set(prev).add(id));
-      setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
-      try {
-        await prayerService.prayForRequest(id);
-      } catch {
-        setPrayedFor((prev) => {
-          const next = new Set(prev);
-          next.delete(id);
-          return next;
-        });
-        setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 1) - 1 }));
+      const saveToStorage = (set: Set<string>) => {
+        if (!prayedStorageKey) return;
+        try {
+          localStorage.setItem(prayedStorageKey, JSON.stringify([...set]));
+        } catch {
+          /* quota */
+        }
+      };
+      if (prayedFor.has(id)) {
+        // Toggle off: unpray
+        const next = new Set(prayedFor);
+        next.delete(id);
+        setPrayedFor(next);
+        saveToStorage(next);
+        setCounters((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) - 1) }));
+        try {
+          await prayerService.unprayForRequest(id);
+        } catch {
+          const reverted = new Set(next);
+          reverted.add(id);
+          setPrayedFor(reverted);
+          saveToStorage(reverted);
+          setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
+        }
+      } else {
+        // Toggle on: pray
+        const next = new Set(prayedFor);
+        next.add(id);
+        setPrayedFor(next);
+        saveToStorage(next);
+        setCounters((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
+        try {
+          await prayerService.prayForRequest(id);
+        } catch {
+          const reverted = new Set(next);
+          reverted.delete(id);
+          setPrayedFor(reverted);
+          saveToStorage(reverted);
+          setCounters((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 1) - 1) }));
+        }
       }
     },
-    [prayedFor]
+    [prayedFor, prayedStorageKey]
   );
   if (!requests || requests.length === 0) {
     return (
@@ -146,12 +164,15 @@ export const PrayerRequestsWidget = memo(function PrayerRequestsWidget({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 gap-1 text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400"
-                  disabled={prayedFor.has(req.id)}
+                  className={`h-7 gap-1 text-xs ${
+                    prayedFor.has(req.id)
+                      ? 'text-rose-700 dark:text-rose-300'
+                      : 'text-rose-600 hover:text-rose-700 dark:text-rose-400'
+                  }`}
                   onClick={() => handlePray(req.id)}
                 >
                   <Heart className={`h-3 w-3 ${prayedFor.has(req.id) ? 'fill-current' : ''}`} />
-                  {prayedFor.has(req.id) ? 'Prayed' : 'Pray'}
+                  {prayedFor.has(req.id) ? 'Prayed ✓' : 'Pray'}
                 </Button>
               </div>
             </div>

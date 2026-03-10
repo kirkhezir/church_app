@@ -35,6 +35,9 @@ router.post('/', prayerSubmitLimiter, (req, res, next) =>
 // POST /api/v1/prayer/:id/pray - Pray for a request (increment count)
 router.post('/:id/pray', (req, res, next) => prayerController.prayForRequest(req, res, next));
 
+// DELETE /api/v1/prayer/:id/pray - Unpray / toggle off (decrement count)
+router.delete('/:id/pray', (req, res, next) => prayerController.unprayForRequest(req, res, next));
+
 /**
  * Admin/Staff routes (requires authentication + role check)
  */

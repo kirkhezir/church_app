@@ -8,6 +8,7 @@ export interface IPrayerRepository {
   create(request: any): Promise<any>;
   updateStatus(id: string, status: string): Promise<any>;
   incrementPrayerCount(id: string): Promise<any>;
+  decrementPrayerCount(id: string): Promise<any>;
   findRecentPublic(limit: number): Promise<any[]>;
   countPublicApproved(): Promise<number>;
   countPending(): Promise<number>;

@@ -88,6 +88,14 @@ export const prayerService = {
   },
 
   /**
+   * Unpray / toggle off a request (decrement prayer count)
+   */
+  async unprayForRequest(id: string): Promise<PrayerRequest> {
+    const response = (await apiClient.delete(`/prayer/${id}/pray`)) as PrayerDetailResponse;
+    return response.data;
+  },
+
+  /**
    * Moderate a prayer request - approve or archive (admin/staff)
    */
   async moderatePrayerRequest(id: string, status: 'APPROVED' | 'ARCHIVED'): Promise<PrayerRequest> {

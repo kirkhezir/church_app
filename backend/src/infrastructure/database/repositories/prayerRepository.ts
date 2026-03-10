@@ -45,6 +45,16 @@ export class PrayerRepository implements IPrayerRepository {
     });
   }
 
+  async decrementPrayerCount(id: string): Promise<any> {
+    // Fetch current count first to ensure we never go below 0
+    const current = await prisma.prayer_requests.findUnique({ where: { id } });
+    if (!current || current.prayerCount <= 0) return current;
+    return prisma.prayer_requests.update({
+      where: { id },
+      data: { prayerCount: { decrement: 1 }, updatedAt: new Date() },
+    });
+  }
+
   async findRecentPublic(limit: number): Promise<any[]> {
     return prisma.prayer_requests.findMany({
       where: { isPublic: true, status: 'APPROVED' },

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { GetPrayerRequests } from '../../application/useCases/getPrayerRequests';
 import { SubmitPrayerRequest } from '../../application/useCases/submitPrayerRequest';
 import { PrayForRequest } from '../../application/useCases/prayForRequest';
+import { UnprayForRequest } from '../../application/useCases/unprayForRequest';
 import { ModeratePrayerRequest } from '../../application/useCases/moderatePrayerRequest';
 import { PrayerRepository } from '../../infrastructure/database/repositories/prayerRepository';
 
@@ -85,6 +86,24 @@ export class PrayerController {
   async prayForRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const useCase = new PrayForRequest(this.prayerRepository);
+      const result = await useCase.execute(req.params.id);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * DELETE /api/v1/prayer/:id/pray
+   * Decrement prayer count / toggle off (PUBLIC)
+   */
+  async unprayForRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const useCase = new UnprayForRequest(this.prayerRepository);
       const result = await useCase.execute(req.params.id);
 
       res.status(200).json({
