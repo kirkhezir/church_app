@@ -426,6 +426,50 @@ docker-compose -f docker-compose.prod.yml up  # Production
 - **Manual Testing**: `MANUAL_TEST_GUIDE.md`
 - **Security**: `SECURITY_GUIDE.md`, `SECURITY_INCIDENT_REPORT.md`
 
+## 📱 Frontend Quality Standards
+
+Every frontend change — feature, fix, or enhancement — must meet these standards:
+
+### Mobile-First & Responsive
+
+- **Write Tailwind classes mobile-first**: base styles = mobile, `sm:` / `md:` / `lg:` = larger screens
+- No horizontal scroll at any viewport width; touch targets minimum 44×44px; body text minimum 16px on mobile
+- Images: use `loading="lazy"`, `srcset`, WebP, and explicit `width`/`height` to prevent layout shift
+- Viewport meta tag `width=device-width, initial-scale=1` is mandatory
+
+### Accessibility (WCAG 2.1 AA)
+
+- Color contrast ≥4.5:1; visible `focus-visible:ring` on all interactive elements
+- Semantic HTML always: `<main>`, `<nav>`, `<header>`, `<section>`, `<article>`, `<button>`, `<a href>`
+- Every input has an associated `<label>`; icon-only buttons have `aria-label`
+- Respect `prefers-reduced-motion` — wrap animations in a media query check
+
+### React Performance
+
+- `Promise.all()` for independent async calls — never sequential `await` (waterfall)
+- Import directly from source files — never barrel imports that inflate bundle size
+- `React.lazy()` for all non-critical routes and heavy components
+- Use ternary (`condition ? <A /> : null`), not `&&`, for conditional rendering
+- Derive state during render; don't sync state via `useEffect`
+
+### PWA
+
+- Critical pages (dashboard, events, announcements) must function offline via service worker cache
+- Lighthouse targets: Performance ≥90, Accessibility ≥95, SEO ≥90
+- Core Web Vitals: LCP < 2.5s, CLS < 0.1, INP < 100ms
+
+### Skills to Use for Frontend Work
+
+| Task                                 | Invoke                         |
+| ------------------------------------ | ------------------------------ |
+| New pages, components, design system | `#ui-ux-pro-max`               |
+| Accessibility & UX compliance review | `#web-design-guidelines`       |
+| React component performance review   | `#vercel-react-best-practices` |
+
+See **`.github/instructions/frontend.instructions.md`** for the full rules (auto-injected when editing `frontend/**`).
+
+---
+
 ## MCP Server Usage Guidelines
 
 When implementing features, leverage available MCP servers for enhanced development:
