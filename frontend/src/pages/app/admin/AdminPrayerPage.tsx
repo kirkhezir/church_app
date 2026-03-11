@@ -193,7 +193,7 @@ export function AdminPrayerPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-shrink-0 gap-1">
+                    <div className="flex flex-shrink-0 flex-col gap-2 sm:flex-row sm:gap-1">
                       {prayer.status !== 'APPROVED' && (
                         <Button
                           size="sm"

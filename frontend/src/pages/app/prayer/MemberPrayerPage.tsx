@@ -403,6 +403,9 @@ export function MemberPrayerPage() {
                 className="resize-none"
               />
               <p
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
                 className={`text-right text-xs ${
                   request.length >= MAX_REQUEST_LENGTH * 0.9
                     ? 'text-destructive'
@@ -513,13 +516,14 @@ export function MemberPrayerPage() {
       {activeCategories.length > 0 && (
         <div className="space-y-2">
           <div
-            className="flex gap-2 overflow-x-auto pb-1"
+            className="flex gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             role="group"
             aria-label="Filter prayer requests by category"
           >
             <button
+              type="button"
               onClick={() => setActiveFilter('all')}
-              className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+              className={`min-h-[44px] flex-shrink-0 touch-manipulation rounded-full px-3 py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
                 activeFilter === 'all'
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -535,8 +539,9 @@ export function MemberPrayerPage() {
               return (
                 <button
                   key={cat.id}
+                  type="button"
                   onClick={() => setActiveFilter(isActive ? 'all' : cat.id)}
-                  className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                  className={`min-h-[44px] flex-shrink-0 touch-manipulation rounded-full px-3 py-2 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
                     isActive
                       ? `${style.badge} ring-current/20 shadow-sm ring-1 ring-inset`
                       : 'border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -590,6 +595,7 @@ export function MemberPrayerPage() {
             return (
               <article
                 key={prayer.id}
+                aria-label={`${getCategoryName(prayer.category)} prayer by ${prayer.isAnonymous ? 'Anonymous' : prayer.name}`}
                 className={`flex flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
               >
                 {/* Header row */}
@@ -631,8 +637,8 @@ export function MemberPrayerPage() {
                     disabled={prayingId === prayer.id}
                     className={
                       hasPrayed
-                        ? 'h-8 bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
-                        : 'h-8 border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/30'
+                        ? 'h-11 touch-manipulation bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
+                        : 'h-11 touch-manipulation border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/30'
                     }
                     onClick={() => handlePrayFor(prayer.id)}
                     aria-label={
@@ -659,7 +665,7 @@ export function MemberPrayerPage() {
 
           {/* Load More / pagination */}
           {visibleCount < filteredPrayers.length && (
-            <div className="pt-2 text-center">
+            <div className="col-span-full pt-2 text-center">
               <Button
                 variant="outline"
                 size="sm"
@@ -702,21 +708,21 @@ export function MemberPrayerPage() {
         <div className="mb-6 grid grid-cols-3 gap-3">
           <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20">
             <Users className="mb-1 h-4 w-4 text-blue-500" />
-            <p className="text-xl font-bold tabular-nums text-blue-700 dark:text-blue-300">
+            <p className="text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
               {publicPrayers.length}
             </p>
             <p className="text-xs text-blue-600/70 dark:text-blue-400/70">Requests</p>
           </div>
           <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
             <Calendar className="mb-1 h-4 w-4 text-amber-500" />
-            <p className="text-xl font-bold tabular-nums text-amber-700 dark:text-amber-300">
+            <p className="text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl">
               {requestsThisMonth}
             </p>
             <p className="text-xs text-amber-600/70 dark:text-amber-400/70">This Month</p>
           </div>
           <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20">
             <Heart className="mb-1 h-4 w-4 fill-rose-500 text-rose-500" />
-            <p className="text-xl font-bold tabular-nums text-rose-600 dark:text-rose-400">
+            <p className="text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl">
               {totalPrayers}
             </p>
             <p className="text-xs text-rose-600/70 dark:text-rose-400/70">Prayers Offered</p>
@@ -724,7 +730,7 @@ export function MemberPrayerPage() {
         </div>
 
         {/* ── Mobile: tabs ─────────────────────────────────────────────────── */}
-        <div className="block lg:hidden">
+        <div className="block xl:hidden">
           <Tabs defaultValue="wall">
             <TabsList className="mb-5 grid w-full grid-cols-2">
               <TabsTrigger value="wall" className="gap-1.5">
@@ -742,7 +748,7 @@ export function MemberPrayerPage() {
         </div>
 
         {/* ── Desktop: two columns ─────────────────────────────────────────── */}
-        <div className="hidden lg:grid lg:grid-cols-[400px_1fr] lg:gap-8">
+        <div className="hidden xl:grid xl:grid-cols-[420px_1fr] xl:gap-8">
           {/* Left — submit form */}
           <div>
             <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
