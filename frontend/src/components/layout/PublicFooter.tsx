@@ -13,7 +13,7 @@ import { useI18n } from '@/i18n';
 const CHURCH_LOGO = '/church-logo.png';
 
 const SOCIAL_LINKS = {
-  facebook: 'https://www.facebook.com/singburiadventist',
+  facebook: 'https://www.facebook.com/share/1Ax2FW4hyi/',
   youtube: 'https://www.youtube.com/@singburiadventist',
   line: 'https://line.me/ti/p/@singburiadventist',
 } as const;
