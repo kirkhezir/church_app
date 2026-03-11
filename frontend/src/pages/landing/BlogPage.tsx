@@ -181,7 +181,7 @@ export function BlogPage() {
                   placeholder={language === 'th' ? 'ค้นหาบทความ...' : 'Search articles...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border border-border py-2 pl-9 pr-4 text-sm focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-4 text-sm text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
 
@@ -303,7 +303,7 @@ export function BlogPage() {
                     placeholder={language === 'th' ? 'อีเมลของคุณ' : 'Your email'}
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="flex-1 rounded-lg bg-white px-4 py-3 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 dark:bg-slate-800"
+                    className="flex-1 rounded-lg bg-white/90 px-4 py-3 text-slate-900 placeholder:text-slate-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-400"
                   />
                   <Button
                     className="bg-white text-blue-700 hover:bg-blue-50 dark:text-blue-700 dark:hover:bg-blue-50"

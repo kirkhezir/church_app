@@ -258,7 +258,7 @@ export function PrayerPage() {
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder={language === 'th' ? 'ไม่ระบุตัวตน' : 'Anonymous'}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
                       <div>
@@ -276,7 +276,7 @@ export function PrayerPage() {
                           spellCheck={false}
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
                       <div>
@@ -292,7 +292,7 @@ export function PrayerPage() {
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                           required
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         >
                           <option value="">
                             {language === 'th' ? 'เลือกหมวดหมู่' : 'Select a category'}
@@ -323,7 +323,7 @@ export function PrayerPage() {
                               ? 'แบ่งปันคำอธิษฐานของคุณ...'
                               : 'Share your prayer request...'
                           }
-                          className="w-full rounded-lg border border-border px-4 py-2 focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
                         />
                       </div>
 

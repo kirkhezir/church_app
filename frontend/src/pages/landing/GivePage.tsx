@@ -281,9 +281,9 @@ export function GivePage() {
                       value={amount}
                       onChange={(e) => handleAmountChange(e.target.value)}
                       placeholder="0"
-                      className={`w-full rounded-lg border py-3 pl-8 pr-4 text-xl focus-visible:outline-none focus-visible:ring-2 ${
+                      className={`w-full rounded-lg border bg-background py-3 pl-8 pr-4 text-xl text-foreground focus-visible:outline-none focus-visible:ring-2 ${
                         amountError
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                          ? 'border-red-300 focus:border-red-500 focus:ring-red-200 dark:border-red-600 dark:focus:ring-red-800'
                           : 'border-border focus:border-amber-500 focus:ring-amber-200 dark:focus:ring-amber-800'
                       }`}
                       aria-invalid={!!amountError}
