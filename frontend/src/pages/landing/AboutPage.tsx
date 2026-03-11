@@ -45,15 +45,15 @@ const PASTOR = {
 
 const ELDERS = [
   {
-    name: 'Elder Nealbeart Jumawid',
-    nameThai: 'ผอ. ประเสริฐ ศรีพันธ์',
-    title: 'Elder',
+    name: 'Nealbert S. Jumawid',
+    nameThai: '',
+    title: 'Church Elder',
     photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&q=80',
   },
   {
-    name: 'Elder Carl Max Siano',
-    nameThai: 'ผอ. วิชัย ทองดี',
-    title: 'Elder',
+    name: 'Carl Max J. Siano',
+    nameThai: '',
+    title: 'Church Elder',
     photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80',
   },
 ];
@@ -84,14 +84,14 @@ const CHURCH_OFFICERS_BY_DEPT: {
     iconBg: 'bg-blue-100 dark:bg-blue-900/30',
     members: [
       {
-        name: 'Gladys Jane Santos',
-        nameThai: 'สมหญิง แก้วใส',
+        name: 'Gladys Jane Z. Santos',
+        nameThai: '',
         role: 'Church Clerk',
         roleThai: 'เสมียน',
       },
       {
-        name: 'Lavonne Jumawid',
-        nameThai: 'ประสิทธิ์ วงศ์สวัสดิ์',
+        name: 'Lavonne S. Jumawid',
+        nameThai: '',
         role: 'Treasurer',
         roleThai: 'เหรัญญิก',
       },
@@ -105,20 +105,19 @@ const CHURCH_OFFICERS_BY_DEPT: {
     iconBg: 'bg-emerald-100 dark:bg-emerald-900/30',
     members: [
       {
-        name: 'Mary June Cabunoc',
-        nameThai: 'สมศักดิ์ เพชรรัตน์',
+        name: 'Mary June D. Cabunoc',
+        nameThai: '',
         role: 'Superintendent',
         roleThai: 'ผู้ดูแล',
       },
       {
-        name: 'Kenneth Joy Santos',
-        nameThai: 'นิตยา ศรีสุข',
+        name: 'Kenneth Joy Z. Santos',
+        nameThai: '',
         role: 'Asst. Superintendent',
         roleThai: 'ผู้ช่วยผู้ดูแล',
       },
     ],
   },
-
   {
     department: 'Deacon / Deaconess',
     departmentThai: 'มัคนายก / มัคนายิกา',
@@ -127,70 +126,88 @@ const CHURCH_OFFICERS_BY_DEPT: {
     iconBg: 'bg-violet-100 dark:bg-violet-900/30',
     members: [
       {
-        name: 'Kirk Hezir Cabunoc',
-        nameThai: 'สมชาย วงศ์ประเสริฐ',
+        name: 'Kirk Hezir M. Cabunoc',
+        nameThai: '',
         role: 'Deacon',
         roleThai: 'มัคนายก',
       },
       {
-        name: 'Nilda Sojor',
-        nameThai: 'สมพร แก้วมณี',
+        name: 'Nilda B. Sojor',
+        nameThai: '',
         role: 'Deaconess',
         roleThai: 'มัคนายิกา',
       },
       {
         name: 'Lorrie Hope Yosorez',
-        nameThai: 'ลอรี โฮป โยซอเรซ',
+        nameThai: '',
         role: 'Deaconess',
         roleThai: 'มัคนายิกา',
       },
     ],
   },
   {
-    department: 'Youth Department (AY)',
-    departmentThai: 'แผนกเยาวชน',
+    department: 'Adventist Youth Ministry',
+    departmentThai: 'แผนกเยาวชนแอดเวนตีส',
     icon: Sparkles,
     accent: 'text-amber-600',
     iconBg: 'bg-amber-100 dark:bg-amber-900/30',
     members: [
       {
-        name: 'Ronela Mifranum',
-        nameThai: 'โรเนลา มิฟรานุม',
-        role: 'AY Leader',
+        name: 'Ronela C. Mifranum',
+        nameThai: '',
+        role: 'AY Ministry Leader',
         roleThai: 'ผู้นำเยาวชน',
       },
       {
-        name: 'Siriporn Malee',
-        nameThai: 'ศิริพร มาลี',
-        role: 'AY Secretary',
-        roleThai: 'เลขานุการเยาวชน',
+        name: 'Richelle C. Mifranum',
+        nameThai: '',
+        role: 'Asst. AY Ministry Leader',
+        roleThai: 'ผู้ช่วยผู้นำเยาวชน',
       },
     ],
   },
   {
-    department: 'Music & Worship',
-    departmentThai: 'แผนกดนตรีและนมัสการ',
+    department: "Women's Ministry / Communication & Media",
+    departmentThai: 'แผนกสตรีและสื่อสาร',
     icon: Music,
     accent: 'text-rose-600',
     iconBg: 'bg-rose-100 dark:bg-rose-900/30',
     members: [
       {
-        name: 'Supachai Musikphan',
-        nameThai: 'ศุภชัย มูสิกพันธ์',
-        role: 'Music Director',
-        roleThai: 'ผู้อำนวยการดนตรี',
+        name: 'Lazelle S. Saplina',
+        nameThai: '',
+        role: "Women's Ministry / Communication & Media",
+        roleThai: 'ผู้รับผิดชอบ',
       },
+    ],
+  },
+  {
+    department: 'Family / Children / Health & APM',
+    departmentThai: 'แผนกครอบครัวและสุขภาพ',
+    icon: Heart,
+    accent: 'text-pink-600',
+    iconBg: 'bg-pink-100 dark:bg-pink-900/30',
+    members: [
       {
-        name: 'Ratchanee Singsai',
-        nameThai: 'รัชนี สิงห์ใส',
-        role: 'Choir Director',
-        roleThai: 'ผู้นำขับร้อง',
+        name: 'Maria Glenda Y. Siano',
+        nameThai: '',
+        role: 'Family / Children / Health & APM Coordinator',
+        roleThai: 'ผู้ประสานงาน',
       },
+    ],
+  },
+  {
+    department: 'ACS / Personal & Publishing Ministry',
+    departmentThai: 'แผนกบริการชุมชนและสิ่งพิมพ์',
+    icon: BookOpen,
+    accent: 'text-indigo-600',
+    iconBg: 'bg-indigo-100 dark:bg-indigo-900/30',
+    members: [
       {
-        name: 'Natthapong Saelee',
-        nameThai: 'ณัฐพงศ์ แซ่ลี',
-        role: 'Organist',
-        roleThai: 'นักเล่นออร์แกน',
+        name: 'Gemma S. Salarza',
+        nameThai: '',
+        role: 'ACS Leader / Personal & Publishing Ministry',
+        roleThai: 'ผู้นำ',
       },
     ],
   },
@@ -408,7 +425,9 @@ export function AboutPage() {
                       </div>
                     </div>
                     <h3 className="font-semibold text-foreground">{elder.name}</h3>
-                    <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
+                    {elder.nameThai && (
+                      <p className="text-sm text-muted-foreground">{elder.nameThai}</p>
+                    )}
                     <p className="mt-1 text-sm font-medium text-primary">{elder.title}</p>
                   </CardContent>
                 </Card>
@@ -464,9 +483,11 @@ export function AboutPage() {
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium text-foreground">{officer.name}</p>
-                            <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground">
-                              {officer.nameThai}
-                            </p>
+                            {officer.nameThai && (
+                              <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground">
+                                {officer.nameThai}
+                              </p>
+                            )}
                             <p className={`text-sm font-medium ${dept.accent}`}>{officer.role}</p>
                           </div>
                         </div>
