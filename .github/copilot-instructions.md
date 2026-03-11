@@ -823,6 +823,26 @@ npm audit                            # Root (E2E/dev deps) must also be 0
 4. `npm audit` (root) → 0 vulnerabilities
 5. Review GitHub Actions CI results after push with GitHub MCP server
 
+**After every `git push` — use GitHub MCP to verify:**
+
+6. **CI/CD passed** — check `ci-cd.yml` run on `main`:
+   ```
+   mcp_github_get_commit  → verify latest commit status is success
+   ```
+7. **Security scan passed** — `security-scan.yml` runs automatically on push to `main`; verify:
+   - Dependency scan (npm audit): no new HIGH/CRITICAL advisories
+   - Secret scan (TruffleHog + Gitleaks): no secrets detected
+   - OWASP Dependency Check: no new CVEs introduced
+   - Container scan (Trivy): no HIGH/CRITICAL container vulnerabilities
+8. **No new Dependabot alerts** — check via GitHub MCP:
+   ```
+   mcp_github_list_issues  (labels: "dependencies")  → no new open security alerts
+   ```
+9. **No new CodeQL alerts** — check via GitHub MCP:
+   ```
+   mcp_github_search_issues  query: "repo:kirkhezir/church_app is:open label:security"
+   ```
+
 If ANY check fails → fix ALL issues before pushing. Never push with known TypeScript errors, build failures, or vulnerabilities.
 
-<!-- MANUAL ADDITIONS END -->
+> Run `#pre-push-checklist` in chat to execute all local checks and get a ✅/❌ report for each.
