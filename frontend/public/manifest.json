@@ -1,6 +1,6 @@
 {
   "name": "Sing Buri Adventist Center",
-  "short_name": "SBAC",
+  "short_name": "SAC",
   "description": "Church management application for Sing Buri Adventist Center",
   "start_url": "/",
   "display": "standalone",
