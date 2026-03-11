@@ -417,7 +417,10 @@ export function MemberPrayerPage() {
             </div>
 
             {/* Share on wall toggle */}
-            <div className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-3">
+            <label
+              htmlFor="isPublic"
+              className="flex cursor-pointer items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-3"
+            >
               <div className="min-w-0 pr-4">
                 <p className="text-sm font-medium text-foreground">Share on Prayer Wall</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
@@ -432,10 +435,13 @@ export function MemberPrayerPage() {
                 onCheckedChange={setIsPublic}
                 aria-label="Share prayer request on the prayer wall"
               />
-            </div>
+            </label>
 
             {/* Anonymous toggle */}
-            <div className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-3">
+            <label
+              htmlFor="isAnonymous"
+              className="flex cursor-pointer items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-3"
+            >
               <div className="min-w-0 pr-4">
                 <p className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                   <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
@@ -453,7 +459,7 @@ export function MemberPrayerPage() {
                 onCheckedChange={setIsAnonymous}
                 aria-label="Submit prayer request anonymously"
               />
-            </div>
+            </label>
 
             <div className="flex items-start gap-2 text-xs text-muted-foreground">
               <Lock className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
@@ -462,7 +468,7 @@ export function MemberPrayerPage() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="min-h-[44px] w-full"
               disabled={submitting || !category || !request.trim()}
             >
               {submitting ? (
@@ -688,13 +694,13 @@ export function MemberPrayerPage() {
   // ─── Page
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
         {/* Page header */}
         <header className="mb-6 flex items-start gap-3">
           <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/30">
             <HeartHandshake className="h-6 w-6 text-rose-600 dark:text-rose-400" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight">Prayer Wall</h1>
             <p className="mt-0.5 text-sm text-muted-foreground">
               Lift each other up in prayer —{' '}
@@ -705,22 +711,22 @@ export function MemberPrayerPage() {
         </header>
 
         {/* Community stats strip */}
-        <div className="mb-6 grid grid-cols-3 gap-3">
-          <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20">
+        <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-2 py-2 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20 sm:px-4 sm:py-3">
             <Users className="mb-1 h-4 w-4 text-blue-500" />
             <p className="text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
               {publicPrayers.length}
             </p>
             <p className="text-xs text-blue-600/70 dark:text-blue-400/70">Requests</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-2 py-2 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20 sm:px-4 sm:py-3">
             <Calendar className="mb-1 h-4 w-4 text-amber-500" />
             <p className="text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl">
               {requestsThisMonth}
             </p>
             <p className="text-xs text-amber-600/70 dark:text-amber-400/70">This Month</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-2 py-2 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20 sm:px-4 sm:py-3">
             <Heart className="mb-1 h-4 w-4 fill-rose-500 text-rose-500" />
             <p className="text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl">
               {totalPrayers}
