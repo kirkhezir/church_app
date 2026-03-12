@@ -1,7 +1,7 @@
 # church_app Development Guidelines
 
 **Church Management Application for Sing Buri Adventist Center**  
-Last updated: 2026-03-10
+Last updated: 2026-03-12
 
 ## 🎯 Project Overview
 
@@ -89,6 +89,19 @@ frontend/src/
 **Testing**: Jest 29.x (backend), Playwright (E2E in `/tests/e2e`)  
 **External Services**: Cloudinary (image storage), Sentry (error monitoring)
 
+## 📂 Auto-Injected Instruction Files
+
+These files are automatically included in Copilot context based on the file you're editing — no manual `/add` or context steps needed:
+
+| When editing…       | Auto-injected file                                            | Key rules enforced                                                |
+| ------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `backend/**`        | `.github/instructions/backend.instructions.md`                | Clean Architecture, use-case pattern, Prisma, security, logging   |
+| `frontend/**`       | `.github/instructions/frontend.instructions.md`               | URL namespacing, routing, a11y, mobile-first, build rules         |
+| `backend/prisma/**` | `.github/instructions/neon-prisma-migrations.instructions.md` | Schema changes, migration safety, Neon branching, expand/contract |
+| `**` (all files)    | `.github/instructions/pre-push.instructions.md`               | Pre-push checklist: tsc, build, npm audit, CI/CD verification     |
+
+> Files use `applyTo` frontmatter. VS Code Copilot injects them automatically — no manual addition required.
+
 ## 🚀 Development Workflow
 
 ### Initial Setup
@@ -161,12 +174,17 @@ Files: `/e2e/*.spec.ts` — see `/e2e/` for current spec files.
 
 ```bash
 cd backend
-npx prisma studio            # Visual database browser
-npx prisma migrate dev       # Create new migration
+npx prisma studio            # Visual database browser (local/Neon)
+npx prisma migrate dev --name <name>  # Create new migration (dev only)
 npx prisma generate          # Regenerate Prisma Client after schema changes
+npx prisma migrate deploy    # Apply pending migrations (production — auto-run by Render)
 ```
 
-**Schema**: `backend/prisma/schema.prisma` - PostgreSQL models for members, events, announcements, messages, audit_logs, etc.
+**Schema**: `backend/prisma/schema.prisma` — PostgreSQL models for members, events, announcements, messages, audit_logs, etc.
+
+**Production rule**: Every push to `main` triggers Render to run `npx prisma migrate deploy && npm start`. Migrations are applied **before** new code starts — zero data loss, zero downtime for additive changes. For breaking changes (rename/remove column) use the **expand-and-contract** pattern. Full rules → `.github/instructions/backend.instructions.md` § Database Migrations.
+
+> ⚠️ **NEVER** run `prisma migrate reset`, `prisma db push`, or raw `DROP` statements in production.
 
 ## 📝 Code Conventions
 
@@ -213,134 +231,7 @@ npm run build   # Must exit with code 0, zero TypeScript errors
 - Dependency inversion: Use interfaces from `backend/src/domain/interfaces` in use cases; concrete repositories live in `backend/src/infrastructure/database/repositories`.
 - Favor explicitness: Prefer named flows like `AuthenticateUser`, `EnrollMFA`, `RSVPToEvent` over clever one-liners in auth/MFA paths.
 
-### Backend Patterns
-
-**Use Cases** - Single-responsibility business logic:
-
-```typescript
-// application/useCases/createEvent.ts
-export class CreateEvent {
-  constructor(private eventRepository: IEventRepository) {}
-
-  async execute(input: CreateEventInput): Promise<CreateEventOutput> {
-    // Validation
-    if (input.startDateTime < new Date()) {
-      throw new Error("Event start date cannot be in the past");
-    }
-    // Business logic
-    const event = new Event(/* ... */);
-    return await this.eventRepository.create(event);
-  }
-}
-```
-
-**Controllers** - Thin wrappers calling use cases:
-
-```typescript
-// presentation/controllers/eventController.ts
-export async function createEvent(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const result = await createEventUseCase.execute(req.body);
-    res.status(201).json(result);
-  } catch (error: any) {
-    logger.error("Create event error", { error: error.message });
-    next(error); // Pass to error handler middleware
-  }
-}
-```
-
-**Repository Pattern** - All database access via interfaces:
-
-```typescript
-// domain/interfaces/IEventRepository.ts
-export interface IEventRepository {
-  create(event: Event): Promise<Event>;
-  findById(id: string): Promise<Event | null>;
-  // ...
-}
-```
-
-**Logging** - Use Winston logger from `infrastructure/logging/logger`:
-
-```typescript
-import { logger } from "../infrastructure/logging/logger";
-logger.info("Event created", { eventId, userId });
-logger.error("Failed to send email", { error: error.message });
-```
-
-### Frontend Patterns
-
-**Routing & URL Namespacing** - Strict separation between landing pages and app pages:
-
-```tsx
-// Frontend Routes (React Router)
-/                    → Landing page (public)
-/about, /visit       → Landing pages (public)
-/events              → Public events calendar (public)
-/login               → Login page (public)
-/app/dashboard       → Member dashboard (authenticated)
-/app/events          → Member events calendar (authenticated)
-/app/admin/*         → Admin pages (admin role required)
-
-// Backend API Endpoints (always /api/v1/*)
-/api/v1/members/dashboard      ← Called by /app/dashboard page
-/api/v1/members/me             ← Called by /app/profile page
-/api/v1/events                 ← Called by both /events and /app/events pages
-/api/v1/announcements          ← Called by /app/announcements page
-/api/v1/admin/*                ← Called by /app/admin/* pages
-```
-
-**CRITICAL**: Never confuse frontend routes (`/app/*`) with backend API paths (`/api/v1/*`)
-
-- When calling `apiClient.get('/members/dashboard')`, the full URL becomes `http://localhost:3000/api/v1/members/dashboard`
-- The `/app` prefix is ONLY for frontend React Router paths
-- API calls should reference `/members/`, `/events/`, `/announcements/`, NOT `/app/members/`
-
-**API Services** - Centralized in `services/endpoints/`:
-
-```typescript
-// services/endpoints/eventService.ts
-import apiClient from "../api/apiClient";
-export const eventService = {
-  async getEvents(): Promise<Event[]> {
-    return await apiClient.get("/events"); // Correct: /api/v1/events
-  },
-  // ...
-};
-```
-
-**Authentication** - Use AuthContext:
-
-```typescript
-import { useAuth } from "../contexts/AuthContext";
-const { member, login, logout, isAuthenticated } = useAuth();
-```
-
-**shadcn/ui Components** - All UI components in `components/ui/`:
-
-- Use `npx shadcn-ui@latest add <component>` to add new components
-- Customize via Tailwind classes, NOT direct CSS
-- See **shadcn-ui-guide.md** for detailed component usage
-
-**Route Protection**:
-
-```tsx
-import { PrivateRoute } from './components/routing/PrivateRoute';
-import { AdminRoute } from './components/routing/AdminRoute';
-
-<Route path="/app/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-<Route path="/app/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
-```
-
-**Lazy Loading** - All non-critical routes lazy-loaded:
-
-```tsx
-const EventsPage = lazy(() => import("./pages/app/events/EventsListPage"));
-```
+> Full patterns with code examples live in `.github/instructions/backend.instructions.md` (auto-injected when editing `backend/**`) and `.github/instructions/frontend.instructions.md` (auto-injected when editing `frontend/**`).
 
 ## 🔌 Real-Time Features
 
@@ -390,7 +281,7 @@ app.use("/api/v1", sanitizeInputMiddleware);
 
 ```bash
 cd backend
-npm run build                # esbuild → dist/index.js
+npm run build                # esbuild → dist/index.js (also runs prisma generate)
 npm start                    # Production server
 ```
 
@@ -403,9 +294,11 @@ npm run build                # Vite → dist/ (optimized with code splitting)
 
 **Deployment Platforms**:
 
-- **Frontend**: Vercel (see `vercel.json`)
-- **Backend**: Render.com (see `render.yaml`)
-- **Database**: Neon PostgreSQL (managed via Vercel)
+- **Frontend**: Vercel (see `vercel.json`) — auto-deploys on push to `main`
+- **Backend**: Render.com (see `render.yaml`) — auto-deploys on push to `main`
+  - `buildCommand`: `npm install && npm run build && npx prisma generate`
+  - `startCommand`: `npx prisma migrate deploy && npm start` ← migrations run automatically
+- **Database**: Neon PostgreSQL — use Neon branches to test migrations against real data before pushing
 - **Files**: Cloudinary (env: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
 
 See `DEPLOYMENT_GUIDE.md` for complete deployment instructions.
@@ -426,39 +319,11 @@ docker-compose -f docker-compose.prod.yml up  # Production
 - **Manual Testing**: `MANUAL_TEST_GUIDE.md`
 - **Security**: `SECURITY_GUIDE.md`, `SECURITY_INCIDENT_REPORT.md`
 
-## 📱 Frontend Quality Standards
+## 🛠 Development Skills & Tools
 
-Every frontend change — feature, fix, or enhancement — must meet these standards:
+> Full frontend quality standards (mobile-first, a11y, React performance, PWA) are in `.github/instructions/frontend.instructions.md` — auto-injected when editing `frontend/**`.
 
-### Mobile-First & Responsive
-
-- **Write Tailwind classes mobile-first**: base styles = mobile, `sm:` / `md:` / `lg:` = larger screens
-- No horizontal scroll at any viewport width; touch targets minimum 44×44px; body text minimum 16px on mobile
-- Images: use `loading="lazy"`, `srcset`, WebP, and explicit `width`/`height` to prevent layout shift
-- Viewport meta tag `width=device-width, initial-scale=1` is mandatory
-
-### Accessibility (WCAG 2.1 AA)
-
-- Color contrast ≥4.5:1; visible `focus-visible:ring` on all interactive elements
-- Semantic HTML always: `<main>`, `<nav>`, `<header>`, `<section>`, `<article>`, `<button>`, `<a href>`
-- Every input has an associated `<label>`; icon-only buttons have `aria-label`
-- Respect `prefers-reduced-motion` — wrap animations in a media query check
-
-### React Performance
-
-- `Promise.all()` for independent async calls — never sequential `await` (waterfall)
-- Import directly from source files — never barrel imports that inflate bundle size
-- `React.lazy()` for all non-critical routes and heavy components
-- Use ternary (`condition ? <A /> : null`), not `&&`, for conditional rendering
-- Derive state during render; don't sync state via `useEffect`
-
-### PWA
-
-- Critical pages (dashboard, events, announcements) must function offline via service worker cache
-- Lighthouse targets: Performance ≥90, Accessibility ≥95, SEO ≥90
-- Core Web Vitals: LCP < 2.5s, CLS < 0.1, INP < 100ms
-
-### Skills to Use for Frontend Work
+### Frontend Skills
 
 | Task                                 | Invoke                         |
 | ------------------------------------ | ------------------------------ |
@@ -467,6 +332,16 @@ Every frontend change — feature, fix, or enhancement — must meet these stand
 | React component performance review   | `#vercel-react-best-practices` |
 
 See **`.github/instructions/frontend.instructions.md`** for the full rules (auto-injected when editing `frontend/**`).
+
+### Backend Development Tools
+
+| Task                             | Invoke                |
+| -------------------------------- | --------------------- |
+| Safe schema change with guidance | `#new-migration`      |
+| All pre-push checks + CI verify  | `#pre-push-checklist` |
+
+See **`.github/instructions/backend.instructions.md`** for the full rules (auto-injected when editing `backend/**`).  
+See **`.github/instructions/neon-prisma-migrations.instructions.md`** for Prisma/migration rules (auto-injected when editing `backend/prisma/**`).
 
 ---
 
@@ -526,7 +401,14 @@ When implementing features, leverage available MCP servers for enhanced developm
 
 ## Recent Changes
 
-- 001-full-stack-web: Added TypeScript 5.x (Node.js 20.x LTS for backend, React 18.x for frontend)
+- **2026-03-12**: Production database migration pipeline
+  - `render.yaml` `startCommand` updated to `npx prisma migrate deploy && npm start` — migrations auto-apply on every Render deploy before code starts
+  - `buildCommand` updated to include `npx prisma generate`
+  - Full database migration rules (expand-and-contract, rollback, Neon branching) added to `.github/instructions/backend.instructions.md`
+  - `.github/instructions/neon-prisma-migrations.instructions.md` — auto-injected when editing `backend/prisma/**`
+  - `.github/prompts/new-migration.prompt.md` — invoke with `#new-migration` for guided migration creation
+  - `hono` override bumped to `>=4.12.7` (prototype pollution CVE fix)
+- **2026-03-10**: TypeScript 5.x stack (Node.js 20.x LTS backend, React 18.x frontend)
 
 <!-- MANUAL ADDITIONS START -->
 
@@ -726,7 +608,7 @@ Current security overrides in `backend/package.json`:
 ```json
 "overrides": {
   "lodash": "^4.17.23",           // prototype pollution fix
-  "hono": ">=4.12.5",             // serveStatic / SSE / cookie injection fix
+  "hono": ">=4.12.7",             // prototype pollution fix (parseBody dot:true)
   "@hono/node-server": ">=1.19.10", // authorization bypass fix (via prisma)
   "fast-xml-parser": ">=5.4.2",   // stack overflow DoS fix
   "qs": "^6.15.0",                // prototype pollution fix

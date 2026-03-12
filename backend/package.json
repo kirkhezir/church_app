@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "prisma generate && npx esbuild src/index.ts --bundle --platform=node --outdir=dist --format=cjs --external:@prisma/client --external:bcrypt --external:swagger-ui-express --external:swagger-ui-dist --external:swagger-ui-dist/*",
-    "start": "node dist/index.js",
+    "start": "node --max-old-space-size=384 dist/index.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:integration": "jest --testPathPattern=tests/integration",
@@ -106,7 +106,7 @@
   },
   "overrides": {
     "lodash": "^4.17.23",
-    "hono": ">=4.12.5",
+    "hono": ">=4.12.7",
     "@hono/node-server": ">=1.19.10",
     "fast-xml-parser": ">=5.4.2",
     "qs": "^6.15.0",

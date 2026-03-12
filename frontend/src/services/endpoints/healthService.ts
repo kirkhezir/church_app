@@ -34,6 +34,7 @@ export interface DetailedHealth {
     memoryUsage: {
       heapUsed: number;
       heapTotal: number;
+      heapLimit: number;
       heapUsedPercentage: number;
       rss: number;
       external: number;
@@ -46,6 +47,12 @@ export interface DetailedHealth {
         user: number;
         system: number;
       };
+      cpuCount: number;
+    };
+    systemMemory?: {
+      total: number;
+      free: number;
+      usedPercent: number;
     };
   };
 }
@@ -80,8 +87,8 @@ export async function getHealth(): Promise<SimpleHealth> {
 /**
  * Get detailed health status
  */
-export async function getDetailedHealth(): Promise<DetailedHealth> {
-  const response = await fetch(`${healthBaseUrl}/health/detailed`);
+export async function getDetailedHealth(signal?: AbortSignal): Promise<DetailedHealth> {
+  const response = await fetch(`${healthBaseUrl}/health/detailed`, { signal });
   if (!response.ok) {
     throw new Error('Detailed health check failed');
   }

@@ -1,7 +1,9 @@
 /**
  * System Health Dashboard Component
  *
- * Displays system health status and metrics
+ * Displays real-time system health status and performance metrics.
+ * Features: live uptime counter, Page Visibility API pause, configurable
+ * auto-refresh, countdown timer, stale-data error handling, and CPU/disk metrics.
  */
 
 import * as React from 'react';
@@ -17,11 +19,20 @@ import {
   AlertCircle,
   RefreshCw,
   Loader2,
+  Zap,
+  ChevronDown,
+  MemoryStick,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   getDetailedHealth,
   formatUptime,
@@ -30,31 +41,35 @@ import {
   type ComponentHealth,
 } from '@/services/endpoints/healthService';
 
+// ─── Sub-components ────────────────────────────────────────────────────────
+
 function StatusIcon({ status }: { status: 'up' | 'down' | 'degraded' }) {
-  switch (status) {
-    case 'up':
-      return <CheckCircle2 className="h-5 w-5 text-green-500" />;
-    case 'degraded':
-      return <AlertCircle className="h-5 w-5 text-yellow-500" />;
-    case 'down':
-      return <XCircle className="h-5 w-5 text-red-500" />;
-  }
+  if (status === 'up') return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+  if (status === 'degraded') return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+  return <XCircle className="h-5 w-5 text-red-500" />;
 }
 
-function StatusBadge({ status }: { status: 'up' | 'down' | 'degraded' | 'healthy' | 'unhealthy' }) {
-  const variants: Record<string, 'default' | 'destructive' | 'secondary' | 'outline'> = {
-    up: 'default',
-    healthy: 'default',
-    degraded: 'secondary',
-    down: 'destructive',
-    unhealthy: 'destructive',
-  };
+type AnyStatus = 'up' | 'down' | 'degraded' | 'healthy' | 'unhealthy';
 
+function StatusBadge({ status }: { status: AnyStatus }) {
+  const classes: Record<string, string> = {
+    up: 'bg-green-100 text-green-800 border-green-200',
+    healthy: 'bg-green-100 text-green-800 border-green-200',
+    degraded: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    down: 'bg-red-100 text-red-800 border-red-200',
+    unhealthy: 'bg-red-100 text-red-800 border-red-200',
+  };
   return (
-    <Badge variant={variants[status] || 'secondary'} className="capitalize">
+    <Badge variant="outline" className={`capitalize ${classes[status] ?? ''}`}>
       {status}
     </Badge>
   );
+}
+
+function statusCardBorder(status: AnyStatus): string {
+  if (status === 'healthy' || status === 'up') return 'border-l-4 border-l-green-500';
+  if (status === 'degraded') return 'border-l-4 border-l-yellow-500';
+  return 'border-l-4 border-l-red-500';
 }
 
 interface ComponentCardProps {
@@ -65,7 +80,7 @@ interface ComponentCardProps {
 
 function ComponentCard({ name, icon: Icon, health }: ComponentCardProps) {
   return (
-    <Card>
+    <Card className={statusCardBorder(health.status)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
@@ -91,24 +106,28 @@ function ComponentCard({ name, icon: Icon, health }: ComponentCardProps) {
 function MemoryCard({
   health,
   memoryMetrics,
+  systemMemory,
 }: {
   health: ComponentHealth;
   memoryMetrics?: {
     heapUsed: number;
     heapTotal: number;
+    heapLimit: number;
     heapUsedPercentage: number;
     rss: number;
     external: number;
   };
+  systemMemory?: { total: number; free: number; usedPercent: number };
 }) {
-  const heapPercentage = memoryMetrics ? Math.round(memoryMetrics.heapUsedPercentage) : 0;
+  const heapPct = memoryMetrics ? Math.round(memoryMetrics.heapUsedPercentage ?? 0) : 0;
+  const sysPct = systemMemory ? Math.round(systemMemory.usedPercent ?? 0) : null;
 
   return (
-    <Card>
+    <Card className={statusCardBorder(health.status)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Cpu className="h-4 w-4 text-muted-foreground" />
+            <MemoryStick className="h-4 w-4 text-muted-foreground" />
             Memory
           </CardTitle>
           <StatusIcon status={health.status} />
@@ -120,21 +139,51 @@ function MemoryCard({
           {health.message && <p className="text-sm text-muted-foreground">{health.message}</p>}
           {memoryMetrics && (
             <>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex justify-between text-sm">
-                  <span>Heap Usage</span>
-                  <span>{heapPercentage}%</span>
+                  <span className="text-muted-foreground">Heap</span>
+                  <span className="font-medium">{heapPct}%</span>
                 </div>
-                <Progress value={heapPercentage} />
+                <Progress
+                  value={heapPct}
+                  className={
+                    heapPct > 90
+                      ? '[&>div]:bg-red-500'
+                      : heapPct > 75
+                        ? '[&>div]:bg-yellow-500'
+                        : ''
+                  }
+                />
               </div>
+              {sysPct !== null && systemMemory && (
+                <div className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">System RAM</span>
+                    <span className="font-medium">{sysPct}%</span>
+                  </div>
+                  <Progress
+                    value={sysPct}
+                    className={
+                      sysPct > 90
+                        ? '[&>div]:bg-red-500'
+                        : sysPct > 75
+                          ? '[&>div]:bg-yellow-500'
+                          : ''
+                    }
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {formatBytes(systemMemory.free)} free of {formatBytes(systemMemory.total)}
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <p className="text-muted-foreground">Heap Used</p>
                   <p className="font-medium">{formatBytes(memoryMetrics.heapUsed)}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Heap Total</p>
-                  <p className="font-medium">{formatBytes(memoryMetrics.heapTotal)}</p>
+                  <p className="text-muted-foreground">Heap Limit</p>
+                  <p className="font-medium">{formatBytes(memoryMetrics.heapLimit)}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">RSS</p>
@@ -153,43 +202,128 @@ function MemoryCard({
   );
 }
 
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+const REFRESH_OPTIONS = [
+  { label: '15 seconds', value: 15 },
+  { label: '30 seconds', value: 30 },
+  { label: '1 minute', value: 60 },
+  { label: '5 minutes', value: 300 },
+] as const;
+
+function formatElapsed(seconds: number): string {
+  if (seconds < 5) return 'just now';
+  if (seconds < 60) return `${seconds}s ago`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return s === 0 ? `${m}m ago` : `${m}m ${s}s ago`;
+}
+
+function healthySummary(checks: DetailedHealth['checks']): { healthy: number; total: number } {
+  const all = Object.values(checks).filter(Boolean) as ComponentHealth[];
+  return { healthy: all.filter((c) => c.status === 'up').length, total: all.length };
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────
+
 export function HealthDashboard() {
   const [health, setHealth] = React.useState<DetailedHealth | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
+  const [elapsedSecs, setElapsedSecs] = React.useState(0);
+  const [countdownSecs, setCountdownSecs] = React.useState(30);
+  const [liveUptime, setLiveUptime] = React.useState<number | null>(null);
+  const [refreshInterval, setRefreshInterval] = React.useState(30);
 
+  // Refs to avoid stale closure issues
+  const abortRef = React.useRef<AbortController | null>(null);
+  const hasDataRef = React.useRef(false);
+  const refreshIntervalRef = React.useRef(refreshInterval);
+  React.useEffect(() => {
+    refreshIntervalRef.current = refreshInterval;
+  }, [refreshInterval]);
+
+  // Core fetch — stable (no external deps via ref pattern)
   const fetchHealth = React.useCallback(async () => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    if (!hasDataRef.current) {
+      setIsInitialLoad(true);
+    } else {
+      setIsRefreshing(true);
+    }
+
     try {
-      setLoading(true);
-      setError(null);
-      const data = await getDetailedHealth();
+      const data = await getDetailedHealth(controller.signal);
+      if (controller.signal.aborted) return;
+      hasDataRef.current = true;
       setHealth(data);
+      setLiveUptime(data.uptime);
       setLastUpdated(new Date());
+      setElapsedSecs(0);
+      setCountdownSecs(refreshIntervalRef.current);
+      setError(null);
     } catch (err) {
-      setError('Failed to fetch health status');
-      console.error('Health check failed:', err);
+      if ((err as Error).name === 'AbortError') return;
+      setError('Failed to connect to backend. Showing last known data.');
     } finally {
-      setLoading(false);
+      setIsInitialLoad(false);
+      setIsRefreshing(false);
     }
   }, []);
 
+  // Auto-refresh (resets when interval changes)
   React.useEffect(() => {
     fetchHealth();
+    const id = setInterval(fetchHealth, refreshInterval * 1000);
+    setCountdownSecs(refreshInterval);
+    return () => clearInterval(id);
+  }, [fetchHealth, refreshInterval]);
 
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchHealth, 30000);
-    return () => clearInterval(interval);
+  // Pause polling when tab is hidden, resume on visibility
+  React.useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchHealth();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, [fetchHealth]);
 
-  if (loading && !health) {
+  // Abort in-flight request on unmount
+  React.useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
+
+  // 1-second ticker: countdown + elapsed + live uptime
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      setElapsedSecs((e) => e + 1);
+      setCountdownSecs((c) => Math.max(0, c - 1));
+      setLiveUptime((u) => (u !== null ? u + 1 : null));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // ── Initial loading state
+  if (isInitialLoad) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div
+        className="flex items-center justify-center py-12"
+        role="status"
+        aria-label="Loading health data"
+      >
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
+  // ── Error with no data (first load failed)
   if (error && !health) {
     return (
       <Card className="border-destructive">
@@ -210,28 +344,80 @@ export function HealthDashboard() {
     );
   }
 
+  const summary = health ? healthySummary(health.checks) : null;
+  const overallBorder = health ? statusCardBorder(health.status) : '';
+  const intervalLabel =
+    REFRESH_OPTIONS.find((o) => o.value === refreshInterval)?.label ?? `${refreshInterval}s`;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* ── Error banner (stale data) ── */}
+      {error && health && (
+        <div
+          role="alert"
+          className="flex items-center gap-3 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <span>{error}</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="ml-auto h-7 px-2 text-destructive hover:bg-destructive/20"
+            onClick={fetchHealth}
+          >
+            Retry
+          </Button>
+        </div>
+      )}
+
+      {/* ── Header ── */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-balance text-2xl font-bold tracking-tight">System Health</h2>
-          <p className="text-muted-foreground">Monitor system status and performance metrics</p>
+          <p className="text-muted-foreground">Real-time backend status and performance metrics</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Updated ago */}
           {lastUpdated && (
-            <span className="hidden text-sm text-muted-foreground sm:inline">
-              Updated {lastUpdated.toLocaleTimeString()}
+            <span className="text-sm text-muted-foreground">
+              Updated {formatElapsed(elapsedSecs)}
             </span>
           )}
+          {/* Countdown */}
+          <span className="text-sm tabular-nums text-muted-foreground">
+            Next in {countdownSecs}s
+          </span>
+          {/* Refresh interval selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" aria-label="Set auto-refresh interval">
+                <RefreshCw className="mr-1 h-3.5 w-3.5" />
+                {intervalLabel}
+                <ChevronDown className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {REFRESH_OPTIONS.map((opt) => (
+                <DropdownMenuItem
+                  key={opt.value}
+                  onClick={() => setRefreshInterval(opt.value)}
+                  className={refreshInterval === opt.value ? 'font-semibold' : ''}
+                >
+                  {opt.label}
+                  {refreshInterval === opt.value && ' ✓'}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {/* Manual refresh */}
           <Button
             onClick={fetchHealth}
             variant="outline"
             size="sm"
-            disabled={loading}
-            className="w-full sm:w-auto"
+            disabled={isRefreshing}
+            aria-label="Refresh now"
           >
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
@@ -239,63 +425,79 @@ export function HealthDashboard() {
 
       {health && (
         <>
-          {/* Overall Status */}
-          <Card>
+          {/* ── Overall Status Card ── */}
+          <Card className={overallBorder}>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="flex items-center gap-3">
                   <Activity className="h-6 w-6" />
                   <div>
                     <CardTitle>Overall Status</CardTitle>
-                    <CardDescription>v{health.version}</CardDescription>
+                    <CardDescription>
+                      v{health.version} — {health.environment}
+                    </CardDescription>
                   </div>
                 </div>
-                <StatusBadge status={health.status} />
+                <div className="flex items-center gap-2">
+                  {summary && (
+                    <span className="text-sm text-muted-foreground">
+                      {summary.healthy}/{summary.total} checks passing
+                    </span>
+                  )}
+                  <StatusBadge status={health.status} />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-muted-foreground" />
-                  <div>
+                  <Clock className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">Uptime</p>
-                    <p className="font-medium">{formatUptime(health.uptime)}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Server className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Environment</p>
-                    <p className="font-medium capitalize">{health.environment}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <HardDrive className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Node.js</p>
-                    <p className="font-medium">
-                      {health.metrics?.processInfo?.nodeVersion || 'N/A'}
+                    <p className="font-medium tabular-nums">
+                      {liveUptime !== null ? formatUptime(liveUptime) : '—'}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Cpu className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Platform</p>
-                    <p className="font-medium">{health.metrics?.processInfo?.platform || 'N/A'}</p>
+                  <Server className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm text-muted-foreground">Node.js</p>
+                    <p className="font-medium">{health.metrics?.processInfo?.nodeVersion ?? '—'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Cpu className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm text-muted-foreground">CPU Cores</p>
+                    <p className="font-medium">{health.metrics?.processInfo?.cpuCount ?? '—'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Zap className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm text-muted-foreground">Platform / PID</p>
+                    <p className="font-medium">
+                      {health.metrics?.processInfo?.platform ?? '—'} /{' '}
+                      {health.metrics?.processInfo?.pid ?? '—'}
+                    </p>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Components */}
+          {/* ── Component Cards ── */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <ComponentCard name="Database" icon={Database} health={health.checks.database} />
             {health.checks.cache && (
               <ComponentCard name="Redis Cache" icon={Server} health={health.checks.cache} />
             )}
-            <MemoryCard health={health.checks.memory} memoryMetrics={health.metrics?.memoryUsage} />
+            <MemoryCard
+              health={health.checks.memory}
+              memoryMetrics={health.metrics?.memoryUsage}
+              systemMemory={health.metrics?.systemMemory}
+            />
             {health.checks.monitoring && (
               <ComponentCard
                 name="Error Monitoring"

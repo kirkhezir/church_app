@@ -31,8 +31,8 @@ export function initSentry(): void {
     // Performance monitoring
     tracesSampleRate: SENTRY_ENVIRONMENT === 'production' ? 0.1 : 1.0,
 
-    // Include local variables in stack traces
-    includeLocalVariables: true,
+    // Only capture local variables in development (saves ~5-10 MB in prod)
+    includeLocalVariables: SENTRY_ENVIRONMENT !== 'production',
 
     // Filter out noisy errors
     ignoreErrors: [
@@ -46,9 +46,9 @@ export function initSentry(): void {
       'Unauthorized',
     ],
 
-    // Additional configuration
-    maxBreadcrumbs: 50,
-    attachStacktrace: true,
+    // Reduce breadcrumb buffer in production to save memory
+    maxBreadcrumbs: SENTRY_ENVIRONMENT === 'production' ? 20 : 50,
+    attachStacktrace: SENTRY_ENVIRONMENT !== 'production',
 
     // Before send hook for filtering/modifying events
     beforeSend(event, hint) {
