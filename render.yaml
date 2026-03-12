@@ -23,6 +23,12 @@ services:
         value: production
       - key: NODE_OPTIONS
         value: --max-old-space-size=384
+      - key: SENTRY_ENABLED
+        value: "true"
+      - key: SENTRY_DSN
+        sync: false # Paste backend DSN from sentry.io/settings/khcabz/projects/church-app-backend/keys/
+      - key: SENTRY_ENVIRONMENT
+        value: production
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
