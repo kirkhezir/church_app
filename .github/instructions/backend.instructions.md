@@ -158,7 +158,7 @@ NEVER use `npm audit fix --force` — it may downgrade Prisma 7→6. Use `overri
 ```json
 "overrides": {
   "lodash": "^4.17.23",
-  "hono": ">=4.12.5",
+  "hono": ">=4.12.7",
   "@hono/node-server": ">=1.19.10",
   "fast-xml-parser": ">=5.4.2",
   "qs": "^6.15.0",
@@ -192,3 +192,225 @@ WebSocket server: `infrastructure/websocket/websocketServer.ts` — JWT-authenti
 cd backend && npx tsc --noEmit   # Must exit 0
 cd backend && npm audit           # Must report 0 vulnerabilities
 ```
+
+---
+
+## 🗄️ Database Migrations — Production Safety Rules
+
+This section governs every change to `backend/prisma/schema.prisma`. **Zero data loss and zero downtime are non-negotiable.** Render.com automatically runs `npx prisma migrate deploy` before `npm start` on every deploy, so migrations are applied atomically before new code goes live.
+
+### How Migrations Work in This Stack
+
+```
+Dev machine          │  Git push to main   │  Render.com (Production)
+─────────────────────│─────────────────────│──────────────────────────
+npx prisma migrate   │                     │  npx prisma migrate deploy
+  dev --name xyz     │  ──────────────►    │  (applies pending migrations)
+  (creates SQL file) │                     │  npm start
+  (updates dev DB)   │                     │  (new code runs on updated DB)
+```
+
+`prisma migrate deploy`:
+
+- Applies only **pending** migrations in chronological order
+- Is **idempotent** — safe to run multiple times
+- Does **not** reset, drop, or touch already-applied migrations
+- Does **not** rely on a shadow database
+- If it fails, Render aborts the deploy — the old version keeps serving traffic
+
+### ❌ NEVER Use These Commands in Production
+
+| Command                              | Why it's dangerous                                                 |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `prisma migrate reset`               | **DROPS ALL DATA** — development only                              |
+| `prisma migrate reset --force`       | Same, bypasses confirmation prompt                                 |
+| `prisma db push`                     | Bypasses the migration history — causes drift between environments |
+| `prisma db push --force-reset`       | Wipes the database                                                 |
+| Raw `DROP TABLE` / `DROP COLUMN` SQL | Instant irreversible data loss                                     |
+
+### ✅ Rules for Every Schema Change
+
+**Before touching `schema.prisma`, ask:**
+
+1. Is this **additive** (new model, new optional column, new index)? → Safe to deploy directly.
+2. Does this **rename, remove, or make NOT NULL** an existing column? → Use expand-and-contract.
+3. Is there data that must be **backfilled**? → Write a data migration script first.
+
+**Always:**
+
+- Run `npx prisma migrate dev --name <descriptive_name>` locally to generate the migration SQL
+- Review the generated SQL in `backend/prisma/migrations/*/migration.sql` before committing
+- Test locally that `npx prisma migrate deploy` succeeds on a clean DB
+- Commit the migration file **together with** the schema and application code change
+
+**Never:**
+
+- Modify an existing `migration.sql` file that has already been applied to any environment
+- Delete migration folders that are already applied
+- Commit a schema change without the migration file (Prisma will error on deploy)
+
+### ✅ Additive Changes — Safe by Default
+
+These can be deployed directly without any special process:
+
+```prisma
+// ✅ Add a new optional column
+model members {
+  bio String?   // nullable = safe, no data loss
+}
+
+// ✅ Add a new model (new table)
+model prayer_requests {
+  id String @id
+  // ...
+}
+
+// ✅ Add an index
+model events {
+  @@index([startDateTime])
+}
+
+// ✅ Add a column with a default value
+model members {
+  isVerified Boolean @default(false)
+}
+```
+
+```bash
+npx prisma migrate dev --name add_member_bio
+# Review backend/prisma/migrations/*/migration.sql
+git add backend/prisma/ && git commit -m "feat: add member bio column"
+# Push → Render auto-runs migrate deploy before starting
+```
+
+### ✅ Expand-and-Contract — Breaking Changes (Rename/Remove/NOT NULL)
+
+Use this 4-step pattern when renaming a column, removing a column, or making a nullable column NOT NULL. Each step is a **separate deploy**.
+
+**Example: rename `bio` → `biography`**
+
+**Step 1 — EXPAND: add new column alongside old**
+
+```prisma
+model members {
+  bio       String?   // keep old column
+  biography String?   // add new column
+}
+```
+
+```bash
+npx prisma migrate dev --name expand_add_biography_column
+git add backend/prisma/ && git commit && git push
+# Deploy → both columns exist, old code still works
+```
+
+**Step 2 — BACKFILL: copy data to new column**
+
+```typescript
+// Write a one-off script (scripts/backfill-biography.ts)
+const members = await prisma.members.findMany({ where: { biography: null } });
+for (const m of members) {
+  await prisma.members.update({
+    where: { id: m.id },
+    data: { biography: m.bio },
+  });
+}
+```
+
+```bash
+cd backend && npx ts-node scripts/backfill-biography.ts  # run against production DB
+```
+
+**Step 3 — SWITCH: update application code to use new column only**
+
+```typescript
+// Stop reading/writing 'bio', use 'biography' everywhere
+```
+
+```bash
+git add . && git commit -m "feat: switch app to use biography column" && git push
+# Deploy → new code uses new column, old column is no longer written
+```
+
+**Step 4 — CONTRACT: remove old column**
+
+```prisma
+model members {
+  // bio removed
+  biography String?   // now the only column
+}
+```
+
+```bash
+npx prisma migrate dev --name contract_remove_bio_column
+git add backend/prisma/ && git commit -m "chore: remove deprecated bio column" && git push
+# Deploy → old column dropped cleanly, no data in-use is lost
+```
+
+### ✅ NOT NULL Column on Existing Table
+
+Adding a `NOT NULL` column to a table with existing rows **will fail** unless you provide a `DEFAULT` or backfill first:
+
+```prisma
+// ❌ Will fail if table has rows — no default = Postgres error
+model members {
+  role Role  // NOT NULL without @default
+}
+
+// ✅ Phase 1: add with a default so existing rows get a value
+model members {
+  role Role @default(MEMBER)
+}
+
+// ✅ Phase 2 (optional): once backfilled, enforce stricter defaults
+```
+
+### ✅ Testing Migrations Safely with Neon Branches
+
+Neon allows creating an isolated branch of the production database. Use this to test migrations against real data before pushing:
+
+```bash
+# 1. Create a branch from the production database via Neon console or MCP
+# 2. Set DATABASE_URL to the branch connection string
+# 3. Dry-run migration against the branch
+DATABASE_URL="<neon-branch-url>" npx prisma migrate deploy
+
+# 4. Verify data integrity in Neon Studio
+# 5. If successful, push migration to git → Render applies to production
+```
+
+### ✅ Rollback Strategy
+
+Prisma does not auto-generate rollback SQL. For critical changes, write a `down.sql` manually:
+
+```bash
+# If a migration caused problems:
+npx prisma db execute --file ./down.sql
+# Then manually mark the migration as rolled back in _prisma_migrations table if needed
+npx prisma migrate resolve --rolled-back <migration_name>
+```
+
+For this codebase, the safest rollback is always a **forward fix** — write a new migration that undoes the bad change.
+
+### ✅ Pre-Push Checklist — Schema Changes
+
+Before committing any change to `schema.prisma`:
+
+- [ ] `npx prisma migrate dev --name <name>` generated a new migration file
+- [ ] Reviewed the generated `migration.sql` — no unintended `DROP` statements
+- [ ] Migration file is committed alongside schema and code changes
+- [ ] `npx prisma generate` succeeds locally
+- [ ] `npx tsc --noEmit` passes (no TS2322 from Prisma `include`/`select` changes)
+- [ ] No existing migration SQL files were modified
+- [ ] Additive changes only **OR** expand-and-contract pattern was followed for breaking changes
+- [ ] If NOT NULL was added, a `@default` was provided or rows were backfilled first
+
+### Development vs Production Commands Reference
+
+| Task                  | Local Dev                         | Production (Render auto-runs) |
+| --------------------- | --------------------------------- | ----------------------------- |
+| Apply new migration   | `npx prisma migrate dev --name x` | `npx prisma migrate deploy`   |
+| Regenerate client     | `npx prisma generate`             | Part of `buildCommand`        |
+| Explore data          | `npx prisma studio`               | Neon console / Studio         |
+| Reset DB (local only) | `npx prisma migrate reset`        | ❌ NEVER                      |
+| Inspect schema drift  | `npx prisma migrate diff`         | ❌ Use deploy only            |

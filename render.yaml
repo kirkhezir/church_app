@@ -7,8 +7,8 @@ services:
     region: singapore
     plan: free
     branch: main
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm install && npm run build && npx prisma generate
+    startCommand: npx prisma migrate deploy && npm start
     buildFilter:
       paths:
         - backend/**

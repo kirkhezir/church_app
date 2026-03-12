@@ -726,7 +726,7 @@ Current security overrides in `backend/package.json`:
 ```json
 "overrides": {
   "lodash": "^4.17.23",           // prototype pollution fix
-  "hono": ">=4.12.5",             // serveStatic / SSE / cookie injection fix
+  "hono": ">=4.12.7",             // prototype pollution fix (parseBody dot:true)
   "@hono/node-server": ">=1.19.10", // authorization bypass fix (via prisma)
   "fast-xml-parser": ">=5.4.2",   // stack overflow DoS fix
   "qs": "^6.15.0",                // prototype pollution fix
