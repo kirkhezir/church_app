@@ -38,7 +38,7 @@ class PrismaClientSingleton {
       const adapter = new PrismaPg({ connectionString });
       const client = new PrismaClient({
         adapter,
-        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
       }) as ExtendedPrismaClient;
 
       // Add camelCase aliases for snake_case model names

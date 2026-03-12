@@ -21,6 +21,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=384
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN

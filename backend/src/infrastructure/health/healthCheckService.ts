@@ -4,6 +4,9 @@
  * Provides comprehensive system health monitoring
  */
 
+import * as fs from 'fs';
+import * as os from 'os';
+import * as v8 from 'v8';
 import prisma from '../database/prismaClient';
 import { cacheService } from '../cache/cacheService';
 import { getSentryStatus } from '../monitoring/sentry';
@@ -25,6 +28,7 @@ interface HealthStatus {
   metrics: {
     memoryUsage: MemoryMetrics;
     processInfo: ProcessInfo;
+    systemMemory: SystemMemory;
   };
 }
 
@@ -37,6 +41,7 @@ interface ComponentHealth {
 interface MemoryMetrics {
   heapUsed: number;
   heapTotal: number;
+  heapLimit: number;
   heapUsedPercentage: number;
   rss: number;
   external: number;
@@ -47,6 +52,13 @@ interface ProcessInfo {
   nodeVersion: string;
   platform: string;
   cpuUsage: NodeJS.CpuUsage;
+  cpuCount: number;
+}
+
+interface SystemMemory {
+  total: number;
+  free: number;
+  usedPercent: number;
 }
 
 class HealthCheckService {
@@ -85,6 +97,7 @@ class HealthCheckService {
       metrics: {
         memoryUsage: this.getMemoryMetrics(),
         processInfo: this.getProcessInfo(),
+        systemMemory: this.getSystemMemory(),
       },
     };
   }
@@ -162,19 +175,18 @@ class HealthCheckService {
   private async checkMemory(): Promise<ComponentHealth> {
     const metrics = this.getMemoryMetrics();
 
-    // Alert if heap usage > 90%
-    if (metrics.heapUsedPercentage > 90) {
-      return {
-        status: 'degraded',
-        message: `High memory usage: ${metrics.heapUsedPercentage.toFixed(1)}%`,
-      };
-    }
-
-    // Alert if heap usage > 95%
+    // Check critical threshold first (must come before degraded check)
     if (metrics.heapUsedPercentage > 95) {
       return {
         status: 'down',
         message: `Critical memory usage: ${metrics.heapUsedPercentage.toFixed(1)}%`,
+      };
+    }
+
+    if (metrics.heapUsedPercentage > 90) {
+      return {
+        status: 'degraded',
+        message: `High memory usage: ${metrics.heapUsedPercentage.toFixed(1)}%`,
       };
     }
 
@@ -185,15 +197,39 @@ class HealthCheckService {
   }
 
   /**
-   * Check disk space (basic check)
+   * Check disk space using fs.statfsSync (Node 19+)
    */
   private checkDisk(): ComponentHealth {
-    // Basic check - just ensure we can write
-    // In production, you'd want to check actual disk space
-    return {
-      status: 'up',
-      message: 'Disk check passed',
-    };
+    try {
+      const stats = fs.statfsSync(process.cwd());
+      const totalBytes = stats.blocks * stats.bsize;
+      const availableBytes = stats.bavail * stats.bsize;
+      if (totalBytes === 0) {
+        return { status: 'up', message: 'Disk check passed' };
+      }
+      const usedPercent = ((totalBytes - availableBytes) / totalBytes) * 100;
+      const totalGB = (totalBytes / 1024 ** 3).toFixed(1);
+      const freeGB = (availableBytes / 1024 ** 3).toFixed(1);
+
+      if (usedPercent > 95) {
+        return {
+          status: 'down',
+          message: `Critical disk usage: ${usedPercent.toFixed(1)}% used (${freeGB} GB free of ${totalGB} GB)`,
+        };
+      }
+      if (usedPercent > 80) {
+        return {
+          status: 'degraded',
+          message: `High disk usage: ${usedPercent.toFixed(1)}% used (${freeGB} GB free of ${totalGB} GB)`,
+        };
+      }
+      return {
+        status: 'up',
+        message: `Disk usage: ${usedPercent.toFixed(1)}% used — ${freeGB} GB free of ${totalGB} GB`,
+      };
+    } catch {
+      return { status: 'up', message: 'Disk check passed' };
+    }
   }
 
   /**
@@ -217,13 +253,18 @@ class HealthCheckService {
 
   /**
    * Get detailed memory metrics
+   * Uses v8.getHeapStatistics() for the true heap limit instead of heapTotal
+   * (heapTotal is just the currently-allocated heap, not the maximum)
    */
   private getMemoryMetrics(): MemoryMetrics {
     const usage = process.memoryUsage();
+    const heapStats = v8.getHeapStatistics();
+    const heapLimit = heapStats.heap_size_limit;
     return {
       heapUsed: usage.heapUsed,
       heapTotal: usage.heapTotal,
-      heapUsedPercentage: (usage.heapUsed / usage.heapTotal) * 100,
+      heapLimit,
+      heapUsedPercentage: (usage.heapUsed / heapLimit) * 100,
       rss: usage.rss,
       external: usage.external,
     };
@@ -238,6 +279,20 @@ class HealthCheckService {
       nodeVersion: process.version,
       platform: process.platform,
       cpuUsage: process.cpuUsage(),
+      cpuCount: os.cpus().length,
+    };
+  }
+
+  /**
+   * Get system memory (OS-level, not just heap)
+   */
+  private getSystemMemory(): SystemMemory {
+    const total = os.totalmem();
+    const free = os.freemem();
+    return {
+      total,
+      free,
+      usedPercent: ((total - free) / total) * 100,
     };
   }
 
