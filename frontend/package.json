@@ -96,6 +96,8 @@
   "overrides": {
     "test-exclude": "^7.0.1",
     "jsdom": "^28.1.0",
-    "glob": "^13.0.3"
+    "glob": "^13.0.3",
+    "flatted": ">=3.4.0",
+    "undici": ">=7.23.1"
   }
 }
