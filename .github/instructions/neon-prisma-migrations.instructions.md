@@ -35,11 +35,13 @@ git add backend/prisma/ && git add backend/src/
 
 ## Production deploy (automatic — no manual steps)
 
-Render.com runs this on every push to `main`:
+Render.com runs migrations during the **build step** on every push to `main`:
 
 ```
-npx prisma migrate deploy && npm start
+npm install && npm run build && npx prisma generate && npx prisma migrate deploy
 ```
+
+Then starts the app with `npm start`.
 
 `migrate deploy` applies only **pending** migrations in order. It is idempotent and safe. If it fails, Render aborts the deploy — the old version keeps serving.
 

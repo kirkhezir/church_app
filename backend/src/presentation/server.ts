@@ -15,12 +15,9 @@ import {
   sqlInjectionDetectionMiddleware,
 } from './middleware/sanitizationMiddleware';
 import { websocketServer } from '../infrastructure/websocket/websocketServer';
-import { initSentry, setupSentryErrorHandler } from '../infrastructure/monitoring/sentry';
+import { setupSentryErrorHandler } from '../infrastructure/monitoring/sentry';
 import healthRoutes from './routes/healthRoutes';
 import apiRouter from './routes/index';
-
-// Initialize Sentry early (before Express)
-initSentry();
 
 /**
  * Express Server Configuration
@@ -232,11 +229,16 @@ export class Server {
 
     // Start listening
     this.httpServer.listen(port, () => {
+      const env = process.env.NODE_ENV || 'development';
+      const host = env === 'production'
+        ? (process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${port}`)
+        : `http://localhost:${port}`;
+
       logger.info(`🚀 Server started on port ${port}`);
-      logger.info(`🏥 Health check: http://localhost:${port}/health`);
-      logger.info(`📡 API endpoint: http://localhost:${port}/api/v1`);
-      logger.info(`📚 API docs: http://localhost:${port}/api-docs`);
-      logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`🏥 Health check: ${host}/health`);
+      logger.info(`📡 API endpoint: ${host}/api/v1`);
+      logger.info(`📚 API docs: ${host}/api-docs`);
+      logger.info(`🌍 Environment: ${env}`);
     });
   }
 

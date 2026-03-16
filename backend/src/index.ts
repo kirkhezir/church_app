@@ -1,4 +1,9 @@
 import 'dotenv/config';
+import { initSentry } from './infrastructure/monitoring/sentry';
+
+// Initialize Sentry before any other imports so it can instrument Express
+initSentry();
+
 import { server } from './presentation/server';
 import { logger } from './infrastructure/logging/logger';
 import prisma from './infrastructure/database/prismaClient';

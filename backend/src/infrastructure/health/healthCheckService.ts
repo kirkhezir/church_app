@@ -211,13 +211,19 @@ class HealthCheckService {
       const totalGB = (totalBytes / 1024 ** 3).toFixed(1);
       const freeGB = (availableBytes / 1024 ** 3).toFixed(1);
 
-      if (usedPercent > 95) {
+      // Container environments (Render, Docker) have small ephemeral
+      // filesystems. Raise thresholds to avoid false-positive "degraded".
+      const isContainer = Boolean(process.env.RENDER || process.env.DOCKER);
+      const criticalThreshold = isContainer ? 98 : 95;
+      const warnThreshold = isContainer ? 95 : 80;
+
+      if (usedPercent > criticalThreshold) {
         return {
           status: 'down',
           message: `Critical disk usage: ${usedPercent.toFixed(1)}% used (${freeGB} GB free of ${totalGB} GB)`,
         };
       }
-      if (usedPercent > 80) {
+      if (usedPercent > warnThreshold) {
         return {
           status: 'degraded',
           message: `High disk usage: ${usedPercent.toFixed(1)}% used (${freeGB} GB free of ${totalGB} GB)`,

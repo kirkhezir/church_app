@@ -182,7 +182,7 @@ npx prisma migrate deploy    # Apply pending migrations (production — auto-run
 
 **Schema**: `backend/prisma/schema.prisma` — PostgreSQL models for members, events, announcements, messages, audit_logs, etc.
 
-**Production rule**: Every push to `main` triggers Render to run `npx prisma migrate deploy && npm start`. Migrations are applied **before** new code starts — zero data loss, zero downtime for additive changes. For breaking changes (rename/remove column) use the **expand-and-contract** pattern. Full rules → `.github/instructions/backend.instructions.md` § Database Migrations.
+**Production rule**: Every push to `main` triggers Render to run `npx prisma migrate deploy` during the build step, then `npm start`. Migrations are applied **before** new code starts — zero data loss, zero downtime for additive changes. For breaking changes (rename/remove column) use the **expand-and-contract** pattern. Full rules → `.github/instructions/backend.instructions.md` § Database Migrations.
 
 > ⚠️ **NEVER** run `prisma migrate reset`, `prisma db push`, or raw `DROP` statements in production.
 
@@ -296,8 +296,8 @@ npm run build                # Vite → dist/ (optimized with code splitting)
 
 - **Frontend**: Vercel (see `vercel.json`) — auto-deploys on push to `main`
 - **Backend**: Render.com (see `render.yaml`) — auto-deploys on push to `main`
-  - `buildCommand`: `npm install && npm run build && npx prisma generate`
-  - `startCommand`: `npx prisma migrate deploy && npm start` ← migrations run automatically
+  - `buildCommand`: `npm install && npm run build && npx prisma generate && npx prisma migrate deploy`
+  - `startCommand`: `npm start`
 - **Database**: Neon PostgreSQL — use Neon branches to test migrations against real data before pushing
 - **Files**: Cloudinary (env: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
 

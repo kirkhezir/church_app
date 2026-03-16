@@ -5,7 +5,7 @@
  */
 
 import * as Sentry from '@sentry/node';
-import { Express } from 'express';
+import type { Express } from 'express';
 import { logger } from '../logging/logger';
 
 // Sentry configuration
