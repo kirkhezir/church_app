@@ -230,9 +230,10 @@ export class Server {
     // Start listening
     this.httpServer.listen(port, () => {
       const env = process.env.NODE_ENV || 'development';
-      const host = env === 'production'
-        ? (process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${port}`)
-        : `http://localhost:${port}`;
+      const host =
+        env === 'production'
+          ? process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${port}`
+          : `http://localhost:${port}`;
 
       logger.info(`🚀 Server started on port ${port}`);
       logger.info(`🏥 Health check: ${host}/health`);
