@@ -150,7 +150,7 @@ export const RSVPListPage: React.FC = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap gap-6">
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-muted-foreground" />
                 <div>
@@ -166,6 +166,27 @@ export const RSVPListPage: React.FC = () => {
                   </div>
                 </div>
               )}
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <div>
+                  <p className="text-2xl font-bold tabular-nums">{confirmedCount}</p>
+                  <p className="text-sm text-muted-foreground">Confirmed</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-yellow-600" />
+                <div>
+                  <p className="text-2xl font-bold tabular-nums">{waitlistedCount}</p>
+                  <p className="text-sm text-muted-foreground">Waitlisted</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <XCircle className="h-5 w-5 text-red-600" />
+                <div>
+                  <p className="text-2xl font-bold tabular-nums">{cancelledCount}</p>
+                  <p className="text-sm text-muted-foreground">Cancelled</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -177,7 +198,10 @@ export const RSVPListPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             {/* Tabs for filtering by status */}
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as 'all' | RSVPStatus)}
+            >
               <TabsList>
                 <TabsTrigger value="all">All ({confirmedCount + waitlistedCount})</TabsTrigger>
                 <TabsTrigger value={RSVPStatus.CONFIRMED}>Confirmed ({confirmedCount})</TabsTrigger>

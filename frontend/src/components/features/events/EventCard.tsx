@@ -12,6 +12,7 @@ import { Event, EventCategory } from '../../../types/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
+import { Progress } from '../../ui/progress';
 import { format } from 'date-fns';
 
 interface EventCardProps {
@@ -61,6 +62,7 @@ export const EventCard = memo(function EventCard({
       <Card
         className={`cursor-pointer transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
         data-testid="event-card"
+        onClick={() => onViewDetails?.(event.id)}
       >
         <CardHeader>
           <div className="flex items-start justify-between">
@@ -109,14 +111,20 @@ export const EventCard = memo(function EventCard({
 
           {/* Capacity */}
           {event.maxCapacity && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <UsersIcon className="h-4 w-4" />
-              <span>
-                {event.rsvpCount || 0} / {event.maxCapacity} attendees
-                {availableSpots !== undefined && availableSpots > 0 && (
-                  <span className="ml-1 text-success">({availableSpots} spots left)</span>
-                )}
-              </span>
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <UsersIcon className="h-4 w-4" />
+                <span>
+                  {event.rsvpCount || 0} / {event.maxCapacity} attendees
+                  {availableSpots !== undefined && availableSpots > 0 && (
+                    <span className="ml-1 text-success">({availableSpots} spots left)</span>
+                  )}
+                </span>
+              </div>
+              <Progress
+                value={Math.min(((event.rsvpCount || 0) / event.maxCapacity) * 100, 100)}
+                className="h-1.5"
+              />
             </div>
           )}
 
@@ -132,7 +140,10 @@ export const EventCard = memo(function EventCard({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onViewDetails?.(event.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewDetails?.(event.id);
+              }}
               className="flex-1"
             >
               View Details
@@ -141,16 +152,26 @@ export const EventCard = memo(function EventCard({
             {showRSVPButton && !isCancelled && (
               <>
                 {event.hasUserRSVPd ? (
-                  <Button variant="success" size="sm" disabled className="flex-1">
+                  <Button
+                    variant="success"
+                    size="sm"
+                    disabled
+                    className="flex-1"
+                    aria-label="You are registered for this event"
+                  >
                     Going ✓
                   </Button>
                 ) : (
                   <Button
                     size="sm"
                     variant={isFull ? 'secondary' : 'warning'}
-                    onClick={() => onRSVP?.(event.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRSVP?.(event.id);
+                    }}
                     disabled={isFull}
                     className="flex-1"
+                    aria-label={isFull ? 'Event is at full capacity' : 'RSVP for this event'}
                   >
                     {isFull ? 'Event Full' : 'RSVP'}
                   </Button>

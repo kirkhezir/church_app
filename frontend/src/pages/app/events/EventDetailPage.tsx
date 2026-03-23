@@ -5,7 +5,7 @@ import {
   Calendar,
   MapPin,
   Users,
-  Clock,
+  User2,
   ArrowLeft,
   UserPlus,
   UserMinus,
@@ -36,6 +36,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Progress } from '@/components/ui/progress';
 
 const categoryColors: Record<EventCategory, string> = {
   [EventCategory.WORSHIP]: 'bg-accent text-primary',
@@ -225,6 +226,10 @@ export const EventDetailPage: React.FC = () => {
                     src={event.imageUrl}
                     alt={event.title}
                     className="h-32 w-32 rounded-lg object-cover"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 )}
               </div>
@@ -254,12 +259,16 @@ export const EventDetailPage: React.FC = () => {
               {event.maxCapacity && (
                 <div className="flex items-start gap-3">
                   <Users className="mt-0.5 h-5 w-5 text-muted-foreground" />
-                  <div>
+                  <div className="flex-1">
                     <p>
                       {event.rsvpCount || 0} / {event.maxCapacity} attendees
                     </p>
+                    <Progress
+                      value={Math.min(((event.rsvpCount || 0) / event.maxCapacity) * 100, 100)}
+                      className="mt-1.5 h-2"
+                    />
                     {isFull && (
-                      <p className="text-sm text-destructive">Event is at full capacity</p>
+                      <p className="mt-1 text-sm text-destructive">Event is at full capacity</p>
                     )}
                   </div>
                 </div>
@@ -268,7 +277,7 @@ export const EventDetailPage: React.FC = () => {
               {/* Created By */}
               {event.creator && (
                 <div className="flex items-start gap-3">
-                  <Clock className="mt-0.5 h-5 w-5 text-muted-foreground" />
+                  <User2 className="mt-0.5 h-5 w-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm">
                       Organized by{' '}

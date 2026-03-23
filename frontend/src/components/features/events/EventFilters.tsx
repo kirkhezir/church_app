@@ -53,11 +53,12 @@ export function EventFilters({
       {/* Category Filter */}
       <div className="space-y-2">
         <Label>Category</Label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
           <Button
             variant={selectedCategory === undefined ? 'default' : 'outline'}
             size="sm"
             onClick={() => onCategoryChange(undefined)}
+            aria-pressed={selectedCategory === undefined}
           >
             All
           </Button>
@@ -67,6 +68,7 @@ export function EventFilters({
               variant={selectedCategory === cat.value ? 'default' : 'outline'}
               size="sm"
               onClick={() => onCategoryChange(cat.value)}
+              aria-pressed={selectedCategory === cat.value}
             >
               {cat.label}
             </Button>

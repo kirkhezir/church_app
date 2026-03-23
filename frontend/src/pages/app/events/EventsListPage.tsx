@@ -17,6 +17,7 @@ import { reportError } from '@/lib/errorReporting';
 import { gooeyToast } from 'goey-toast';
 import { EventCalendarView } from '@/components/features/events/EventCalendarView';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -92,6 +93,7 @@ export function EventsListPage() {
   }, [navigate]);
 
   const canCreateEvents = user && (user.role === 'ADMIN' || user.role === 'STAFF');
+  const activeFilterCount = [selectedCategory, startDate, endDate].filter(Boolean).length;
 
   // Event list content — always rendered inside SidebarLayout (behind PrivateRoute)
   const eventListContent = (
@@ -144,9 +146,20 @@ export function EventsListPage() {
               size="sm"
               className="flex items-center gap-1.5 lg:hidden"
               onClick={() => setShowFilters(true)}
+              aria-label={
+                activeFilterCount > 0 ? `Filters, ${activeFilterCount} active` : 'Open filters'
+              }
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filters
+              {activeFilterCount > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="ml-1 h-5 min-w-5 rounded-full px-1.5 py-0 text-xs"
+                >
+                  {activeFilterCount}
+                </Badge>
+              )}
             </Button>
           )}
         </div>
