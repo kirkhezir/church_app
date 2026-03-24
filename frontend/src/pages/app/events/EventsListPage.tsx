@@ -99,71 +99,76 @@ export function EventsListPage() {
   const eventListContent = (
     <div className="flex flex-1 flex-col">
       {/* Header */}
-      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="flex items-center gap-2 text-balance text-3xl font-bold">
-            <CalendarIcon className="h-8 w-8" />
-            Church Events
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Browse upcoming events and activities at our church
-          </p>
-        </div>
+      <header className="mb-8 rounded-xl bg-gradient-to-br from-primary/5 via-background to-accent/5 p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="flex items-center gap-3 font-heading text-3xl font-bold tracking-tight text-foreground">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <CalendarIcon className="h-5 w-5" />
+              </span>
+              Church Events
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              Browse upcoming events and activities at our church
+            </p>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-4">
-          {/* View Toggle */}
-          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')}>
-            <TabsList>
-              <TabsTrigger
-                value="list"
-                className="flex items-center gap-2"
-                aria-label="Switch to list view"
-              >
-                <List className="h-4 w-4" />
-                List
-              </TabsTrigger>
-              <TabsTrigger
-                value="calendar"
-                className="flex items-center gap-2"
-                aria-label="Switch to calendar view"
-              >
-                <LayoutGrid className="h-4 w-4" />
-                Calendar
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {canCreateEvents && (
-            <Button onClick={handleCreateEvent} className="flex items-center gap-2">
-              <PlusIcon className="h-4 w-4" />
-              Create Event
-            </Button>
-          )}
-
-          {viewMode === 'list' && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1.5 lg:hidden"
-              onClick={() => setShowFilters(true)}
-              aria-label={
-                activeFilterCount > 0 ? `Filters, ${activeFilterCount} active` : 'Open filters'
-              }
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Filters
-              {activeFilterCount > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="ml-1 h-5 min-w-5 rounded-full px-1.5 py-0 text-xs"
+          <div className="flex flex-wrap items-center gap-3">
+            {/* View Toggle */}
+            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')}>
+              <TabsList className="h-9">
+                <TabsTrigger
+                  value="list"
+                  className="flex items-center gap-1.5 text-xs"
+                  aria-label="Switch to list view"
                 >
-                  {activeFilterCount}
-                </Badge>
-              )}
-            </Button>
-          )}
+                  <List className="h-3.5 w-3.5" />
+                  List
+                </TabsTrigger>
+                <TabsTrigger
+                  value="calendar"
+                  className="flex items-center gap-1.5 text-xs"
+                  aria-label="Switch to calendar view"
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  Calendar
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {canCreateEvents && (
+              <Button onClick={handleCreateEvent} size="sm" className="flex items-center gap-1.5">
+                <PlusIcon className="h-4 w-4" />
+                Create Event
+              </Button>
+            )}
+
+            {viewMode === 'list' && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1.5 lg:hidden"
+                onClick={() => setShowFilters(true)}
+                aria-label={
+                  activeFilterCount > 0 ? `Filters, ${activeFilterCount} active` : 'Open filters'
+                }
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Filters
+                {activeFilterCount > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 h-5 min-w-5 rounded-full px-1.5 py-0 text-xs"
+                  >
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       </header>
+
       {(error || rsvpError) && (
         <Alert variant="destructive" className="mb-6" role="alert">
           <AlertDescription>{error || rsvpError}</AlertDescription>
@@ -199,26 +204,42 @@ export function EventsListPage() {
           {/* Events List */}
           <div className="flex-1 lg:col-span-3">
             {loading ? (
-              // Loading skeletons
+              // Card-shaped skeleton loaders
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="h-48 w-full" />
+                  <div key={i} className="overflow-hidden rounded-xl border bg-card">
+                    <Skeleton className="h-1 w-full" />
+                    <div className="space-y-4 p-5">
+                      <Skeleton className="h-5 w-24 rounded-full" />
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <div className="space-y-2 rounded-lg bg-muted/30 p-3">
+                        <Skeleton className="h-4 w-2/3" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-3/5" />
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        <Skeleton className="h-8 flex-1 rounded-md" />
+                        <Skeleton className="h-8 flex-1 rounded-md" />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : events.length === 0 ? (
-              // Empty state
-              <div className="py-12 text-center">
-                <CalendarIcon className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-                <h3 className="mb-2 text-lg font-semibold">No events found</h3>
-                <p className="mb-4 text-muted-foreground">
+              // Empty state with better visual
+              <div className="flex flex-col items-center rounded-xl border border-dashed bg-muted/20 py-16 text-center">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <CalendarIcon className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="mb-1 font-heading text-lg font-semibold">No events found</h3>
+                <p className="mb-6 max-w-sm text-sm text-muted-foreground">
                   {selectedCategory || startDate || endDate
                     ? 'Try adjusting your filters to see more events'
-                    : 'There are no upcoming events at this time'}
+                    : 'There are no upcoming events at this time. Check back soon!'}
                 </p>
                 {(selectedCategory || startDate || endDate) && (
-                  <Button variant="outline" onClick={handleClearFilters}>
+                  <Button variant="outline" size="sm" onClick={handleClearFilters}>
                     Clear Filters
                   </Button>
                 )}
@@ -226,14 +247,15 @@ export function EventsListPage() {
             ) : (
               // Events grid
               <>
-                <div className="mb-4 text-sm text-muted-foreground">
+                <p className="mb-4 text-sm text-muted-foreground">
                   Showing {events.length} {events.length === 1 ? 'event' : 'events'}
-                </div>
+                </p>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {events.map((event, index) => (
                     <div
                       key={event.id}
-                      className={`animate-fade-in-up ${index < 10 ? `stagger-${index + 1}` : ''}`}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${Math.min(index, 9) * 60}ms` }}
                     >
                       <EventCard
                         event={event}

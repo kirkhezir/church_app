@@ -12,6 +12,7 @@ import {
   Edit,
   AlertTriangle,
   Ban,
+  ClockIcon,
 } from 'lucide-react';
 import { useEventDetail, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import { EventCategory } from '@/types/api';
 import { gooeyToast } from 'goey-toast';
 import { eventService } from '@/services/endpoints/eventService';
@@ -37,21 +39,36 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
-const categoryColors: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'bg-accent text-primary',
-  [EventCategory.BIBLE_STUDY]:
-    'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-  [EventCategory.COMMUNITY]: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  [EventCategory.FELLOWSHIP]:
-    'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-};
-
-const categoryLabels: Record<EventCategory, string> = {
-  [EventCategory.WORSHIP]: 'Worship Service',
-  [EventCategory.BIBLE_STUDY]: 'Bible Study',
-  [EventCategory.COMMUNITY]: 'Community Service',
-  [EventCategory.FELLOWSHIP]: 'Fellowship',
+const categoryConfig: Record<
+  EventCategory,
+  { label: string; badge: string; accent: string; bg: string }
+> = {
+  [EventCategory.WORSHIP]: {
+    label: 'Worship Service',
+    badge: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    accent: 'bg-blue-600 dark:bg-blue-500',
+    bg: 'bg-blue-50/50 dark:bg-blue-950/20',
+  },
+  [EventCategory.BIBLE_STUDY]: {
+    label: 'Bible Study',
+    badge: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+    accent: 'bg-emerald-600 dark:bg-emerald-500',
+    bg: 'bg-emerald-50/50 dark:bg-emerald-950/20',
+  },
+  [EventCategory.COMMUNITY]: {
+    label: 'Community Service',
+    badge: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+    accent: 'bg-purple-600 dark:bg-purple-500',
+    bg: 'bg-purple-50/50 dark:bg-purple-950/20',
+  },
+  [EventCategory.FELLOWSHIP]: {
+    label: 'Fellowship',
+    badge: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+    accent: 'bg-amber-500 dark:bg-amber-400',
+    bg: 'bg-amber-50/50 dark:bg-amber-950/20',
+  },
 };
 
 export const EventDetailPage: React.FC = () => {
@@ -98,11 +115,35 @@ export const EventDetailPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="mb-6 h-8 w-32" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Skeleton className="h-96 w-full" />
+          <div className="space-y-6 lg:col-span-2">
+            <div className="overflow-hidden rounded-xl border bg-card">
+              <Skeleton className="h-64 w-full" />
+              <div className="space-y-4 p-6">
+                <Skeleton className="h-5 w-28 rounded-full" />
+                <Skeleton className="h-8 w-3/4" />
+                <div className="space-y-3 rounded-lg bg-muted/30 p-4">
+                  <Skeleton className="h-5 w-2/3" />
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-5 w-3/5" />
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl border bg-card p-6">
+              <Skeleton className="mb-4 h-6 w-40" />
+              <Skeleton className="h-20 w-full" />
+            </div>
           </div>
-          <div>
-            <Skeleton className="h-64 w-full" />
+          <div className="space-y-6">
+            <div className="space-y-4 rounded-xl border bg-card p-6">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+            <div className="space-y-3 rounded-xl border bg-card p-6">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+            </div>
           </div>
         </div>
       </div>
@@ -154,23 +195,29 @@ export const EventDetailPage: React.FC = () => {
   const isCreator = user?.id === event.createdById;
   const canEdit = user && (user.role === 'ADMIN' || user.role === 'STAFF' || isCreator);
 
+  const config = categoryConfig[event.category];
+
   const eventDetailContent = (
     <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Button variant="ghost" onClick={() => navigate('/app/events')}>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/app/events')}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Events
         </Button>
         {canEdit && !isCancelled && (
           <div className="flex gap-2">
-            <Button onClick={() => navigate(`/app/events/${event.id}/edit`)}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/app/events/${event.id}/edit`)}
+            >
               <Edit className="mr-2 h-4 w-4" />
-              Edit Event
+              Edit
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={cancelling}>
+                <Button variant="destructive" size="sm" disabled={cancelling}>
                   <Ban className="mr-2 h-4 w-4" />
                   Cancel Event
                 </Button>
@@ -198,7 +245,7 @@ export const EventDetailPage: React.FC = () => {
         )}
       </div>
 
-      {/* Cancelled Badge */}
+      {/* Cancelled Alert */}
       {isCancelled && event.cancelledAt && (
         <Alert variant="destructive" className="mb-6">
           <AlertTriangle className="h-4 w-4" />
@@ -211,111 +258,130 @@ export const EventDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Event Header */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <Badge className={categoryColors[event.category]}>
-                    {categoryLabels[event.category]}
-                  </Badge>
-                  <CardTitle className="mt-2 text-3xl">{event.title}</CardTitle>
+          {/* Event Header Card with Hero Image */}
+          <Card className="overflow-hidden">
+            {/* Hero image */}
+            {event.imageUrl && (
+              <div className="relative h-56 w-full overflow-hidden sm:h-72">
+                <img
+                  src={event.imageUrl}
+                  alt={event.title}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.currentTarget.parentElement as HTMLElement).style.display = 'none';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <Badge className={cn('absolute bottom-4 left-4 rounded-full', config.badge)}>
+                  {config.label}
+                </Badge>
+              </div>
+            )}
+
+            {/* Category accent bar when no image */}
+            {!event.imageUrl && <div className={cn('h-1.5 w-full', config.accent)} />}
+
+            <CardContent className="p-6">
+              {/* Badge when no image */}
+              {!event.imageUrl && (
+                <Badge className={cn('mb-3 rounded-full', config.badge)}>{config.label}</Badge>
+              )}
+
+              <h1 className="mb-4 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+                {event.title}
+              </h1>
+
+              {/* Info grid with subtle background */}
+              <div className={cn('space-y-3 rounded-lg p-4', config.bg)}>
+                {/* Date */}
+                <div className="flex items-start gap-3">
+                  <Calendar className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">
+                      {format(new Date(event.startDateTime), 'EEEE, MMMM d, yyyy')}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {format(new Date(event.startDateTime), 'h:mm a')} –{' '}
+                      {format(new Date(event.endDateTime), 'h:mm a')}
+                    </p>
+                  </div>
                 </div>
-                {event.imageUrl && (
-                  <img
-                    src={event.imageUrl}
-                    alt={event.title}
-                    width={128}
-                    height={128}
-                    className="h-32 w-32 rounded-lg object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
+
+                <Separator className="bg-border/50" />
+
+                {/* Location */}
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  <p>{event.location}</p>
+                </div>
+
+                {/* Capacity */}
+                {event.maxCapacity && (
+                  <>
+                    <Separator className="bg-border/50" />
+                    <div className="flex items-start gap-3">
+                      <Users className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm">
+                            {event.rsvpCount || 0} / {event.maxCapacity} attendees
+                          </p>
+                          {isFull && (
+                            <span className="text-xs font-medium text-destructive">Full</span>
+                          )}
+                        </div>
+                        <Progress
+                          value={Math.min(((event.rsvpCount || 0) / event.maxCapacity) * 100, 100)}
+                          className="mt-2 h-2"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Organizer */}
+                {event.creator && (
+                  <>
+                    <Separator className="bg-border/50" />
+                    <div className="flex items-center gap-3">
+                      <User2 className="h-5 w-5 shrink-0 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm">
+                          Organized by{' '}
+                          <span className="font-medium">
+                            {event.creator.firstName} {event.creator.lastName}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Date and Time */}
-              <div className="flex items-start gap-3">
-                <Calendar className="mt-0.5 h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="font-medium">
-                    {format(new Date(event.startDateTime), 'EEEE, MMMM d, yyyy')}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(event.startDateTime), 'h:mm a')} -{' '}
-                    {format(new Date(event.endDateTime), 'h:mm a')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 text-muted-foreground" />
-                <p>{event.location}</p>
-              </div>
-
-              {/* Capacity */}
-              {event.maxCapacity && (
-                <div className="flex items-start gap-3">
-                  <Users className="mt-0.5 h-5 w-5 text-muted-foreground" />
-                  <div className="flex-1">
-                    <p>
-                      {event.rsvpCount || 0} / {event.maxCapacity} attendees
-                    </p>
-                    <Progress
-                      value={Math.min(((event.rsvpCount || 0) / event.maxCapacity) * 100, 100)}
-                      className="mt-1.5 h-2"
-                    />
-                    {isFull && (
-                      <p className="mt-1 text-sm text-destructive">Event is at full capacity</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Created By */}
-              {event.creator && (
-                <div className="flex items-start gap-3">
-                  <User2 className="mt-0.5 h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm">
-                      Organized by{' '}
-                      <span className="font-medium">
-                        {event.creator.firstName} {event.creator.lastName}
-                      </span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Created{' '}
-                      <time dateTime={new Date(event.createdAt).toISOString()}>
-                        {format(new Date(event.createdAt), 'MMMM d, yyyy')}
-                      </time>
-                    </p>
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
 
           {/* Description */}
-          <Card>
-            <CardHeader>
-              <CardTitle>About This Event</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="whitespace-pre-wrap">{event.description}</p>
-            </CardContent>
-          </Card>
+          {event.description && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-heading text-lg">About This Event</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap leading-relaxed text-muted-foreground">
+                  {event.description}
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
           {/* RSVP Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Attendance</CardTitle>
+          <Card className="border-2 border-primary/20">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-heading text-lg">Attendance</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {canRSVP && (
@@ -324,10 +390,11 @@ export const EventDetailPage: React.FC = () => {
                     onClick={handleRSVP}
                     disabled={rsvping || (isFull && !event.hasUserRSVPd)}
                     className="w-full"
+                    size="lg"
                     variant={event.hasUserRSVPd ? 'outline' : 'default'}
                   >
                     {rsvping ? (
-                      'Processing…'
+                      'Processing\u2026'
                     ) : event.hasUserRSVPd ? (
                       <>
                         <UserMinus className="mr-2 h-4 w-4" />
@@ -348,15 +415,15 @@ export const EventDetailPage: React.FC = () => {
                     </Alert>
                   )}
                   {event.hasUserRSVPd && (
-                    <p className="text-center text-sm text-muted-foreground">
-                      You&apos;re attending this event
+                    <p className="text-center text-sm text-emerald-600 dark:text-emerald-400">
+                      ✓ You&apos;re attending this event
                     </p>
                   )}
                 </>
               )}
 
               {!user && !isCancelled && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <p className="text-center text-sm text-muted-foreground">
                     Please log in to RSVP for this event
                   </p>
@@ -384,22 +451,29 @@ export const EventDetailPage: React.FC = () => {
 
           {/* Quick Info Card */}
           <Card>
-            <CardHeader>
-              <CardTitle>Quick Info</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="font-heading text-lg">Quick Info</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Category:</span>
-                <span className="font-medium">{categoryLabels[event.category]}</span>
+            <CardContent className="space-y-3 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Category</span>
+                <Badge className={cn('rounded-full text-xs', config.badge)}>{config.label}</Badge>
               </div>
+              <Separator />
               {event.maxCapacity && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Capacity:</span>
-                  <span className="font-medium">{event.maxCapacity}</span>
-                </div>
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Capacity</span>
+                    <span className="font-medium">{event.maxCapacity}</span>
+                  </div>
+                  <Separator />
+                </>
               )}
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Duration:</span>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  Duration
+                </span>
                 <span className="font-medium">
                   {(() => {
                     const totalMinutes = Math.round(
@@ -411,10 +485,24 @@ export const EventDetailPage: React.FC = () => {
                     const minutes = totalMinutes % 60;
                     if (hours === 0) return `${minutes} min`;
                     if (minutes === 0) return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
-                    return `${hours} ${hours === 1 ? 'hour' : 'hours'} ${minutes} min`;
+                    return `${hours}h ${minutes}m`;
                   })()}
                 </span>
               </div>
+              {event.creator && (
+                <>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Created</span>
+                    <time
+                      dateTime={new Date(event.createdAt).toISOString()}
+                      className="font-medium"
+                    >
+                      {format(new Date(event.createdAt), 'MMM d, yyyy')}
+                    </time>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>

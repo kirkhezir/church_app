@@ -135,6 +135,10 @@ export default {
           from: { opacity: '0', transform: 'translateX(1rem)' },
           to: { opacity: '1', transform: 'translateX(0)' },
         },
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(0.75rem)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -145,6 +149,7 @@ export default {
         'number-pop': 'number-pop 0.5s ease-out both',
         'slide-in-left': 'slide-in-left 0.4s ease-out both',
         'slide-in-right': 'slide-in-right 0.4s ease-out both',
+        'fade-in-up': 'fade-in-up 0.4s ease-out both',
       },
     },
   },

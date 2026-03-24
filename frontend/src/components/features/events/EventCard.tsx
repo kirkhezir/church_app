@@ -1,18 +1,18 @@
 /**
  * EventCard Component
  *
- * Displays event information in a card format
- * Shows: title, date/time, location, category, capacity
- * Handles: click to view details
+ * Displays event information in a card format with category-colored accent,
+ * hover animations, and optional image thumbnail.
  */
 
 import { memo } from 'react';
 import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon } from 'lucide-react';
 import { Event, EventCategory } from '@/types/api';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
 interface EventCardProps {
@@ -29,13 +29,31 @@ const categoryLabels: Record<EventCategory, string> = {
   FELLOWSHIP: 'Fellowship',
 };
 
-const categoryBadgeVariant: Record<EventCategory, 'default' | 'success' | 'secondary' | 'warning'> =
-  {
-    WORSHIP: 'default',
-    BIBLE_STUDY: 'success',
-    COMMUNITY: 'secondary',
-    FELLOWSHIP: 'warning',
-  };
+const categoryConfig: Record<
+  EventCategory,
+  { badge: 'default' | 'success' | 'secondary' | 'warning'; accent: string; bg: string }
+> = {
+  WORSHIP: {
+    badge: 'default',
+    accent: 'bg-blue-600 dark:bg-blue-500',
+    bg: 'bg-blue-50/50 dark:bg-blue-950/20',
+  },
+  BIBLE_STUDY: {
+    badge: 'success',
+    accent: 'bg-emerald-600 dark:bg-emerald-500',
+    bg: 'bg-emerald-50/50 dark:bg-emerald-950/20',
+  },
+  COMMUNITY: {
+    badge: 'secondary',
+    accent: 'bg-purple-600 dark:bg-purple-500',
+    bg: 'bg-purple-50/50 dark:bg-purple-950/20',
+  },
+  FELLOWSHIP: {
+    badge: 'warning',
+    accent: 'bg-amber-500 dark:bg-amber-400',
+    bg: 'bg-amber-50/50 dark:bg-amber-950/20',
+  },
+};
 
 export const EventCard = memo(function EventCard({
   event,
@@ -46,9 +64,10 @@ export const EventCard = memo(function EventCard({
   const startDate = new Date(event.startDateTime);
   const endDate = new Date(event.endDateTime);
   const isCancelled = !!event.cancelledAt;
+  const config = categoryConfig[event.category];
 
   const formatTime = (date: Date) => format(date, 'h:mm a');
-  const formatDate = (date: Date) => format(date, 'MMM d, yyyy');
+  const formatDate = (date: Date) => format(date, 'EEE, MMM d');
 
   const availableSpots =
     event.maxCapacity && event.rsvpCount !== undefined
@@ -60,7 +79,10 @@ export const EventCard = memo(function EventCard({
   return (
     <article>
       <Card
-        className={`cursor-pointer transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isCancelled ? 'opacity-60' : ''}`}
+        className={cn(
+          'group relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          isCancelled ? 'opacity-60 grayscale' : 'cursor-pointer'
+        )}
         data-testid="event-card"
         tabIndex={0}
         role="link"
@@ -72,62 +94,90 @@ export const EventCard = memo(function EventCard({
           }
         }}
       >
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="mb-2 flex items-center gap-2">
-                <Badge variant={categoryBadgeVariant[event.category]} className="rounded-full">
-                  {categoryLabels[event.category]}
-                </Badge>
-                {isCancelled && (
-                  <Badge variant="destructive" className="rounded-full">
-                    Cancelled
-                  </Badge>
-                )}
-                {isFull && !isCancelled && (
-                  <Badge variant="warning" className="rounded-full">
-                    Full
-                  </Badge>
-                )}
-              </div>
-              <CardTitle className="text-xl">{event.title}</CardTitle>
+        {/* Category accent bar */}
+        <div className={cn('h-1 w-full', config.accent)} />
+
+        {/* Optional image banner */}
+        {event.imageUrl && (
+          <div className="relative h-40 w-full overflow-hidden">
+            <img
+              src={event.imageUrl}
+              alt=""
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+              onError={(e) => {
+                (e.currentTarget.parentElement as HTMLElement).style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </div>
+        )}
+
+        <CardContent className="p-5">
+          {/* Badge row */}
+          <div className="mb-3 flex items-center gap-2">
+            <Badge variant={config.badge} className="rounded-full text-xs">
+              {categoryLabels[event.category]}
+            </Badge>
+            {isCancelled && (
+              <Badge variant="destructive" className="rounded-full text-xs">
+                Cancelled
+              </Badge>
+            )}
+            {isFull && !isCancelled && (
+              <Badge variant="warning" className="rounded-full text-xs">
+                Full
+              </Badge>
+            )}
+          </div>
+
+          {/* Title */}
+          <h3 className="mb-2 line-clamp-2 font-heading text-lg font-semibold leading-tight tracking-tight group-hover:text-primary">
+            {event.title}
+          </h3>
+
+          {/* Description */}
+          {event.description && (
+            <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{event.description}</p>
+          )}
+
+          {/* Meta info */}
+          <div className={cn('space-y-2 rounded-lg p-3', config.bg)}>
+            <div className="flex items-center gap-2.5 text-sm">
+              <CalendarIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <time dateTime={startDate.toISOString().split('T')[0]} className="font-medium">
+                {formatDate(startDate)}
+              </time>
+            </div>
+
+            <div className="flex items-center gap-2.5 text-sm">
+              <ClockIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                <time dateTime={startDate.toISOString()}>{formatTime(startDate)}</time>
+                {' \u2013 '}
+                <time dateTime={endDate.toISOString()}>{formatTime(endDate)}</time>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2.5 text-sm">
+              <MapPinIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="truncate text-muted-foreground">{event.location}</span>
             </div>
           </div>
-          <CardDescription className="line-clamp-2">{event.description}</CardDescription>
-        </CardHeader>
 
-        <CardContent className="space-y-3">
-          {/* Date and Time */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <CalendarIcon className="h-4 w-4" />
-            <time dateTime={startDate.toISOString().split('T')[0]}>{formatDate(startDate)}</time>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <ClockIcon className="h-4 w-4" />
-            <span>
-              <time dateTime={startDate.toISOString()}>{formatTime(startDate)}</time> -{' '}
-              <time dateTime={endDate.toISOString()}>{formatTime(endDate)}</time>
-            </span>
-          </div>
-
-          {/* Location */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPinIcon className="h-4 w-4" />
-            <span>{event.location}</span>
-          </div>
-
-          {/* Capacity */}
+          {/* Capacity bar */}
           {event.maxCapacity && (
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <UsersIcon className="h-4 w-4" />
-                <span>
-                  {event.rsvpCount || 0} / {event.maxCapacity} attendees
-                  {availableSpots !== undefined && availableSpots > 0 && (
-                    <span className="ml-1 text-success">({availableSpots} spots left)</span>
-                  )}
+            <div className="mt-4 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <UsersIcon className="h-3.5 w-3.5" />
+                  {event.rsvpCount || 0} / {event.maxCapacity}
                 </span>
+                {availableSpots !== undefined && availableSpots > 0 && (
+                  <span className="font-medium text-emerald-600 dark:text-emerald-400">
+                    {availableSpots} spots left
+                  </span>
+                )}
               </div>
               <Progress
                 value={Math.min(((event.rsvpCount || 0) / event.maxCapacity) * 100, 100)}
@@ -136,15 +186,15 @@ export const EventCard = memo(function EventCard({
             </div>
           )}
 
-          {/* Creator */}
+          {/* Organizer */}
           {event.creator && (
-            <div className="border-t pt-2 text-xs text-muted-foreground">
-              Organized by {event.creator.firstName} {event.creator.lastName}
-            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              By {event.creator.firstName} {event.creator.lastName}
+            </p>
           )}
 
           {/* Actions */}
-          <div className="flex gap-2 pt-2">
+          <div className="mt-4 flex gap-2">
             <Button
               variant="outline"
               size="sm"

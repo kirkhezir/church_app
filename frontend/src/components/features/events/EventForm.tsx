@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, Loader2, CalendarIcon, MapPinIcon, TagIcon, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { Event, EventCategory } from '@/types/api';
 import { ImageUploader } from '../upload/ImageUploader';
 import { reportError } from '@/lib/errorReporting';
@@ -193,7 +194,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-8" noValidate>
       {submitError && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -201,191 +202,225 @@ export const EventForm: React.FC<EventFormProps> = ({
         </Alert>
       )}
 
-      {/* Title */}
-      <div className="space-y-2">
-        <Label htmlFor="title">
-          Event Title <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="title"
-          value={formData.title}
-          onChange={(e) => handleChange('title', e.target.value)}
-          placeholder="Enter event title"
-          disabled={isLoading}
-          autoComplete="off"
-          aria-invalid={!!errors.title}
-          aria-describedby={errors.title ? 'title-error' : undefined}
-          className={errors.title ? 'border-destructive' : ''}
-        />
-        {errors.title && (
-          <p id="title-error" className="text-sm text-destructive">
-            {errors.title}
-          </p>
-        )}
-      </div>
+      {/* Section: Basic Info */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-2">
+          <TagIcon className="h-4 w-4 text-muted-foreground" />
+          <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Basic Information
+          </h3>
+        </div>
+        <Separator />
 
-      {/* Description */}
-      <div className="space-y-2">
-        <Label htmlFor="description">
-          Description <span className="text-destructive">*</span>
-        </Label>
-        <Textarea
-          id="description"
-          value={formData.description}
-          onChange={(e) => handleChange('description', e.target.value)}
-          placeholder="Describe the event…"
-          rows={5}
-          disabled={isLoading}
-          aria-invalid={!!errors.description}
-          aria-describedby={errors.description ? 'description-error' : undefined}
-          className={errors.description ? 'border-destructive' : ''}
-        />
-        {errors.description && (
-          <p id="description-error" className="text-sm text-destructive">
-            {errors.description}
-          </p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Start Date and Time */}
+        {/* Title */}
         <div className="space-y-2">
-          <Label htmlFor="startDateTime">
-            Start Date & Time <span className="text-destructive">*</span>
+          <Label htmlFor="title">
+            Event Title <span className="text-destructive">*</span>
           </Label>
           <Input
-            id="startDateTime"
-            type="datetime-local"
-            value={formData.startDateTime}
-            onChange={(e) => handleChange('startDateTime', e.target.value)}
+            id="title"
+            value={formData.title}
+            onChange={(e) => handleChange('title', e.target.value)}
+            placeholder="Enter event title"
             disabled={isLoading}
-            aria-invalid={!!errors.startDateTime}
-            aria-describedby={errors.startDateTime ? 'startDateTime-error' : undefined}
-            className={errors.startDateTime ? 'border-destructive' : ''}
+            autoComplete="off"
+            aria-invalid={!!errors.title}
+            aria-describedby={errors.title ? 'title-error' : undefined}
+            className={errors.title ? 'border-destructive' : ''}
           />
-          {errors.startDateTime && (
-            <p id="startDateTime-error" className="text-sm text-destructive">
-              {errors.startDateTime}
+          {errors.title && (
+            <p id="title-error" className="text-sm text-destructive">
+              {errors.title}
             </p>
           )}
         </div>
 
-        {/* End Date and Time */}
+        {/* Description */}
         <div className="space-y-2">
-          <Label htmlFor="endDateTime">
-            End Date & Time <span className="text-destructive">*</span>
+          <Label htmlFor="description">
+            Description <span className="text-destructive">*</span>
+          </Label>
+          <Textarea
+            id="description"
+            value={formData.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+            placeholder="Describe the event"
+            rows={5}
+            disabled={isLoading}
+            aria-invalid={!!errors.description}
+            aria-describedby={errors.description ? 'description-error' : undefined}
+            className={errors.description ? 'border-destructive' : ''}
+          />
+          {errors.description && (
+            <p id="description-error" className="text-sm text-destructive">
+              {errors.description}
+            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {/* Category */}
+          <div className="space-y-2">
+            <Label htmlFor="category">
+              Category <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value) => handleChange('category', value as EventCategory)}
+              disabled={isLoading}
+            >
+              <SelectTrigger id="category">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.category && (
+              <p id="category-error" className="text-sm text-destructive">
+                {errors.category}
+              </p>
+            )}
+          </div>
+
+          {/* Max Capacity */}
+          <div className="space-y-2">
+            <Label htmlFor="maxCapacity">Max Capacity (Optional)</Label>
+            <Input
+              id="maxCapacity"
+              type="number"
+              min="1"
+              max="10000"
+              value={formData.maxCapacity || ''}
+              onChange={(e) =>
+                handleChange('maxCapacity', e.target.value ? parseInt(e.target.value) : 0)
+              }
+              placeholder="Leave empty for unlimited"
+              disabled={isLoading}
+              aria-invalid={!!errors.maxCapacity}
+              aria-describedby={errors.maxCapacity ? 'maxCapacity-error' : undefined}
+              className={errors.maxCapacity ? 'border-destructive' : ''}
+            />
+            {errors.maxCapacity && (
+              <p id="maxCapacity-error" className="text-sm text-destructive">
+                {errors.maxCapacity}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Section: Date & Location */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-2">
+          <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+          <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Date, Time & Location
+          </h3>
+        </div>
+        <Separator />
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {/* Start Date and Time */}
+          <div className="space-y-2">
+            <Label htmlFor="startDateTime">
+              Start Date & Time <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="startDateTime"
+              type="datetime-local"
+              value={formData.startDateTime}
+              onChange={(e) => handleChange('startDateTime', e.target.value)}
+              disabled={isLoading}
+              aria-invalid={!!errors.startDateTime}
+              aria-describedby={errors.startDateTime ? 'startDateTime-error' : undefined}
+              className={errors.startDateTime ? 'border-destructive' : ''}
+            />
+            {errors.startDateTime && (
+              <p id="startDateTime-error" className="text-sm text-destructive">
+                {errors.startDateTime}
+              </p>
+            )}
+          </div>
+
+          {/* End Date and Time */}
+          <div className="space-y-2">
+            <Label htmlFor="endDateTime">
+              End Date & Time <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="endDateTime"
+              type="datetime-local"
+              value={formData.endDateTime}
+              onChange={(e) => handleChange('endDateTime', e.target.value)}
+              disabled={isLoading}
+              aria-invalid={!!errors.endDateTime}
+              aria-describedby={errors.endDateTime ? 'endDateTime-error' : undefined}
+              className={errors.endDateTime ? 'border-destructive' : ''}
+            />
+            {errors.endDateTime && (
+              <p id="endDateTime-error" className="text-sm text-destructive">
+                {errors.endDateTime}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="space-y-2">
+          <Label htmlFor="location" className="flex items-center gap-1.5">
+            <MapPinIcon className="h-3.5 w-3.5" />
+            Location <span className="text-destructive">*</span>
           </Label>
           <Input
-            id="endDateTime"
-            type="datetime-local"
-            value={formData.endDateTime}
-            onChange={(e) => handleChange('endDateTime', e.target.value)}
+            id="location"
+            value={formData.location}
+            onChange={(e) => handleChange('location', e.target.value)}
+            placeholder="Enter event location"
             disabled={isLoading}
-            aria-invalid={!!errors.endDateTime}
-            aria-describedby={errors.endDateTime ? 'endDateTime-error' : undefined}
-            className={errors.endDateTime ? 'border-destructive' : ''}
+            autoComplete="street-address"
+            aria-invalid={!!errors.location}
+            aria-describedby={errors.location ? 'location-error' : undefined}
+            className={errors.location ? 'border-destructive' : ''}
           />
-          {errors.endDateTime && (
-            <p id="endDateTime-error" className="text-sm text-destructive">
-              {errors.endDateTime}
+          {errors.location && (
+            <p id="location-error" className="text-sm text-destructive">
+              {errors.location}
             </p>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Location */}
-      <div className="space-y-2">
-        <Label htmlFor="location">
-          Location <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="location"
-          value={formData.location}
-          onChange={(e) => handleChange('location', e.target.value)}
-          placeholder="Enter event location"
-          disabled={isLoading}
-          autoComplete="street-address"
-          aria-invalid={!!errors.location}
-          aria-describedby={errors.location ? 'location-error' : undefined}
-          className={errors.location ? 'border-destructive' : ''}
-        />
-        {errors.location && (
-          <p id="location-error" className="text-sm text-destructive">
-            {errors.location}
-          </p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Category */}
-        <div className="space-y-2">
-          <Label htmlFor="category">
-            Category <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.category}
-            onValueChange={(value) => handleChange('category', value as EventCategory)}
-            disabled={isLoading}
-          >
-            <SelectTrigger id="category">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categoryOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.category && (
-            <p id="category-error" className="text-sm text-destructive">
-              {errors.category}
-            </p>
-          )}
+      {/* Section: Image */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-2">
+          <ImageIcon className="h-4 w-4 text-muted-foreground" />
+          <h3 className="font-heading text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Event Image
+          </h3>
         </div>
+        <Separator />
 
-        {/* Max Capacity */}
         <div className="space-y-2">
-          <Label htmlFor="maxCapacity">Max Capacity (Optional)</Label>
-          <Input
-            id="maxCapacity"
-            type="number"
-            min="1"
-            max="10000"
-            value={formData.maxCapacity || ''}
-            onChange={(e) =>
-              handleChange('maxCapacity', e.target.value ? parseInt(e.target.value) : 0)
-            }
-            placeholder="Leave empty for unlimited"
+          <Label>Cover Image (Optional)</Label>
+          <ImageUploader
+            uploadType="event"
+            currentImageUrl={formData.imageUrl}
+            onUploadComplete={(url) => handleChange('imageUrl', url)}
             disabled={isLoading}
-            aria-invalid={!!errors.maxCapacity}
-            aria-describedby={errors.maxCapacity ? 'maxCapacity-error' : undefined}
-            className={errors.maxCapacity ? 'border-destructive' : ''}
+            maxSizeMB={10}
           />
-          {errors.maxCapacity && (
-            <p id="maxCapacity-error" className="text-sm text-destructive">
-              {errors.maxCapacity}
-            </p>
-          )}
+          {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl}</p>}
         </div>
-      </div>
-
-      {/* Event Image */}
-      <div className="space-y-2">
-        <Label>Event Image (Optional)</Label>
-        <ImageUploader
-          uploadType="event"
-          currentImageUrl={formData.imageUrl}
-          onUploadComplete={(url) => handleChange('imageUrl', url)}
-          disabled={isLoading}
-          maxSizeMB={10}
-        />
-        {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl}</p>}
-      </div>
+      </section>
 
       {/* Form Actions */}
-      <div className="flex justify-end gap-4">
+      <Separator />
+      <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
           Cancel
         </Button>
@@ -393,7 +428,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving…
+              Saving\u2026
             </>
           ) : event ? (
             'Update Event'
