@@ -1,7 +1,8 @@
 /**
  * Event Calendar View Component
  *
- * Interactive calendar view for church events
+ * Interactive calendar view for church events with category-based coloring,
+ * accessible keyboard navigation, and responsive cell sizing.
  */
 
 import { useState, useMemo } from 'react';
@@ -19,24 +20,29 @@ import {
   parseISO,
 } from 'date-fns';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
-import { cn } from '../../../lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { Event, EventCategory } from '@/types/api';
 
-interface Event {
-  id: string;
-  title: string;
-  description?: string;
-  startDate: string;
-  endDate: string;
-  location?: string;
-  type?: string;
+const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string }> = {
+  [EventCategory.WORSHIP]: { label: 'Worship', color: 'bg-blue-500' },
+  [EventCategory.BIBLE_STUDY]: { label: 'Bible Study', color: 'bg-green-500' },
+  [EventCategory.COMMUNITY]: { label: 'Community', color: 'bg-purple-500' },
+  [EventCategory.FELLOWSHIP]: { label: 'Fellowship', color: 'bg-orange-500' },
+};
+
+function getCategoryColor(category?: EventCategory): string {
+  if (category && category in CATEGORY_CONFIG) {
+    return CATEGORY_CONFIG[category].color;
+  }
+  return 'bg-primary';
 }
 
 interface EventCalendarViewProps {
   events: Event[];
-  onEventClick: (event: Event) => void;
+  onEventClick: (eventId: string) => void;
   onDateClick?: (date: Date) => void;
   onCreateEvent?: (date: Date) => void;
 }
@@ -54,7 +60,7 @@ export function EventCalendarView({
   const eventsByDate = useMemo(() => {
     const map = new Map<string, Event[]>();
     events.forEach((event) => {
-      const dateKey = format(parseISO(event.startDate), 'yyyy-MM-dd');
+      const dateKey = format(parseISO(event.startDateTime), 'yyyy-MM-dd');
       const existing = map.get(dateKey) || [];
       map.set(dateKey, [...existing, event]);
     });
@@ -65,13 +71,13 @@ export function EventCalendarView({
   const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
+    const start = startOfWeek(monthStart);
+    const end = endOfWeek(monthEnd);
 
     const days: Date[] = [];
-    let day = startDate;
+    let day = start;
 
-    while (day <= endDate) {
+    while (day <= end) {
       days.push(day);
       day = addDays(day, 1);
     }
@@ -97,21 +103,6 @@ export function EventCalendarView({
     return eventsByDate.get(dateKey) || [];
   };
 
-  const getEventTypeColor = (type?: string) => {
-    switch (type?.toLowerCase()) {
-      case 'worship':
-        return 'bg-blue-500';
-      case 'meeting':
-        return 'bg-green-500';
-      case 'social':
-        return 'bg-purple-500';
-      case 'outreach':
-        return 'bg-orange-500';
-      default:
-        return 'bg-primary';
-    }
-  };
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -119,31 +110,45 @@ export function EventCalendarView({
           <CalendarIcon className="h-5 w-5" />
           {format(currentMonth, 'MMMM yyyy')}
         </CardTitle>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={handlePreviousMonth}>
+        <nav className="flex items-center gap-2" aria-label="Calendar navigation">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handlePreviousMonth}
+            aria-label="Previous month"
+          >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date())}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentMonth(new Date())}
+            aria-label="Go to today"
+          >
             Today
           </Button>
-          <Button variant="outline" size="icon" onClick={handleNextMonth}>
+          <Button variant="outline" size="icon" onClick={handleNextMonth} aria-label="Next month">
             <ChevronRight className="h-4 w-4" />
           </Button>
-        </div>
+        </nav>
       </CardHeader>
 
       <CardContent>
         {/* Weekday Headers */}
-        <div className="mb-2 grid grid-cols-7 gap-1">
+        <div className="mb-2 grid grid-cols-7 gap-1" role="row">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
+            <div
+              key={day}
+              role="columnheader"
+              className="py-2 text-center text-xs font-medium text-muted-foreground sm:text-sm"
+            >
               {day}
             </div>
           ))}
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Event calendar">
           {calendarDays.map((day, index) => {
             const dayEvents = getEventsForDate(day);
             const isCurrentMonth = isSameMonth(day, currentMonth);
@@ -155,17 +160,20 @@ export function EventCalendarView({
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      'min-h-[100px] rounded-md border p-1 text-left transition-colors hover:bg-muted/50',
+                      'group min-h-[60px] rounded-md border p-1 text-left transition-colors hover:bg-muted/50 sm:min-h-[80px] lg:min-h-[100px]',
                       !isCurrentMonth && 'text-muted-foreground opacity-50',
                       isToday && 'border-primary',
                       isSelected && 'bg-muted'
                     )}
                     onClick={() => handleDateClick(day)}
+                    aria-label={`${format(day, 'EEEE, MMMM d, yyyy')}${dayEvents.length > 0 ? `, ${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}` : ''}`}
+                    aria-current={isToday ? 'date' : undefined}
+                    aria-selected={isSelected || undefined}
                   >
                     <div className="flex items-center justify-between">
                       <span
                         className={cn(
-                          'flex h-6 w-6 items-center justify-center rounded-full text-sm',
+                          'flex h-5 w-5 items-center justify-center rounded-full text-xs sm:h-6 sm:w-6 sm:text-sm',
                           isToday && 'bg-primary text-primary-foreground'
                         )}
                       >
@@ -175,11 +183,12 @@ export function EventCalendarView({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-5 w-5 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100"
+                          className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation();
                             onCreateEvent(day);
                           }}
+                          aria-label={`Create event on ${format(day, 'MMMM d')}`}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
@@ -187,25 +196,37 @@ export function EventCalendarView({
                     </div>
 
                     {/* Event Indicators */}
-                    <div className="mt-1 space-y-1">
-                      {dayEvents.slice(0, 3).map((event) => (
+                    <div className="mt-1 space-y-0.5 sm:space-y-1">
+                      {dayEvents.slice(0, 2).map((event) => (
                         <div
                           key={event.id}
                           className={cn(
-                            'truncate rounded px-1 py-0.5 text-xs text-white',
-                            getEventTypeColor(event.type)
+                            'hidden truncate rounded px-1 py-0.5 text-xs text-white sm:block',
+                            getCategoryColor(event.category)
                           )}
                           onClick={(e) => {
                             e.stopPropagation();
-                            onEventClick(event);
+                            onEventClick(event.id);
                           }}
                         >
                           {event.title}
                         </div>
                       ))}
-                      {dayEvents.length > 3 && (
-                        <div className="text-xs text-muted-foreground">
-                          +{dayEvents.length - 3} more
+                      {/* Mobile: show colored dots instead of full titles */}
+                      <div className="flex gap-0.5 sm:hidden">
+                        {dayEvents.slice(0, 4).map((event) => (
+                          <div
+                            key={event.id}
+                            className={cn(
+                              'h-1.5 w-1.5 rounded-full',
+                              getCategoryColor(event.category)
+                            )}
+                          />
+                        ))}
+                      </div>
+                      {dayEvents.length > 2 && (
+                        <div className="hidden text-xs text-muted-foreground sm:block">
+                          +{dayEvents.length - 2} more
                         </div>
                       )}
                     </div>
@@ -219,25 +240,30 @@ export function EventCalendarView({
                       <h4 className="font-semibold">{format(day, 'EEEE, MMMM d')}</h4>
                       <div className="space-y-2">
                         {dayEvents.map((event) => (
-                          <div
+                          <button
                             key={event.id}
-                            className="cursor-pointer rounded-md border p-2 transition-colors hover:bg-muted"
-                            onClick={() => onEventClick(event)}
+                            className="w-full cursor-pointer rounded-md border p-2 text-left transition-colors hover:bg-muted"
+                            onClick={() => onEventClick(event.id)}
                           >
                             <div className="flex items-center gap-2">
                               <div
                                 className={cn(
-                                  'h-2 w-2 rounded-full',
-                                  getEventTypeColor(event.type)
+                                  'h-2 w-2 shrink-0 rounded-full',
+                                  getCategoryColor(event.category)
                                 )}
                               />
                               <span className="font-medium">{event.title}</span>
                             </div>
+                            {event.description && (
+                              <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                                {event.description}
+                              </p>
+                            )}
                             <p className="mt-1 text-xs text-muted-foreground">
-                              {format(parseISO(event.startDate), 'h:mm a')}
-                              {event.location && ` • ${event.location}`}
+                              {format(parseISO(event.startDateTime), 'h:mm a')}
+                              {event.location && ` · ${event.location}`}
                             </p>
-                          </div>
+                          </button>
                         ))}
                       </div>
                       {onCreateEvent && (
@@ -259,24 +285,14 @@ export function EventCalendarView({
           })}
         </div>
 
-        {/* Legend */}
+        {/* Legend — generated from CATEGORY_CONFIG */}
         <div className="mt-4 flex flex-wrap gap-4">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="h-3 w-3 rounded-full bg-blue-500" />
-            <span>Worship</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <div className="h-3 w-3 rounded-full bg-green-500" />
-            <span>Meeting</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <div className="h-3 w-3 rounded-full bg-purple-500" />
-            <span>Social</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <div className="h-3 w-3 rounded-full bg-orange-500" />
-            <span>Outreach</span>
-          </div>
+          {Object.values(CATEGORY_CONFIG).map(({ label, color }) => (
+            <div key={label} className="flex items-center gap-2 text-sm">
+              <div className={cn('h-3 w-3 rounded-full', color)} />
+              <span>{label}</span>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

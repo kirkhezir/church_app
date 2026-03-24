@@ -173,14 +173,7 @@ export function EventsListPage() {
       {/* Calendar View */}
       {viewMode === 'calendar' ? (
         <EventCalendarView
-          events={events.map((e) => ({
-            id: e.id,
-            title: e.title,
-            startDate: e.startDateTime,
-            endDate: e.endDateTime,
-            category: e.category,
-            location: e.location,
-          }))}
+          events={events}
           onEventClick={(eventId) => navigate(`/app/events/${eventId}`)}
           onDateClick={(date) => {
             setStartDate(date.toISOString().split('T')[0]);

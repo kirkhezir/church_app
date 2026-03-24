@@ -15,6 +15,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Event, EventCategory } from '@/types/api';
 import { ImageUploader } from '../upload/ImageUploader';
+import { reportError } from '@/lib/errorReporting';
 
 const categoryOptions = [
   { value: EventCategory.WORSHIP, label: 'Worship Service' },
@@ -184,7 +185,7 @@ export const EventForm: React.FC<EventFormProps> = ({
         imageUrl: formData.imageUrl?.trim() || undefined,
       });
     } catch (error) {
-      console.error('Form submission error:', error);
+      reportError('Form submission error', error);
       setSubmitError(
         error instanceof Error ? error.message : 'Failed to save event. Please try again.'
       );
