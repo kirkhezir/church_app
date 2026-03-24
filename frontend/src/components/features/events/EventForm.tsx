@@ -193,7 +193,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {submitError && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -212,9 +212,16 @@ export const EventForm: React.FC<EventFormProps> = ({
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Enter event title"
           disabled={isLoading}
+          autoComplete="off"
+          aria-invalid={!!errors.title}
+          aria-describedby={errors.title ? 'title-error' : undefined}
           className={errors.title ? 'border-destructive' : ''}
         />
-        {errors.title && <p className="text-sm text-destructive">{errors.title}</p>}
+        {errors.title && (
+          <p id="title-error" className="text-sm text-destructive">
+            {errors.title}
+          </p>
+        )}
       </div>
 
       {/* Description */}
@@ -226,12 +233,18 @@ export const EventForm: React.FC<EventFormProps> = ({
           id="description"
           value={formData.description}
           onChange={(e) => handleChange('description', e.target.value)}
-          placeholder="Describe the event..."
+          placeholder="Describe the event…"
           rows={5}
           disabled={isLoading}
+          aria-invalid={!!errors.description}
+          aria-describedby={errors.description ? 'description-error' : undefined}
           className={errors.description ? 'border-destructive' : ''}
         />
-        {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
+        {errors.description && (
+          <p id="description-error" className="text-sm text-destructive">
+            {errors.description}
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -246,10 +259,14 @@ export const EventForm: React.FC<EventFormProps> = ({
             value={formData.startDateTime}
             onChange={(e) => handleChange('startDateTime', e.target.value)}
             disabled={isLoading}
+            aria-invalid={!!errors.startDateTime}
+            aria-describedby={errors.startDateTime ? 'startDateTime-error' : undefined}
             className={errors.startDateTime ? 'border-destructive' : ''}
           />
           {errors.startDateTime && (
-            <p className="text-sm text-destructive">{errors.startDateTime}</p>
+            <p id="startDateTime-error" className="text-sm text-destructive">
+              {errors.startDateTime}
+            </p>
           )}
         </div>
 
@@ -264,9 +281,15 @@ export const EventForm: React.FC<EventFormProps> = ({
             value={formData.endDateTime}
             onChange={(e) => handleChange('endDateTime', e.target.value)}
             disabled={isLoading}
+            aria-invalid={!!errors.endDateTime}
+            aria-describedby={errors.endDateTime ? 'endDateTime-error' : undefined}
             className={errors.endDateTime ? 'border-destructive' : ''}
           />
-          {errors.endDateTime && <p className="text-sm text-destructive">{errors.endDateTime}</p>}
+          {errors.endDateTime && (
+            <p id="endDateTime-error" className="text-sm text-destructive">
+              {errors.endDateTime}
+            </p>
+          )}
         </div>
       </div>
 
@@ -281,9 +304,16 @@ export const EventForm: React.FC<EventFormProps> = ({
           onChange={(e) => handleChange('location', e.target.value)}
           placeholder="Enter event location"
           disabled={isLoading}
+          autoComplete="street-address"
+          aria-invalid={!!errors.location}
+          aria-describedby={errors.location ? 'location-error' : undefined}
           className={errors.location ? 'border-destructive' : ''}
         />
-        {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
+        {errors.location && (
+          <p id="location-error" className="text-sm text-destructive">
+            {errors.location}
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -308,7 +338,11 @@ export const EventForm: React.FC<EventFormProps> = ({
               ))}
             </SelectContent>
           </Select>
-          {errors.category && <p className="text-sm text-destructive">{errors.category}</p>}
+          {errors.category && (
+            <p id="category-error" className="text-sm text-destructive">
+              {errors.category}
+            </p>
+          )}
         </div>
 
         {/* Max Capacity */}
@@ -325,9 +359,15 @@ export const EventForm: React.FC<EventFormProps> = ({
             }
             placeholder="Leave empty for unlimited"
             disabled={isLoading}
+            aria-invalid={!!errors.maxCapacity}
+            aria-describedby={errors.maxCapacity ? 'maxCapacity-error' : undefined}
             className={errors.maxCapacity ? 'border-destructive' : ''}
           />
-          {errors.maxCapacity && <p className="text-sm text-destructive">{errors.maxCapacity}</p>}
+          {errors.maxCapacity && (
+            <p id="maxCapacity-error" className="text-sm text-destructive">
+              {errors.maxCapacity}
+            </p>
+          )}
         </div>
       </div>
 

@@ -6,10 +6,10 @@
  * - Date range filter
  */
 
-import { EventCategory } from '../../../types/api';
-import { Button } from '../../ui/button';
-import { Input } from '../../ui/input';
-import { Label } from '../../ui/label';
+import { EventCategory } from '@/types/api';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface EventFiltersProps {
   selectedCategory?: EventCategory;

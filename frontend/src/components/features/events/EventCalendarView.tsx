@@ -198,10 +198,11 @@ export function EventCalendarView({
                     {/* Event Indicators */}
                     <div className="mt-1 space-y-0.5 sm:space-y-1">
                       {dayEvents.slice(0, 2).map((event) => (
-                        <div
+                        <button
+                          type="button"
                           key={event.id}
                           className={cn(
-                            'hidden truncate rounded px-1 py-0.5 text-xs text-white sm:block',
+                            'hidden w-full truncate rounded px-1 py-0.5 text-left text-xs text-white sm:block',
                             getCategoryColor(event.category)
                           )}
                           onClick={(e) => {
@@ -210,7 +211,7 @@ export function EventCalendarView({
                           }}
                         >
                           {event.title}
-                        </div>
+                        </button>
                       ))}
                       {/* Mobile: show colored dots instead of full titles */}
                       <div className="flex gap-0.5 sm:hidden">

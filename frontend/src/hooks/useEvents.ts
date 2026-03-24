@@ -6,8 +6,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { eventService } from '../services/endpoints/eventService';
-import { Event, EventCategory } from '../types/api';
+import { eventService } from '@/services/endpoints/eventService';
+import { Event, EventCategory } from '@/types/api';
+import { reportError } from '@/lib/errorReporting';
 
 interface UseEventsOptions {
   category?: EventCategory;
@@ -47,7 +48,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsReturn {
       setEvents(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch events');
-      console.error('Error fetching events:', err);
+      reportError('Error fetching events', err);
     } finally {
       setLoading(false);
     }
@@ -100,7 +101,7 @@ export function useEventDetail(options: UseEventDetailOptions): UseEventDetailRe
       setEvent(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch event');
-      console.error('Error fetching event:', err);
+      reportError('Error fetching event', err);
     } finally {
       setLoading(false);
     }
@@ -147,7 +148,7 @@ export function useEventRSVP(onSuccess?: () => void): UseEventRSVPReturn {
         }
       } catch (err) {
         setRsvpError(err instanceof Error ? err.message : 'Failed to RSVP');
-        console.error('Error RSVPing to event:', err);
+        reportError('Error RSVPing to event', err);
         throw err;
       } finally {
         setRsvping(false);
@@ -169,7 +170,7 @@ export function useEventRSVP(onSuccess?: () => void): UseEventRSVPReturn {
         }
       } catch (err) {
         setRsvpError(err instanceof Error ? err.message : 'Failed to cancel RSVP');
-        console.error('Error canceling RSVP:', err);
+        reportError('Error canceling RSVP', err);
         throw err;
       } finally {
         setRsvping(false);

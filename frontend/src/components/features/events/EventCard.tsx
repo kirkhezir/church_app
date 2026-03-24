@@ -8,11 +8,11 @@
 
 import { memo } from 'react';
 import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon } from 'lucide-react';
-import { Event, EventCategory } from '../../../types/api';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { Progress } from '../../ui/progress';
+import { Event, EventCategory } from '@/types/api';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { format } from 'date-fns';
 
 interface EventCardProps {
@@ -60,9 +60,17 @@ export const EventCard = memo(function EventCard({
   return (
     <article>
       <Card
-        className={`cursor-pointer transition-shadow hover:shadow-lg ${isCancelled ? 'opacity-60' : ''}`}
+        className={`cursor-pointer transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isCancelled ? 'opacity-60' : ''}`}
         data-testid="event-card"
+        tabIndex={0}
+        role="link"
         onClick={() => onViewDetails?.(event.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onViewDetails?.(event.id);
+          }
+        }}
       >
         <CardHeader>
           <div className="flex items-start justify-between">

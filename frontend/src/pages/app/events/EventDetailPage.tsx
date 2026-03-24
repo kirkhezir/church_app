@@ -225,6 +225,8 @@ export const EventDetailPage: React.FC = () => {
                   <img
                     src={event.imageUrl}
                     alt={event.title}
+                    width={128}
+                    height={128}
                     className="h-32 w-32 rounded-lg object-cover"
                     loading="lazy"
                     onError={(e) => {
@@ -286,7 +288,10 @@ export const EventDetailPage: React.FC = () => {
                       </span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Created {format(new Date(event.createdAt), 'MMMM d, yyyy')}
+                      Created{' '}
+                      <time dateTime={new Date(event.createdAt).toISOString()}>
+                        {format(new Date(event.createdAt), 'MMMM d, yyyy')}
+                      </time>
                     </p>
                   </div>
                 </div>
@@ -396,12 +401,18 @@ export const EventDetailPage: React.FC = () => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Duration:</span>
                 <span className="font-medium">
-                  {Math.round(
-                    (new Date(event.endDateTime).getTime() -
-                      new Date(event.startDateTime).getTime()) /
-                      (1000 * 60 * 60)
-                  )}{' '}
-                  hours
+                  {(() => {
+                    const totalMinutes = Math.round(
+                      (new Date(event.endDateTime).getTime() -
+                        new Date(event.startDateTime).getTime()) /
+                        (1000 * 60)
+                    );
+                    const hours = Math.floor(totalMinutes / 60);
+                    const minutes = totalMinutes % 60;
+                    if (hours === 0) return `${minutes} min`;
+                    if (minutes === 0) return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+                    return `${hours} ${hours === 1 ? 'hour' : 'hours'} ${minutes} min`;
+                  })()}
                 </span>
               </div>
             </CardContent>
