@@ -147,7 +147,13 @@ export function useEventRSVP(onSuccess?: () => void): UseEventRSVPReturn {
           onSuccess();
         }
       } catch (err) {
-        setRsvpError(err instanceof Error ? err.message : 'Failed to RSVP');
+        const message =
+          err instanceof Error
+            ? err.message
+            : typeof err === 'object' && err !== null && 'message' in err
+              ? String((err as { message: unknown }).message)
+              : 'Failed to RSVP';
+        setRsvpError(message);
         reportError('Error RSVPing to event', err);
         throw err;
       } finally {
@@ -169,7 +175,13 @@ export function useEventRSVP(onSuccess?: () => void): UseEventRSVPReturn {
           onSuccess();
         }
       } catch (err) {
-        setRsvpError(err instanceof Error ? err.message : 'Failed to cancel RSVP');
+        const message =
+          err instanceof Error
+            ? err.message
+            : typeof err === 'object' && err !== null && 'message' in err
+              ? String((err as { message: unknown }).message)
+              : 'Failed to cancel RSVP';
+        setRsvpError(message);
         reportError('Error canceling RSVP', err);
         throw err;
       } finally {

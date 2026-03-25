@@ -32,6 +32,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -39,6 +49,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { EventCategory, Event } from '@/types/api';
+import { format } from 'date-fns';
 
 const EVENTS_PER_PAGE = 6;
 
@@ -98,9 +109,13 @@ export function EventsListPage() {
   });
 
   // RSVP handling
-  const { rsvpToEvent, rsvpError } = useEventRSVP(() => {
+  const { rsvpToEvent, rsvping, rsvpError } = useEventRSVP(() => {
     refetch(); // Refresh events after RSVP
   });
+
+  // RSVP confirmation dialog state
+  const [rsvpConfirmOpen, setRsvpConfirmOpen] = useState(false);
+  const [selectedEventForRSVP, setSelectedEventForRSVP] = useState<Event | null>(null);
 
   // Sort and paginate events
   const sortedEvents = useMemo(() => sortEvents(events, sortBy), [events, sortBy]);
@@ -145,30 +160,41 @@ export function EventsListPage() {
   );
 
   const handleRSVP = useCallback(
-    async (eventId: string) => {
+    (eventId: string) => {
       if (!user) {
-        // Redirect to login if not authenticated
         navigate('/login', { state: { from: `/app/events/${eventId}` } });
         return;
       }
-
-      try {
-        await rsvpToEvent(eventId);
-        gooeyToast.success('RSVP confirmed!', {
-          description: 'You have been registered for this event.',
-        });
-        // Show success message or navigate to event details
-        navigate(`/app/events/${eventId}`);
-      } catch (err) {
-        // Error is already handled by the hook
-        gooeyToast.error('RSVP failed', {
-          description: 'Could not register for this event. Please try again.',
-        });
-        reportError('RSVP failed', err);
+      const eventToRSVP = events.find((e) => e.id === eventId);
+      if (eventToRSVP) {
+        setSelectedEventForRSVP(eventToRSVP);
+        setRsvpConfirmOpen(true);
       }
     },
-    [user, navigate, rsvpToEvent]
+    [user, navigate, events]
   );
+
+  const confirmRSVP = useCallback(async () => {
+    if (!selectedEventForRSVP) return;
+    try {
+      await rsvpToEvent(selectedEventForRSVP.id);
+      gooeyToast.success('RSVP confirmed!', {
+        description: `You have been registered for ${selectedEventForRSVP.title}.`,
+      });
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null && 'message' in err
+            ? String((err as { message: unknown }).message)
+            : 'Could not register for this event.';
+      gooeyToast.error('RSVP failed', { description: message });
+      reportError('RSVP failed', err);
+    } finally {
+      setRsvpConfirmOpen(false);
+      setSelectedEventForRSVP(null);
+    }
+  }, [selectedEventForRSVP, rsvpToEvent]);
 
   const handleCreateEvent = useCallback(() => {
     navigate('/app/events/create');
@@ -440,6 +466,40 @@ export function EventsListPage() {
           </div>
         </div>
       )}
+
+      {/* RSVP Confirmation Dialog */}
+      <AlertDialog open={rsvpConfirmOpen} onOpenChange={setRsvpConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm RSVP</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>Are you sure you want to RSVP for this event?</p>
+                {selectedEventForRSVP && (
+                  <div className="rounded-lg border bg-muted/30 p-3 text-sm">
+                    <p className="font-medium text-foreground">{selectedEventForRSVP.title}</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {format(
+                        new Date(selectedEventForRSVP.startDateTime),
+                        'EEEE, MMMM d, yyyy \u2022 h:mm a'
+                      )}
+                    </p>
+                    {selectedEventForRSVP.location && (
+                      <p className="text-muted-foreground">{selectedEventForRSVP.location}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={rsvping}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmRSVP} disabled={rsvping}>
+              {rsvping ? 'Confirming…' : 'Confirm RSVP'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Mobile Filter Sheet */}
       <Sheet open={showFilters} onOpenChange={setShowFilters}>

@@ -6,14 +6,14 @@
  */
 
 import { memo } from 'react';
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, CheckCircle2Icon } from 'lucide-react';
 import { Event, EventCategory } from '@/types/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, isPast as dateIsPast } from 'date-fns';
 
 interface EventCardProps {
   event: Event;
@@ -64,6 +64,7 @@ export const EventCard = memo(function EventCard({
   const startDate = new Date(event.startDateTime);
   const endDate = new Date(event.endDateTime);
   const isCancelled = !!event.cancelledAt;
+  const isPast = dateIsPast(endDate);
   const config = categoryConfig[event.category];
 
   const formatTime = (date: Date) => format(date, 'h:mm a');
@@ -80,8 +81,12 @@ export const EventCard = memo(function EventCard({
     <article className="h-full">
       <Card
         className={cn(
-          'group relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-          isCancelled ? 'opacity-60 grayscale' : 'cursor-pointer'
+          'group relative flex h-full flex-col overflow-hidden transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          isCancelled
+            ? 'opacity-60 grayscale'
+            : isPast
+              ? 'cursor-pointer opacity-75'
+              : 'cursor-pointer hover:-translate-y-1 hover:shadow-lg'
         )}
         data-testid="event-card"
         tabIndex={0}
@@ -124,7 +129,12 @@ export const EventCard = memo(function EventCard({
                 Cancelled
               </Badge>
             )}
-            {isFull && !isCancelled && (
+            {isPast && !isCancelled && (
+              <Badge variant="secondary" className="rounded-full text-xs">
+                Event Ended
+              </Badge>
+            )}
+            {isFull && !isCancelled && !isPast && (
               <Badge variant="warning" className="rounded-full text-xs">
                 Full
               </Badge>
@@ -210,7 +220,7 @@ export const EventCard = memo(function EventCard({
               View Details
             </Button>
 
-            {showRSVPButton && !isCancelled && (
+            {showRSVPButton && !isCancelled && !isPast && (
               <>
                 {event.hasUserRSVPd ? (
                   <Button
@@ -220,7 +230,8 @@ export const EventCard = memo(function EventCard({
                     className="flex-1"
                     aria-label="You are registered for this event"
                   >
-                    Going ✓
+                    <CheckCircle2Icon className="mr-1 h-3.5 w-3.5" />
+                    Going
                   </Button>
                 ) : (
                   <Button
@@ -238,6 +249,17 @@ export const EventCard = memo(function EventCard({
                   </Button>
                 )}
               </>
+            )}
+            {isPast && !isCancelled && (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled
+                className="flex-1"
+                aria-label="This event has ended"
+              >
+                Event Ended
+              </Button>
             )}
           </div>
         </CardContent>
