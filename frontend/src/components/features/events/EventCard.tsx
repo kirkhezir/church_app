@@ -77,10 +77,10 @@ export const EventCard = memo(function EventCard({
   const isFull = availableSpots !== undefined && availableSpots <= 0;
 
   return (
-    <article>
+    <article className="h-full">
       <Card
         className={cn(
-          'group relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          'group relative flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           isCancelled ? 'opacity-60 grayscale' : 'cursor-pointer'
         )}
         data-testid="event-card"
@@ -113,7 +113,7 @@ export const EventCard = memo(function EventCard({
           </div>
         )}
 
-        <CardContent className="p-5">
+        <CardContent className="flex flex-1 flex-col p-5">
           {/* Badge row */}
           <div className="mb-3 flex items-center gap-2">
             <Badge variant={config.badge} className="rounded-full text-xs">
@@ -136,10 +136,10 @@ export const EventCard = memo(function EventCard({
             {event.title}
           </h3>
 
-          {/* Description */}
-          {event.description && (
-            <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{event.description}</p>
-          )}
+          {/* Description — always reserve space for consistent height */}
+          <p className="mb-4 line-clamp-2 min-h-[2.5rem] text-sm text-muted-foreground">
+            {event.description || '\u00A0'}
+          </p>
 
           {/* Meta info */}
           <div className={cn('space-y-2 rounded-lg p-3', config.bg)}>
@@ -164,6 +164,9 @@ export const EventCard = memo(function EventCard({
               <span className="truncate text-muted-foreground">{event.location}</span>
             </div>
           </div>
+
+          {/* Flexible spacer — pushes capacity + actions to the bottom */}
+          <div className="flex-1" />
 
           {/* Capacity bar */}
           {event.maxCapacity && (
@@ -193,8 +196,8 @@ export const EventCard = memo(function EventCard({
             </p>
           )}
 
-          {/* Actions */}
-          <div className="mt-4 flex gap-2">
+          {/* Actions — anchored to bottom */}
+          <div className="mt-4 flex gap-2 border-t border-border/40 pt-2">
             <Button
               variant="outline"
               size="sm"

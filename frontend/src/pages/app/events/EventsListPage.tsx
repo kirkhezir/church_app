@@ -1,13 +1,21 @@
 /**
  * EventsListPage Component
  *
- * Displays list of all events with filtering options and calendar view
- * Conditionally uses SidebarLayout for authenticated users
+ * Displays list of all events with filtering, sorting, pagination and calendar view.
+ * Conditionally uses SidebarLayout for authenticated users.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { CalendarIcon, PlusIcon, List, LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import {
+  CalendarIcon,
+  PlusIcon,
+  List,
+  LayoutGrid,
+  SlidersHorizontal,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from 'lucide-react';
 import { useEvents, useEventRSVP } from '@/hooks/useEvents';
 import { useAuth } from '@/hooks/useAuth';
 import { SidebarLayout } from '@/components/layout';
@@ -16,13 +24,54 @@ import { EventFilters } from '@/components/features/events/EventFilters';
 import { reportError } from '@/lib/errorReporting';
 import { gooeyToast } from 'goey-toast';
 import { EventCalendarView } from '@/components/features/events/EventCalendarView';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { EventCategory } from '@/types/api';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { EventCategory, Event } from '@/types/api';
+
+const EVENTS_PER_PAGE = 6;
+
+type SortOption = 'date-asc' | 'date-desc' | 'title-asc';
+
+function sortEvents(events: Event[], sortBy: SortOption): Event[] {
+  return [...events].sort((a, b) => {
+    switch (sortBy) {
+      case 'date-asc':
+        return new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime();
+      case 'date-desc':
+        return new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime();
+      case 'title-asc':
+        return a.title.localeCompare(b.title);
+      default:
+        return 0;
+    }
+  });
+}
+
+function getPaginationRange(currentPage: number, totalPages: number): (number | 'ellipsis')[] {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  const pages: (number | 'ellipsis')[] = [1];
+  if (currentPage > 3) pages.push('ellipsis');
+  const start = Math.max(2, currentPage - 1);
+  const end = Math.min(totalPages - 1, currentPage + 1);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (currentPage < totalPages - 2) pages.push('ellipsis');
+  pages.push(totalPages);
+  return pages;
+}
 
 export function EventsListPage() {
   const navigate = useNavigate();
@@ -37,6 +86,10 @@ export function EventsListPage() {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
+  // Sort & pagination state
+  const [sortBy, setSortBy] = useState<SortOption>('date-asc');
+  const [currentPage, setCurrentPage] = useState(1);
+
   // Fetch events with filters
   const { events, loading, error, refetch } = useEvents({
     category: selectedCategory,
@@ -49,10 +102,39 @@ export function EventsListPage() {
     refetch(); // Refresh events after RSVP
   });
 
+  // Sort and paginate events
+  const sortedEvents = useMemo(() => sortEvents(events, sortBy), [events, sortBy]);
+  const totalPages = Math.max(1, Math.ceil(sortedEvents.length / EVENTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedEvents = useMemo(
+    () => sortedEvents.slice((safePage - 1) * EVENTS_PER_PAGE, safePage * EVENTS_PER_PAGE),
+    [sortedEvents, safePage]
+  );
+  const paginationRange = useMemo(
+    () => getPaginationRange(safePage, totalPages),
+    [safePage, totalPages]
+  );
+
   const handleClearFilters = () => {
     setSelectedCategory(undefined);
     setStartDate('');
     setEndDate('');
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (cat?: EventCategory) => {
+    setSelectedCategory(cat);
+    setCurrentPage(1);
+  };
+
+  const handleStartDateChange = (date: string) => {
+    setStartDate(date);
+    setCurrentPage(1);
+  };
+
+  const handleEndDateChange = (date: string) => {
+    setEndDate(date);
+    setCurrentPage(1);
   };
 
   const handleViewDetails = useCallback(
@@ -194,9 +276,9 @@ export function EventsListPage() {
               selectedCategory={selectedCategory}
               startDate={startDate}
               endDate={endDate}
-              onCategoryChange={setSelectedCategory}
-              onStartDateChange={setStartDate}
-              onEndDateChange={setEndDate}
+              onCategoryChange={handleCategoryChange}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
               onClear={handleClearFilters}
             />
           </div>
@@ -205,8 +287,8 @@ export function EventsListPage() {
           <div className="flex-1 lg:col-span-3">
             {loading ? (
               // Card-shaped skeleton loaders
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {[1, 2, 3, 4].map((i) => (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="overflow-hidden rounded-xl border bg-card">
                     <Skeleton className="h-1 w-full" />
                     <div className="space-y-4 p-5">
@@ -245,17 +327,35 @@ export function EventsListPage() {
                 )}
               </div>
             ) : (
-              // Events grid
-              <>
-                <p className="mb-4 text-sm text-muted-foreground">
-                  Showing {events.length} {events.length === 1 ? 'event' : 'events'}
-                </p>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {events.map((event, index) => (
+              // Events grid with sort + pagination
+              <div className="flex flex-col">
+                {/* Toolbar: count + sort */}
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-semibold tabular-nums text-foreground">
+                      {sortedEvents.length}
+                    </span>{' '}
+                    {sortedEvents.length === 1 ? 'event' : 'events'}
+                  </p>
+                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+                    <SelectTrigger className="h-8 w-[170px] border-dashed text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent align="end">
+                      <SelectItem value="date-asc">Date (oldest first)</SelectItem>
+                      <SelectItem value="date-desc">Date (newest first)</SelectItem>
+                      <SelectItem value="title-asc">Title A\u2013Z</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Event cards grid */}
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {paginatedEvents.map((event, index) => (
                     <div
                       key={event.id}
                       className="animate-fade-in-up"
-                      style={{ animationDelay: `${Math.min(index, 9) * 60}ms` }}
+                      style={{ animationDelay: `${Math.min(index, 5) * 60}ms` }}
                     >
                       <EventCard
                         event={event}
@@ -266,7 +366,66 @@ export function EventsListPage() {
                     </div>
                   ))}
                 </div>
-              </>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <nav
+                    aria-label="Events pagination"
+                    className="mt-8 flex items-center justify-center gap-2"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={safePage <= 1}
+                      className="h-9 gap-1.5 rounded-lg px-3"
+                    >
+                      <ChevronLeftIcon className="h-4 w-4" />
+                      <span className="hidden sm:inline">Previous</span>
+                    </Button>
+
+                    <div className="flex items-center gap-1">
+                      {paginationRange.map((page, i) =>
+                        page === 'ellipsis' ? (
+                          <span
+                            key={`ellipsis-${i}`}
+                            className="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+                            aria-hidden
+                          >
+                            \u2026
+                          </span>
+                        ) : (
+                          <button
+                            key={page}
+                            type="button"
+                            onClick={() => setCurrentPage(page)}
+                            aria-current={page === safePage ? 'page' : undefined}
+                            className={cn(
+                              'inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                              page === safePage
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            )}
+                          >
+                            {page}
+                          </button>
+                        )
+                      )}
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={safePage >= totalPages}
+                      className="h-9 gap-1.5 rounded-lg px-3"
+                    >
+                      <span className="hidden sm:inline">Next</span>
+                      <ChevronRightIcon className="h-4 w-4" />
+                    </Button>
+                  </nav>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -284,11 +443,11 @@ export function EventsListPage() {
               startDate={startDate}
               endDate={endDate}
               onCategoryChange={(cat) => {
-                setSelectedCategory(cat);
+                handleCategoryChange(cat);
                 setShowFilters(false);
               }}
-              onStartDateChange={setStartDate}
-              onEndDateChange={setEndDate}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
               onClear={() => {
                 handleClearFilters();
                 setShowFilters(false);
