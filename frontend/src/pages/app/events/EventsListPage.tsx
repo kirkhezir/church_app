@@ -330,23 +330,33 @@ export function EventsListPage() {
               // Events grid with sort + pagination
               <div className="flex flex-col">
                 {/* Toolbar: count + sort */}
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-5 flex items-center justify-between rounded-lg border bg-muted/30 px-4 py-2.5">
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-semibold tabular-nums text-foreground">
+                    Showing{' '}
+                    <span className="font-medium tabular-nums text-foreground">
+                      {Math.min((safePage - 1) * EVENTS_PER_PAGE + 1, sortedEvents.length)}
+                      &ndash;
+                      {Math.min(safePage * EVENTS_PER_PAGE, sortedEvents.length)}
+                    </span>{' '}
+                    of{' '}
+                    <span className="font-medium tabular-nums text-foreground">
                       {sortedEvents.length}
                     </span>{' '}
                     {sortedEvents.length === 1 ? 'event' : 'events'}
                   </p>
-                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-                    <SelectTrigger className="h-8 w-[170px] border-dashed text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent align="end">
-                      <SelectItem value="date-asc">Date (oldest first)</SelectItem>
-                      <SelectItem value="date-desc">Date (newest first)</SelectItem>
-                      <SelectItem value="title-asc">Title A\u2013Z</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Sort by</span>
+                    <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+                      <SelectTrigger className="h-8 w-[160px] bg-background text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent align="end">
+                        <SelectItem value="date-asc">Oldest first</SelectItem>
+                        <SelectItem value="date-desc">Newest first</SelectItem>
+                        <SelectItem value="title-asc">Name (A to Z)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Event cards grid */}
@@ -392,7 +402,7 @@ export function EventsListPage() {
                             className="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
                             aria-hidden
                           >
-                            \u2026
+                            &hellip;
                           </span>
                         ) : (
                           <button
