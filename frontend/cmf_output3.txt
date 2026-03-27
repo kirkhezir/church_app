@@ -1,0 +1,508 @@
+jest-haste-map: duplicate manual mock found: apiClient
+  The following files share their name; please delete one of them:
+    * <rootDir>\tests\__mocks__\apiClient.ts
+    * <rootDir>\src\services\api\__mocks__\apiClient.ts
+
+FAIL tests/components/admin/CreateMemberForm.test.tsx (23.463 s)
+  AdminCreateMemberPage
+    Form Rendering
+      ΓêÜ should render the create member form (926 ms)
+      ΓêÜ should have all required form fields (439 ms)
+      ΓêÜ should have optional phone and address fields (312 ms)
+      ΓêÜ should have Cancel and Create buttons (785 ms)
+    Form Input
+      ΓêÜ should update form fields when typing (539 ms)
+    Form Submission
+      ├ù should call adminService.createMember with form data (1917 ms)
+      ΓêÜ should show loading state while submitting (749 ms)
+    Success State
+      ΓêÜ should show success message after member creation (831 ms)
+      ├ù should display temporary password in success state (1946 ms)
+      ΓêÜ should have "Add Another" button in success state (1530 ms)
+      ΓêÜ should reset form when "Add Another" is clicked (1707 ms)
+      ΓêÜ should have link to view all members (1643 ms)
+    Error Handling
+      ├ù should display error message on submission failure (1846 ms)
+      ├ù should display generic error message when error has no message (1662 ms)
+      ΓêÜ should stay on form when error occurs (731 ms)
+    Navigation
+      ├ù should navigate to members list when Cancel is clicked (539 ms)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Form Submission ΓÇ║ should call adminService.createMember with form data
+
+    expect(jest.fn()).toHaveBeenCalled()
+
+    Expected number of calls: >= 1
+    Received number of calls:    0
+
+    Ignored nodes: comments, script, style
+    <html>
+      <head />
+      <body>
+        <div>
+          <div
+            class="group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar"
+            style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+          >
+            <a
+              class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-md focus:ring-2 focus:ring-ring"
+              href="#main-content"
+            >
+              Skip to content
+            </a>
+            <div
+              class="group peer hidden text-sidebar-foreground md:block"
+              data-collapsible=""
+              data-side="left"
+              data-state="expanded"
+              data-variant="sidebar"
+            >
+              <div
+                class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+              />
+              <div
+                class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+              >
+                <div
+                  class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                  data-sidebar="sidebar"
+                >
+                  <div
+                    class="flex flex-col gap-2 p-2"
+                    data-sidebar="header"
+                  >
+                    <ul
+                      class="flex w-full min-w-0 flex-col gap-1"
+                      data-sidebar="menu"
+                    >
+                      <li
+                        class="group/menu-item relative"
+                        data-sidebar="menu-item"
+                      >
+                        <a
+                          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0"
+                          data-active="false"
+                          data-discover="true"
+                          data-sidebar="menu-button"
+                          data-size="lg"
+                          href="/app/dashboard"
+                        >
+                          <img
+                            alt="Sing Buri Adventist Center"
+                            class="h-8 w-8 shrink-0 rounded-lg object-contain"
+                            src="/church-logo.png"
+                          />
+                          <div
+                            class="grid flex-1 text-left text-sm leading-tight"
+                          >
+                            <span
+                              class="truncate font-semibold"
+                            >
+                              Sing Buri Adventist
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+                    data-sidebar="content"
+                  >
+                    <div
+                      class="relative flex w-full min-w-0 flex-col p-2"
+                      data-sidebar="group"
+                    >
+                      <ul
+                        class="flex w-full min-w-0 flex-col gap-1"
+                        data-sidebar="menu"
+                      >
+                        <li
+                          class="group/menu-item relative"
+                          data-sidebar="menu-item"
+                        >
+                          <a
+                            class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                            data-active="false"
+                            data-discover="true"
+                            data-sidebar="menu-button"
+                            data-size="default"
+                            data-state="closed"
+                            href="/app/dashboard"[3...
+
+      136 |
+      137 |       await waitFor(() => {
+    > 138 |         expect(mockCreateMember).toHaveBeenCalled();
+          |                                  ^
+      139 |       });
+      140 |     });
+      141 |
+
+      at toHaveBeenCalled (tests/components/admin/CreateMemberForm.test.tsx:138:34)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:552:19)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Success State ΓÇ║ should display temporary password in success state
+
+    Unable to find an element with the text: TempPass123!. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar"
+          style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+        >
+          <a
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-md focus:ring-2 focus:ring-ring"
+            href="#main-content"
+          >
+            Skip to content
+          </a>
+          <div
+            class="group peer hidden text-sidebar-foreground md:block"
+            data-collapsible=""
+            data-side="left"
+            data-state="expanded"
+            data-variant="sidebar"
+          >
+            <div
+              class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+            />
+            <div
+              class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+            >
+              <div
+                class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                data-sidebar="sidebar"
+              >
+                <div
+                  class="flex flex-col gap-2 p-2"
+                  data-sidebar="header"
+                >
+                  <ul
+                    class="flex w-full min-w-0 flex-col gap-1"
+                    data-sidebar="menu"
+                  >
+                    <li
+                      class="group/menu-item relative"
+                      data-sidebar="menu-item"
+                    >
+                      <a
+                        class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0"
+                        data-active="false"
+                        data-discover="true"
+                        data-sidebar="menu-button"
+                        data-size="lg"
+                        href="/app/dashboard"
+                      >
+                        <img
+                          alt="Sing Buri Adventist Center"
+                          class="h-8 w-8 shrink-0 rounded-lg object-contain"
+                          src="/church-logo.png"
+                        />
+                        <div
+                          class="grid flex-1 text-left text-sm leading-tight"
+                        >
+                          <span
+                            class="truncate font-semibold"
+                          >
+                            Sing Buri Adventist
+                          </span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+                  data-sidebar="content"
+                >
+                  <div
+                    class="relative flex w-full min-w-0 flex-col p-2"
+                    data-sidebar="group"
+                  >
+                    <ul
+                      class="flex w-full min-w-0 flex-col gap-1"
+                      data-sidebar="menu"
+                    >
+                      <li
+                        class="group/menu-item relative"
+                        data-sidebar="menu-item"
+                      >
+                        <a
+                          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                          data-active="false"
+                          data-discover="true"
+                          data-sidebar="menu-button"
+                          data-size="default"
+                          data-state="closed"
+                          href="/app/dashboard"
+                        >
+                          <svg
+                            class="lucide lucide-home "
+                            fill="none"
+                        ...
+
+      194 |       fireEvent.click(submitButton);
+      195 |
+    > 196 |       await waitFor(() => {
+          |                    ^
+      197 |         expect(screen.getByText(/Temporary Password/i)).toBeInTheDocument();
+      198 |         expect(screen.getByText('TempPass123!')).toBeInTheDocument();
+      199 |       });
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (tests/components/admin/CreateMemberForm.test.tsx:196:20)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Error Handling ΓÇ║ should display error message on submission failure
+
+    Unable to find an element with the text: /Email already exists/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar"
+          style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+        >
+          <a
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-md focus:ring-2 focus:ring-ring"
+            href="#main-content"
+          >
+            Skip to content
+          </a>
+          <div
+            class="group peer hidden text-sidebar-foreground md:block"
+            data-collapsible=""
+            data-side="left"
+            data-state="expanded"
+            data-variant="sidebar"
+          >
+            <div
+              class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+            />
+            <div
+              class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+            >
+              <div
+                class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                data-sidebar="sidebar"
+              >
+                <div
+                  class="flex flex-col gap-2 p-2"
+                  data-sidebar="header"
+                >
+                  <ul
+                    class="flex w-full min-w-0 flex-col gap-1"
+                    data-sidebar="menu"
+                  >
+                    <li
+                      class="group/menu-item relative"
+                      data-sidebar="menu-item"
+                    >
+                      <a
+                        class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0"
+                        data-active="false"
+                        data-discover="true"
+                        data-sidebar="menu-button"
+                        data-size="lg"
+                        href="/app/dashboard"
+                      >
+                        <img
+                          alt="Sing Buri Adventist Center"
+                          class="h-8 w-8 shrink-0 rounded-lg object-contain"
+                          src="/church-logo.png"
+                        />
+                        <div
+                          class="grid flex-1 text-left text-sm leading-tight"
+                        >
+                          <span
+                            class="truncate font-semibold"
+                          >
+                            Sing Buri Adventist
+                          </span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+                  data-sidebar="content"
+                >
+                  <div
+                    class="relative flex w-full min-w-0 flex-col p-2"
+                    data-sidebar="group"
+                  >
+                    <ul
+                      class="flex w-full min-w-0 flex-col gap-1"
+                      data-sidebar="menu"
+                    >
+                      <li
+                        class="group/menu-item relative"
+                        data-sidebar="menu-item"
+                      >
+                        <a
+                          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                          data-active="false"
+                          data-discover="true"
+                          data-sidebar="menu-button"
+                          data-size="default"
+                          data-state="closed"
+                          href="/app/dashboard"
+                        >
+                          <svg
+                            class="lucide lucide-home "
+                            fill="none"
+                        ...
+
+      278 |       fireEvent.click(submitButton);
+      279 |
+    > 280 |       await waitFor(() => {
+          |                    ^
+      281 |         expect(screen.getByText(/Email already exists/i)).toBeInTheDocument();
+      282 |       });
+      283 |     });
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (tests/components/admin/CreateMemberForm.test.tsx:280:20)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Error Handling ΓÇ║ should display generic error message when error has no message
+
+    Unable to find an element with the text: /Failed to create member/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar"
+          style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+        >
+          <a
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-md focus:ring-2 focus:ring-ring"
+            href="#main-content"
+          >
+            Skip to content
+          </a>
+          <div
+            class="group peer hidden text-sidebar-foreground md:block"
+            data-collapsible=""
+            data-side="left"
+            data-state="expanded"
+            data-variant="sidebar"
+          >
+            <div
+              class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+            />
+            <div
+              class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+            >
+              <div
+                class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                data-sidebar="sidebar"
+              >
+                <div
+                  class="flex flex-col gap-2 p-2"
+                  data-sidebar="header"
+                >
+                  <ul
+                    class="flex w-full min-w-0 flex-col gap-1"
+                    data-sidebar="menu"
+                  >
+                    <li
+                      class="group/menu-item relative"
+                      data-sidebar="menu-item"
+                    >
+                      <a
+                        class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0"
+                        data-active="false"
+                        data-discover="true"
+                        data-sidebar="menu-button"
+                        data-size="lg"
+                        href="/app/dashboard"
+                      >
+                        <img
+                          alt="Sing Buri Adventist Center"
+                          class="h-8 w-8 shrink-0 rounded-lg object-contain"
+                          src="/church-logo.png"
+                        />
+                        <div
+                          class="grid flex-1 text-left text-sm leading-tight"
+                        >
+                          <span
+                            class="truncate font-semibold"
+                          >
+                            Sing Buri Adventist
+                          </span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+                  data-sidebar="content"
+                >
+                  <div
+                    class="relative flex w-full min-w-0 flex-col p-2"
+                    data-sidebar="group"
+                  >
+                    <ul
+                      class="flex w-full min-w-0 flex-col gap-1"
+                      data-sidebar="menu"
+                    >
+                      <li
+                        class="group/menu-item relative"
+                        data-sidebar="menu-item"
+                      >
+                        <a
+                          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                          data-active="false"
+                          data-discover="true"
+                          data-sidebar="menu-button"
+                          data-size="default"
+                          data-state="closed"
+                          href="/app/dashboard"
+                        >
+                          <svg
+                            class="lucide lucide-home "
+                            fill="none"
+                        ...
+
+      298 |       fireEvent.click(submitButton);
+      299 |
+    > 300 |       await waitFor(() => {
+          |                    ^
+      301 |         expect(screen.getByText(/Failed to create member/i)).toBeInTheDocument();
+      302 |       });
+      303 |     });
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (tests/components/admin/CreateMemberForm.test.tsx:300:20)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Navigation ΓÇ║ should navigate to members list when Cancel is clicked
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "/app/admin/members"
+
+    Number of calls: 0
+
+      332 |       fireEvent.click(cancelButton);
+      333 |
+    > 334 |       expect(mockNavigate).toHaveBeenCalledWith('/app/admin/members');
+          |                            ^
+      335 |     });
+      336 |   });
+      337 | });
+
+      at Object.toHaveBeenCalledWith (tests/components/admin/CreateMemberForm.test.tsx:334:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 11 passed, 16 total
+Snapshots:   0 total
+Time:        30.498 s
+Ran all test suites matching tests/components/admin/CreateMemberForm.test.tsx.

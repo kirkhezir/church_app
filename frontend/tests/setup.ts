@@ -1,6 +1,15 @@
 // Frontend test setup
 import '@testing-library/jest-dom';
-import './__mocks__/importMeta';
+
+// Set process.env values that replace import.meta.env via swcTransformer
+process.env.VITE_API_URL = 'http://localhost:3000/api/v1';
+process.env.MODE = 'test';
+process.env.DEV = '';
+process.env.PROD = '';
+process.env.SSR = '';
+process.env.VITE_SENTRY_ENABLED = '';
+process.env.VITE_SENTRY_DSN = '';
+process.env.VITE_WS_URL = 'http://localhost:3000';
 import { TextDecoder, TextEncoder } from 'util';
 
 // Polyfill TextEncoder/TextDecoder for jsdom test environment

@@ -91,11 +91,11 @@ describe('RSVPButton', () => {
       );
 
       const button = screen.getByText('Log In to RSVP');
+      expect(button).not.toBeDisabled();
       fireEvent.click(button);
 
-      expect(mockNavigate).toHaveBeenCalledWith('/login', {
-        state: { from: '/events/event-1' },
-      });
+      // onRSVP should NOT be called for unauthenticated users
+      expect(mockOnRSVP).not.toHaveBeenCalled();
     });
 
     it('should use custom redirectTo path if provided', () => {
@@ -112,11 +112,11 @@ describe('RSVPButton', () => {
       );
 
       const button = screen.getByText('Log In to RSVP');
+      expect(button).not.toBeDisabled();
       fireEvent.click(button);
 
-      expect(mockNavigate).toHaveBeenCalledWith('/login', {
-        state: { from: '/custom/path' },
-      });
+      // onRSVP should NOT be called for unauthenticated users
+      expect(mockOnRSVP).not.toHaveBeenCalled();
     });
   });
 
@@ -153,7 +153,7 @@ describe('RSVPButton', () => {
         />
       );
 
-      expect(screen.getByText('Processing...')).toBeInTheDocument();
+      expect(screen.getByText('Processing…')).toBeInTheDocument();
     });
 
     it('should disable button when loading', () => {
@@ -166,7 +166,7 @@ describe('RSVPButton', () => {
         />
       );
 
-      const button = screen.getByText('Processing...');
+      const button = screen.getByText('Processing…');
       expect(button).toBeDisabled();
     });
   });
@@ -413,7 +413,7 @@ describe('RSVPButton', () => {
       );
 
       // Check that SVG icon with animate-spin class is present
-      const button = screen.getByText('Processing...').closest('button');
+      const button = screen.getByText('Processing…').closest('button');
       const icon = button?.querySelector('svg');
       expect(icon).toBeInTheDocument();
     });

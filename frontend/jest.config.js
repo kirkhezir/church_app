@@ -4,27 +4,22 @@ export default {
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   testMatch: ['**/__tests__/**/*.{ts,tsx}', '**/?(*.)+(spec|test).{ts,tsx}'],
   transform: {
-    '^.+\\.tsx?$': [
-      '@swc/jest',
-      {
-        jsc: {
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-          },
-          transform: {
-            react: {
-              runtime: 'automatic',
-            },
-          },
-        },
-        module: {
-          type: 'commonjs',
-        },
-      },
-    ],
+    '^.+\\.tsx?$': '<rootDir>/tests/swcTransformer.cjs',
   },
   moduleNameMapper: {
+    // i18n mock — alias and all relative depths
+    '^@/i18n$': '<rootDir>/tests/__mocks__/i18n.tsx',
+    '\\.\\./i18n$': '<rootDir>/tests/__mocks__/i18n.tsx',
+    // useTheme mock — alias and all relative depths
+    '^@/hooks/useTheme$': '<rootDir>/tests/__mocks__/useTheme.ts',
+    '\\.\\./hooks/useTheme$': '<rootDir>/tests/__mocks__/useTheme.ts',
+    // useAuth mock — alias and all relative depths
+    '^@/hooks/useAuth$': '<rootDir>/tests/__mocks__/useAuth.ts',
+    '\\.\\./hooks/useAuth$': '<rootDir>/tests/__mocks__/useAuth.ts',
+    // RichTextEditor mock (tiptap)
+    '^@/components/editor/RichTextEditor$': '<rootDir>/tests/__mocks__/RichTextEditor.tsx',
+    '\\.\\./editor/RichTextEditor$': '<rootDir>/tests/__mocks__/RichTextEditor.tsx',
+    // Generic alias
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^../api/apiClient$': '<rootDir>/tests/__mocks__/apiClient.ts',
