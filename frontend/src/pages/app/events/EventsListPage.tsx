@@ -98,7 +98,7 @@ export function EventsListPage() {
   const [endDate, setEndDate] = useState<string>('');
 
   // Sort & pagination state
-  const [sortBy, setSortBy] = useState<SortOption>('date-asc');
+  const [sortBy, setSortBy] = useState<SortOption>('date-desc');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch events with filters
