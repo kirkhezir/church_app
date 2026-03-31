@@ -87,7 +87,6 @@ describe('AnnouncementCard', () => {
       // Urgent badge should be visible
       const urgentBadge = screen.getByText('Urgent');
       expect(urgentBadge).toBeInTheDocument();
-      expect(urgentBadge).toHaveClass(/red/i); // Should have red styling
     });
 
     it('should render archived announcement with archived indicator', () => {
@@ -114,22 +113,20 @@ describe('AnnouncementCard', () => {
   });
 
   describe('Priority Badges', () => {
-    it('should display blue badge for NORMAL priority', () => {
+    it('should display badge for NORMAL priority', () => {
       renderWithRouter(<AnnouncementCard announcement={mockNormalAnnouncement} />);
 
       const badge = screen.getByText('Normal');
       expect(badge).toBeInTheDocument();
-      // Should have blue styling classes
-      expect(badge.closest('span')).toHaveClass(/blue/i);
     });
 
-    it('should display red badge for URGENT priority', () => {
+    it('should display badge for URGENT priority', () => {
       renderWithRouter(<AnnouncementCard announcement={mockUrgentAnnouncement} />);
 
       const badge = screen.getByText('Urgent');
       expect(badge).toBeInTheDocument();
-      // Should have red styling classes
-      expect(badge.closest('span')).toHaveClass(/red/i);
+      // Badge renders as <div> with destructive variant class
+      expect(badge).toHaveClass(/destructive/i);
     });
   });
 

@@ -1,0 +1,166 @@
+jest-haste-map: duplicate manual mock found: apiClient
+  The following files share their name; please delete one of them:
+    * <rootDir>\tests\__mocks__\apiClient.ts
+    * <rootDir>\src\services\api\__mocks__\apiClient.ts
+
+FAIL tests/components/admin/CreateMemberForm.test.tsx (21.864 s)
+  AdminCreateMemberPage
+    Form Rendering
+      ΓêÜ should render the create member form (989 ms)
+      ΓêÜ should have all required form fields (523 ms)
+      ΓêÜ should have optional phone and address fields (346 ms)
+      ΓêÜ should have Cancel and Create buttons (761 ms)
+    Form Input
+      ΓêÜ should update form fields when typing (533 ms)
+    Form Submission
+      ΓêÜ should call adminService.createMember with form data (1045 ms)
+      ΓêÜ should show loading state while submitting (907 ms)
+    Success State
+      ΓêÜ should show success message after member creation (1238 ms)
+      ΓêÜ should display temporary password in success state (1017 ms)
+      ΓêÜ should have "Add Another" button in success state (1759 ms)
+      ΓêÜ should reset form when "Add Another" is clicked (1774 ms)
+      ΓêÜ should have link to view all members (1651 ms)
+    Error Handling
+      ΓêÜ should display error message on submission failure (929 ms)
+      ├ù should display generic error message when error has no message (1843 ms)
+      ΓêÜ should stay on form when error occurs (742 ms)
+    Navigation
+      ├ù should navigate to members list when Cancel is clicked (511 ms)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Error Handling ΓÇ║ should display generic error message when error has no message
+
+    Unable to find an element with the text: /Failed to create member/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar"
+          style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+        >
+          <a
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:shadow-md focus:ring-2 focus:ring-ring"
+            href="#main-content"
+          >
+            Skip to content
+          </a>
+          <div
+            class="group peer hidden text-sidebar-foreground md:block"
+            data-collapsible=""
+            data-side="left"
+            data-state="expanded"
+            data-variant="sidebar"
+          >
+            <div
+              class="relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180 group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+            />
+            <div
+              class="fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l"
+            >
+              <div
+                class="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+                data-sidebar="sidebar"
+              >
+                <div
+                  class="flex flex-col gap-2 p-2"
+                  data-sidebar="header"
+                >
+                  <ul
+                    class="flex w-full min-w-0 flex-col gap-1"
+                    data-sidebar="menu"
+                  >
+                    <li
+                      class="group/menu-item relative"
+                      data-sidebar="menu-item"
+                    >
+                      <a
+                        class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0"
+                        data-active="false"
+                        data-discover="true"
+                        data-sidebar="menu-button"
+                        data-size="lg"
+                        href="/app/dashboard"
+                      >
+                        <img
+                          alt="Sing Buri Adventist Center"
+                          class="h-8 w-8 shrink-0 rounded-lg object-contain"
+                          src="/church-logo.png"
+                        />
+                        <div
+                          class="grid flex-1 text-left text-sm leading-tight"
+                        >
+                          <span
+                            class="truncate font-semibold"
+                          >
+                            Sing Buri Adventist
+                          </span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  class="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+                  data-sidebar="content"
+                >
+                  <div
+                    class="relative flex w-full min-w-0 flex-col p-2"
+                    data-sidebar="group"
+                  >
+                    <ul
+                      class="flex w-full min-w-0 flex-col gap-1"
+                      data-sidebar="menu"
+                    >
+                      <li
+                        class="group/menu-item relative"
+                        data-sidebar="menu-item"
+                      >
+                        <a
+                          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+                          data-active="false"
+                          data-discover="true"
+                          data-sidebar="menu-button"
+                          data-size="default"
+                          data-state="closed"
+                          href="/app/dashboard"
+                        >
+                          <svg
+                            class="lucide lucide-home "
+                            fill="none"
+                        ...
+
+      292 |       fireEvent.click(submitButton);
+      293 |
+    > 294 |       await waitFor(() => {
+          |                    ^
+      295 |         expect(screen.getByText(/Failed to create member/i)).toBeInTheDocument();
+      296 |       });
+      297 |     });
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (tests/components/admin/CreateMemberForm.test.tsx:294:20)
+
+  ΓùÅ AdminCreateMemberPage ΓÇ║ Navigation ΓÇ║ should navigate to members list when Cancel is clicked
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "/app/admin/members"
+
+    Number of calls: 0
+
+      326 |       fireEvent.click(cancelButton);
+      327 |
+    > 328 |       expect(mockNavigate).toHaveBeenCalledWith('/app/admin/members');
+          |                            ^
+      329 |     });
+      330 |   });
+      331 | });
+
+      at Object.toHaveBeenCalledWith (tests/components/admin/CreateMemberForm.test.tsx:328:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 14 passed, 16 total
+Snapshots:   0 total
+Time:        28.451 s
+Ran all test suites matching tests/components/admin/CreateMemberForm.test.tsx.

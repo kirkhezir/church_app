@@ -6,8 +6,11 @@
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AnnouncementForm } from '../../../src/components/features/announcements/AnnouncementForm';
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+
+// RichTextEditor is auto-mocked via moduleNameMapper → tests/__mocks__/RichTextEditor.tsx
+
+import { AnnouncementForm } from '../../../src/components/features/announcements/AnnouncementForm';
 
 describe('AnnouncementForm', () => {
   const mockOnSubmit = jest.fn<() => Promise<void>>();

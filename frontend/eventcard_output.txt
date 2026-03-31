@@ -1,0 +1,62 @@
+jest-haste-map: duplicate manual mock found: apiClient
+  The following files share their name; please delete one of them:
+    * <rootDir>\tests\__mocks__\apiClient.ts
+    * <rootDir>\src\services\api\__mocks__\apiClient.ts
+
+FAIL tests/unit/components/EventCard.test.tsx
+  EventCard
+    Event Information Display
+      ΓêÜ should render event title (114 ms)
+      ΓêÜ should render event category badge (17 ms)
+      ΓêÜ should render event location (14 ms)
+      ΓêÜ should render event date and time (17 ms)
+      ΓêÜ should render capacity information when maxCapacity is set (17 ms)
+      ΓêÜ should not render capacity when maxCapacity is not set (10 ms)
+    Category Badge Colors
+      ΓêÜ should render WORSHIP category badge (11 ms)
+      ΓêÜ should render BIBLE_STUDY category badge (11 ms)
+      ΓêÜ should render COMMUNITY category badge (19 ms)
+      ΓêÜ should render FELLOWSHIP category badge (11 ms)
+    RSVP Button
+      ΓêÜ should show RSVP button when showRSVPButton is true (14 ms)
+      ΓêÜ should not show RSVP button when showRSVPButton is false (11 ms)
+      ΓêÜ should call onRSVP when RSVP button is clicked (24 ms)
+      ΓêÜ should show "Going" when user has RSVPd (12 ms)
+      ΓêÜ should show "Event Full" when event is at capacity (12 ms)
+      ΓêÜ should disable RSVP button when event is at capacity and user has not RSVPd (9 ms)
+    Cancelled Events
+      ΓêÜ should show cancelled indicator for cancelled events (11 ms)
+      ├ù should apply opacity style to cancelled events (14 ms)
+      ΓêÜ should not show RSVP button for cancelled events (14 ms)
+    View Details Button
+      ΓêÜ should render "View Details" button (9 ms)
+      ΓêÜ should call onViewDetails when "View Details" button is clicked (16 ms)
+    Edge Cases
+      ΓêÜ should handle event with no rsvpCount (9 ms)
+      ΓêÜ should handle event with long title (11 ms)
+      ΓêÜ should handle event with creator information (11 ms)
+
+  ΓùÅ EventCard ΓÇ║ Cancelled Events ΓÇ║ should apply opacity style to cancelled events
+
+    expect(element).toHaveClass("opacity-60")
+
+    Expected the element to have class:
+      opacity-60
+    Received:
+      h-full
+
+      242 |
+      243 |       const card = container.firstChild;
+    > 244 |       expect(card).toHaveClass('opacity-60');
+          |                    ^
+      245 |     });
+      246 |
+      247 |     it('should not show RSVP button for cancelled events', () => {
+
+      at Object.toHaveClass (tests/unit/components/EventCard.test.tsx:244:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 23 passed, 24 total
+Snapshots:   0 total
+Time:        9.728 s
+Ran all test suites matching tests/unit/components/EventCard.test.tsx.

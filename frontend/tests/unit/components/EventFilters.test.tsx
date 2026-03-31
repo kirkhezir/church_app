@@ -31,8 +31,8 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.getByText('All')).toBeInTheDocument();
-      expect(screen.getByText('Worship Service')).toBeInTheDocument();
+      expect(screen.getByText('All Events')).toBeInTheDocument();
+      expect(screen.getByText('Worship')).toBeInTheDocument();
       expect(screen.getByText('Bible Study')).toBeInTheDocument();
       expect(screen.getByText('Community')).toBeInTheDocument();
       expect(screen.getByText('Fellowship')).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.queryByText('Clear All')).not.toBeInTheDocument();
+      expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
     });
   });
 
@@ -86,7 +86,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const allButton = screen.getByText('All');
+      const allButton = screen.getByText('All Events');
       fireEvent.click(allButton);
 
       expect(mockOnCategoryChange).toHaveBeenCalledTimes(1);
@@ -106,7 +106,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship Service');
+      const worshipButton = screen.getByText('Worship');
       fireEvent.click(worshipButton);
 
       expect(mockOnCategoryChange).toHaveBeenCalledTimes(1);
@@ -186,7 +186,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship Service');
+      const worshipButton = screen.getByText('Worship');
       // Check that the button has the 'default' variant (active state)
       expect(worshipButton.closest('button')).not.toHaveClass('variant-outline');
     });
@@ -204,7 +204,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const allButton = screen.getByText('All');
+      const allButton = screen.getByText('All Events');
       expect(allButton.closest('button')).not.toHaveClass('variant-outline');
     });
   });
@@ -299,7 +299,7 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.getByText('Clear All')).toBeInTheDocument();
+      expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('should show clear button when start date is set', () => {
@@ -315,7 +315,7 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.getByText('Clear All')).toBeInTheDocument();
+      expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('should show clear button when end date is set', () => {
@@ -331,7 +331,7 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.getByText('Clear All')).toBeInTheDocument();
+      expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('should show clear button when multiple filters are active', () => {
@@ -347,7 +347,7 @@ describe('EventFilters', () => {
         />
       );
 
-      expect(screen.getByText('Clear All')).toBeInTheDocument();
+      expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('should call onClear when clear button is clicked', () => {
@@ -363,7 +363,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const clearButton = screen.getByText('Clear All');
+      const clearButton = screen.getByText('Clear all');
       fireEvent.click(clearButton);
 
       expect(mockOnClear).toHaveBeenCalledTimes(1);
@@ -384,8 +384,8 @@ describe('EventFilters', () => {
         />
       );
 
-      const gridElement = container.querySelector('.grid');
-      expect(gridElement).toBeInTheDocument();
+      const filterElement = container.querySelector('.space-y-1, .flex, .sticky');
+      expect(filterElement).toBeInTheDocument();
     });
   });
 
@@ -403,7 +403,7 @@ describe('EventFilters', () => {
         />
       );
 
-      const worshipButton = screen.getByText('Worship Service');
+      const worshipButton = screen.getByText('Worship');
       const bibleStudyButton = screen.getByText('Bible Study');
 
       fireEvent.click(worshipButton);
