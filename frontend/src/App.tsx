@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
 import { PageErrorBoundary } from './components/common/ErrorBoundary';
+import { useAuth } from './hooks/useAuth';
 
 // Eagerly loaded - critical path
 import HomePage from './pages/landing/Home';
@@ -183,6 +184,18 @@ const PageLoader = () => (
 // NotFoundPage is now lazy-loaded from pages/landing/NotFoundPage.tsx
 
 /**
+ * AuthAwareHome — on the root `/` path, redirect authenticated users
+ * (e.g. PWA launch) straight to the dashboard instead of showing
+ * the public landing page.
+ */
+const AuthAwareHome: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) return <PageLoader />;
+  if (isAuthenticated) return <Navigate to="/app/dashboard" replace />;
+  return <HomePage />;
+};
+
+/**
  * Main App Component with Routing
  *
  * Route architecture:
@@ -205,7 +218,7 @@ const App: React.FC = () => {
             {/* These use PublicLayout with church branding                   */}
             {/* ============================================================ */}
 
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<AuthAwareHome />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/visit" element={<VisitPage />} />

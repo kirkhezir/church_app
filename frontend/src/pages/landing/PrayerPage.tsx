@@ -4,7 +4,7 @@
  * Private prayer request form with prayer wall and prayer updates
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router';
 import {
   Heart,
@@ -19,6 +19,7 @@ import {
   Loader2,
   ChevronDown,
   ArrowUpDown,
+  Pencil,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -50,6 +51,101 @@ function getCategoryDisplay(category: string, lang: 'en' | 'th'): string {
   return category.charAt(0).toUpperCase() + category.slice(1);
 }
 
+// ─── Category colors for prayer cards ────────────────────────────────────────
+
+const CATEGORY_CARD_STYLES: Record<string, { border: string; badge: string; bg: string }> = {
+  health: {
+    border: 'border-l-rose-400',
+    badge: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
+    bg: 'bg-rose-50/30 dark:bg-rose-950/10',
+  },
+  family: {
+    border: 'border-l-blue-400',
+    badge: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    bg: 'bg-blue-50/30 dark:bg-blue-950/10',
+  },
+  guidance: {
+    border: 'border-l-amber-400',
+    badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+    bg: 'bg-amber-50/30 dark:bg-amber-950/10',
+  },
+  financial: {
+    border: 'border-l-emerald-400',
+    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+    bg: 'bg-emerald-50/30 dark:bg-emerald-950/10',
+  },
+  spiritual: {
+    border: 'border-l-purple-400',
+    badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+    bg: 'bg-purple-50/30 dark:bg-purple-950/10',
+  },
+  relationships: {
+    border: 'border-l-pink-400',
+    badge: 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300',
+    bg: 'bg-pink-50/30 dark:bg-pink-950/10',
+  },
+  thanksgiving: {
+    border: 'border-l-orange-400',
+    badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
+    bg: 'bg-orange-50/30 dark:bg-orange-950/10',
+  },
+  other: {
+    border: 'border-l-slate-400',
+    badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+    bg: 'bg-slate-50/30 dark:bg-slate-950/10',
+  },
+};
+const FALLBACK_CARD_STYLE = {
+  border: 'border-l-purple-400',
+  badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+  bg: 'bg-purple-50/30 dark:bg-purple-950/10',
+};
+
+function getCategoryCardStyle(category: string) {
+  return CATEGORY_CARD_STYLES[category.toLowerCase()] ?? FALLBACK_CARD_STYLE;
+}
+
+// ─── Expandable prayer text (overflow-aware) ────────────────────────────────
+
+function PrayerCardText({ text, language }: { text: string; language: 'en' | 'th' }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !isExpanded) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, isExpanded]);
+
+  return (
+    <>
+      <p
+        ref={textRef}
+        className={`mb-1 text-sm leading-relaxed text-foreground/80 ${!isExpanded ? 'line-clamp-3' : ''}`}
+      >
+        {text}
+      </p>
+      {(isClamped || isExpanded) && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mb-2 cursor-pointer text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
+        >
+          {isExpanded
+            ? language === 'th'
+              ? 'แสดงน้อยลง'
+              : 'Show less'
+            : language === 'th'
+              ? 'อ่านเพิ่มเติม'
+              : 'Read more'}
+        </button>
+      )}
+    </>
+  );
+}
+
 export function PrayerPage() {
   const { language } = useI18n();
   useDocumentTitle('Prayer Requests', 'คำขออธิษฐาน', language);
@@ -63,6 +159,10 @@ export function PrayerPage() {
     wantsPastorContact: false,
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [lastSubmittedId, setLastSubmittedId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRequest, setEditRequest] = useState('');
+  const [editCategory, setEditCategory] = useState('');
   const [prayedFor, setPrayedFor] = useState<string[]>([]);
   const revealRef = useScrollReveal<HTMLDivElement>();
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
@@ -121,7 +221,7 @@ export function PrayerPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await prayerService.submitPrayerRequest({
+      const result = await prayerService.submitPrayerRequest({
         name: formData.name || 'Anonymous',
         email: formData.email || undefined,
         request: formData.request,
@@ -130,6 +230,9 @@ export function PrayerPage() {
         isAnonymous: !formData.name,
       });
       setIsSubmitted(true);
+      setLastSubmittedId(result.id);
+      setEditRequest(formData.request);
+      setEditCategory(formData.category);
       // Refresh prayer wall
       const prayers = await prayerService.getPrayerRequests();
       setPublicPrayers(prayers);
@@ -402,6 +505,98 @@ export function PrayerPage() {
                       </Button>
                     </form>
                   </>
+                ) : isEditing && lastSubmittedId ? (
+                  <div className="py-6" role="form" aria-label="Edit prayer request">
+                    <h3 className="mb-4 text-lg font-bold text-foreground">
+                      {language === 'th' ? 'แก้ไขคำอธิษฐาน' : 'Edit Your Prayer Request'}
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="edit-category"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
+                          {language === 'th' ? 'หมวดหมู่' : 'Category'}
+                        </label>
+                        <select
+                          id="edit-category"
+                          value={editCategory}
+                          onChange={(e) => setEditCategory(e.target.value)}
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                        >
+                          {categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {language === 'th' ? cat.nameThai : cat.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="edit-request"
+                          className="mb-1 block text-sm font-medium text-foreground/80"
+                        >
+                          {language === 'th' ? 'คำอธิษฐาน' : 'Prayer Request'}
+                        </label>
+                        <textarea
+                          id="edit-request"
+                          value={editRequest}
+                          onChange={(e) => setEditRequest(e.target.value)}
+                          rows={5}
+                          maxLength={500}
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground focus-visible:border-purple-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800"
+                        />
+                        <p className="mt-1 text-right text-xs text-muted-foreground">
+                          {editRequest.length}/500
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          className="flex-1 bg-purple-600 hover:bg-purple-700"
+                          disabled={submitting || editRequest.trim().length < 10}
+                          onClick={async () => {
+                            setSubmitting(true);
+                            try {
+                              await prayerService.updatePrayerRequest(lastSubmittedId, {
+                                request: editRequest,
+                                category: editCategory || undefined,
+                                categoryThai:
+                                  categories.find((c) => c.id === editCategory)?.nameThai ||
+                                  undefined,
+                                email: formData.email || undefined,
+                              });
+                              gooeyToast.success(
+                                language === 'th'
+                                  ? 'แก้ไขคำอธิษฐานเรียบร้อยแล้ว'
+                                  : 'Prayer request updated successfully'
+                              );
+                              setIsEditing(false);
+                              const prayers = await prayerService.getPrayerRequests();
+                              setPublicPrayers(prayers);
+                            } catch {
+                              gooeyToast.error(
+                                language === 'th'
+                                  ? 'ไม่สามารถแก้ไขคำอธิษฐานได้'
+                                  : 'Failed to update prayer request'
+                              );
+                            } finally {
+                              setSubmitting(false);
+                            }
+                          }}
+                        >
+                          {submitting ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                          )}
+                          {language === 'th' ? 'บันทึกการแก้ไข' : 'Save Changes'}
+                        </Button>
+                        <Button variant="outline" onClick={() => setIsEditing(false)}>
+                          {language === 'th' ? 'ยกเลิก' : 'Cancel'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="py-12 text-center" role="status" aria-live="polite">
                     <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
@@ -413,9 +608,29 @@ export function PrayerPage() {
                         ? 'ทีมอธิษฐานของเราจะอธิษฐานเผื่อคุณ พระเจ้าทรงได้ยินคำอธิษฐานของคุณ'
                         : 'Our prayer team will be praying for you. God hears your prayers.'}
                     </p>
-                    <Button onClick={() => setIsSubmitted(false)} variant="outline">
-                      {language === 'th' ? 'ส่งคำอธิษฐานอื่น' : 'Submit Another Request'}
-                    </Button>
+                    <div className="flex flex-col items-center gap-3">
+                      {lastSubmittedId && (
+                        <Button
+                          onClick={() => setIsEditing(true)}
+                          variant="outline"
+                          className="w-full max-w-xs gap-2 border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-400"
+                        >
+                          <Pencil className="h-4 w-4" />
+                          {language === 'th' ? 'แก้ไขคำอธิษฐาน' : 'Edit Prayer Request'}
+                        </Button>
+                      )}
+                      <Button
+                        onClick={() => {
+                          setIsSubmitted(false);
+                          setLastSubmittedId(null);
+                          setIsEditing(false);
+                        }}
+                        variant="outline"
+                        className="w-full max-w-xs"
+                      >
+                        {language === 'th' ? 'ส่งคำอธิษฐานอื่น' : 'Submit Another Request'}
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -471,19 +686,26 @@ export function PrayerPage() {
             <p className="mb-4 text-sm text-muted-foreground">
               {language === 'th'
                 ? 'อธิษฐานเผื่อพี่น้องในชุมชนของเรา คลิก "ฉันอธิษฐานแล้ว" เพื่อแสดงการสนับสนุน'
-                : 'Pray for our community members. Click "I Prayed" to show your support.'}
+                : 'Pray for our community members. Click "Pray" to show your support.'}
             </p>
             <div className="space-y-4">
-              {visiblePrayers.map((prayer) => (
-                <Card key={prayer.id} className="transition-shadow hover:shadow-md">
-                  <CardContent className="p-5">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+              {visiblePrayers.map((prayer) => {
+                const catStyle = getCategoryCardStyle(prayer.category);
+                return (
+                  <article
+                    key={prayer.id}
+                    aria-label={`${getCategoryDisplay(prayer.category, 'en')} prayer by ${prayer.name}`}
+                    className={`rounded-xl border border-l-4 ${catStyle.border} border-border/50 ${catStyle.bg} p-5 transition-shadow duration-150 hover:shadow-md`}
+                  >
+                    <div className="mb-2.5 flex items-center justify-between">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${catStyle.badge}`}
+                      >
                         {language === 'th'
                           ? (prayer.categoryThai ?? getCategoryDisplay(prayer.category, 'th'))
                           : getCategoryDisplay(prayer.category, 'en')}
                       </span>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         {new Date(prayer.createdAt).toLocaleDateString(
                           language === 'th' ? 'th-TH' : 'en-US',
@@ -491,7 +713,7 @@ export function PrayerPage() {
                         )}
                       </span>
                     </div>
-                    <p className="mb-3 text-foreground/80">{prayer.request}</p>
+                    <PrayerCardText text={prayer.request} language={language} />
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">— {prayer.name}</span>
                       <Button
@@ -517,9 +739,9 @@ export function PrayerPage() {
                         <span className="ml-1">({prayer.prayerCount})</span>
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </article>
+                );
+              })}
 
               {/* Load More */}
               {visibleCount < sortedPrayers.length && (

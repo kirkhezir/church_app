@@ -66,6 +66,13 @@ export class PrayerRepository implements IPrayerRepository {
     return prisma.prayer_requests.create({ data });
   }
 
+  async update(id: string, data: any): Promise<any> {
+    return prisma.prayer_requests.update({
+      where: { id },
+      data: { ...data, updatedAt: new Date() },
+    });
+  }
+
   async updateStatus(id: string, status: string): Promise<any> {
     return prisma.prayer_requests.update({
       where: { id },

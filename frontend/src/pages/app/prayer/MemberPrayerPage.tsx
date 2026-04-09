@@ -9,7 +9,7 @@
  *   Heart (filled)  — "I Prayed" button: personal affirmation action
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react';
 import {
   HeartHandshake,
   Heart,
@@ -23,6 +23,7 @@ import {
   EyeOff,
   ChevronDown,
   ArrowUpDown,
+  Pencil,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -142,6 +143,41 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
+// ─── Expandable prayer text (overflow-aware) ────────────────────────────────
+
+function PrayerCardText({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !isExpanded) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, isExpanded]);
+
+  return (
+    <div className="mb-1 flex-1">
+      <p
+        ref={textRef}
+        className={`text-sm leading-relaxed text-foreground/85 ${!isExpanded ? 'line-clamp-4' : ''}`}
+      >
+        {text}
+      </p>
+      {(isClamped || isExpanded) && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mt-1 cursor-pointer text-xs font-medium text-primary hover:text-primary/80"
+        >
+          {isExpanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MemberPrayerPage() {
@@ -155,6 +191,10 @@ export function MemberPrayerPage() {
   const [isPublic, setIsPublic] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [lastSubmittedId, setLastSubmittedId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRequest, setEditRequest] = useState('');
+  const [editCategory, setEditCategory] = useState('');
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [prayingId, setPrayingId] = useState<string | null>(null);
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
@@ -258,7 +298,7 @@ export function MemberPrayerPage() {
     }
     setSubmitting(true);
     try {
-      await prayerService.submitPrayerRequest({
+      const result = await prayerService.submitPrayerRequest({
         name: isAnonymous ? 'Anonymous' : memberName,
         email: isAnonymous ? undefined : user?.email,
         request,
@@ -266,6 +306,9 @@ export function MemberPrayerPage() {
         isAnonymous,
       });
       setIsSubmitted(true);
+      setLastSubmittedId(result.id);
+      setEditRequest(request);
+      setEditCategory(category);
       // Refresh notification counts so the bell updates immediately
       refreshNotifications();
       await loadPrayers();
@@ -479,6 +522,83 @@ export function MemberPrayerPage() {
               Submit Prayer Request
             </Button>
           </form>
+        ) : isEditing && lastSubmittedId ? (
+          <div className="py-6" role="form" aria-label="Edit prayer request">
+            <h3 className="mb-4 text-lg font-bold text-foreground">Edit Your Prayer Request</h3>
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-category">Category</Label>
+                <Select value={editCategory} onValueChange={setEditCategory}>
+                  <SelectTrigger id="edit-category" className="w-full">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className={`h-2 w-2 flex-shrink-0 rounded-full ${CATEGORY_STYLES[cat.id]?.dot ?? 'bg-muted-foreground'}`}
+                          />
+                          {cat.name}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-request">Prayer Request</Label>
+                <Textarea
+                  id="edit-request"
+                  value={editRequest}
+                  onChange={(e) => setEditRequest(e.target.value)}
+                  rows={5}
+                  maxLength={MAX_REQUEST_LENGTH}
+                  className="resize-none"
+                />
+                <p className="text-right text-xs text-muted-foreground">
+                  {editRequest.length}/{MAX_REQUEST_LENGTH}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  className="min-h-[44px] flex-1"
+                  disabled={submitting || editRequest.trim().length < 10}
+                  onClick={async () => {
+                    setSubmitting(true);
+                    try {
+                      await prayerService.updatePrayerRequest(lastSubmittedId, {
+                        request: editRequest,
+                        category: editCategory || undefined,
+                        email: user?.email,
+                      });
+                      gooeyToast.success('Prayer request updated successfully');
+                      setIsEditing(false);
+                      await loadPrayers();
+                    } catch {
+                      gooeyToast.error('Failed to update prayer request');
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+                >
+                  {submitting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                  )}
+                  Save Changes
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-[44px]"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="py-8 text-center" role="status" aria-live="polite">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
@@ -496,19 +616,33 @@ export function MemberPrayerPage() {
                 <span className="mt-1 block font-medium not-italic">— Philippians 4:6</span>
               </p>
             </blockquote>
-            <Button
-              onClick={() => {
-                setIsSubmitted(false);
-                setCategory('');
-                setRequest('');
-                setIsPublic(true);
-                setIsAnonymous(false);
-              }}
-              variant="outline"
-              className="w-full"
-            >
-              Submit Another Request
-            </Button>
+            <div className="space-y-2">
+              {lastSubmittedId && (
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  variant="outline"
+                  className="w-full gap-2"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit Prayer Request
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  setIsSubmitted(false);
+                  setLastSubmittedId(null);
+                  setIsEditing(false);
+                  setCategory('');
+                  setRequest('');
+                  setIsPublic(true);
+                  setIsAnonymous(false);
+                }}
+                variant="outline"
+                className="w-full"
+              >
+                Submit Another Request
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>
@@ -621,9 +755,7 @@ export function MemberPrayerPage() {
                 </div>
 
                 {/* Request text */}
-                <p className="mb-3 line-clamp-4 flex-1 text-sm leading-relaxed text-foreground/85">
-                  {prayer.request}
-                </p>
+                <PrayerCardText text={prayer.request} />
 
                 {/* Footer row */}
                 <div className="mt-auto flex items-center justify-between">
