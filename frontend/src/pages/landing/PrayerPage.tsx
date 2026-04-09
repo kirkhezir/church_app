@@ -4,7 +4,7 @@
  * Private prayer request form with prayer wall and prayer updates
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router';
 import {
   Heart,
@@ -51,6 +51,101 @@ function getCategoryDisplay(category: string, lang: 'en' | 'th'): string {
   return category.charAt(0).toUpperCase() + category.slice(1);
 }
 
+// ─── Category colors for prayer cards ────────────────────────────────────────
+
+const CATEGORY_CARD_STYLES: Record<string, { border: string; badge: string; bg: string }> = {
+  health: {
+    border: 'border-l-rose-400',
+    badge: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
+    bg: 'bg-rose-50/30 dark:bg-rose-950/10',
+  },
+  family: {
+    border: 'border-l-blue-400',
+    badge: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    bg: 'bg-blue-50/30 dark:bg-blue-950/10',
+  },
+  guidance: {
+    border: 'border-l-amber-400',
+    badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+    bg: 'bg-amber-50/30 dark:bg-amber-950/10',
+  },
+  financial: {
+    border: 'border-l-emerald-400',
+    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+    bg: 'bg-emerald-50/30 dark:bg-emerald-950/10',
+  },
+  spiritual: {
+    border: 'border-l-purple-400',
+    badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+    bg: 'bg-purple-50/30 dark:bg-purple-950/10',
+  },
+  relationships: {
+    border: 'border-l-pink-400',
+    badge: 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300',
+    bg: 'bg-pink-50/30 dark:bg-pink-950/10',
+  },
+  thanksgiving: {
+    border: 'border-l-orange-400',
+    badge: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
+    bg: 'bg-orange-50/30 dark:bg-orange-950/10',
+  },
+  other: {
+    border: 'border-l-slate-400',
+    badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+    bg: 'bg-slate-50/30 dark:bg-slate-950/10',
+  },
+};
+const FALLBACK_CARD_STYLE = {
+  border: 'border-l-purple-400',
+  badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+  bg: 'bg-purple-50/30 dark:bg-purple-950/10',
+};
+
+function getCategoryCardStyle(category: string) {
+  return CATEGORY_CARD_STYLES[category.toLowerCase()] ?? FALLBACK_CARD_STYLE;
+}
+
+// ─── Expandable prayer text (overflow-aware) ────────────────────────────────
+
+function PrayerCardText({ text, language }: { text: string; language: 'en' | 'th' }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !isExpanded) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, isExpanded]);
+
+  return (
+    <>
+      <p
+        ref={textRef}
+        className={`mb-1 text-sm leading-relaxed text-foreground/80 ${!isExpanded ? 'line-clamp-3' : ''}`}
+      >
+        {text}
+      </p>
+      {(isClamped || isExpanded) && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mb-2 cursor-pointer text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
+        >
+          {isExpanded
+            ? language === 'th'
+              ? 'แสดงน้อยลง'
+              : 'Show less'
+            : language === 'th'
+              ? 'อ่านเพิ่มเติม'
+              : 'Read more'}
+        </button>
+      )}
+    </>
+  );
+}
+
 export function PrayerPage() {
   const { language } = useI18n();
   useDocumentTitle('Prayer Requests', 'คำขออธิษฐาน', language);
@@ -69,7 +164,6 @@ export function PrayerPage() {
   const [editRequest, setEditRequest] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [prayedFor, setPrayedFor] = useState<string[]>([]);
-  const [expandedPrayers, setExpandedPrayers] = useState<Set<string>>(new Set());
   const revealRef = useScrollReveal<HTMLDivElement>();
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -592,19 +686,26 @@ export function PrayerPage() {
             <p className="mb-4 text-sm text-muted-foreground">
               {language === 'th'
                 ? 'อธิษฐานเผื่อพี่น้องในชุมชนของเรา คลิก "ฉันอธิษฐานแล้ว" เพื่อแสดงการสนับสนุน'
-                : 'Pray for our community members. Click "I Prayed" to show your support.'}
+                : 'Pray for our community members. Click "Pray" to show your support.'}
             </p>
-            <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1 lg:max-h-[80vh]">
-              {visiblePrayers.map((prayer) => (
-                <Card key={prayer.id} className="transition-shadow hover:shadow-md">
-                  <CardContent className="p-5">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+            <div className="space-y-4">
+              {visiblePrayers.map((prayer) => {
+                const catStyle = getCategoryCardStyle(prayer.category);
+                return (
+                  <article
+                    key={prayer.id}
+                    aria-label={`${getCategoryDisplay(prayer.category, 'en')} prayer by ${prayer.name}`}
+                    className={`rounded-xl border border-l-4 ${catStyle.border} border-border/50 ${catStyle.bg} p-5 transition-shadow duration-150 hover:shadow-md`}
+                  >
+                    <div className="mb-2.5 flex items-center justify-between">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${catStyle.badge}`}
+                      >
                         {language === 'th'
                           ? (prayer.categoryThai ?? getCategoryDisplay(prayer.category, 'th'))
                           : getCategoryDisplay(prayer.category, 'en')}
                       </span>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         {new Date(prayer.createdAt).toLocaleDateString(
                           language === 'th' ? 'th-TH' : 'en-US',
@@ -612,33 +713,7 @@ export function PrayerPage() {
                         )}
                       </span>
                     </div>
-                    <p
-                      className={`mb-1 text-foreground/80 ${!expandedPrayers.has(prayer.id) ? 'line-clamp-3' : ''}`}
-                    >
-                      {prayer.request}
-                    </p>
-                    {prayer.request.length > 120 && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setExpandedPrayers((prev) => {
-                            const next = new Set(prev);
-                            if (next.has(prayer.id)) next.delete(prayer.id);
-                            else next.add(prayer.id);
-                            return next;
-                          })
-                        }
-                        className="mb-2 cursor-pointer text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
-                      >
-                        {expandedPrayers.has(prayer.id)
-                          ? language === 'th'
-                            ? 'แสดงน้อยลง'
-                            : 'Show less'
-                          : language === 'th'
-                            ? 'อ่านเพิ่มเติม'
-                            : 'Read more'}
-                      </button>
-                    )}
+                    <PrayerCardText text={prayer.request} language={language} />
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">— {prayer.name}</span>
                       <Button
@@ -664,9 +739,9 @@ export function PrayerPage() {
                         <span className="ml-1">({prayer.prayerCount})</span>
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </article>
+                );
+              })}
 
               {/* Load More */}
               {visibleCount < sortedPrayers.length && (

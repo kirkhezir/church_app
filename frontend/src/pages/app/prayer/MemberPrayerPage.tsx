@@ -9,7 +9,7 @@
  *   Heart (filled)  — "I Prayed" button: personal affirmation action
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react';
 import {
   HeartHandshake,
   Heart,
@@ -143,6 +143,41 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
+// ─── Expandable prayer text (overflow-aware) ────────────────────────────────
+
+function PrayerCardText({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !isExpanded) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, isExpanded]);
+
+  return (
+    <div className="mb-1 flex-1">
+      <p
+        ref={textRef}
+        className={`text-sm leading-relaxed text-foreground/85 ${!isExpanded ? 'line-clamp-4' : ''}`}
+      >
+        {text}
+      </p>
+      {(isClamped || isExpanded) && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mt-1 cursor-pointer text-xs font-medium text-primary hover:text-primary/80"
+        >
+          {isExpanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MemberPrayerPage() {
@@ -161,7 +196,6 @@ export function MemberPrayerPage() {
   const [editRequest, setEditRequest] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
-  const [expandedPrayers, setExpandedPrayers] = useState<Set<string>>(new Set());
   const [prayingId, setPrayingId] = useState<string | null>(null);
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -721,27 +755,7 @@ export function MemberPrayerPage() {
                 </div>
 
                 {/* Request text */}
-                <p
-                  className={`mb-1 flex-1 text-sm leading-relaxed text-foreground/85 ${!expandedPrayers.has(prayer.id) ? 'line-clamp-4' : ''}`}
-                >
-                  {prayer.request}
-                </p>
-                {prayer.request.length > 150 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setExpandedPrayers((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(prayer.id)) next.delete(prayer.id);
-                        else next.add(prayer.id);
-                        return next;
-                      })
-                    }
-                    className="mb-2 cursor-pointer text-xs font-medium text-primary hover:text-primary/80"
-                  >
-                    {expandedPrayers.has(prayer.id) ? 'Show less' : 'Read more'}
-                  </button>
-                )}
+                <PrayerCardText text={prayer.request} />
 
                 {/* Footer row */}
                 <div className="mt-auto flex items-center justify-between">
