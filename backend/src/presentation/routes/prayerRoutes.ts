@@ -34,16 +34,6 @@ router.post('/', prayerSubmitLimiter, (req, res, next) =>
   prayerController.submitPrayerRequest(req, res, next)
 );
 
-// POST /api/v1/prayer/:id/pray - Pray for a request (increment count)
-router.post('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
-  prayerController.prayForRequest(req, res, next)
-);
-
-// DELETE /api/v1/prayer/:id/pray - Unpray / toggle off (decrement count)
-router.delete('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
-  prayerController.unprayForRequest(req, res, next)
-);
-
 /**
  * Admin/Staff routes (requires authentication + role check)
  */
@@ -56,6 +46,22 @@ router.get('/all', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, nex
 // PATCH /api/v1/prayer/:id/moderate - Approve or archive a prayer request
 router.patch('/:id/moderate', authMiddleware, requireRole('ADMIN', 'STAFF'), (req, res, next) =>
   prayerController.moderatePrayerRequest(req, res, next)
+);
+
+// PATCH /api/v1/prayer/:id - Update a prayer request (within edit window)
+// Must be defined AFTER /:id/moderate to avoid matching 'moderate' as an :id
+router.patch('/:id', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.updatePrayerRequest(req, res, next)
+);
+
+// POST /api/v1/prayer/:id/pray - Pray for a request (increment count)
+router.post('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.prayForRequest(req, res, next)
+);
+
+// DELETE /api/v1/prayer/:id/pray - Unpray / toggle off (decrement count)
+router.delete('/:id/pray', optionalAuthMiddleware, (req, res, next) =>
+  prayerController.unprayForRequest(req, res, next)
 );
 
 export default router;
