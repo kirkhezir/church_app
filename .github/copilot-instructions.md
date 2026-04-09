@@ -607,12 +607,16 @@ Current security overrides in `backend/package.json`:
 
 ```json
 "overrides": {
-  "lodash": "^4.17.23",           // prototype pollution fix
-  "hono": ">=4.12.7",             // prototype pollution fix (parseBody dot:true)
-  "@hono/node-server": ">=1.19.10", // authorization bypass fix (via prisma)
-  "fast-xml-parser": ">=5.4.2",   // stack overflow DoS fix
+  "lodash": ">=4.18.1",           // code injection + prototype pollution fix
+  "hono": ">=4.12.12",             // IP matching, path traversal, cookie, serveStatic fixes
+  "@hono/node-server": ">=1.19.13", // serveStatic middleware bypass fix
+  "fast-xml-parser": ">=5.5.7",   // stack overflow DoS fix
   "qs": "^6.15.0",                // prototype pollution fix
-  "brace-expansion": "^2.0.2"     // ReDoS fix
+  "brace-expansion": ">=5.0.5",   // ReDoS fix
+  "defu": ">=6.1.7",              // prototype pollution fix
+  "flatted": ">=3.4.2",
+  "socket.io-parser": ">=4.2.6",
+  "effect": ">=3.20.0"
 }
 ```
 
@@ -621,7 +625,8 @@ Current security overrides in root `package.json`:
 ```json
 "overrides": {
   "minimatch": ">=3.1.4",   // ReDoS fix (via serve/serve-handler)
-  "ajv": ">=8.18.0"         // ReDoS fix (via serve)
+  "ajv": ">=8.18.0",        // ReDoS fix (via serve)
+  "lodash": ">=4.18.1"      // code injection + prototype pollution fix
 }
 ```
 

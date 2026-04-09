@@ -4,24 +4,20 @@
  * Provides comprehensive filtering options for member directory
  */
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { Filter, X, ChevronDown } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../../components/ui/select';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '../../../components/ui/collapsible';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../components/ui/popover';
-import { Calendar } from '../../../components/ui/calendar';
+} from '@/components/ui/select';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 
 export interface MemberFilters {
@@ -44,6 +40,7 @@ interface AdvancedMemberFiltersProps {
 
 export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMemberFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const filterId = useId();
 
   const activeFilterCount = Object.entries(filters).filter(
     ([key, value]) => value && key !== 'sortBy' && key !== 'sortOrder'
@@ -83,15 +80,16 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <Filter className="h-4 w-4" />
+              <Filter className="h-4 w-4" aria-hidden="true" />
               Filters
-              {activeFilterCount > 0 && (
+              {activeFilterCount > 0 ? (
                 <Badge variant="secondary" className="ml-1">
                   {activeFilterCount}
                 </Badge>
-              )}
+              ) : null}
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                aria-hidden="true"
               />
             </Button>
           </CollapsibleTrigger>
@@ -101,9 +99,11 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Role Filter */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Role</label>
+                  <label htmlFor={`${filterId}-role`} className="text-sm font-medium">
+                    Role
+                  </label>
                   <Select value={filters.role || 'all'} onValueChange={handleRoleChange}>
-                    <SelectTrigger>
+                    <SelectTrigger id={`${filterId}-role`} aria-label="Filter by role">
                       <SelectValue placeholder="All Roles" />
                     </SelectTrigger>
                     <SelectContent>
@@ -117,9 +117,11 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
 
                 {/* Status Filter */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Status</label>
+                  <label htmlFor={`${filterId}-status`} className="text-sm font-medium">
+                    Status
+                  </label>
                   <Select value={filters.status || 'all'} onValueChange={handleStatusChange}>
-                    <SelectTrigger>
+                    <SelectTrigger id={`${filterId}-status`} aria-label="Filter by status">
                       <SelectValue placeholder="All Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -133,7 +135,9 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
 
                 {/* Member Since From */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Member Since (From)</label>
+                  <label id={`${filterId}-from-label`} className="text-sm font-medium">
+                    Member Since (From)
+                  </label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -160,7 +164,9 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
 
                 {/* Member Since To */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Member Since (To)</label>
+                  <label id={`${filterId}-to-label`} className="text-sm font-medium">
+                    Member Since (To)
+                  </label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -189,12 +195,18 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
               {/* Sort Options */}
               <div className="mt-4 flex items-center gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Sort By</label>
+                  <label htmlFor={`${filterId}-sort`} className="text-sm font-medium">
+                    Sort By
+                  </label>
                   <Select
                     value={`${filters.sortBy || 'lastName'}-${filters.sortOrder || 'asc'}`}
                     onValueChange={handleSortChange}
                   >
-                    <SelectTrigger className="w-[200px]">
+                    <SelectTrigger
+                      id={`${filterId}-sort`}
+                      className="w-[200px]"
+                      aria-label="Sort members"
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -209,7 +221,7 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
 
                 <div className="ml-auto">
                   <Button variant="ghost" onClick={onReset} className="gap-2">
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" aria-hidden="true" />
                     Reset Filters
                   </Button>
                 </div>
@@ -219,56 +231,72 @@ export function AdvancedMemberFilters({ filters, onChange, onReset }: AdvancedMe
         </Collapsible>
 
         {/* Active Filter Badges */}
-        {activeFilterCount > 0 && (
+        {activeFilterCount > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {filters.role && (
+            {filters.role ? (
               <Badge variant="secondary" className="gap-1">
                 Role: {filters.role}
-                <X
-                  className="h-3 w-3 cursor-pointer"
+                <button
+                  type="button"
+                  className="ml-0.5 rounded-sm p-0.5 hover:bg-secondary-foreground/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   onClick={() => onChange({ ...filters, role: undefined })}
-                />
+                  aria-label={`Remove role filter: ${filters.role}`}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
               </Badge>
-            )}
-            {filters.status && (
+            ) : null}
+            {filters.status ? (
               <Badge variant="secondary" className="gap-1">
                 Status: {filters.status}
-                <X
-                  className="h-3 w-3 cursor-pointer"
+                <button
+                  type="button"
+                  className="ml-0.5 rounded-sm p-0.5 hover:bg-secondary-foreground/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   onClick={() => onChange({ ...filters, status: undefined })}
-                />
+                  aria-label={`Remove status filter: ${filters.status}`}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
               </Badge>
-            )}
-            {filters.memberSince?.from && (
+            ) : null}
+            {filters.memberSince?.from ? (
               <Badge variant="secondary" className="gap-1">
                 From: {format(filters.memberSince.from, 'MMM d, yyyy')}
-                <X
-                  className="h-3 w-3 cursor-pointer"
+                <button
+                  type="button"
+                  className="ml-0.5 rounded-sm p-0.5 hover:bg-secondary-foreground/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   onClick={() =>
                     onChange({
                       ...filters,
                       memberSince: { ...filters.memberSince, from: undefined },
                     })
                   }
-                />
+                  aria-label="Remove from-date filter"
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
               </Badge>
-            )}
-            {filters.memberSince?.to && (
+            ) : null}
+            {filters.memberSince?.to ? (
               <Badge variant="secondary" className="gap-1">
                 To: {format(filters.memberSince.to, 'MMM d, yyyy')}
-                <X
-                  className="h-3 w-3 cursor-pointer"
+                <button
+                  type="button"
+                  className="ml-0.5 rounded-sm p-0.5 hover:bg-secondary-foreground/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   onClick={() =>
                     onChange({
                       ...filters,
                       memberSince: { ...filters.memberSince, to: undefined },
                     })
                   }
-                />
+                  aria-label="Remove to-date filter"
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
               </Badge>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
