@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
@@ -376,8 +377,48 @@ export function MemberPrayerPage() {
   if (loading) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+          {/* Header skeleton */}
+          <div className="mb-6 rounded-2xl bg-gradient-to-br from-rose-100 to-pink-50 p-6 dark:from-rose-900/30 dark:to-pink-900/15 sm:p-8">
+            <div className="flex items-start gap-4">
+              <Skeleton className="h-12 w-12 rounded-2xl" />
+              <div className="flex-1">
+                <Skeleton className="h-7 w-40" />
+                <Skeleton className="mt-2 h-4 w-64" />
+              </div>
+            </div>
+          </div>
+          {/* Stats skeleton */}
+          <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col items-center rounded-xl border p-3">
+                <Skeleton className="mb-1 h-4 w-4" />
+                <Skeleton className="h-6 w-10" />
+                <Skeleton className="mt-1 h-3 w-16" />
+              </div>
+            ))}
+          </div>
+          {/* Cards skeleton */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="rounded-xl border border-l-4 border-l-muted p-4">
+                <div className="mb-2 flex justify-between">
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                  <Skeleton className="h-4 w-14" />
+                </div>
+                <Skeleton className="mb-1 h-4 w-full" />
+                <Skeleton className="mb-1 h-4 w-full" />
+                <Skeleton className="mb-3 h-4 w-2/3" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                  <Skeleton className="h-9 w-24 rounded-md" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </SidebarLayout>
     );
@@ -728,7 +769,7 @@ export function MemberPrayerPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {visiblePrayers.map((prayer) => {
+          {visiblePrayers.map((prayer, index) => {
             const style = getCategoryStyle(prayer.category);
             const hasPrayed = prayedFor.has(prayer.id);
             const authorInitials = prayer.isAnonymous ? '?' : getInitials(prayer.name);
@@ -736,7 +777,8 @@ export function MemberPrayerPage() {
               <article
                 key={prayer.id}
                 aria-label={`${getCategoryName(prayer.category)} prayer by ${prayer.isAnonymous ? 'Anonymous' : prayer.name}`}
-                className={`flex flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
+                className={`animate-fade-in-up card-hover-lift flex flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4`}
+                style={{ animationDelay: `${Math.min(index, 5) * 80}ms` }}
               >
                 {/* Header row */}
                 <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -773,11 +815,11 @@ export function MemberPrayerPage() {
                     size="sm"
                     variant={hasPrayed ? 'default' : 'outline'}
                     disabled={prayingId === prayer.id}
-                    className={
+                    className={`transition-all duration-200 active:scale-95 ${
                       hasPrayed
-                        ? 'h-11 touch-manipulation bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
+                        ? 'h-11 touch-manipulation bg-rose-600 text-white shadow-md shadow-rose-500/25 hover:bg-rose-500 hover:shadow-lg hover:shadow-rose-500/30 dark:bg-rose-700 dark:hover:bg-rose-600'
                         : 'h-11 touch-manipulation border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/30'
-                    }
+                    }`}
                     onClick={() => handlePrayFor(prayer.id)}
                     aria-label={
                       hasPrayed
@@ -789,7 +831,7 @@ export function MemberPrayerPage() {
                       <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" aria-hidden="true" />
                     ) : (
                       <Heart
-                        className={`mr-1 h-3.5 w-3.5 ${hasPrayed ? 'fill-white' : ''}`}
+                        className={`mr-1 h-3.5 w-3.5 transition-transform duration-200 ${hasPrayed ? 'scale-110 fill-white' : ''}`}
                         aria-hidden="true"
                       />
                     )}
@@ -828,39 +870,45 @@ export function MemberPrayerPage() {
     <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
         {/* Page header */}
-        <header className="mb-6 flex items-start gap-3">
-          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/30">
-            <HeartHandshake className="h-6 w-6 text-rose-600 dark:text-rose-400" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight">Prayer Wall</h1>
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              Lift each other up in prayer —{' '}
-              <span className="font-medium text-foreground">{totalPrayers}</span> prayers offered by
-              our community
-            </p>
+        <header className="animate-fade-in-up relative mb-6 overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-rose-600 via-rose-500 to-pink-600 p-6 shadow-xl dark:from-rose-800 dark:via-rose-700 dark:to-pink-800 sm:p-8">
+          <div className="absolute inset-0 motion-safe:animate-shimmer" />
+          <div className="dot-pattern absolute inset-0 text-white opacity-[0.05]" />
+          <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-white/[0.06] motion-safe:animate-float" />
+          <div className="absolute -bottom-4 left-1/4 h-20 w-20 rounded-full bg-white/[0.04] [animation-delay:1.2s] motion-safe:animate-float" />
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15 shadow-lg shadow-rose-900/20 backdrop-blur-sm">
+              <HeartHandshake className="h-7 w-7 text-white" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight text-white">Prayer Wall</h1>
+              <p className="mt-1 text-sm text-white/80">
+                Lift each other up in prayer —{' '}
+                <span className="font-semibold text-white">{totalPrayers}</span> prayers offered by
+                our community
+              </p>
+            </div>
           </div>
         </header>
 
         {/* Community stats strip */}
         <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
-          <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-2 py-2 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20 sm:px-4 sm:py-3">
+          <div className="animate-fade-in-up stagger-1 card-hover-lift flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-2 py-2 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20 sm:px-4 sm:py-3">
             <Users className="mb-1 h-4 w-4 text-blue-500" />
-            <p className="text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
+            <p className="animate-number-pop text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
               {publicPrayers.length}
             </p>
             <p className="text-xs text-blue-600/70 dark:text-blue-400/70">Requests</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-2 py-2 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20 sm:px-4 sm:py-3">
+          <div className="animate-fade-in-up stagger-2 card-hover-lift flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-2 py-2 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20 sm:px-4 sm:py-3">
             <Calendar className="mb-1 h-4 w-4 text-amber-500" />
-            <p className="text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl">
+            <p className="animate-number-pop text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl" style={{ animationDelay: '0.1s' }}>
               {requestsThisMonth}
             </p>
             <p className="text-xs text-amber-600/70 dark:text-amber-400/70">This Month</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-2 py-2 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20 sm:px-4 sm:py-3">
+          <div className="animate-fade-in-up stagger-3 card-hover-lift flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-2 py-2 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20 sm:px-4 sm:py-3">
             <Heart className="mb-1 h-4 w-4 fill-rose-500 text-rose-500" />
-            <p className="text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl">
+            <p className="animate-number-pop text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl" style={{ animationDelay: '0.2s' }}>
               {totalPrayers}
             </p>
             <p className="text-xs text-rose-600/70 dark:text-rose-400/70">Prayers Offered</p>

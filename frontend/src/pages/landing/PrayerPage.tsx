@@ -313,9 +313,18 @@ export function PrayerPage() {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 pb-12 pt-24">
-        <div className="mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
-          <Heart className="mx-auto mb-4 h-12 w-12 text-pink-300" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 pb-14 pt-24">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 motion-safe:animate-shimmer" />
+        <div className="dot-pattern absolute inset-0 text-white opacity-[0.04]" />
+        <div className="absolute -right-10 top-0 h-48 w-48 rounded-full bg-white/[0.05] motion-safe:animate-float" />
+        <div className="absolute -left-6 bottom-0 h-32 w-32 rounded-full bg-white/[0.03] [animation-delay:1.5s] motion-safe:animate-float" />
+        <div className="absolute left-1/3 top-1/4 h-20 w-20 rounded-full bg-pink-400/[0.06] [animation-delay:0.7s] motion-safe:animate-float" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 text-center text-white sm:px-6">
+          <div className="animate-fade-in-up mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 shadow-lg shadow-purple-900/20 backdrop-blur-sm">
+            <Heart className="h-8 w-8 text-pink-300" />
+          </div>
           <h1 className="mb-4 text-balance text-4xl font-bold sm:text-5xl">
             {language === 'th' ? 'คำอธิษฐาน' : 'Prayer Requests'}
           </h1>
@@ -324,7 +333,7 @@ export function PrayerPage() {
               ? 'แบ่งปันคำอธิษฐานของคุณและอธิษฐานเผื่อผู้อื่น'
               : 'Share your prayer needs and pray for others'}
           </p>
-          <p className="mt-4 text-sm italic text-purple-200">
+          <p className="animate-fade-in-up mt-4 text-sm italic text-purple-200/90 [animation-delay:0.3s]">
             &quot;
             {language === 'th'
               ? 'พระเจ้าทรงอยู่ใกล้คนที่ใจแตกสลาย และทรงช่วยคนที่จิตใจสำนึกผิด'
@@ -683,19 +692,32 @@ export function PrayerPage() {
                 </button>
               </div>
             </div>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-3 text-sm text-muted-foreground">
               {language === 'th'
                 ? 'อธิษฐานเผื่อพี่น้องในชุมชนของเรา คลิก "ฉันอธิษฐานแล้ว" เพื่อแสดงการสนับสนุน'
                 : 'Pray for our community members. Click "Pray" to show your support.'}
             </p>
+            {publicPrayers.length > 0 && (
+              <div className="animate-fade-in-up mb-4 flex flex-wrap items-center gap-2">
+                <span className="flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                  <Users className="h-3 w-3" />
+                  {publicPrayers.length} {language === 'th' ? 'คำอธิษฐาน' : 'requests'}
+                </span>
+                <span className="flex items-center gap-1.5 rounded-full bg-rose-100 px-3 py-1 text-xs font-medium text-rose-700 dark:bg-rose-900/30 dark:text-rose-300">
+                  <Heart className="h-3 w-3 fill-current" />
+                  {publicPrayers.reduce((sum, p) => sum + p.prayerCount, 0)} {language === 'th' ? 'อธิษฐานแล้ว' : 'prayers offered'}
+                </span>
+              </div>
+            )}
             <div className="space-y-4">
-              {visiblePrayers.map((prayer) => {
+              {visiblePrayers.map((prayer, index) => {
                 const catStyle = getCategoryCardStyle(prayer.category);
                 return (
                   <article
                     key={prayer.id}
                     aria-label={`${getCategoryDisplay(prayer.category, 'en')} prayer by ${prayer.name}`}
-                    className={`rounded-xl border border-l-4 ${catStyle.border} border-border/50 ${catStyle.bg} p-5 transition-shadow duration-150 hover:shadow-md`}
+                    className={`animate-fade-in-up card-hover-lift rounded-xl border border-l-4 ${catStyle.border} border-border/50 ${catStyle.bg} p-5`}
+                    style={{ animationDelay: `${Math.min(index, 5) * 80}ms` }}
                   >
                     <div className="mb-2.5 flex items-center justify-between">
                       <span
@@ -719,15 +741,15 @@ export function PrayerPage() {
                       <Button
                         size="sm"
                         variant={prayedFor.includes(prayer.id) ? 'default' : 'outline'}
-                        className={
+                        className={`min-h-[44px] touch-manipulation transition-all duration-200 active:scale-95 ${
                           prayedFor.includes(prayer.id)
-                            ? 'bg-purple-600 hover:bg-purple-500'
-                            : 'border-purple-300 text-purple-600 dark:border-purple-700 dark:text-purple-400'
-                        }
+                            ? 'bg-purple-600 shadow-md shadow-purple-500/25 hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/30'
+                            : 'border-purple-200 text-purple-600 hover:border-purple-300 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-950/30'
+                        }`}
                         onClick={() => handlePrayFor(prayer.id)}
                       >
                         <Heart
-                          className={`mr-1 h-4 w-4 ${prayedFor.includes(prayer.id) ? 'fill-white' : ''}`}
+                          className={`mr-1 h-4 w-4 transition-transform duration-200 ${prayedFor.includes(prayer.id) ? 'scale-110 fill-white' : ''}`}
                         />
                         {prayedFor.includes(prayer.id)
                           ? language === 'th'
@@ -767,21 +789,26 @@ export function PrayerPage() {
         </div>
 
         {/* Contact CTA */}
-        <div className="mt-12 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center text-white">
-          <MessageCircle className="mx-auto mb-4 h-10 w-10" />
-          <h2 className="mb-2 text-balance text-2xl font-bold">
-            {language === 'th' ? 'ต้องการพูดคุยกับใครสักคน?' : 'Need to Talk to Someone?'}
-          </h2>
-          <p className="mb-6 text-purple-100">
-            {language === 'th'
-              ? 'ศิษยาภิบาลของเราพร้อมรับฟังและอธิษฐานร่วมกับคุณ'
-              : 'Our pastor is available to listen and pray with you'}
-          </p>
-          <Link to="/#contact">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-purple-50">
-              {language === 'th' ? 'ติดต่อศิษยาภิบาล' : 'Contact the Pastor'}
-            </Button>
-          </Link>
+        <div className="animate-fade-in-up relative mt-12 overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 p-8 text-center text-white shadow-xl sm:p-10">
+          <div className="absolute inset-0 motion-safe:animate-shimmer" />
+          <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/[0.06] motion-safe:animate-float" />
+          <div className="absolute -bottom-4 left-1/4 h-20 w-20 rounded-full bg-white/[0.04] [animation-delay:1s] motion-safe:animate-float" />
+          <div className="relative z-10">
+            <MessageCircle className="mx-auto mb-4 h-10 w-10" />
+            <h2 className="mb-2 text-balance text-2xl font-bold">
+              {language === 'th' ? 'ต้องการพูดคุยกับใครสักคน?' : 'Need to Talk to Someone?'}
+            </h2>
+            <p className="mb-6 text-purple-100">
+              {language === 'th'
+                ? 'ศิษยาภิบาลของเราพร้อมรับฟังและอธิษฐานร่วมกับคุณ'
+                : 'Our pastor is available to listen and pray with you'}
+            </p>
+            <Link to="/#contact">
+              <Button size="lg" className="bg-white text-purple-600 shadow-lg shadow-purple-900/20 transition-all duration-200 hover:bg-purple-50 hover:shadow-xl active:scale-95">
+                {language === 'th' ? 'ติดต่อศิษยาภิบาล' : 'Contact the Pastor'}
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </PublicLayout>
