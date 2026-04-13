@@ -316,6 +316,59 @@ export class PushNotificationService {
   }
 
   /**
+   * Send notification to all admin and staff members
+   */
+  async sendToAdminStaff(payload: NotificationPayload): Promise<number> {
+    if (!this.isConfigured) {
+      logger.warn('Push notifications not configured, skipping admin/staff notification');
+      return 0;
+    }
+
+    try {
+      const subscriptions = await prisma.push_subscriptions.findMany({
+        where: {
+          members: { role: { in: ['ADMIN', 'STAFF'] } },
+        },
+        include: { members: { select: { id: true } } },
+      });
+
+      if (subscriptions.length === 0) {
+        logger.debug('No admin/staff push subscriptions found');
+        return 0;
+      }
+
+      let successCount = 0;
+      for (const sub of subscriptions) {
+        const pushSubscription: PushSubscription = {
+          endpoint: sub.endpoint,
+          keys: { p256dh: sub.p256dh, auth: sub.auth },
+        };
+        try {
+          await this.sendNotification(pushSubscription, payload);
+          successCount++;
+        } catch (error) {
+          if (this.isSubscriptionExpired(error)) {
+            await prisma.push_subscriptions
+              .delete({
+                where: { memberId_endpoint: { memberId: sub.memberId, endpoint: sub.endpoint } },
+              })
+              .catch(() => {});
+          }
+        }
+      }
+
+      logger.info('Admin/staff notification sent', {
+        total: subscriptions.length,
+        success: successCount,
+      });
+      return successCount;
+    } catch (error) {
+      logger.error('Failed to send admin/staff notification', { error });
+      return 0;
+    }
+  }
+
+  /**
    * Send a notification to a push subscription
    */
   private async sendNotification(

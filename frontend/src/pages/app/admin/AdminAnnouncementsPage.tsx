@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAnnouncements, AnnouncementFilters as FilterState } from '@/hooks/useAnnouncements';
 import { announcementService, Author } from '@/services/endpoints/announcementService';
+import { websocketClient } from '@/services/websocket/websocketClient';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -71,6 +72,15 @@ export function AdminAnnouncementsPage() {
     loading,
     error: fetchError,
   } = useAnnouncements(showArchived, currentPage, limit, refreshKey, filters);
+
+  // Real-time: auto-refresh when new announcements arrive
+  useEffect(() => {
+    const bump = () => setRefreshKey((k) => k + 1);
+    websocketClient.onNewAnnouncement(bump);
+    return () => {
+      websocketClient.off('announcement:new', bump);
+    };
+  }, []);
 
   // Fetch counts for both active and archived - independent of main list
   useEffect(() => {

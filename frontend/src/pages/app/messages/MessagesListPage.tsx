@@ -4,7 +4,7 @@
  * Displays inbox/sent messages with folder navigation and pagination
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router';
 import { Inbox, Send, Mail, Trash2 } from 'lucide-react';
 import { useMessages, useDeleteMessage } from '@/hooks/useMessages';
@@ -19,6 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ConfirmDialog } from '@/components/features/shared/ConfirmDialog';
 import { reportError } from '@/lib/errorReporting';
 import { gooeyToast } from 'goey-toast';
+import { websocketClient } from '@/services/websocket/websocketClient';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 const MSG_SKELETON_KEYS = ['msg-0', 'msg-1', 'msg-2', 'msg-3', 'msg-4'];
 
@@ -27,15 +29,27 @@ export function MessagesListPage() {
   const [searchParams] = useSearchParams();
   const initialFolder = (searchParams.get('folder') as 'inbox' | 'sent') || 'inbox';
 
-  const { messages, loading, error, pagination, setPage, setFolder } = useMessages({
+  const { messages, loading, error, pagination, setPage, setFolder, refetch } = useMessages({
     folder: initialFolder,
     page: 1,
     limit: 20,
   });
 
   const { deleteMessage, loading: deleteLoading } = useDeleteMessage();
+  const { refresh: refreshNotifications } = useNotifications();
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent'>(initialFolder);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string } | null>(null);
+
+  // Listen for new messages via WebSocket
+  useEffect(() => {
+    const handler = () => {
+      if (activeFolder === 'inbox') refetch();
+    };
+    websocketClient.onNewMessage(handler);
+    return () => {
+      websocketClient.off('message:new', handler);
+    };
+  }, [activeFolder, refetch]);
 
   const handleFolderChange = (folder: string) => {
     const newFolder = folder as 'inbox' | 'sent';
@@ -58,6 +72,7 @@ export function MessagesListPage() {
       await deleteMessage(deleteTarget.id);
       gooeyToast.success('Message deleted');
       setFolder(activeFolder);
+      refreshNotifications();
     } catch (err) {
       gooeyToast.error('Failed to delete message');
       reportError('Failed to delete message', err);

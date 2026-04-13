@@ -32,7 +32,7 @@ services:
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
-        value: https://singburisdacenter.vercel.app,https://singburiadventistcenter.vercel.app
+        value: https://www.singburisdacenter.org,https://singburisdacenter.org,https://singburisdacenter.vercel.app,https://singburiadventistcenter.vercel.app
       - key: DATABASE_URL
         sync: false # Set manually in Render dashboard
       - key: JWT_SECRET
@@ -75,3 +75,5 @@ services:
         sync: false # Set manually
       - key: VAPID_SUBJECT
         value: mailto:admin@singburi-adventist.org
+      - key: FRONTEND_URL
+        value: https://www.singburisdacenter.org
