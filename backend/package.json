@@ -68,7 +68,6 @@
     "socket.io": "^4.8.3",
     "speakeasy": "^2.0.0",
     "swagger-ui-express": "^5.0.1",
-    "typescript": "^5.9.3",
     "uuid": "^9.0.1",
     "validator": "^13.15.26",
     "web-push": "^3.6.7",
@@ -98,6 +97,7 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.2"
   },
   "engines": {

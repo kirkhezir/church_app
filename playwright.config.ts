@@ -1,10 +1,16 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
+ * Load E2E test credentials from .env.e2e (gitignored, local/CI only).
+ * Copy .env.e2e.example → .env.e2e and fill in seed user credentials.
+ * In CI: set E2E_ADMIN_PASSWORD and E2E_MEMBER_PASSWORD as repository secrets.
  */
-// require('dotenv').config();
+try {
+  // process.loadEnvFile is available in Node 20.12+ / Node 22+ (no dotenv needed)
+  process.loadEnvFile(".env.e2e");
+} catch {
+  // File not present locally — tests requiring credentials will be skipped
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.

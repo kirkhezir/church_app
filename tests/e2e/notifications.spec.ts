@@ -9,19 +9,25 @@
 
 import { test, expect, Page } from "@playwright/test";
 
-const BASE_URL = "http://localhost:5173";
+const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:5173";
 
+// Credentials are loaded from .env.e2e (gitignored) or CI environment secrets.
+// See .env.e2e.example at the project root for setup instructions.
 const ADMIN_USER = {
-  email: "admin@singburi-adventist.org",
-  password: "Admin123!",
+  email: process.env.E2E_ADMIN_EMAIL ?? "admin@singburi-adventist.org",
+  password: process.env.E2E_ADMIN_PASSWORD ?? "",
 };
 
 const MEMBER_USER = {
-  email: "john.doe@example.com",
-  password: "Member123!",
+  email: process.env.E2E_MEMBER_EMAIL ?? "john.doe@example.com",
+  password: process.env.E2E_MEMBER_PASSWORD ?? "",
 };
 
 async function login(page: Page, email: string, password: string) {
+  if (!password) {
+    test.skip(true, "Test credentials not configured — copy .env.e2e.example to .env.e2e and fill in values");
+    return;
+  }
   await page.goto(`${BASE_URL}/login`);
   await page.getByRole("textbox", { name: "Email" }).fill(email);
   await page.getByRole("textbox", { name: "Password" }).fill(password);
