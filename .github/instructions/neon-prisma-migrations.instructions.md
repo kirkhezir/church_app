@@ -45,6 +45,22 @@ Then starts the app with `npm start`.
 
 `migrate deploy` applies only **pending** migrations in order. It is idempotent and safe. If it fails, Render aborts the deploy — the old version keeps serving.
 
+### Dev vs Production database split
+
+| Environment       | `DATABASE_URL`                                        | `DIRECT_DATABASE_URL`                         |
+| ----------------- | ----------------------------------------------------- | --------------------------------------------- |
+| **Local dev**     | `postgresql://postgres:...@localhost:5432/church_app` | not needed (local = no pooler)                |
+| **Render (prod)** | Neon **pooler** URL (`...pooler.ap-southeast-1...`)   | Neon **direct** URL (same host, no `-pooler`) |
+
+`prisma.config.ts` resolves the migration URL as `DIRECT_DATABASE_URL ?? DATABASE_URL`. On Render both env vars must be set in the dashboard:
+
+- `DATABASE_URL` → Neon pooler URL (used by the running app for all queries)
+- `DIRECT_DATABASE_URL` → Neon direct URL (used by `prisma migrate deploy` during build to bypass pooler advisory lock requirement)
+
+To get the direct URL from Neon: open your Neon project → Connection Details → toggle off "Connection pooling" → copy the connection string.
+
+> ⚠️ If `DIRECT_DATABASE_URL` is missing from Render, migrations may hang or fail with a "could not obtain lock" error because Prisma migrations require an advisory lock that Neon's pooler does not support.
+
 ## Testing migrations before pushing (Neon branching)
 
 ```bash

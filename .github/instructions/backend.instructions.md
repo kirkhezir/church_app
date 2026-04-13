@@ -202,13 +202,21 @@ This section governs every change to `backend/prisma/schema.prisma`. **Zero data
 ### How Migrations Work in This Stack
 
 ```
-Dev machine          │  Git push to main   │  Render.com (Production)
-─────────────────────│─────────────────────│──────────────────────────
-npx prisma migrate   │                     │  npx prisma migrate deploy
-  dev --name xyz     │  ──────────────►    │  (applies pending migrations)
-  (creates SQL file) │                     │  npm start
-  (updates dev DB)   │                     │  (new code runs on updated DB)
+Dev machine (local PostgreSQL)  │  Git push to main   │  Render.com → Neon (Production)
+────────────────────────────────│─────────────────────│──────────────────────────────────
+npx prisma migrate dev          │                     │  npx prisma migrate deploy
+  --name xyz                    │  ──────────────►    │  (uses DIRECT_DATABASE_URL to
+  (creates SQL file)            │                     │   bypass Neon pooler advisory lock)
+  (updates local DB)            │                     │  npm start
+  (commit migration file)       │                     │  (new code runs on updated Neon DB)
 ```
+
+**Two env vars are required in Render dashboard for production:**
+
+- `DATABASE_URL` → Neon **pooler** URL — used by the running app for all queries
+- `DIRECT_DATABASE_URL` → Neon **direct** URL (no `-pooler` in hostname) — used by `prisma migrate deploy` during build
+
+`prisma.config.ts` resolves migration URL as `DIRECT_DATABASE_URL ?? DATABASE_URL`. Without `DIRECT_DATABASE_URL`, migrations may hang with a "could not obtain lock" error.
 
 `prisma migrate deploy`:
 
@@ -407,10 +415,13 @@ Before committing any change to `schema.prisma`:
 
 ### Development vs Production Commands Reference
 
-| Task                  | Local Dev                         | Production (Render auto-runs) |
-| --------------------- | --------------------------------- | ----------------------------- |
-| Apply new migration   | `npx prisma migrate dev --name x` | `npx prisma migrate deploy`   |
-| Regenerate client     | `npx prisma generate`             | Part of `buildCommand`        |
-| Explore data          | `npx prisma studio`               | Neon console / Studio         |
-| Reset DB (local only) | `npx prisma migrate reset`        | ❌ NEVER                      |
-| Inspect schema drift  | `npx prisma migrate diff`         | ❌ Use deploy only            |
+| Task                  | Local Dev (local PostgreSQL)      | Production (Render auto-runs on push to main) |
+| --------------------- | --------------------------------- | --------------------------------------------- |
+| Apply new migration   | `npx prisma migrate dev --name x` | `npx prisma migrate deploy` (auto via Render) |
+| Regenerate client     | `npx prisma generate`             | Part of `buildCommand`                        |
+| Explore data          | `npx prisma studio`               | Neon console / Studio                         |
+| Seed test data        | `npx tsx prisma/seed.ts`          | ❌ Never seed production                      |
+| Reset DB (local only) | `npx prisma migrate reset`        | ❌ NEVER                                      |
+| Inspect schema drift  | `npx prisma migrate diff`         | ❌ Use deploy only                            |
+
+> Local dev uses `DATABASE_URL=postgresql://postgres:...@localhost:5432/church_app`. Production uses Neon (set in Render dashboard). **The `.env` file must never point at the Neon production database during development** — it will consume Neon Free Tier compute hours.
