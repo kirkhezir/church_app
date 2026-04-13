@@ -21,7 +21,6 @@ permissions:
 
 env:
   BACKUP_RETENTION_DAYS: 30
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   backup:
@@ -31,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check required secrets
         id: check-secrets

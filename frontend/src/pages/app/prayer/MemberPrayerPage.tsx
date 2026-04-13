@@ -9,7 +9,7 @@
  *   Heart (filled)  — "I Prayed" button: personal affirmation action
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react';
 import {
   HeartHandshake,
   Heart,
@@ -18,14 +18,17 @@ import {
   Users,
   CheckCircle,
   Calendar,
+  Clock,
   Loader2,
   Sparkles,
   EyeOff,
   ChevronDown,
   ArrowUpDown,
+  Pencil,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
@@ -60,6 +63,28 @@ const CATEGORIES = [
   { id: 'thanksgiving', name: 'Thanksgiving' },
   { id: 'other', name: 'Other' },
 ] as const;
+
+type TimeFilter = 'week' | 'month' | 'all';
+const TIME_FILTERS: { id: TimeFilter; label: string }[] = [
+  { id: 'week', label: 'This Week' },
+  { id: 'month', label: 'This Month' },
+  { id: 'all', label: 'All Time' },
+];
+
+function getTimeFilterStart(filter: TimeFilter): Date | null {
+  if (filter === 'all') return null;
+  const now = new Date();
+  if (filter === 'week') {
+    // Adventist week: Sunday (0) to Saturday (6)
+    const day = now.getDay(); // 0 = Sun
+    const start = new Date(now);
+    start.setDate(now.getDate() - day);
+    start.setHours(0, 0, 0, 0);
+    return start;
+  }
+  // "This Month" — first day of the current calendar month
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+}
 
 // Full Tailwind class strings are required so purgecss keeps them
 const CATEGORY_STYLES: Record<string, { badge: string; border: string; bg: string; dot: string }> =
@@ -142,6 +167,41 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
+// ─── Expandable prayer text (overflow-aware) ────────────────────────────────
+
+function PrayerCardText({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !isExpanded) {
+      setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, isExpanded]);
+
+  return (
+    <div className="mb-1 flex-1">
+      <p
+        ref={textRef}
+        className={`text-sm leading-relaxed text-foreground/85 ${!isExpanded ? 'line-clamp-4' : ''}`}
+      >
+        {text}
+      </p>
+      {(isClamped || isExpanded) && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mt-1 cursor-pointer text-xs font-medium text-primary hover:text-primary/80"
+        >
+          {isExpanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MemberPrayerPage() {
@@ -155,25 +215,37 @@ export function MemberPrayerPage() {
   const [isPublic, setIsPublic] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [lastSubmittedId, setLastSubmittedId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRequest, setEditRequest] = useState('');
+  const [editCategory, setEditCategory] = useState('');
   const [prayedFor, setPrayedFor] = useState<Set<string>>(new Set());
   const [prayingId, setPrayingId] = useState<string | null>(null);
+  const [justPrayed, setJustPrayed] = useState<string | null>(null);
   const [publicPrayers, setPublicPrayers] = useState<PrayerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('week');
   const [sortBy, setSortBy] = useState<'recent' | 'most_prayed'>('recent');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  // Reset pagination when filter or sort changes
+  // Reset pagination when filter, time filter, or sort changes
   const prevFilterRef = useRef(activeFilter);
+  const prevTimeRef = useRef(timeFilter);
   const prevSortRef = useRef(sortBy);
   useEffect(() => {
-    if (prevFilterRef.current !== activeFilter || prevSortRef.current !== sortBy) {
+    if (
+      prevFilterRef.current !== activeFilter ||
+      prevTimeRef.current !== timeFilter ||
+      prevSortRef.current !== sortBy
+    ) {
       setVisibleCount(PAGE_SIZE);
       prevFilterRef.current = activeFilter;
+      prevTimeRef.current = timeFilter;
       prevSortRef.current = sortBy;
     }
-  }, [activeFilter, sortBy]);
+  }, [activeFilter, timeFilter, sortBy]);
 
   const loadPrayers = useCallback(async () => {
     try {
@@ -222,12 +294,18 @@ export function MemberPrayerPage() {
     return copy;
   }, [publicPrayers, sortBy]);
 
+  const timeFilteredPrayers = useMemo(() => {
+    const start = getTimeFilterStart(timeFilter);
+    if (!start) return sortedPrayers;
+    return sortedPrayers.filter((p) => new Date(p.createdAt) >= start);
+  }, [sortedPrayers, timeFilter]);
+
   const filteredPrayers = useMemo(
     () =>
       activeFilter === 'all'
-        ? sortedPrayers
-        : sortedPrayers.filter((p) => p.category.toLowerCase() === activeFilter),
-    [sortedPrayers, activeFilter]
+        ? timeFilteredPrayers
+        : timeFilteredPrayers.filter((p) => p.category.toLowerCase() === activeFilter),
+    [timeFilteredPrayers, activeFilter]
   );
 
   const visiblePrayers = useMemo(
@@ -246,9 +324,9 @@ export function MemberPrayerPage() {
   }, [publicPrayers]);
 
   const activeCategories = useMemo(() => {
-    const seen = new Set(publicPrayers.map((p) => p.category.toLowerCase()));
+    const seen = new Set(timeFilteredPrayers.map((p) => p.category.toLowerCase()));
     return CATEGORIES.filter((c) => seen.has(c.id));
-  }, [publicPrayers]);
+  }, [timeFilteredPrayers]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -258,7 +336,7 @@ export function MemberPrayerPage() {
     }
     setSubmitting(true);
     try {
-      await prayerService.submitPrayerRequest({
+      const result = await prayerService.submitPrayerRequest({
         name: isAnonymous ? 'Anonymous' : memberName,
         email: isAnonymous ? undefined : user?.email,
         request,
@@ -266,6 +344,9 @@ export function MemberPrayerPage() {
         isAnonymous,
       });
       setIsSubmitted(true);
+      setLastSubmittedId(result.id);
+      setEditRequest(request);
+      setEditCategory(category);
       // Refresh notification counts so the bell updates immediately
       refreshNotifications();
       await loadPrayers();
@@ -305,6 +386,8 @@ export function MemberPrayerPage() {
       }
     } else {
       // Toggle on: pray (optimistic)
+      setJustPrayed(id);
+      setTimeout(() => setJustPrayed(null), 500);
       const next = new Set(prayedFor);
       next.add(id);
       setPrayedFor(next);
@@ -333,8 +416,48 @@ export function MemberPrayerPage() {
   if (loading) {
     return (
       <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+          {/* Header skeleton */}
+          <div className="mb-6 rounded-2xl bg-gradient-to-br from-rose-100 to-pink-50 p-6 dark:from-rose-900/30 dark:to-pink-900/15 sm:p-8">
+            <div className="flex items-start gap-4">
+              <Skeleton className="h-12 w-12 rounded-2xl" />
+              <div className="flex-1">
+                <Skeleton className="h-7 w-40" />
+                <Skeleton className="mt-2 h-4 w-64" />
+              </div>
+            </div>
+          </div>
+          {/* Stats skeleton */}
+          <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col items-center rounded-xl border p-3">
+                <Skeleton className="mb-1 h-4 w-4" />
+                <Skeleton className="h-6 w-10" />
+                <Skeleton className="mt-1 h-3 w-16" />
+              </div>
+            ))}
+          </div>
+          {/* Cards skeleton */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="rounded-xl border border-l-4 border-l-muted p-4">
+                <div className="mb-2 flex justify-between">
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                  <Skeleton className="h-4 w-14" />
+                </div>
+                <Skeleton className="mb-1 h-4 w-full" />
+                <Skeleton className="mb-1 h-4 w-full" />
+                <Skeleton className="mb-3 h-4 w-2/3" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                  <Skeleton className="h-9 w-24 rounded-md" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </SidebarLayout>
     );
@@ -479,6 +602,83 @@ export function MemberPrayerPage() {
               Submit Prayer Request
             </Button>
           </form>
+        ) : isEditing && lastSubmittedId ? (
+          <div className="py-6" role="form" aria-label="Edit prayer request">
+            <h3 className="mb-4 text-lg font-bold text-foreground">Edit Your Prayer Request</h3>
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-category">Category</Label>
+                <Select value={editCategory} onValueChange={setEditCategory}>
+                  <SelectTrigger id="edit-category" className="w-full">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className={`h-2 w-2 flex-shrink-0 rounded-full ${CATEGORY_STYLES[cat.id]?.dot ?? 'bg-muted-foreground'}`}
+                          />
+                          {cat.name}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-request">Prayer Request</Label>
+                <Textarea
+                  id="edit-request"
+                  value={editRequest}
+                  onChange={(e) => setEditRequest(e.target.value)}
+                  rows={5}
+                  maxLength={MAX_REQUEST_LENGTH}
+                  className="resize-none"
+                />
+                <p className="text-right text-xs text-muted-foreground">
+                  {editRequest.length}/{MAX_REQUEST_LENGTH}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  className="min-h-[44px] flex-1"
+                  disabled={submitting || editRequest.trim().length < 10}
+                  onClick={async () => {
+                    setSubmitting(true);
+                    try {
+                      await prayerService.updatePrayerRequest(lastSubmittedId, {
+                        request: editRequest,
+                        category: editCategory || undefined,
+                        email: user?.email,
+                      });
+                      gooeyToast.success('Prayer request updated successfully');
+                      setIsEditing(false);
+                      await loadPrayers();
+                    } catch {
+                      gooeyToast.error('Failed to update prayer request');
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+                >
+                  {submitting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                  )}
+                  Save Changes
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-[44px]"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="py-8 text-center" role="status" aria-live="polite">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
@@ -496,19 +696,33 @@ export function MemberPrayerPage() {
                 <span className="mt-1 block font-medium not-italic">— Philippians 4:6</span>
               </p>
             </blockquote>
-            <Button
-              onClick={() => {
-                setIsSubmitted(false);
-                setCategory('');
-                setRequest('');
-                setIsPublic(true);
-                setIsAnonymous(false);
-              }}
-              variant="outline"
-              className="w-full"
-            >
-              Submit Another Request
-            </Button>
+            <div className="space-y-2">
+              {lastSubmittedId && (
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  variant="outline"
+                  className="w-full gap-2"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit Prayer Request
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  setIsSubmitted(false);
+                  setLastSubmittedId(null);
+                  setIsEditing(false);
+                  setCategory('');
+                  setRequest('');
+                  setIsPublic(true);
+                  setIsAnonymous(false);
+                }}
+                variant="outline"
+                className="w-full"
+              >
+                Submit Another Request
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>
@@ -518,6 +732,28 @@ export function MemberPrayerPage() {
   // ─── Prayer Wall (shared between mobile tab and desktop column) ─────────────
   const prayerWall = (
     <div className="space-y-4">
+      {/* Time period filter */}
+      <div className="flex items-center gap-2">
+        <Clock className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" aria-hidden="true" />
+        <div className="flex gap-1.5" role="group" aria-label="Filter by time period">
+          {TIME_FILTERS.map((tf) => (
+            <button
+              key={tf.id}
+              type="button"
+              onClick={() => setTimeFilter(tf.id)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                timeFilter === tf.id
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
+              }`}
+              aria-pressed={timeFilter === tf.id}
+            >
+              {tf.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Category filter chips + sort */}
       {activeCategories.length > 0 && (
         <div className="space-y-2">
@@ -536,11 +772,13 @@ export function MemberPrayerPage() {
               }`}
               aria-pressed={activeFilter === 'all'}
             >
-              All ({publicPrayers.length})
+              All ({timeFilteredPrayers.length})
             </button>
             {activeCategories.map((cat) => {
               const style = CATEGORY_STYLES[cat.id];
-              const count = publicPrayers.filter((p) => p.category.toLowerCase() === cat.id).length;
+              const count = timeFilteredPrayers.filter(
+                (p) => p.category.toLowerCase() === cat.id
+              ).length;
               const isActive = activeFilter === cat.id;
               return (
                 <button
@@ -584,17 +822,29 @@ export function MemberPrayerPage() {
         <Card>
           <CardContent className="py-10 text-center">
             <HeartHandshake className="mx-auto mb-3 h-10 w-10 text-muted-foreground/30" />
-            <p className="text-sm font-medium text-foreground">No prayer requests yet</p>
+            <p className="text-sm font-medium text-foreground">No prayer requests found</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              {activeFilter === 'all'
-                ? 'Be the first to share a prayer request with the community.'
-                : `No ${getCategoryName(activeFilter)} prayer requests yet.`}
+              {activeFilter !== 'all'
+                ? `No ${getCategoryName(activeFilter)} requests ${timeFilter !== 'all' ? 'in this period' : 'yet'}.`
+                : timeFilter !== 'all'
+                  ? 'No prayer requests in this time period.'
+                  : 'Be the first to share a prayer request with the community.'}
             </p>
+            {timeFilter !== 'all' && (
+              <Button
+                variant="link"
+                size="sm"
+                className="mt-2 text-xs"
+                onClick={() => setTimeFilter(timeFilter === 'week' ? 'month' : 'all')}
+              >
+                Try {timeFilter === 'week' ? 'This Month' : 'All Time'} instead
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {visiblePrayers.map((prayer) => {
+          {visiblePrayers.map((prayer, index) => {
             const style = getCategoryStyle(prayer.category);
             const hasPrayed = prayedFor.has(prayer.id);
             const authorInitials = prayer.isAnonymous ? '?' : getInitials(prayer.name);
@@ -602,7 +852,8 @@ export function MemberPrayerPage() {
               <article
                 key={prayer.id}
                 aria-label={`${getCategoryName(prayer.category)} prayer by ${prayer.isAnonymous ? 'Anonymous' : prayer.name}`}
-                className={`flex flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4 transition-shadow duration-150 hover:shadow-md`}
+                className={`card-hover-lift flex animate-fade-in-up flex-col rounded-xl border border-l-4 ${style.border} border-border/50 ${style.bg} p-4`}
+                style={{ animationDelay: `${Math.min(index, 5) * 80}ms` }}
               >
                 {/* Header row */}
                 <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -621,9 +872,7 @@ export function MemberPrayerPage() {
                 </div>
 
                 {/* Request text */}
-                <p className="mb-3 line-clamp-4 flex-1 text-sm leading-relaxed text-foreground/85">
-                  {prayer.request}
-                </p>
+                <PrayerCardText text={prayer.request} />
 
                 {/* Footer row */}
                 <div className="mt-auto flex items-center justify-between">
@@ -641,11 +890,11 @@ export function MemberPrayerPage() {
                     size="sm"
                     variant={hasPrayed ? 'default' : 'outline'}
                     disabled={prayingId === prayer.id}
-                    className={
+                    className={`inline-flex items-center gap-1.5 transition-all duration-200 active:scale-95 ${
                       hasPrayed
-                        ? 'h-11 touch-manipulation bg-rose-600 text-white hover:bg-rose-500 dark:bg-rose-700 dark:hover:bg-rose-600'
+                        ? 'h-11 touch-manipulation bg-rose-600 text-white shadow-md shadow-rose-500/25 hover:bg-rose-500 hover:shadow-lg hover:shadow-rose-500/30 dark:bg-rose-700 dark:hover:bg-rose-600'
                         : 'h-11 touch-manipulation border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-800 dark:text-rose-400 dark:hover:bg-rose-950/30'
-                    }
+                    }`}
                     onClick={() => handlePrayFor(prayer.id)}
                     aria-label={
                       hasPrayed
@@ -654,15 +903,15 @@ export function MemberPrayerPage() {
                     }
                   >
                     {prayingId === prayer.id ? (
-                      <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
                     ) : (
                       <Heart
-                        className={`mr-1 h-3.5 w-3.5 ${hasPrayed ? 'fill-white' : ''}`}
+                        className={`h-3.5 w-3.5 transition-transform duration-200 ${hasPrayed ? 'scale-110 fill-white' : ''} ${justPrayed === prayer.id ? 'animate-heart-pulse' : ''}`}
                         aria-hidden="true"
                       />
                     )}
-                    {hasPrayed ? 'Prayed ✓' : 'Pray'}
-                    <span className="ml-1 text-[11px] opacity-75">({prayer.prayerCount})</span>
+                    {hasPrayed ? 'Prayed' : 'Pray'}
+                    <span className="text-[11px] opacity-75">({prayer.prayerCount})</span>
                   </Button>
                 </div>
               </article>
@@ -696,39 +945,51 @@ export function MemberPrayerPage() {
     <SidebarLayout breadcrumbs={[{ label: 'Prayer Wall' }]}>
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
         {/* Page header */}
-        <header className="mb-6 flex items-start gap-3">
-          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/30">
-            <HeartHandshake className="h-6 w-6 text-rose-600 dark:text-rose-400" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight">Prayer Wall</h1>
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              Lift each other up in prayer —{' '}
-              <span className="font-medium text-foreground">{totalPrayers}</span> prayers offered by
-              our community
-            </p>
+        <header className="relative mb-6 animate-fade-in-up overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-rose-600 via-rose-500 to-pink-600 p-6 shadow-xl dark:from-rose-800 dark:via-rose-700 dark:to-pink-800 sm:p-8">
+          <div className="absolute inset-0 motion-safe:animate-shimmer" />
+          <div className="dot-pattern absolute inset-0 text-white opacity-[0.05]" />
+          <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-white/[0.06] motion-safe:animate-float" />
+          <div className="absolute -bottom-4 left-1/4 h-20 w-20 rounded-full bg-white/[0.04] [animation-delay:1.2s] motion-safe:animate-float" />
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15 shadow-lg shadow-rose-900/20 backdrop-blur-sm">
+              <HeartHandshake className="h-7 w-7 text-white" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight text-white">Prayer Wall</h1>
+              <p className="mt-1 text-sm text-white/80">
+                Lift each other up in prayer —{' '}
+                <span className="font-semibold text-white">{totalPrayers}</span> prayers offered by
+                our community
+              </p>
+            </div>
           </div>
         </header>
 
         {/* Community stats strip */}
         <div className="mb-6 grid grid-cols-3 gap-2 sm:gap-3">
-          <div className="flex flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-2 py-2 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20 sm:px-4 sm:py-3">
+          <div className="stagger-1 card-hover-lift flex animate-fade-in-up flex-col items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-2 py-2 shadow-sm dark:border-blue-900/30 dark:bg-blue-950/20 sm:px-4 sm:py-3">
             <Users className="mb-1 h-4 w-4 text-blue-500" />
-            <p className="text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
+            <p className="animate-number-pop text-base font-bold tabular-nums text-blue-700 dark:text-blue-300 sm:text-xl">
               {publicPrayers.length}
             </p>
             <p className="text-xs text-blue-600/70 dark:text-blue-400/70">Requests</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-2 py-2 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20 sm:px-4 sm:py-3">
+          <div className="stagger-2 card-hover-lift flex animate-fade-in-up flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50 px-2 py-2 shadow-sm dark:border-amber-900/30 dark:bg-amber-950/20 sm:px-4 sm:py-3">
             <Calendar className="mb-1 h-4 w-4 text-amber-500" />
-            <p className="text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl">
+            <p
+              className="animate-number-pop text-base font-bold tabular-nums text-amber-700 dark:text-amber-300 sm:text-xl"
+              style={{ animationDelay: '0.1s' }}
+            >
               {requestsThisMonth}
             </p>
             <p className="text-xs text-amber-600/70 dark:text-amber-400/70">This Month</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-2 py-2 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20 sm:px-4 sm:py-3">
+          <div className="stagger-3 card-hover-lift flex animate-fade-in-up flex-col items-center justify-center rounded-xl border border-rose-100 bg-rose-50 px-2 py-2 shadow-sm dark:border-rose-900/30 dark:bg-rose-950/20 sm:px-4 sm:py-3">
             <Heart className="mb-1 h-4 w-4 fill-rose-500 text-rose-500" />
-            <p className="text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl">
+            <p
+              className="animate-number-pop text-base font-bold tabular-nums text-rose-600 dark:text-rose-400 sm:text-xl"
+              style={{ animationDelay: '0.2s' }}
+            >
               {totalPrayers}
             </p>
             <p className="text-xs text-rose-600/70 dark:text-rose-400/70">Prayers Offered</p>

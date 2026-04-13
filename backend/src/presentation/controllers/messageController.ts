@@ -16,6 +16,7 @@ import { GetMessageById } from '../../application/useCases/getMessageById';
 import { MarkMessageAsRead } from '../../application/useCases/markMessageAsRead';
 import { DeleteMessage } from '../../application/useCases/deleteMessage';
 import logger from '../../infrastructure/logging/logger';
+import { websocketServer } from '../../infrastructure/websocket/websocketServer';
 
 /**
  * Message Controller
@@ -87,6 +88,15 @@ export class MessageController {
         recipientId,
         subject: subject.trim(),
         body: body.trim(),
+      });
+
+      // Emit real-time + push notification to recipient
+      websocketServer.sendMessageNotification(recipientId, {
+        id: result.id,
+        senderId,
+        senderName: `${result.sender.firstName} ${result.sender.lastName}`,
+        content: result.subject,
+        sentAt: result.sentAt.toISOString(),
       });
 
       res.status(201).json(result);

@@ -82,6 +82,17 @@ export const prayerService = {
   },
 
   /**
+   * Update an existing prayer request (within 24-hour edit window, while still PENDING)
+   */
+  async updatePrayerRequest(
+    id: string,
+    data: { request: string; category?: string; categoryThai?: string; email?: string }
+  ): Promise<PrayerRequest> {
+    const response = (await apiClient.patch(`/prayer/${id}`, data)) as PrayerDetailResponse;
+    return response.data;
+  },
+
+  /**
    * Pray for a request (increment prayer count)
    */
   async prayForRequest(id: string): Promise<PrayerRequest> {

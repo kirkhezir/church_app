@@ -2,6 +2,7 @@ import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { logger } from '../logging/logger';
 import { jwtService } from '../auth/jwtService';
+import { pushNotificationService } from '../notifications/pushNotificationService';
 
 /**
  * WebSocket Server
@@ -159,6 +160,17 @@ export class WebSocketServer {
     }
   ): void {
     this.sendToUser(recipientId, 'message:new', message);
+
+    // Fire push notification for offline users (fire-and-forget)
+    if (!this.isUserConnected(recipientId)) {
+      pushNotificationService
+        .notifyNewMessage(recipientId, {
+          id: message.id,
+          senderName: message.senderName,
+          subject: message.content,
+        })
+        .catch((err) => logger.error('Push: message notification failed', { err }));
+    }
   }
 
   /**
@@ -172,6 +184,23 @@ export class WebSocketServer {
     createdAt: string;
   }): void {
     this.broadcast('announcement:new', announcement);
+
+    // Fire push notification to all subscribers (fire-and-forget)
+    pushNotificationService
+      .sendToAll({
+        title:
+          announcement.priority === 'URGENT' ? '🚨 Urgent Announcement' : '📢 New Announcement',
+        body: announcement.title,
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: `announcement-${announcement.id}`,
+        data: { type: 'announcement', announcementId: announcement.id },
+        requireInteraction: announcement.priority === 'URGENT',
+      })
+      .then((count) => {
+        if (count > 0) logger.info('Push: announcement sent', { count });
+      })
+      .catch((err) => logger.error('Push: announcement notification failed', { err }));
   }
 
   /**
@@ -207,6 +236,28 @@ export class WebSocketServer {
       eventId,
       ...update,
     });
+
+    // Fire push notification for event updates (fire-and-forget)
+    const label =
+      update.type === 'cancelled'
+        ? '❌ Event Cancelled'
+        : update.type === 'created'
+          ? '📅 New Event'
+          : '📅 Event Updated';
+    pushNotificationService
+      .sendToAll({
+        title: label,
+        body: update.event.title,
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: `event-${eventId}-${update.type}`,
+        data: { type: 'event', eventId },
+        requireInteraction: update.type === 'cancelled',
+      })
+      .then((count) => {
+        if (count > 0) logger.info('Push: event update sent', { count, type: update.type });
+      })
+      .catch((err) => logger.error('Push: event notification failed', { err }));
   }
 
   /**
@@ -214,6 +265,19 @@ export class WebSocketServer {
    */
   sendPrayerPendingNotification(prayer: { id: string; name: string; category: string }): void {
     this.io?.to('role:staff-admin').emit('prayer:pending', prayer);
+
+    // Fire push notification to admin/staff (fire-and-forget)
+    pushNotificationService
+      .sendToAdminStaff({
+        title: '🙏 Prayer Request Needs Review',
+        body: `From ${prayer.name} · ${prayer.category}`,
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: `prayer-pending-${prayer.id}`,
+        data: { type: 'prayer', prayerId: prayer.id },
+        requireInteraction: true,
+      })
+      .catch((err) => logger.error('Push: prayer pending notification failed', { err }));
   }
 
   /**
@@ -221,6 +285,18 @@ export class WebSocketServer {
    */
   sendPrayerApprovedNotification(prayer: { id: string; category: string; request: string }): void {
     this.broadcast('prayer:approved', prayer);
+
+    // Fire push notification for approved prayer (fire-and-forget)
+    pushNotificationService
+      .sendToAll({
+        title: '🙏 New Prayer Request',
+        body: 'A new prayer has been added to the community wall.',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: `prayer-${prayer.id}`,
+        data: { type: 'prayer', prayerId: prayer.id },
+      })
+      .catch((err) => logger.error('Push: prayer notification failed', { err }));
   }
 
   /**

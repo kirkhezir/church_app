@@ -9,7 +9,7 @@
  * - Click to view full announcement
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useAnnouncements } from '@/hooks/useAnnouncements';
@@ -19,19 +19,37 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SidebarLayout } from '@/components/layout';
 import { BellIcon, ArchiveIcon, SettingsIcon } from 'lucide-react';
+import { websocketClient } from '@/services/websocket/websocketClient';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 export function AnnouncementsPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [showArchived, setShowArchived] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const limit = 10;
+  const { refresh: refreshNotifications } = useNotifications();
 
   const { announcements, pagination, loading, error } = useAnnouncements(
     showArchived,
     currentPage,
-    limit
+    limit,
+    refreshTrigger
   );
+
+  // Listen for new announcements via WebSocket
+  const handleNewAnnouncement = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+    refreshNotifications();
+  }, [refreshNotifications]);
+
+  useEffect(() => {
+    websocketClient.onNewAnnouncement(handleNewAnnouncement);
+    return () => {
+      websocketClient.off('announcement:new', handleNewAnnouncement);
+    };
+  }, [handleNewAnnouncement]);
 
   // Check if user is admin or staff
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF';

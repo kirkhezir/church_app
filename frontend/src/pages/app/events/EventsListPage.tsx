@@ -5,7 +5,7 @@
  * Conditionally uses SidebarLayout for authenticated users.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import {
   CalendarIcon,
@@ -25,6 +25,7 @@ import { reportError } from '@/lib/errorReporting';
 import { gooeyToast } from 'goey-toast';
 import { EventCalendarView } from '@/components/features/events/EventCalendarView';
 import { cn } from '@/lib/utils';
+import { websocketClient } from '@/services/websocket/websocketClient';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -98,7 +99,7 @@ export function EventsListPage() {
   const [endDate, setEndDate] = useState<string>('');
 
   // Sort & pagination state
-  const [sortBy, setSortBy] = useState<SortOption>('date-asc');
+  const [sortBy, setSortBy] = useState<SortOption>('date-desc');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch events with filters
@@ -116,6 +117,17 @@ export function EventsListPage() {
   // RSVP confirmation dialog state
   const [rsvpConfirmOpen, setRsvpConfirmOpen] = useState(false);
   const [selectedEventForRSVP, setSelectedEventForRSVP] = useState<Event | null>(null);
+
+  // Listen for real-time event updates via WebSocket
+  useEffect(() => {
+    const handler = () => {
+      refetch();
+    };
+    websocketClient.onEventUpdate(handler);
+    return () => {
+      websocketClient.off('event:update', handler);
+    };
+  }, [refetch]);
 
   // Sort and paginate events
   const sortedEvents = useMemo(() => sortEvents(events, sortBy), [events, sortBy]);

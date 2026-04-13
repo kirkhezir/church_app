@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { GetPrayerRequests } from '../../application/useCases/getPrayerRequests';
 import { SubmitPrayerRequest } from '../../application/useCases/submitPrayerRequest';
+import { UpdatePrayerRequest } from '../../application/useCases/updatePrayerRequest';
 import { PrayForRequest } from '../../application/useCases/prayForRequest';
 import { UnprayForRequest } from '../../application/useCases/unprayForRequest';
 import { ModeratePrayerRequest } from '../../application/useCases/moderatePrayerRequest';
@@ -83,6 +84,32 @@ export class PrayerController {
         id: result.id,
         name: result.name ?? 'Anonymous',
         category: result.category ?? 'other',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * PATCH /api/v1/prayer/:id
+   * Update a prayer request (within 24-hour edit window, still PENDING)
+   */
+  async updatePrayerRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const memberId = (req as AuthenticatedRequest).user?.userId;
+      const useCase = new UpdatePrayerRequest(this.prayerRepository);
+      const result = await useCase.execute({
+        id: req.params.id,
+        request: req.body.request,
+        category: req.body.category,
+        categoryThai: req.body.categoryThai,
+        email: req.body.email,
+        memberId,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (error) {
       next(error);

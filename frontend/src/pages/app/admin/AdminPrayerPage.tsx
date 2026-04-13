@@ -7,7 +7,7 @@
  * - View requester details
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   CheckCircle,
   Archive,
@@ -25,6 +25,8 @@ import { Input } from '@/components/ui/input';
 import { SidebarLayout } from '@/components/layout';
 import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
 import { gooeyToast } from 'goey-toast';
+import { websocketClient } from '@/services/websocket/websocketClient';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 type StatusFilter = 'all' | 'PENDING' | 'APPROVED' | 'ARCHIVED';
 
@@ -35,8 +37,9 @@ export function AdminPrayerPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const { refresh: refreshNotifications } = useNotifications();
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       setLoading(true);
       const data = await prayerService.getAllPrayerRequests();
@@ -46,11 +49,22 @@ export function AdminPrayerPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [fetchRequests]);
+
+  // Listen for new pending prayer requests in real-time
+  useEffect(() => {
+    const handlePending = () => {
+      fetchRequests();
+    };
+    websocketClient.onPrayerPending(handlePending);
+    return () => {
+      websocketClient.off('prayer:pending', handlePending);
+    };
+  }, [fetchRequests]);
 
   const filteredRequests = useMemo(
     () =>
@@ -80,6 +94,7 @@ export function AdminPrayerPage() {
       await prayerService.moderatePrayerRequest(id, status);
       gooeyToast.success(`Prayer request ${status.toLowerCase()}`);
       await fetchRequests();
+      refreshNotifications();
     } catch {
       setError('Failed to moderate prayer request');
     } finally {

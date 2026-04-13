@@ -6,9 +6,6 @@ WORKDIR /app
 # Upgrade Alpine packages to patch system-level CVEs (e.g. zlib)
 RUN apk upgrade --no-cache
 
-# Update bundled npm dependencies for security fixes
-RUN npm install -g npm@11.10.0
-
 # Copy package files
 COPY package*.json ./
 
@@ -32,9 +29,6 @@ WORKDIR /app
 
 # Upgrade Alpine packages to patch system-level CVEs (e.g. zlib)
 RUN apk upgrade --no-cache
-
-# Update bundled npm dependencies for security fixes
-RUN npm install -g npm@11.10.0
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \

@@ -16,15 +16,17 @@ interface PushSubscriptionData {
 
 interface PushStatus {
   enabled: boolean;
-  subscriptionCount: number;
+  message: string;
 }
 
 /**
  * Get VAPID public key for push subscription
  */
 export async function getVapidPublicKey(): Promise<string> {
-  const response = await apiClient.get<{ publicKey: string }>('/push/vapid-key');
-  return response.publicKey;
+  const response = await apiClient.get<{ success: boolean; data: { publicKey: string } }>(
+    '/push/vapid-key'
+  );
+  return response.data.publicKey;
 }
 
 /**
@@ -38,7 +40,24 @@ export async function subscribeToPush(subscription: PushSubscriptionData): Promi
  * Unsubscribe from push notifications (current device)
  */
 export async function unsubscribeFromPush(): Promise<void> {
-  await apiClient.delete('/push/subscribe');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+
+    if (subscription) {
+      // Send endpoint to backend so it can remove the subscription
+      await apiClient.delete('/push/subscribe', { data: { endpoint: subscription.endpoint } });
+      // Unsubscribe from browser push manager
+      await subscription.unsubscribe();
+    }
+  } catch (error) {
+    console.error('Failed to unsubscribe from push:', error);
+    throw error;
+  }
 }
 
 /**
@@ -52,8 +71,8 @@ export async function unsubscribeAllDevices(): Promise<void> {
  * Get push notification status
  */
 export async function getPushStatus(): Promise<PushStatus> {
-  const response = await apiClient.get<PushStatus>('/push/status');
-  return response;
+  const response = await apiClient.get<{ success: boolean; data: PushStatus }>('/push/status');
+  return response.data;
 }
 
 /**
