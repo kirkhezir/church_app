@@ -339,6 +339,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const unreadCount = items.filter((item) => !item.read).length;
 
+  // ── PWA App Badge sync ────────────────────────────────────────────────────
+  const badgeTotal = counts.total + unreadCount;
+
+  useEffect(() => {
+    if (!('setAppBadge' in navigator)) return;
+    if (badgeTotal > 0) {
+      navigator.setAppBadge(badgeTotal).catch(() => {});
+    } else {
+      navigator.clearAppBadge?.().catch(() => {});
+    }
+  }, [badgeTotal]);
+
   return (
     <NotificationContext.Provider
       value={{ items, counts, unreadCount, markRead, markAllRead, refresh }}

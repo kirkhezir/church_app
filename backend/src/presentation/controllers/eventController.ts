@@ -11,6 +11,7 @@ import { EventRepository } from '../../infrastructure/database/repositories/even
 import { EventRSVPRepository } from '../../infrastructure/database/repositories/eventRSVPRepository';
 import { MemberRepository } from '../../infrastructure/database/repositories/memberRepository';
 import { eventNotificationService } from '../../application/services/eventNotificationService';
+import { websocketServer } from '../../infrastructure/websocket/websocketServer';
 
 /**
  * EventController
@@ -47,6 +48,16 @@ export class EventController {
         maxCapacity: req.body.maxCapacity,
         imageUrl: req.body.imageUrl,
         createdById: (req as any).user.userId, // Set by auth middleware
+      });
+
+      // Emit real-time + push notification
+      websocketServer.sendEventUpdateNotification(result.id, {
+        type: 'created',
+        event: {
+          id: result.id,
+          title: result.title,
+          startDateTime: result.startDateTime.toISOString(),
+        },
       });
 
       res.status(201).json({
@@ -121,6 +132,16 @@ export class EventController {
         maxCapacity: req.body.maxCapacity,
       });
 
+      // Emit real-time + push notification
+      websocketServer.sendEventUpdateNotification(result.id, {
+        type: 'updated',
+        event: {
+          id: result.id,
+          title: result.title,
+          startDateTime: result.startDateTime.toISOString(),
+        },
+      });
+
       res.status(200).json({
         success: true,
         data: result,
@@ -147,6 +168,16 @@ export class EventController {
         eventId: req.params.id,
         cancelledById: (req as any).user.userId,
         reason: req.body.reason,
+      });
+
+      // Emit real-time + push notification for cancellation
+      websocketServer.sendEventUpdateNotification(req.params.id, {
+        type: 'cancelled',
+        event: {
+          id: req.params.id,
+          title: result.title || 'Event',
+          startDateTime: result.cancelledAt?.toISOString?.() || new Date().toISOString(),
+        },
       });
 
       res.status(200).json({

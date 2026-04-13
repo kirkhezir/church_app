@@ -10,6 +10,7 @@ import { Priority } from '../../domain/valueObjects/Priority';
 import { announcementRepository } from '../../infrastructure/database/repositories/announcementRepository';
 import prisma from '../../infrastructure/database/prismaClient';
 import logger from '../../infrastructure/logging/logger';
+import { websocketServer } from '../../infrastructure/websocket/websocketServer';
 
 /**
  * Announcement Controller
@@ -59,6 +60,17 @@ export class AnnouncementController {
         priority as Priority,
         isDraft
       );
+
+      // Emit real-time + push notification for published announcements
+      if (!isDraft) {
+        websocketServer.sendAnnouncementNotification({
+          id: announcement.id,
+          title: announcement.title,
+          content: announcement.content,
+          priority: announcement.priority,
+          createdAt: announcement.createdAt.toISOString(),
+        });
+      }
 
       res.status(201).json(announcement);
     } catch (error: any) {

@@ -231,7 +231,14 @@ self.addEventListener('push', (event) => {
       options.vibrate = [200, 100, 200];
     }
 
-    event.waitUntil(self.registration.showNotification(data.title || 'Church App', options));
+    event.waitUntil(
+      self.registration.showNotification(data.title || 'Church App', options).then(() => {
+        // Update app badge count (PWA)
+        if ('setAppBadge' in navigator) {
+          return navigator.setAppBadge().catch(() => {});
+        }
+      })
+    );
   } catch (error) {
     console.error('Error showing push notification:', error);
   }
@@ -243,6 +250,11 @@ self.addEventListener('notificationclick', (event) => {
 
   event.notification.close();
 
+  // Clear badge when user interacts with notification
+  if ('clearAppBadge' in navigator) {
+    navigator.clearAppBadge().catch(() => {});
+  }
+
   // Get the notification data
   const data = event.notification.data || {};
   let url = '/';
@@ -250,16 +262,21 @@ self.addEventListener('notificationclick', (event) => {
   // Determine URL based on notification type
   switch (data.type) {
     case 'event':
-      url = data.eventId ? `/events/${data.eventId}` : '/events';
+      url = data.eventId ? `/app/events/${data.eventId}` : '/app/events';
       break;
     case 'announcement':
-      url = data.announcementId ? `/announcements/${data.announcementId}` : '/announcements';
+      url = data.announcementId
+        ? `/app/announcements/${data.announcementId}`
+        : '/app/announcements';
       break;
     case 'message':
-      url = data.messageId ? `/messages/${data.messageId}` : '/messages';
+      url = data.messageId ? `/app/messages/${data.messageId}` : '/app/messages';
+      break;
+    case 'prayer':
+      url = '/app/prayer';
       break;
     default:
-      url = data.url || '/';
+      url = data.url || '/app/dashboard';
   }
 
   // Handle action buttons
@@ -272,7 +289,7 @@ self.addEventListener('notificationclick', (event) => {
         // Just close the notification (already done)
         return;
       case 'rsvp':
-        url = data.eventId ? `/events/${data.eventId}/rsvp` : url;
+        url = data.eventId ? `/app/events/${data.eventId}` : url;
         break;
     }
   }

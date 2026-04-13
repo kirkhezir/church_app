@@ -14,12 +14,13 @@
  * Design System: design-system/pages/dashboard.md
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router';
 import { Calendar, Bell, CheckCircle, Sparkles, MessageSquare, HeartHandshake } from 'lucide-react';
 import { SidebarLayout } from '@/components/layout';
 import { reportError } from '@/lib/errorReporting';
 import { useNotificationCounts } from '@/hooks/useNotificationCounts';
+import { websocketClient } from '@/services/websocket/websocketClient';
 
 import { UpcomingEventsWidget } from '@/components/features/dashboard/UpcomingEventsWidget';
 import { RecentAnnouncementsWidget } from '@/components/features/dashboard/RecentAnnouncementsWidget';
@@ -141,27 +142,43 @@ export default function MemberDashboard() {
     announcements: liveAnnouncements,
     messages: liveMessages,
   } = useNotificationCounts();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const fetchDashboard = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await apiClient.get('/members/dashboard');
+      setDashboard(response as unknown as DashboardData);
+      // Ensure bell counts are in sync with freshly loaded dashboard data
+      refreshNotifications();
+    } catch (err) {
+      reportError('Failed to fetch dashboard', err);
+      setError('Failed to load dashboard data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [refreshNotifications]);
 
   useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await apiClient.get('/members/dashboard');
-        setDashboard(response as unknown as DashboardData);
-        // Ensure bell counts are in sync with freshly loaded dashboard data
-        refreshNotifications();
-      } catch (err) {
-        reportError('Failed to fetch dashboard', err);
-        setError('Failed to load dashboard data. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDashboard();
-  }, [refreshNotifications]);
+  }, [fetchDashboard, refreshTrigger]);
+
+  // Real-time updates: refetch dashboard when relevant events occur
+  useEffect(() => {
+    const bump = () => setRefreshTrigger((p) => p + 1);
+    websocketClient.onNewMessage(bump);
+    websocketClient.onNewAnnouncement(bump);
+    websocketClient.onEventUpdate(bump);
+    websocketClient.onPrayerApproved(bump);
+    return () => {
+      websocketClient.off('message:new', bump);
+      websocketClient.off('announcement:new', bump);
+      websocketClient.off('event:update', bump);
+      websocketClient.off('prayer:approved', bump);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -233,7 +250,7 @@ export default function MemberDashboard() {
   return (
     <SidebarLayout breadcrumbs={[{ label: 'Home' }]}>
       {/* Welcome Header — warm gradient with decorative pattern */}
-      <Card className="animate-fade-in-up relative overflow-hidden border-0 shadow-xl">
+      <Card className="relative animate-fade-in-up overflow-hidden border-0 shadow-xl">
         {/* Animated gradient background */}
         <div className="motion-safe:animate-gradient absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 dark:from-blue-900 dark:via-blue-800 dark:to-indigo-900" />
         {/* Decorative dot pattern overlay */}
@@ -310,7 +327,7 @@ export default function MemberDashboard() {
       {/* Stats Overview — 5 colored accent cards, each linking to the relevant page */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 [&>*:last-child]:col-span-2 sm:[&>*:last-child]:col-span-1">
         <Link to="/app/events" className="group block">
-          <Card className="animate-fade-in-up stagger-1 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(222,70%,55%)] hover:shadow-md">
+          <Card className="stagger-1 card-hover-lift accent-top h-full animate-fade-in-up cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(222,70%,55%)] hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Upcoming Events
@@ -332,7 +349,7 @@ export default function MemberDashboard() {
         </Link>
 
         <Link to="/app/announcements" className="group block">
-          <Card className="animate-fade-in-up stagger-2 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(38,92%,50%)] hover:shadow-md">
+          <Card className="stagger-2 card-hover-lift accent-top h-full animate-fade-in-up cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(38,92%,50%)] hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Announcements
@@ -356,7 +373,7 @@ export default function MemberDashboard() {
         </Link>
 
         <Link to="/app/events" className="group block">
-          <Card className="animate-fade-in-up stagger-3 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(142,71%,45%)] hover:shadow-md">
+          <Card className="stagger-3 card-hover-lift accent-top h-full animate-fade-in-up cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(142,71%,45%)] hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">My RSVPs</CardTitle>
               <div
@@ -376,7 +393,7 @@ export default function MemberDashboard() {
         </Link>
 
         <Link to="/app/messages" className="group block">
-          <Card className="animate-fade-in-up stagger-4 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(270,70%,55%)] hover:shadow-md">
+          <Card className="stagger-4 card-hover-lift accent-top h-full animate-fade-in-up cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(270,70%,55%)] hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Messages</CardTitle>
               <div
@@ -396,7 +413,7 @@ export default function MemberDashboard() {
         </Link>
 
         <Link to="/app/prayer" className="group block">
-          <Card className="animate-fade-in-up stagger-5 card-hover-lift accent-top h-full cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(350,70%,55%)] hover:shadow-md">
+          <Card className="stagger-5 card-hover-lift accent-top h-full animate-fade-in-up cursor-pointer overflow-hidden transition-shadow [--accent-color:hsl(350,70%,55%)] hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 Prayer Requests
@@ -419,7 +436,7 @@ export default function MemberDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="animate-fade-in-up stagger-6">
+      <div className="stagger-6 animate-fade-in-up">
         <QuickActionsWidget role={dashboard.profile.role} />
       </div>
 
@@ -437,7 +454,7 @@ export default function MemberDashboard() {
         </div>
 
         {/* Content Widgets Row: Messages | Latest Content | Prayer Requests */}
-        <div className="animate-fade-in-up stagger-7 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="stagger-7 grid animate-fade-in-up grid-cols-1 gap-4 lg:grid-cols-3">
           <UnreadMessagesWidget
             messages={dashboard.recentMessages ?? []}
             unreadCount={dashboard.stats.unreadMessagesCount ?? 0}
@@ -464,7 +481,7 @@ export default function MemberDashboard() {
         </div>
 
         {/* Activity Feed + Birthdays & Bible Verse */}
-        <div className="animate-fade-in-up stagger-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="stagger-8 grid animate-fade-in-up grid-cols-1 gap-4 lg:grid-cols-2">
           <ActivityFeedWidget activities={dashboard.activityFeed ?? []} />
           <div className="space-y-4">
             <BirthdayCelebrationWidget members={dashboard.birthdayMembers ?? []} />
@@ -487,7 +504,7 @@ export default function MemberDashboard() {
         </div>
 
         {/* Events and Announcements */}
-        <div className="animate-fade-in-up stagger-9 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="stagger-9 grid animate-fade-in-up grid-cols-1 gap-4 lg:grid-cols-2">
           <UpcomingEventsWidget events={dashboard.upcomingEvents} />
           <RecentAnnouncementsWidget announcements={dashboard.recentAnnouncements} />
         </div>
@@ -495,7 +512,7 @@ export default function MemberDashboard() {
 
       {/* Admin Section (admin/staff only) */}
       {isAdmin && (
-        <div className="animate-fade-in-up stagger-10">
+        <div className="stagger-10 animate-fade-in-up">
           <AdminDashboardSection stats={dashboard.adminStats} />
         </div>
       )}
