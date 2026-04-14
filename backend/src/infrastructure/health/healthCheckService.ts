@@ -104,21 +104,17 @@ class HealthCheckService {
 
   /**
    * Get simple health status (for load balancers)
+   *
+   * Does NOT hit the database — this keeps Neon compute in scale-to-zero
+   * when there is no real application traffic. Render pings this every ~30s;
+   * a DB query here would prevent Neon from ever suspending.
+   * Use /health/detailed for a full check that includes the database.
    */
   async getSimpleHealth(): Promise<{ status: 'ok' | 'error'; timestamp: string }> {
-    try {
-      // Quick database ping
-      await prisma.$queryRaw`SELECT 1`;
-      return {
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-      };
-    } catch {
-      return {
-        status: 'error',
-        timestamp: new Date().toISOString(),
-      };
-    }
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   /**

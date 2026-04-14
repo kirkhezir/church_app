@@ -67,25 +67,57 @@ export class AnalyticsRepository implements IAnalyticsRepository {
 
   async getMemberGrowth(months: number): Promise<MemberGrowthEntry[]> {
     const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth() - (months - 1), 1);
+
+    // Two aggregate queries instead of 3×N loop queries
+    const [newByMonth, churnedByMonth, totalBeforeRange] = await Promise.all([
+      // New members grouped by month
+      prisma.$queryRaw<Array<{ month: Date; count: bigint }>>`
+        SELECT date_trunc('month', "createdAt") AS month, COUNT(*)::bigint AS count
+        FROM members
+        WHERE "createdAt" >= ${startDate}
+          AND "createdAt" < ${new Date(now.getFullYear(), now.getMonth() + 1, 1)}
+          AND "deletedAt" IS NULL
+        GROUP BY month ORDER BY month
+      `,
+      // Churned members grouped by month
+      prisma.$queryRaw<Array<{ month: Date; count: bigint }>>`
+        SELECT date_trunc('month', "deletedAt") AS month, COUNT(*)::bigint AS count
+        FROM members
+        WHERE "deletedAt" >= ${startDate}
+          AND "deletedAt" < ${new Date(now.getFullYear(), now.getMonth() + 1, 1)}
+        GROUP BY month ORDER BY month
+      `,
+      // Total members before the range (baseline)
+      prisma.members.count({
+        where: { createdAt: { lt: startDate }, deletedAt: null },
+      }),
+    ]);
+
+    // Build lookup maps from month string → count
+    const newMap = new Map<string, number>();
+    for (const row of newByMonth) {
+      const key = new Date(row.month).toISOString().slice(0, 7);
+      newMap.set(key, Number(row.count));
+    }
+    const churnMap = new Map<string, number>();
+    for (const row of churnedByMonth) {
+      const key = new Date(row.month).toISOString().slice(0, 7);
+      churnMap.set(key, Number(row.count));
+    }
+
+    // Walk through months, accumulating totals from the baseline
     const data: MemberGrowthEntry[] = [];
+    let runningTotal = totalBeforeRange;
 
     for (let i = months - 1; i >= 0; i--) {
       const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+      const key = monthStart.toISOString().slice(0, 7);
+      const newMembers = newMap.get(key) || 0;
+      const churnedMembers = churnMap.get(key) || 0;
 
-      const [newMembers, totalAtMonth, deletedThisMonth] = await Promise.all([
-        prisma.members.count({
-          where: { createdAt: { gte: monthStart, lt: monthEnd }, deletedAt: null },
-        }),
-        prisma.members.count({
-          where: { createdAt: { lt: monthEnd }, deletedAt: null },
-        }),
-        prisma.members.count({
-          where: { deletedAt: { gte: monthStart, lt: monthEnd } },
-        }),
-      ]);
-
-      const churnRate = totalAtMonth > 0 ? (deletedThisMonth / totalAtMonth) * 100 : 0;
+      runningTotal += newMembers;
+      const churnRate = runningTotal > 0 ? (churnedMembers / runningTotal) * 100 : 0;
       const monthName = monthStart.toLocaleDateString('en-US', {
         month: 'short',
         year: 'numeric',
@@ -94,8 +126,8 @@ export class AnalyticsRepository implements IAnalyticsRepository {
       data.push({
         month: monthName,
         newMembers,
-        totalMembers: totalAtMonth,
-        churnedMembers: deletedThisMonth,
+        totalMembers: runningTotal,
+        churnedMembers,
         churnRate: Math.round(churnRate * 10) / 10,
       });
     }
@@ -162,17 +194,31 @@ export class AnalyticsRepository implements IAnalyticsRepository {
   }
 
   async getDemographics(): Promise<DemographicsData> {
-    const [totalMembers, adminCount, staffCount, memberCount, mfaEnabled, membersWithDob] =
+    const [totalMembers, adminCount, staffCount, memberCount, mfaEnabled, ageBuckets] =
       await Promise.all([
         prisma.members.count({ where: { deletedAt: null } }),
         prisma.members.count({ where: { role: 'ADMIN', deletedAt: null } }),
         prisma.members.count({ where: { role: 'STAFF', deletedAt: null } }),
         prisma.members.count({ where: { role: 'MEMBER', deletedAt: null } }),
         prisma.members.count({ where: { mfaEnabled: true, deletedAt: null } }),
-        prisma.members.findMany({
-          where: { deletedAt: null, dateOfBirth: { not: null } },
-          select: { dateOfBirth: true },
-        }),
+        // Age bucketing done entirely in SQL — no row-level fetch
+        prisma.$queryRaw<Array<{ bucket: string; count: bigint }>>`
+          SELECT
+            CASE
+              WHEN age < 18 THEN '0-17'
+              WHEN age <= 30 THEN '18-30'
+              WHEN age <= 45 THEN '31-45'
+              WHEN age <= 60 THEN '46-60'
+              ELSE '61+'
+            END AS bucket,
+            COUNT(*)::bigint AS count
+          FROM (
+            SELECT EXTRACT(YEAR FROM age("dateOfBirth"))::int AS age
+            FROM members
+            WHERE "deletedAt" IS NULL AND "dateOfBirth" IS NOT NULL
+          ) sub
+          GROUP BY bucket
+        `,
       ]);
 
     const roleDistribution = [
@@ -187,21 +233,19 @@ export class AnalyticsRepository implements IAnalyticsRepository {
       { type: 'MFA Disabled', count: mfaDisabled, color: '#94a3b8' },
     ];
 
-    const now = new Date();
-    const ageGroups = { '0-17': 0, '18-30': 0, '31-45': 0, '46-60': 0, '61+': 0 };
-
-    membersWithDob.forEach((member: { dateOfBirth: Date | null }) => {
-      if (member.dateOfBirth) {
-        const age = Math.floor(
-          (now.getTime() - member.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-        );
-        if (age < 18) ageGroups['0-17']++;
-        else if (age <= 30) ageGroups['18-30']++;
-        else if (age <= 45) ageGroups['31-45']++;
-        else if (age <= 60) ageGroups['46-60']++;
-        else ageGroups['61+']++;
-      }
-    });
+    const ageGroups: Record<string, number> = {
+      '0-17': 0,
+      '18-30': 0,
+      '31-45': 0,
+      '46-60': 0,
+      '61+': 0,
+    };
+    let membersWithDobCount = 0;
+    for (const row of ageBuckets) {
+      const count = Number(row.count);
+      ageGroups[row.bucket] = count;
+      membersWithDobCount += count;
+    }
 
     const ageDistribution = [
       { label: 'Age 0-17', value: ageGroups['0-17'], color: '#3b82f6' },
@@ -216,7 +260,7 @@ export class AnalyticsRepository implements IAnalyticsRepository {
       securityStats,
       ageDistribution,
       totalMembers,
-      membersWithDobCount: membersWithDob.length,
+      membersWithDobCount,
     };
   }
 
@@ -233,7 +277,7 @@ export class AnalyticsRepository implements IAnalyticsRepository {
       eventRsvps,
       messagesSent,
       announcementViews,
-      activityLogs,
+      heatmapRows,
     ] = await Promise.all([
       prisma.members.count({
         where: { deletedAt: null, lastLoginAt: { gte: sevenDaysAgo } },
@@ -249,43 +293,35 @@ export class AnalyticsRepository implements IAnalyticsRepository {
       prisma.member_announcement_views.count({
         where: { viewedAt: { gte: startOfMonth } },
       }),
-      prisma.audit_logs.findMany({
-        where: { timestamp: { gte: thirtyDaysAgo } },
-        select: { timestamp: true },
-      }),
+      // Aggregate heatmap in DB instead of fetching all rows
+      prisma.$queryRaw<Array<{ dow: number; hour: number; count: bigint }>>`
+        SELECT EXTRACT(DOW FROM timestamp)::int AS dow,
+               EXTRACT(HOUR FROM timestamp)::int AS hour,
+               COUNT(*)::bigint AS count
+        FROM audit_logs
+        WHERE timestamp >= ${thirtyDaysAgo}
+        GROUP BY dow, hour
+      `,
     ]);
 
-    // Build activity heatmap
+    // Build activity heatmap from aggregated rows
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const activityMap = new Map<string, number>();
-
-    activityLogs.forEach((log: { timestamp: Date }) => {
-      const date = new Date(log.timestamp);
-      const day = dayNames[date.getDay()];
-      const hour = date.getHours();
-      const key = `${day}-${hour}`;
-      activityMap.set(key, (activityMap.get(key) || 0) + 1);
-    });
-
     const heatmapData: HeatMapEntry[] = [];
-    activityMap.forEach((count, key) => {
-      const [day, hour] = key.split('-');
-      heatmapData.push({ day, hour: parseInt(hour), count });
-    });
-
-    // Peak usage & most active day
+    const dayActivity = new Map<string, number>();
     let peakHour = 10;
     let peakCount = 0;
-    const dayActivity = new Map<string, number>();
 
-    activityMap.forEach((count, key) => {
-      const [day, hour] = key.split('-');
+    for (const row of heatmapRows) {
+      const day = dayNames[row.dow];
+      const count = Number(row.count);
+      heatmapData.push({ day, hour: row.hour, count });
+
       dayActivity.set(day, (dayActivity.get(day) || 0) + count);
       if (count > peakCount) {
         peakCount = count;
-        peakHour = parseInt(hour);
+        peakHour = row.hour;
       }
-    });
+    }
 
     const dayFullNames: Record<string, string> = {
       Sun: 'Sunday',
