@@ -169,17 +169,20 @@ export class GetMemberDashboard {
     // 5. Get recent announcements (last 5)
     const allRecentAnnouncements = await this.announcementRepository.findRecent(5);
 
-    // 6. Check view status for each announcement
-    const recentAnnouncements = await Promise.all(
-      allRecentAnnouncements.map(async (announcement: any) => ({
-        id: announcement.id,
-        title: announcement.title,
-        content: announcement.content,
-        priority: announcement.priority,
-        publishedAt: announcement.publishedAt,
-        isRead: await this.announcementRepository.hasViewed(announcement.id, memberId),
-      }))
+    // 6. Batch check view status (1 query instead of N)
+    const announcementIds = allRecentAnnouncements.map((a: any) => a.id);
+    const viewedIds = await this.announcementRepository.getViewedAnnouncementIds(
+      announcementIds,
+      memberId
     );
+    const recentAnnouncements = allRecentAnnouncements.map((announcement: any) => ({
+      id: announcement.id,
+      title: announcement.title,
+      content: announcement.content,
+      priority: announcement.priority,
+      publishedAt: announcement.publishedAt,
+      isRead: viewedIds.has(announcement.id),
+    }));
 
     // 7. Calculate base stats
     const unreadAnnouncements = recentAnnouncements.filter((a: any) => !a.isRead);

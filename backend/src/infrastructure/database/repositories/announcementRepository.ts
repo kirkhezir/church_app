@@ -302,6 +302,24 @@ export class AnnouncementRepository implements IAnnouncementRepository {
   }
 
   /**
+   * Batch check which announcements a member has viewed (single query)
+   */
+  async getViewedAnnouncementIds(
+    announcementIds: string[],
+    memberId: string
+  ): Promise<Set<string>> {
+    if (announcementIds.length === 0) return new Set();
+    const views = await prisma.member_announcement_views.findMany({
+      where: {
+        memberId,
+        announcementId: { in: announcementIds },
+      },
+      select: { announcementId: true },
+    });
+    return new Set(views.map((v: { announcementId: string }) => v.announcementId));
+  }
+
+  /**
    * Get view count for announcement
    */
   async getViewCount(announcementId: string): Promise<number> {

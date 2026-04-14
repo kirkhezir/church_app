@@ -34,7 +34,9 @@ services:
       - key: CORS_ORIGIN
         value: https://www.singburisdacenter.org,https://singburisdacenter.org,https://singburisdacenter.vercel.app,https://singburiadventistcenter.vercel.app
       - key: DATABASE_URL
-        sync: false # Set manually in Render dashboard
+        sync: false # Set to Neon POOLER connection string (e.g. ...pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require) — used by the running app
+      - key: DIRECT_DATABASE_URL
+        sync: false # Set to Neon DIRECT connection string (no -pooler in hostname) — used by prisma migrate deploy during build to bypass pooler advisory locks
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET

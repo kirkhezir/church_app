@@ -48,6 +48,11 @@ export interface IAnnouncementRepository {
   hasViewed(announcementId: string, memberId: string): Promise<boolean>;
 
   /**
+   * Batch check which announcements a member has viewed
+   */
+  getViewedAnnouncementIds(announcementIds: string[], memberId: string): Promise<Set<string>>;
+
+  /**
    * Count active announcements that a member has NOT yet viewed
    */
   countUnreadForMember(memberId: string): Promise<number>;
