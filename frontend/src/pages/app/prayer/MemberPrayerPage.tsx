@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react';
+import { useLocation } from 'react-router';
 import {
   HeartHandshake,
   Heart,
@@ -25,6 +26,8 @@ import {
   ChevronDown,
   ArrowUpDown,
   Pencil,
+  Share2,
+  Check,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -207,6 +210,7 @@ function PrayerCardText({ text }: { text: string }) {
 export function MemberPrayerPage() {
   const { user } = useAuth();
   const { refresh: refreshNotifications } = useNotificationCounts();
+  const location = useLocation();
   const memberName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Member';
   const memberInitials = getInitials(memberName);
 
@@ -226,9 +230,11 @@ export function MemberPrayerPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('week');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'most_prayed'>('recent');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [mobileTab, setMobileTab] = useState('wall');
 
   // Reset pagination when filter, time filter, or sort changes
   const prevFilterRef = useRef(activeFilter);
@@ -283,6 +289,17 @@ export function MemberPrayerPage() {
       websocketClient.off('prayer:approved', handler);
     };
   }, [loadPrayers]);
+
+  // Scroll to submit form if landing via shared link
+  useEffect(() => {
+    if (location.hash === '#submit-prayer') {
+      setMobileTab('submit');
+      setTimeout(() => {
+        const el = document.getElementById('submit-prayer');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [location.hash]);
 
   const sortedPrayers = useMemo(() => {
     const copy = [...publicPrayers];
@@ -354,6 +371,25 @@ export function MemberPrayerPage() {
       gooeyToast.error('Failed to submit prayer request');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleShareForm = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#submit-prayer`;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Submit a Prayer Request',
+          text: 'Share your prayer request with our church community.',
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }
+    } catch {
+      // User cancelled or clipboard failed
     }
   };
 
@@ -465,7 +501,7 @@ export function MemberPrayerPage() {
 
   // ─── Submit Form (shared between mobile tab and desktop column) ─────────────
   const submitForm = (
-    <Card className="border border-border/60 shadow-sm">
+    <Card id="submit-prayer" className="border border-border/60 shadow-sm">
       <CardContent className="p-6">
         {!isSubmitted ? (
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -600,6 +636,19 @@ export function MemberPrayerPage() {
                 <Send className="mr-2 h-4 w-4" />
               )}
               Submit Prayer Request
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-[44px] w-full gap-2"
+              onClick={handleShareForm}
+            >
+              {shareCopied ? (
+                <Check className="h-4 w-4 text-green-600" />
+              ) : (
+                <Share2 className="h-4 w-4" />
+              )}
+              {shareCopied ? 'Link Copied!' : 'Share This Form'}
             </Button>
           </form>
         ) : isEditing && lastSubmittedId ? (
@@ -998,7 +1047,7 @@ export function MemberPrayerPage() {
 
         {/* ── Mobile: tabs ─────────────────────────────────────────────────── */}
         <div className="block xl:hidden">
-          <Tabs defaultValue="wall">
+          <Tabs value={mobileTab} onValueChange={setMobileTab}>
             <TabsList className="mb-5 grid w-full grid-cols-2">
               <TabsTrigger value="wall" className="gap-1.5">
                 <Users className="h-4 w-4" />

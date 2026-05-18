@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import {
   Heart,
   Send,
@@ -21,6 +21,8 @@ import {
   ChevronDown,
   ArrowUpDown,
   Pencil,
+  Share2,
+  Check,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -175,6 +177,7 @@ function PrayerCardText({ text, language }: { text: string; language: 'en' | 'th
 export function PrayerPage() {
   const { language } = useI18n();
   useDocumentTitle('Prayer Requests', 'คำขออธิษฐาน', language);
+  const location = useLocation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -195,9 +198,11 @@ export function PrayerPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [sortBy, setSortBy] = useState<'recent' | 'most_prayed'>('recent');
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('week');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [visibleCount, setVisibleCount] = useState(6);
   const [justPrayed, setJustPrayed] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState('wall');
 
   const PAGE_SIZE = 6;
 
@@ -251,6 +256,17 @@ export function PrayerPage() {
     load();
   }, []);
 
+  // Scroll to submit form if landing via shared link
+  useEffect(() => {
+    if (location.hash === '#submit-prayer') {
+      setActiveTab('submit');
+      setTimeout(() => {
+        const el = document.getElementById('submit-prayer');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [location.hash]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -274,6 +290,28 @@ export function PrayerPage() {
       gooeyToast.error('Failed to submit prayer request');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleShareForm = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#submit-prayer`;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: language === 'th' ? 'ส่งคำอธิษฐาน' : 'Submit a Prayer Request',
+          text:
+            language === 'th'
+              ? 'แบ่งปันคำอธิษฐานของคุณกับชุมชนคริสตจักร'
+              : 'Share your prayer request with our church community.',
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }
+    } catch {
+      // User cancelled or clipboard failed
     }
   };
 
@@ -350,7 +388,7 @@ export function PrayerPage() {
   // ─── Submit Form (shared between mobile tab and desktop column) ─────────────
   const submitForm = (
     <>
-      <Card>
+      <Card id="submit-prayer">
         <CardContent className="p-6">
           {!isSubmitted ? (
             <>
@@ -512,6 +550,25 @@ export function PrayerPage() {
                     <Send className="mr-2 h-4 w-4" />
                   )}
                   {language === 'th' ? 'ส่งคำอธิษฐาน' : 'Submit Prayer Request'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full gap-2"
+                  onClick={handleShareForm}
+                >
+                  {shareCopied ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Share2 className="h-4 w-4 text-purple-600" />
+                  )}
+                  {shareCopied
+                    ? language === 'th'
+                      ? 'คัดลอกลิงก์แล้ว!'
+                      : 'Link Copied!'
+                    : language === 'th'
+                      ? 'แชร์ฟอร์มนี้'
+                      : 'Share This Form'}
                 </Button>
               </form>
             </>
@@ -866,7 +923,7 @@ export function PrayerPage() {
       </section>
 
       <div ref={revealRef} className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-        <Tabs defaultValue="wall">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6 grid w-full grid-cols-2">
             <TabsTrigger value="wall" className="gap-1.5">
               <Users className="h-4 w-4" />
