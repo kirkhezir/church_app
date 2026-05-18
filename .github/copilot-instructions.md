@@ -101,6 +101,8 @@ These files are automatically included in Copilot context based on the file you'
 | `**` (all files)    | `.github/instructions/pre-push.instructions.md`               | Pre-push checklist: tsc, build, npm audit, CI/CD verification     |
 
 > Files use `applyTo` frontmatter. VS Code Copilot injects them automatically — no manual addition required.
+>
+> **Migration failures:** If a migration fails, revert to the previous schema using `prisma migrate resolve --rolled-back <migration-name>` and investigate the issue before retrying. Full rollback and expand-and-contract rules are in `.github/instructions/neon-prisma-migrations.instructions.md`.
 
 ## 🚀 Development Workflow
 
@@ -188,7 +190,7 @@ npx prisma migrate deploy    # Apply pending migrations (production — auto-run
 
 ## 📝 Code Conventions
 
-- Use `snake_case` for Prisma model names and generated types (e.g. `Prisma.membersCreateInput`, `Prisma.eventsCreateInput`).
+- Use `snake_case` for Prisma model names and input types (e.g. `Prisma.membersCreateInput`, `Prisma.eventsCreateInput`).
 - Prisma `include`, `select`, and `where` fields accept objects or `undefined`/`null` — **never `false`**. Use `condition ? { ... } : undefined`.
 - Test factories must supply explicit `id` (`randomUUID()`) and `updatedAt` (`new Date()`); schema fields lack `@default()` and `@updatedAt` directives.
 - Admin pages use breadcrumbs: **Administration > Category (Content | Monitoring) > Page** — mirrors the sidebar collapsible groups.
@@ -198,14 +200,14 @@ npx prisma migrate deploy    # Apply pending migrations (production — auto-run
 
 **CRITICAL: Every code change — feature, fix, enhancement, or improvement — MUST pass a clean frontend build before being committed or pushed.**
 
-### Required Before Every Push
+### Step 1 — Run the Frontend Build
 
 ```bash
 cd frontend
 npm run build   # Must exit with code 0, zero TypeScript errors
 ```
 
-### Common Build-Breaking Issues to Avoid
+### Step 2 — Fix Common Build-Breaking Issues
 
 1. **Unused imports** — TypeScript `noUnusedLocals: true` is enforced. Never leave `import { Foo }` if `Foo` is not used in the file. Remove it immediately.
 2. **Unused variables/parameters** — Same rule: `noUnusedParameters: true`. Prefix intentionally-unused params with `_` (e.g. `_event`).
@@ -213,7 +215,7 @@ npm run build   # Must exit with code 0, zero TypeScript errors
 4. **Missing exports** — If you add a new file/component, make sure it's exported correctly.
 5. **Import path aliases** — Use `@/` alias for `src/` imports in frontend (e.g. `@/components/ui/button`).
 
-### Workflow Rule
+### Step 3 — Enforce the Workflow Rule
 
 - Before `git push`, always run `cd frontend && npm run build` locally.
 - If `tsc` reports `error TS6133` (declared but never read) → remove the unused import/variable.
