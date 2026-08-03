@@ -1,37 +1,39 @@
 /**
- * AdminPrayerPage
+ * AdminEnglishTutorialEnrollmentsPage
  *
- * Admin page for moderating prayer requests
- * - List all prayer requests (all statuses)
- * - Approve/archive requests
- * - View requester details
+ * Admin page for managing English Tutorial Ministry enrollments
+ * - List all enrollments
+ * - Mark enrollments as reviewed once contacted
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   CheckCircle,
-  Archive,
   Loader2,
   SearchIcon,
-  Heart,
+  Languages,
   Mail,
+  Phone,
   Clock,
-  Shield,
+  Cake,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { SidebarLayout } from '@/components/layout';
-import { prayerService, type PrayerRequest } from '@/services/endpoints/prayerService';
+import {
+  englishTutorialService,
+  type EnglishTutorialEnrollment,
+} from '@/services/endpoints/englishTutorialService';
 import { gooeyToast } from 'goey-toast';
 import { websocketClient } from '@/services/websocket/websocketClient';
 import { useNotifications } from '@/contexts/NotificationContext';
 
-type StatusFilter = 'all' | 'PENDING' | 'APPROVED' | 'ARCHIVED';
+type StatusFilter = 'all' | 'PENDING' | 'REVIEWED';
 
-export function AdminPrayerPage() {
-  const [requests, setRequests] = useState<PrayerRequest[]>([]);
+export function AdminEnglishTutorialEnrollmentsPage() {
+  const [enrollments, setEnrollments] = useState<EnglishTutorialEnrollment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -39,78 +41,79 @@ export function AdminPrayerPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const { refresh: refreshNotifications } = useNotifications();
 
-  const fetchRequests = useCallback(async () => {
+  const fetchEnrollments = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await prayerService.getAllPrayerRequests();
-      setRequests(data);
+      const data = await englishTutorialService.getAllEnrollments();
+      setEnrollments(data);
     } catch {
-      setError('Failed to load prayer requests');
+      setError('Failed to load enrollments');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchRequests();
-  }, [fetchRequests]);
+    fetchEnrollments();
+  }, [fetchEnrollments]);
 
-  // Listen for new pending prayer requests in real-time
+  // Listen for new enrollments in real-time
   useEffect(() => {
     const handlePending = () => {
-      fetchRequests();
+      fetchEnrollments();
     };
-    websocketClient.onPrayerPending(handlePending);
+    websocketClient.onEnrollmentPending(handlePending);
     return () => {
-      websocketClient.off('prayer:pending', handlePending);
+      websocketClient.off('enrollment:pending', handlePending);
     };
-  }, [fetchRequests]);
+  }, [fetchEnrollments]);
 
-  const filteredRequests = useMemo(
+  const filteredEnrollments = useMemo(
     () =>
-      requests.filter((r) => {
-        const matchesStatus = statusFilter === 'all' || r.status === statusFilter;
+      enrollments.filter((e) => {
+        const matchesStatus =
+          statusFilter === 'all' ||
+          (statusFilter === 'PENDING' && !e.reviewedAt) ||
+          (statusFilter === 'REVIEWED' && !!e.reviewedAt);
         const matchesSearch =
           searchQuery === '' ||
-          r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.request.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.category.toLowerCase().includes(searchQuery.toLowerCase());
+          e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          e.nickname.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
       }),
-    [requests, statusFilter, searchQuery]
+    [enrollments, statusFilter, searchQuery]
   );
 
   const counts = useMemo(() => {
-    const c = { all: requests.length, PENDING: 0, APPROVED: 0, ARCHIVED: 0 };
-    for (const r of requests) {
-      c[r.status]++;
+    const c = { all: enrollments.length, PENDING: 0, REVIEWED: 0 };
+    for (const e of enrollments) {
+      if (e.reviewedAt) c.REVIEWED++;
+      else c.PENDING++;
     }
     return c;
-  }, [requests]);
+  }, [enrollments]);
 
-  const handleModerate = async (id: string, status: 'APPROVED' | 'ARCHIVED') => {
+  const handleMarkReviewed = async (id: string) => {
     setActionLoading(id);
     try {
-      await prayerService.moderatePrayerRequest(id, status);
-      gooeyToast.success(`Prayer request ${status.toLowerCase()}`);
-      await fetchRequests();
+      await englishTutorialService.markReviewed(id);
+      gooeyToast.success('Enrollment marked as reviewed');
+      await fetchEnrollments();
       refreshNotifications();
     } catch {
-      setError('Failed to moderate prayer request');
+      setError('Failed to update enrollment');
     } finally {
       setActionLoading(null);
     }
   };
 
-  const statusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      APPROVED: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      ARCHIVED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
-    };
+  const statusBadge = (reviewedAt?: string) => {
+    const styles = reviewedAt
+      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
     return (
-      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles[status] ?? ''}`}>
-        {status}
+      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles}`}>
+        {reviewedAt ? 'Reviewed' : 'Pending'}
       </span>
     );
   };
@@ -120,14 +123,14 @@ export function AdminPrayerPage() {
       breadcrumbs={[
         { label: 'Administration', href: '/app/admin/members' },
         { label: 'Content' },
-        { label: 'Prayer' },
+        { label: 'English Tutorial' },
       ]}
     >
       <div className="flex flex-1 flex-col gap-6">
         {/* Header */}
         <header>
-          <h1 className="text-2xl font-bold">Moderate Prayer Requests</h1>
-          <p className="text-muted-foreground">{requests.length} total requests</p>
+          <h1 className="text-2xl font-bold">English Tutorial Enrollments</h1>
+          <p className="text-muted-foreground">{enrollments.length} total enrollments</p>
         </header>
 
         {error && (
@@ -135,13 +138,14 @@ export function AdminPrayerPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
+
         {/* Filters */}
         <nav
-          aria-label="Filter prayer requests"
+          aria-label="Filter enrollments"
           className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <div className="flex flex-wrap gap-2">
-            {(['all', 'PENDING', 'APPROVED', 'ARCHIVED'] as StatusFilter[]).map((status) => (
+            {(['all', 'PENDING', 'REVIEWED'] as StatusFilter[]).map((status) => (
               <Button
                 key={status}
                 variant={statusFilter === status ? 'default' : 'outline'}
@@ -157,7 +161,7 @@ export function AdminPrayerPage() {
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search requests..."
+              placeholder="Search by name or nickname..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -165,46 +169,56 @@ export function AdminPrayerPage() {
           </div>
         </nav>
 
-        {/* Requests List */}
+        {/* Enrollments List */}
         {loading ? (
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
           <div className="flex-1 space-y-4">
-            {filteredRequests.map((prayer) => (
-              <Card key={prayer.id}>
+            {filteredEnrollments.map((enrollment) => (
+              <Card key={enrollment.id}>
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        {statusBadge(prayer.status)}
-                        <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                          {prayer.category.charAt(0).toUpperCase() + prayer.category.slice(1)}
+                        {statusBadge(enrollment.reviewedAt)}
+                        <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                          {enrollment.gender === 'MALE' ? 'Male' : 'Female'}
                         </span>
-                        {prayer.isPublic && (
-                          <span className="text-xs text-muted-foreground">(Public)</span>
-                        )}
-                        {prayer.isAnonymous && (
-                          <span className="text-xs text-muted-foreground">(Anonymous)</span>
-                        )}
+                        <span className="text-xs text-muted-foreground">Age {enrollment.age}</span>
                       </div>
-                      <p className="mb-2 text-foreground">{prayer.request}</p>
+                      <p className="mb-2 font-medium text-foreground">
+                        {enrollment.name}{' '}
+                        <span className="font-normal text-muted-foreground">
+                          &ldquo;{enrollment.nickname}&rdquo;
+                        </span>
+                      </p>
                       <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <Shield className="h-3 w-3" /> {prayer.name}
+                          <Cake className="h-3 w-3" />{' '}
+                          {new Date(enrollment.birthDate).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
                         </span>
-                        {prayer.email && (
+                        {enrollment.phone && (
                           <span className="flex items-center gap-1">
-                            <Mail className="h-3 w-3" /> {prayer.email}
+                            <Phone className="h-3 w-3" /> {enrollment.phone}
+                          </span>
+                        )}
+                        {enrollment.email && (
+                          <span className="flex items-center gap-1">
+                            <Mail className="h-3 w-3" /> {enrollment.email}
                           </span>
                         )}
                         <span
                           className="flex items-center gap-1"
-                          title={new Date(prayer.createdAt).toISOString()}
+                          title={new Date(enrollment.enrolledAt).toISOString()}
                         >
                           <Clock className="h-3 w-3" />{' '}
-                          {new Date(prayer.createdAt).toLocaleString(undefined, {
+                          {new Date(enrollment.enrolledAt).toLocaleString(undefined, {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric',
@@ -212,41 +226,23 @@ export function AdminPrayerPage() {
                             minute: '2-digit',
                           })}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Heart className="h-3 w-3" /> {prayer.prayerCount} prayers
-                        </span>
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 flex-col gap-2 sm:flex-row sm:gap-1">
-                      {prayer.status !== 'APPROVED' && (
+                      {!enrollment.reviewedAt && (
                         <Button
                           size="sm"
                           variant="outline"
                           className="text-green-600"
-                          disabled={actionLoading === prayer.id}
-                          onClick={() => handleModerate(prayer.id, 'APPROVED')}
+                          disabled={actionLoading === enrollment.id}
+                          onClick={() => handleMarkReviewed(enrollment.id)}
                         >
-                          {actionLoading === prayer.id ? (
+                          {actionLoading === enrollment.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
                             <CheckCircle className="mr-1 h-4 w-4" />
                           )}
-                          Approve
-                        </Button>
-                      )}
-                      {prayer.status !== 'ARCHIVED' && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          disabled={actionLoading === prayer.id}
-                          onClick={() => handleModerate(prayer.id, 'ARCHIVED')}
-                        >
-                          {actionLoading === prayer.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Archive className="mr-1 h-4 w-4" />
-                          )}
-                          Archive
+                          Mark Reviewed
                         </Button>
                       )}
                     </div>
@@ -254,12 +250,12 @@ export function AdminPrayerPage() {
                 </CardContent>
               </Card>
             ))}
-            {filteredRequests.length === 0 && (
+            {filteredEnrollments.length === 0 && (
               <div className="py-12 text-center text-muted-foreground">
-                <Heart className="mx-auto mb-2 h-8 w-8 opacity-30" />
-                <p>No prayer requests found</p>
+                <Languages className="mx-auto mb-2 h-8 w-8 opacity-30" />
+                <p>No enrollments found</p>
                 <p className="mt-1 text-xs opacity-70">
-                  Prayer requests from members will appear here.
+                  Enrollments submitted from the English Tutorial Ministry page will appear here.
                 </p>
               </div>
             )}
@@ -270,4 +266,4 @@ export function AdminPrayerPage() {
   );
 }
 
-export default AdminPrayerPage;
+export default AdminEnglishTutorialEnrollmentsPage;

@@ -300,6 +300,30 @@ export class WebSocketServer {
   }
 
   /**
+   * Notify admin/staff of a new English Tutorial Ministry enrollment
+   */
+  sendEnglishTutorialEnrollmentPendingNotification(enrollment: {
+    id: string;
+    name: string;
+    age: number;
+  }): void {
+    this.io?.to('role:staff-admin').emit('enrollment:pending', enrollment);
+
+    // Fire push notification to admin/staff (fire-and-forget)
+    pushNotificationService
+      .sendToAdminStaff({
+        title: '📚 New English Tutorial Enrollment',
+        body: `${enrollment.name} (age ${enrollment.age}) just enrolled`,
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/badge-72x72.png',
+        tag: `enrollment-pending-${enrollment.id}`,
+        data: { type: 'enrollment', enrollmentId: enrollment.id },
+        requireInteraction: true,
+      })
+      .catch((err) => logger.error('Push: enrollment pending notification failed', { err }));
+  }
+
+  /**
    * Check if user is connected
    */
   isUserConnected(userId: string): boolean {

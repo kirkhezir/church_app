@@ -18,6 +18,7 @@ import { PublicLayout } from '@/layouts';
 import { useI18n } from '@/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { ministriesData } from '@/data/ministries';
+import { EnglishTutorialEnrollmentForm } from '@/components/features/EnglishTutorialEnrollmentForm';
 
 export function MinistryDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -138,7 +139,7 @@ export function MinistryDetailPage() {
             )}
 
             {/* How to Join */}
-            <Card>
+            <Card className={slug === 'english-tutorial' ? 'mb-8' : undefined}>
               <CardContent className="p-6">
                 <h2 className="mb-4 text-balance text-xl font-bold text-foreground">
                   {language === 'th' ? 'วิธีเข้าร่วม' : 'How to Get Involved'}
@@ -155,15 +156,29 @@ export function MinistryDetailPage() {
                     )
                   )}
                 </ul>
-                <div className="mt-6">
-                  <Link to="/#contact">
-                    <Button className={ministry.color + ' text-white'}>
-                      {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
-                    </Button>
-                  </Link>
-                </div>
+                {slug !== 'english-tutorial' && (
+                  <div className="mt-6">
+                    <Link to="/#contact">
+                      <Button className={ministry.color + ' text-white'}>
+                        {language === 'th' ? 'ติดต่อเรา' : 'Contact Us'}
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </CardContent>
             </Card>
+
+            {/* Enrollment Form */}
+            {slug === 'english-tutorial' && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="mb-4 text-balance text-xl font-bold text-foreground">
+                    {language === 'th' ? 'แบบฟอร์มลงทะเบียน' : 'Enrollment Form'}
+                  </h2>
+                  <EnglishTutorialEnrollmentForm />
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}

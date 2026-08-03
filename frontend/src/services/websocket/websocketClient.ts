@@ -7,6 +7,7 @@ import {
   EventUpdateEvent,
   PrayerApprovedEvent,
   PrayerPendingEvent,
+  EnrollmentPendingEvent,
 } from '../../types/api';
 
 /**
@@ -258,6 +259,24 @@ class WebSocketClient {
   }
 
   // ============================================================================
+  // ENGLISH TUTORIAL ENROLLMENT EVENTS
+  // ============================================================================
+
+  /**
+   * Listen for new pending English Tutorial enrollment (admin/staff only)
+   */
+  onEnrollmentPending(callback: (data: EnrollmentPendingEvent) => void): void {
+    this.on<EnrollmentPendingEvent>('enrollment:pending', callback);
+  }
+
+  /**
+   * Remove all enrollment event listeners
+   */
+  offEnrollmentEvents(): void {
+    this.off('enrollment:pending');
+  }
+
+  // ============================================================================
   // CLEANUP
   // ============================================================================
 
@@ -269,6 +288,7 @@ class WebSocketClient {
     this.offAnnouncementEvents();
     this.offEventUpdateEvents();
     this.offPrayerEvents();
+    this.offEnrollmentEvents();
   }
 }
 

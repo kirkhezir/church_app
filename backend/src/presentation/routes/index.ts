@@ -15,6 +15,7 @@ import sermonRoutes from './sermonRoutes';
 import blogRoutes from './blogRoutes';
 import galleryRoutes from './galleryRoutes';
 import prayerRoutes from './prayerRoutes';
+import englishTutorialEnrollmentRoutes from './englishTutorialEnrollmentRoutes';
 
 /**
  * Main API Router
@@ -44,6 +45,7 @@ router.get('/', (_req, res) => {
       blog: '/api/v1/blog',
       gallery: '/api/v1/gallery',
       prayer: '/api/v1/prayer',
+      englishTutorialEnrollments: '/api/v1/english-tutorial-enrollments',
     },
   });
 });
@@ -64,6 +66,7 @@ router.use('/sermons', sermonRoutes);
 router.use('/blog', blogRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/prayer', prayerRoutes);
+router.use('/english-tutorial-enrollments', englishTutorialEnrollmentRoutes);
 
 logger.info('API routes initialized');
 

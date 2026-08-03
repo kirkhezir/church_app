@@ -125,6 +125,11 @@ const AdminPrayerPage = lazy(() =>
     default: m.AdminPrayerPage,
   }))
 );
+const AdminEnglishTutorialEnrollmentsPage = lazy(() =>
+  import('./pages/app/admin/AdminEnglishTutorialEnrollmentsPage').then((m) => ({
+    default: m.AdminEnglishTutorialEnrollmentsPage,
+  }))
+);
 
 // Settings pages (unified with sub-navigation)
 const SettingsLayout = lazy(() => import('./pages/app/settings/SettingsLayout'));
@@ -604,6 +609,14 @@ const App: React.FC = () => {
               element={
                 <AdminRoute>
                   <AdminPrayerPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/app/admin/english-tutorial-enrollments"
+              element={
+                <AdminRoute>
+                  <AdminEnglishTutorialEnrollmentsPage />
                 </AdminRoute>
               }
             />

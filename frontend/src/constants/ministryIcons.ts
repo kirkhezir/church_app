@@ -18,6 +18,7 @@ import {
   GraduationCap,
   Church,
   Mic2,
+  Languages,
 } from 'lucide-react';
 import type React from 'react';
 
@@ -34,4 +35,5 @@ export const ministryIconMap: Record<string, React.ElementType> = {
   education: GraduationCap,
   deacons: Church,
   media: Mic2,
+  'english-tutorial': Languages,
 };
