@@ -34,6 +34,7 @@ export type NotificationType =
   | 'announcement_urgent'
   | 'prayer_approved'
   | 'prayer_pending'
+  | 'enrollment_pending'
   | 'event_update';
 
 export interface NotificationItem {
@@ -50,6 +51,7 @@ export interface NotificationCounts {
   announcements: number;
   messages: number;
   prayerRequests: number;
+  enrollments: number;
   total: number;
 }
 
@@ -72,6 +74,7 @@ const EMPTY_COUNTS: NotificationCounts = {
   announcements: 0,
   messages: 0,
   prayerRequests: 0,
+  enrollments: 0,
   total: 0,
 };
 
@@ -92,6 +95,7 @@ interface NotificationCountsResponse {
   unreadAnnouncements: number;
   unreadMessages: number;
   pendingPrayer: number;
+  pendingEnrollments: number;
 }
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
@@ -131,11 +135,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       const announcements = data.unreadAnnouncements ?? 0;
       const messages = data.unreadMessages ?? 0;
       const prayerRequests = data.pendingPrayer ?? 0;
+      const enrollments = data.pendingEnrollments ?? 0;
       setCounts({
         announcements,
         messages,
         prayerRequests,
-        total: announcements + messages + prayerRequests,
+        enrollments,
+        total: announcements + messages + prayerRequests + enrollments,
       });
     } catch {
       // silent — never break the layout
@@ -315,11 +321,37 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       });
     });
 
+    // ── enrollment:pending (admin/staff only — WS server filters by role room) ──
+    websocketClient.onEnrollmentPending((enrollment) => {
+      addItem({
+        type: 'enrollment_pending',
+        title: 'New English Tutorial enrollment',
+        body: `${enrollment.name} (age ${enrollment.age})`,
+        href: '/app/admin/english-tutorial-enrollments',
+        idSuffix: `enrollment-pending-${enrollment.id}`,
+      });
+      setCounts((prev) => ({
+        ...prev,
+        enrollments: prev.enrollments + 1,
+        total: prev.total + 1,
+      }));
+      gooeyToast.info('New English Tutorial Enrollment', {
+        description: `${enrollment.name} just enrolled — awaiting review`,
+        action: {
+          label: 'Review',
+          onClick: () => {
+            window.location.href = '/app/admin/english-tutorial-enrollments';
+          },
+        },
+      });
+    });
+
     return () => {
       websocketClient.offMessageEvents();
       websocketClient.offAnnouncementEvents();
       websocketClient.offEventUpdateEvents();
       websocketClient.offPrayerEvents();
+      websocketClient.offEnrollmentEvents();
     };
   }, [isAuthenticated, addItem]);
 

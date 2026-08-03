@@ -18,6 +18,7 @@ import {
   PenSquare,
   Monitor,
   ClipboardList,
+  Languages,
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
@@ -66,6 +67,11 @@ const ADMIN_NAV: NavCollapsibleItem[] = [
       { title: 'Blog', url: '/app/admin/blog', icon: Newspaper },
       { title: 'Gallery', url: '/app/admin/gallery', icon: Image },
       { title: 'Prayer', url: '/app/admin/prayer', icon: HeartHandshake },
+      {
+        title: 'English Tutorial',
+        url: '/app/admin/english-tutorial-enrollments',
+        icon: Languages,
+      },
     ],
   },
   {

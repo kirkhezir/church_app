@@ -325,7 +325,7 @@ model prayer_supporters {
 }
 
 model english_tutorial_enrollments {
-  id         String   @id
+  id         String    @id
   name       String
   nickname   String
   gender     Gender
@@ -333,8 +333,10 @@ model english_tutorial_enrollments {
   birthDate  DateTime
   phone      String?
   email      String?
-  enrolledAt DateTime @default(now())
+  enrolledAt DateTime  @default(now())
+  reviewedAt DateTime?
   updatedAt  DateTime
 
   @@index([enrolledAt(sort: Desc)])
+  @@index([reviewedAt])
 }

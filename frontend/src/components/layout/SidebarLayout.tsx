@@ -26,6 +26,7 @@ import {
   Calendar,
   AlertTriangle,
   CheckCheck,
+  Languages,
 } from 'lucide-react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -46,6 +47,7 @@ const TYPE_META: Record<string, { icon: React.ElementType; color: string; badgeC
   announcement_urgent: { icon: AlertTriangle, color: 'text-red-500', badgeColor: 'bg-red-500' },
   prayer_approved: { icon: Heart, color: 'text-rose-500', badgeColor: 'bg-rose-500' },
   prayer_pending: { icon: HeartHandshake, color: 'text-amber-500', badgeColor: 'bg-amber-500' },
+  enrollment_pending: { icon: Languages, color: 'text-orange-500', badgeColor: 'bg-orange-500' },
   event_update: { icon: Calendar, color: 'text-emerald-500', badgeColor: 'bg-emerald-500' },
 };
 
@@ -252,6 +254,18 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children, breadcru
                         <span className="flex-1 text-foreground">Prayer Requests</span>
                         <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10px] font-bold text-white">
                           {counts.prayerRequests > 99 ? '99+' : counts.prayerRequests}
+                        </span>
+                      </Link>
+                    )}
+                    {counts.enrollments > 0 && (
+                      <Link
+                        to="/app/admin/english-tutorial-enrollments"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-muted"
+                      >
+                        <Languages className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 text-foreground">English Tutorial Enrollments</span>
+                        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white">
+                          {counts.enrollments > 99 ? '99+' : counts.enrollments}
                         </span>
                       </Link>
                     )}

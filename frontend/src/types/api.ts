@@ -304,3 +304,9 @@ export interface PrayerPendingEvent {
   name: string;
   category: string;
 }
+
+export interface EnrollmentPendingEvent {
+  id: string;
+  name: string;
+  age: number;
+}

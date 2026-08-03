@@ -6,4 +6,7 @@ import { EnglishTutorialEnrollment } from '../entities/EnglishTutorialEnrollment
  */
 export interface IEnglishTutorialEnrollmentRepository {
   create(enrollment: EnglishTutorialEnrollment): Promise<EnglishTutorialEnrollment>;
+  findAll(): Promise<EnglishTutorialEnrollment[]>;
+  markReviewed(id: string): Promise<EnglishTutorialEnrollment>;
+  countUnreviewed(): Promise<number>;
 }

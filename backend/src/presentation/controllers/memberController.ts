@@ -29,6 +29,7 @@ import { MessageRepository } from '../../infrastructure/database/repositories/me
 import { SermonRepository } from '../../infrastructure/database/repositories/sermonRepository';
 import { BlogRepository } from '../../infrastructure/database/repositories/blogRepository';
 import { PrayerRepository } from '../../infrastructure/database/repositories/prayerRepository';
+import { EnglishTutorialEnrollmentRepository } from '../../infrastructure/database/repositories/englishTutorialEnrollmentRepository';
 import logger from '../../infrastructure/logging/logger';
 
 /**
@@ -55,6 +56,7 @@ export class MemberController {
     const sermonRepository = new SermonRepository();
     const blogRepository = new BlogRepository();
     const prayerRepository = new PrayerRepository();
+    const englishTutorialEnrollmentRepository = new EnglishTutorialEnrollmentRepository();
 
     this.getMemberDashboardUseCase = new GetMemberDashboard(
       this.memberRepository,
@@ -69,7 +71,8 @@ export class MemberController {
     this.getNotificationCountsUseCase = new GetNotificationCounts(
       announcementRepository,
       messageRepository,
-      prayerRepository
+      prayerRepository,
+      englishTutorialEnrollmentRepository
     );
     this.updateProfileUseCase = new UpdateProfile(this.memberRepository);
     this.updateNotificationPreferencesUseCase = new UpdateNotificationPreferences(

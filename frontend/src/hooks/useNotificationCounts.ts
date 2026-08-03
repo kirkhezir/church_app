@@ -11,6 +11,7 @@ export interface NotificationCounts {
   announcements: number;
   messages: number;
   prayerRequests: number;
+  enrollments: number;
   total: number;
   /** Imperatively re-fetch counts (e.g. after submitting a prayer request) */
   refresh: () => void;

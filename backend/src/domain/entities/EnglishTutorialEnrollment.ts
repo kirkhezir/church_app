@@ -15,6 +15,7 @@ export class EnglishTutorialEnrollment {
   readonly phone?: string;
   readonly email?: string;
   readonly enrolledAt: Date;
+  readonly reviewedAt?: Date;
   readonly updatedAt: Date;
 
   private constructor(data: {
@@ -27,6 +28,7 @@ export class EnglishTutorialEnrollment {
     phone?: string;
     email?: string;
     enrolledAt: Date;
+    reviewedAt?: Date;
     updatedAt: Date;
   }) {
     this.id = data.id;
@@ -38,6 +40,7 @@ export class EnglishTutorialEnrollment {
     this.phone = data.phone;
     this.email = data.email;
     this.enrolledAt = data.enrolledAt;
+    this.reviewedAt = data.reviewedAt;
     this.updatedAt = data.updatedAt;
   }
 
@@ -54,6 +57,7 @@ export class EnglishTutorialEnrollment {
     phone?: string;
     email?: string;
     enrolledAt?: Date;
+    reviewedAt?: Date;
     updatedAt?: Date;
   }): EnglishTutorialEnrollment {
     this.validate(data);
@@ -68,6 +72,7 @@ export class EnglishTutorialEnrollment {
       phone: data.phone?.trim() || undefined,
       email: data.email?.trim() || undefined,
       enrolledAt: data.enrolledAt ?? new Date(),
+      reviewedAt: data.reviewedAt,
       updatedAt: data.updatedAt ?? new Date(),
     });
   }

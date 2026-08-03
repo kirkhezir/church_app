@@ -1,26 +1,35 @@
 import { Request, Response } from 'express';
 import { CreateEnglishTutorialEnrollment } from '../../application/useCases/createEnglishTutorialEnrollment';
+import { GetEnglishTutorialEnrollments } from '../../application/useCases/getEnglishTutorialEnrollments';
+import { MarkEnglishTutorialEnrollmentReviewed } from '../../application/useCases/markEnglishTutorialEnrollmentReviewed';
 import { EnglishTutorialEnrollmentRepository } from '../../infrastructure/database/repositories/englishTutorialEnrollmentRepository';
 import { EnglishTutorialNotificationService } from '../../application/services/englishTutorialNotificationService';
 import { isValidGender } from '../../domain/valueObjects/Gender';
 import { logger } from '../../infrastructure/logging/logger';
+import { websocketServer } from '../../infrastructure/websocket/websocketServer';
 
 /**
  * EnglishTutorialEnrollmentController
  *
- * Handles POST /api/v1/english-tutorial-enrollments — public enrollment
- * submissions for the English Tutorial Ministry.
+ * Handles public enrollment submissions and admin/staff management for the
+ * English Tutorial Ministry.
  */
 export class EnglishTutorialEnrollmentController {
+  private enrollmentRepository: EnglishTutorialEnrollmentRepository;
   private createEnrollment: CreateEnglishTutorialEnrollment;
+  private getEnrollments: GetEnglishTutorialEnrollments;
+  private markReviewed: MarkEnglishTutorialEnrollmentReviewed;
 
   constructor(createEnrollment?: CreateEnglishTutorialEnrollment) {
+    this.enrollmentRepository = new EnglishTutorialEnrollmentRepository();
     this.createEnrollment =
       createEnrollment ||
       new CreateEnglishTutorialEnrollment(
-        new EnglishTutorialEnrollmentRepository(),
+        this.enrollmentRepository,
         new EnglishTutorialNotificationService()
       );
+    this.getEnrollments = new GetEnglishTutorialEnrollments(this.enrollmentRepository);
+    this.markReviewed = new MarkEnglishTutorialEnrollmentReviewed(this.enrollmentRepository);
   }
 
   async submitEnrollment(req: Request, res: Response): Promise<void> {
@@ -76,6 +85,13 @@ export class EnglishTutorialEnrollmentController {
         message: 'Thank you for enrolling! We will contact you soon with more details.',
         data: result,
       });
+
+      // Notify admin/staff in real time (don't block the response on this)
+      websocketServer.sendEnglishTutorialEnrollmentPendingNotification({
+        id: result.id,
+        name,
+        age: parsedAge,
+      });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       logger.error('Error processing English Tutorial enrollment', { error: message });
@@ -83,6 +99,42 @@ export class EnglishTutorialEnrollmentController {
       res.status(500).json({
         error: 'Failed to submit enrollment',
         message: 'An error occurred while processing your request. Please try again later.',
+      });
+    }
+  }
+
+  /**
+   * GET /api/v1/english-tutorial-enrollments
+   * List all enrollments (ADMIN, STAFF)
+   */
+  async getAllEnrollments(_req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.getEnrollments.execute();
+      res.status(200).json({ success: true, data: result });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Error fetching English Tutorial enrollments', { error: message });
+      res.status(500).json({
+        error: 'Failed to fetch enrollments',
+        message: 'An error occurred while retrieving enrollments.',
+      });
+    }
+  }
+
+  /**
+   * PATCH /api/v1/english-tutorial-enrollments/:id/review
+   * Mark an enrollment as reviewed (ADMIN, STAFF)
+   */
+  async reviewEnrollment(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await this.markReviewed.execute(req.params.id);
+      res.status(200).json({ success: true, data: result });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Error marking English Tutorial enrollment reviewed', { error: message });
+      res.status(500).json({
+        error: 'Failed to update enrollment',
+        message: 'An error occurred while updating the enrollment.',
       });
     }
   }
