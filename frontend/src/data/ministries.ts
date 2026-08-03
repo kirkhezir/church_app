@@ -5,7 +5,7 @@
  * TODO: Replace with API call to ministryService.getAll() when backend is ready.
  */
 import type React from 'react';
-import { Users, Baby } from 'lucide-react';
+import { Users, Baby, Languages } from 'lucide-react';
 
 export interface Ministry {
   id: string;
@@ -158,6 +158,18 @@ export const ministries: Ministry[] = [
     image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&q=80',
     leader: 'Brother Apichart',
     meetingTime: 'Weekly coordination',
+  },
+  {
+    id: 'english-tutorial',
+    name: 'English Tutorial Ministry',
+    nameThai: 'แผนกติวภาษาอังกฤษ',
+    description:
+      'Free English tutoring for the community, taught with love and a heart for connection.',
+    descriptionThai: 'สอนพิเศษภาษาอังกฤษฟรีสำหรับชุมชน สอนด้วยความรักและใจที่อยากเชื่อมโยงกับผู้คน',
+    color: 'bg-orange-500',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
+    leader: 'Mrs. Lavonne S. Jumawid',
+    meetingTime: 'Saturday 2:00 PM',
   },
 ];
 
@@ -331,6 +343,47 @@ export const ministriesData: Record<string, MinistryDetail> = {
       'พูดคุยกับพี่มาลีเพื่อเรียนรู้เกี่ยวกับโอกาสอาสาสมัคร',
       'ลงทะเบียน VBS เมื่อเปิดรับสมัคร',
       'เข้าร่วมกลุ่มสื่อสารผู้ปกครองเพื่อรับข่าวสาร',
+    ],
+  },
+  'english-tutorial': {
+    name: 'English Tutorial Ministry',
+    nameThai: 'แผนกติวภาษาอังกฤษ',
+    description:
+      'Free English tutoring for the community, taught with love and a heart for connection.',
+    descriptionThai: 'สอนพิเศษภาษาอังกฤษฟรีสำหรับชุมชน สอนด้วยความรักและใจที่อยากเชื่อมโยงกับผู้คน',
+    fullDescription:
+      'The English Tutorial Ministry offers free English lessons to children, youth, and adults in our community as a bridge for friendship and outreach. Classes cover conversational English, reading, and basic grammar in a relaxed, encouraging environment.\n\nNo prior experience is required — lessons are tailored to each learner\u2019s age and level. Enroll below and a tutor will follow up with you before the next class.',
+    fullDescriptionThai:
+      'แผนกติวภาษาอังกฤษเปิดสอนภาษาอังกฤษฟรีให้แก่เด็ก เยาวชน และผู้ใหญ่ในชุมชนของเรา เพื่อเป็นสะพานเชื่อมมิตรภาพและการประกาศข่าวประเสริฐ ชั้นเรียนครอบคลุมการสนทนา การอ่าน และไวยากรณ์พื้นฐานในบรรยากาศที่ผ่อนคลายและให้กำลังใจ\n\nไม่จำเป็นต้องมีพื้นฐานมาก่อน — บทเรียนปรับให้เหมาะกับวัยและระดับของผู้เรียนแต่ละคน ลงทะเบียนด้านล่างแล้วผู้สอนจะติดต่อกลับก่อนชั้นเรียนถัดไป',
+    icon: Languages,
+    color: 'bg-orange-500',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80',
+    leader: {
+      name: 'Mrs. Lavonne S. Jumawid',
+      role: 'English Tutorial Coordinator',
+      roleThai: 'ผู้ประสานงานแผนกติวภาษาอังกฤษ',
+      phone: '+66 (0) 876-106-926',
+      email: 'singburiadventistcenter@gmail.com',
+    },
+    // team: [{ name: 'Brother David', role: 'Volunteer Tutor', roleThai: 'ผู้สอนอาสาสมัคร' }],
+    meetingTime: 'Every Saturday, 2:00 PM - 3:00 PM',
+    meetingTimeThai: 'ทุกวันเสาร์ เวลา 14:00 - 15:00 น.',
+    location: 'Fellowship Hall, 1st Floor',
+    locationThai: 'ห้องสามัคคีธรรม ชั้น 1',
+    gallery: [
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80',
+      'https://images.unsplash.com/photo-1503676382389-4809596d5290?w=400&q=80',
+    ],
+    events: [],
+    howToJoin: [
+      'Fill out the enrollment form below with the learner\u2019s details.',
+      'A tutor will contact you to confirm the class schedule.',
+      'Attend the first Saturday class to be placed at the right level.',
+    ],
+    howToJoinThai: [
+      'กรอกแบบฟอร์มลงทะเบียนด้านล่างพร้อมข้อมูลของผู้เรียน',
+      'ผู้สอนจะติดต่อกลับเพื่อยืนยันตารางเรียน',
+      'เข้าร่วมชั้นเรียนวันเสาร์แรกเพื่อจัดระดับที่เหมาะสม',
     ],
   },
 };

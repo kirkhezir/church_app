@@ -207,6 +207,11 @@ enum PrayerStatus {
   ARCHIVED
 }
 
+enum Gender {
+  MALE
+  FEMALE
+}
+
 // ============================================================================
 // CMS Models (Phase 12)
 // ============================================================================
@@ -317,4 +322,19 @@ model prayer_supporters {
 
   @@unique([prayerRequestId, memberId])
   @@index([memberId])
+}
+
+model english_tutorial_enrollments {
+  id         String   @id
+  name       String
+  nickname   String
+  gender     Gender
+  age        Int
+  birthDate  DateTime
+  phone      String?
+  email      String?
+  enrolledAt DateTime @default(now())
+  updatedAt  DateTime
+
+  @@index([enrolledAt(sort: Desc)])
 }

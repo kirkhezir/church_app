@@ -199,9 +199,18 @@ export function AdminPrayerPage() {
                             <Mail className="h-3 w-3" /> {prayer.email}
                           </span>
                         )}
-                        <span className="flex items-center gap-1">
+                        <span
+                          className="flex items-center gap-1"
+                          title={new Date(prayer.createdAt).toISOString()}
+                        >
                           <Clock className="h-3 w-3" />{' '}
-                          {new Date(prayer.createdAt).toLocaleDateString()}
+                          {new Date(prayer.createdAt).toLocaleString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </span>
                         <span className="flex items-center gap-1">
                           <Heart className="h-3 w-3" /> {prayer.prayerCount} prayers
